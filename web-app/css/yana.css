@@ -1,0 +1,393 @@
+
+
+body {
+
+    background: #dddddd;
+    padding-top: 4px;
+    font-family: "Helvetica";
+}
+
+h1 {
+    font-size: 140%;
+    font-weight: bold;
+}
+
+#hd {
+    padding: 0.1em;
+    background-image: url('../images/background.png');
+    background-repeat: repeat-x;
+}
+
+#bd {
+    margin-top: 0.2em;
+    border: 1px solid lightgray;
+    background: white;
+    padding: 1em;
+}
+
+#ft {
+    background: #222222;
+    padding: 0.5em;
+    text-align: center;
+    color: white;
+    font-family: "Lucinda Grande",Arial;
+    font-size: 10pt;
+}
+
+#sidebar {
+
+    margin-top: 3em;
+    background-color: #d3e3f5;
+    padding: 1em;
+    border: 1px solid lightblue;
+    
+}
+
+#sidebar h3 {
+    color: #343534;
+    font-weight: bold;
+    border-bottom: 1px solid lightslategray;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    
+}
+
+#newNode h3 {
+    font-size: x-large;
+    font-weight: bold;
+    border-bottom: 1px solid lightslategray;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+#charLeft {
+    color: lightslategray;
+    float: right;
+    font-size: x-large;
+    border: none;
+}
+
+#nodeContent {
+    margin: 1em;
+    font-size: large;
+    width: 90%;    
+}
+
+dl {
+    padding-left: 5px;
+    padding-top: 10px;
+}
+
+dt {
+    float: left;
+}
+
+dd {
+    padding-left: 12em;
+    padding-bottom: 0.5em;
+}
+
+
+.nodeImage {
+    margin: 0.5em;
+    float: left;
+}
+
+.nodeEntry {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-left: 3em;
+    font-size: larger;
+    border-top: 1px solid lightslategray;
+
+}
+
+.nodeText a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nodeDate {
+    font-size: smaller;
+}
+
+.friendsThumbnails img {
+    margin: 4px;
+}
+
+.flash {
+    background: #ffe957;
+    border: 1px dotted black;
+    color: black;
+    padding: 1em;
+    margin: 1em;
+    font-weight: bold;
+    background-color: #ffe957;
+}
+
+.errors {
+    background: lightpink;
+    border: 1px dotted red;
+    color: black;
+    padding: 1em;
+    margin: 1em;
+    font-weight: bold;
+}
+
+.step{
+    padding-left: 1em;
+}
+
+.prevLink {
+    padding-left: 1em;
+}
+
+
+.nextLink {
+    padding-left: 1em;
+}
+
+.currentStep {
+    padding-left: 1em;
+    font-weight: bold;
+}
+
+.searchNode {
+    border: 1px dotted black;
+    background-color: #dddddd;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.searchFrom {
+    color: #333333;
+    font-style: italic;
+    font-size: smaller;
+}
+
+.searchContent {
+    
+}
+
+
+input, select, textarea {
+    background-color: #fcfcfc;
+    border: 1px solid #ccc;
+    font: 11px verdana, arial, helvetica, sans-serif;
+    margin: 2px 0;
+    padding: 2px 4px;
+}
+select {
+   padding: 2px 2px 2px 0;
+}
+textarea {
+  width: 250px;
+  height: 150px;
+  vertical-align: top;
+}
+
+input:focus, select:focus, textarea:focus {
+    border: 1px solid #b2d1ff;
+}
+
+/* NAVIGATION MENU */
+
+.nav {
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    border-style: solid none solid none;
+    margin-top: 5px;
+    padding: 7px 12px;
+}
+
+.menuButton {
+    font-size: 10px;
+    padding: 0 5px;
+}
+.menuButton a {
+    color: #333;
+    padding: 4px 6px;
+}
+.menuButton a.home {
+    background: url(../images/icons/icon-tiny-rarrow-sep.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}
+.menuButton a.list {
+    background: url(../images/icons/list.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}
+.menuButton a.create {
+    background: url(../images/icons/add.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}
+
+/* MESSAGES AND ERRORS */
+
+.message {
+    background: #f3f8fc url(../images/skin/information.png) 8px 50% no-repeat;
+    border: 1px solid #b2d1ff;
+    color: #006dba;
+    margin: 10px 0 5px 0;
+    padding: 5px 5px 5px 30px
+}
+
+div.errors {
+    background: #fff3f3;
+    border: 1px solid red;
+    color: #cc0000;
+    margin: 10px 0 5px 0;
+    padding: 5px 0 5px 0;
+}
+div.errors ul {
+    list-style: none;
+    padding: 0;
+}
+div.errors li {
+  background: url(../images/skin/exclamation.png) 8px 0% no-repeat;
+    line-height: 16px;
+    padding-left: 30px;
+}
+td.errors select {
+    border: 1px solid red;
+}
+td.errors input {
+    border: 1px solid red;
+}
+td.errors textarea {
+    border: 1px solid red;
+}
+
+
+
+/* TABLES */
+
+table {
+    border: 1px solid #ccc;
+    width: 100%
+}
+tr {
+    border: 0;
+}
+td, th {
+    font: 11px verdana, arial, helvetica, sans-serif;
+    line-height: 12px;
+    padding: 5px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background: #fff url(../images/skin/shadow.jpg);
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 17px;
+    padding: 2px 6px;
+}
+
+th a:link, th a:visited, th a:hover {
+    color: #333;
+    display: block;
+    font-size: 10px;
+    text-decoration: none;
+    width: 100%;
+}
+th.asc a, th.desc a {
+    background-position: right;
+    background-repeat: no-repeat;
+}
+th.asc a {
+    background-image: url(../images/skin/sorted_asc.gif);
+}
+th.desc a {
+    background-image: url(../images/skin/sorted_desc.gif);
+}
+
+.odd {
+    background: #f7f7f7;
+}
+.even {
+    background: #fff;
+}
+/* LIST */
+
+.list table {
+    border-collapse: collapse;
+}
+.list th, .list td {
+    border-left: 1px solid #ddd;
+}
+.list th:hover, .list tr:hover {
+    background: #b2d1ff;
+}
+
+
+/* PAGINATION */
+
+.paginateButtons {
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    border-top: 0;
+    color: #666;
+    font-size: 10px;
+    overflow: hidden;
+    padding: 10px 3px;
+}
+.paginateButtons a {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-color: #ccc #aaa #aaa #ccc;
+    color: #666;
+    margin: 0 3px;
+    padding: 2px 6px;
+}
+.paginateButtons span {
+    padding: 2px 3px;
+}
+
+/* DIALOG */
+
+.dialog table {
+    padding: 5px 0;
+}
+
+.prop {
+    padding: 5px;
+}
+.prop .name {
+    text-align: left;
+    width: 15%;
+    white-space: nowrap;
+}
+.prop .value {
+    text-align: left;
+    width: 85%;
+}
+
+/* ACTION BUTTONS */
+
+.buttons input {
+    background: #fff;
+    border: 0;
+    color: #333;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 3px;
+    overflow: visible;
+    padding: 2px 6px;
+}
+.buttons input.delete {
+    background: transparent url(../images/icons/delete.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+.buttons input.edit {
+    background: transparent url(../images/icons/edit.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+.buttons input.save {
+    background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}

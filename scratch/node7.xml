@@ -1,0 +1,38 @@
+<node id="7">
+  <attributes>
+    <attribute id="7">
+      <dataType>string</dataType>
+      <name>primary-interface</name>
+      <value>eth0</value>
+    </attribute>
+  </attributes>
+  <description>the 7th ubuntu</description>
+  <name>ubuntu7</name>
+  <osFamily>unix</osFamily>
+  <osName>ubuntu</osName>
+  <tags>
+    <tag id="9">
+      <name>web</name>
+    </tag>
+    <tag id="10">
+      <name>dev</name>
+    </tag>
+  </tags>
+  <externalAttributes>
+    <attributes id="1">
+      <external>
+	<externalAttribute id="3">
+	  <dataType>string</dataType>
+	  <name>hoho</name>
+	  <value>501</value>
+	</externalAttribute>
+	<externalAttribute id="2">
+	  <dataType>string</dataType>
+	  <name>alexh</name>
+	  <value>500</value>
+	</externalAttribute>
+      </external>
+      <name>users</name>
+    </attributes>
+  </externalAttributes>
+</node>

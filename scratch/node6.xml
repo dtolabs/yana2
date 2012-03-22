@@ -1,0 +1,23 @@
+<node id="6">
+  <attributes>
+    <attribute id="6">
+      <dataType>string</dataType>
+      <name>primary-interface</name>
+      <node ref="../.."/>
+      <value>eth0</value>
+    </attribute>
+  </attributes>
+  <description>the 6th ubuntu</description>
+  <externalAttributes/>
+  <name>ubuntu6</name>
+  <osFamily>unix</osFamily>
+  <osName>ubuntu</osName>
+  <tags>
+    <tag id="7">
+      <name>web</name>
+    </tag>
+    <tag id="8">
+      <name>dev</name>
+    </tag>
+  </tags>
+</node>

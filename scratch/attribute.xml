@@ -1,0 +1,6 @@
+<attribute>
+      <dataType>string</dataType>
+      <name>primary-interface</name>
+      <value>eth0</value>
+</attribute>
+

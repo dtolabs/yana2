@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<breadcrumbs>
+    <controller name='main'>
+        <action name='index'>Home Page</action>
+    </controller>
+    <controller name='applicationInfo'>
+        <action name='index' parent='dashboard' >Application List</action>
+        <action name='list' parent='dashboard' >Application List</action>
+        <action name='show' parent='dashboard'>Application Info</action>
+        <action name='edit' parent='dashboard' >Edit Application Info</action>
+        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    </controller>
+    <controller name='facilities'>
+        <action name='index' parent='dashboard' >Facilities List</action>
+        <action name='list' parent='dashboard' >Facilities List</action>
+        <action name='create' parent='dashboard'>New Facilities</action>
+        <action name='show' parent='dashboard'>Facilities Info</action>
+        <action name='edit' parent='dashboard' >Edit Facilities Info</action>
+        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    </controller>
+    <controller name='applicationcontacts'>
+        <action name='index' parent='dashboard' >Application Contacts List</action>
+        <action name='list' parent='dashboard' >Application Contacts List</action>
+        <action name='show' parent='dashboard'>Application Contacts Info</action>
+        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    </controller>
+    <controller name='contacts'>
+        <action name='index' parent='dashboard' >Contacts List</action>
+        <action name='list' parent='dashboard' >Contacts List</action>
+        <action name='show' parent='dashboard'>Contacts Info</action>
+        <action name='edit' parent='dashboard' >Edit Contacts Info</action>
+        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    </controller>
+    <controller name='contactsinfo'>
+        <action name='index' parent='dashboard' >Contacts Info List</action>
+        <action name='list' parent='dashboard' >Contacts Info List</action>
+        <action name='show' parent='dashboard'>More Contacts Info</action>
+        <action name='edit' parent='dashboard' >Edit Contacts Info</action>
+        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    </controller>
+</breadcrumbs>

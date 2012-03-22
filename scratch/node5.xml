@@ -1,0 +1,17 @@
+<node id="5">
+  <description>the 5th ubuntu</description>
+  <attributes/>
+  <externalAttributes/>
+  <name>ubuntu5</name>
+  <osFamily>unix</osFamily>
+  <osName>Jacksquat</osName>
+
+  <tags>
+    <tag id="5">
+      <name>web</name>
+    </tag>
+    <tag id="6">
+      <name>dev</name>
+    </tag>
+  </tags>
+</node>

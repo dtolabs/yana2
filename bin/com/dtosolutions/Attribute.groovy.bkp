@@ -1,0 +1,14 @@
+package com.dtosolutions
+
+class Attribute {
+    static belongsTo = [ node : Node ]
+
+	String attributeName
+	
+    def static fromMap(Map map) {
+        println "DEBUG: inside Attr#fromMap: map="+map
+        def attrInstance = (Attribute.exists(map.id)) ?Attribute.get(map.id): new Attribute()            
+        attrInstance.properties = map
+        return attrInstance
+    }
+}

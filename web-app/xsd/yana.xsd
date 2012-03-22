@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+        <xs:element name="yana">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref="locations" maxOccurs="1"/>
+                    <xs:element ref="attributes"  maxOccurs="1"/>
+                    <xs:element ref="nodetypes"  maxOccurs="1"/>
+                    <xs:element ref="solutions"  maxOccurs="1"/>
+                    <xs:element ref="artifacts"  maxOccurs="1"/>
+                    <xs:element ref="nodes"  maxOccurs="1"/>
+                    <xs:element ref="instances" maxOccurs="1"/>
+                    <xs:element ref="templates" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='locations'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='location' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='location'>
+            <xs:complexType>
+                    <xs:attribute name='id' type='xs:ID' use='required'/>
+                    <xs:attribute name='provider' type='xs:string'/>
+                    <xs:attribute name='city' type='xs:string'/>
+                    <xs:attribute name='state' type='xs:string'/>
+                    <xs:attribute name='country' type='xs:string'/>
+                    <xs:attribute name='zip' type='xs:string'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='attributes'>
+            <xs:complexType>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref='attribute' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='attribute'>
+            <xs:complexType>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
+                <xs:attribute name='filter' type='xs:string' use='required'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='nodetypes'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='nodetype' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='nodetype'>
+            <xs:complexType>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='solutions'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='solution' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='solution'>
+            <xs:complexType>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
+                <xs:attribute name='parent' type='xs:IDREF'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='artifacts'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='artifact' maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='artifact'>
+           <xs:complexType>
+               <xs:attribute name='id' type='xs:ID' use='required'/>
+           </xs:complexType>
+       </xs:element>
+        
+        <xs:element name='nodes'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='node' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='node'>
+            <xs:complexType>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
+                <xs:attribute name='template' type='xs:IDREF' use='required'/>
+                <xs:attribute name='nodetype' type='xs:IDREF' use='required'/>
+                <xs:attribute name='location' type='xs:IDREF' use='required'/>
+                <xs:attribute name='solution' type='xs:IDREF'/>
+                <xs:attribute name='parent' type='xs:IDREF'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='instances'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='instance' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+    
+        <xs:element name='instance'>
+            <xs:complexType>
+                <xs:attribute name='artifact' type='xs:IDREF' use='required'/>
+                <xs:attribute name='node' type='xs:IDREF' use='required'/>
+                <xs:attribute name='license' type='xs:string'/>
+            </xs:complexType>
+        </xs:element>
+    
+        <xs:element name='templates'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='template' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='template'>
+            <xs:complexType>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref='templateAttributes' maxOccurs="unbounded"/>
+                    <xs:element ref='templateValues' maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
+                <xs:attribute name='nodetype' type='xs:IDREF' use='required'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='templateAttributes'>
+            <xs:complexType>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref='templateAttribute' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='templateAttribute'>
+            <xs:complexType>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
+                <xs:attribute name='template' type='xs:IDREF' use='required'/>
+                <xs:attribute name='attribute' type='xs:IDREF' use='required'/>
+                <xs:attribute name='required' type='xs:boolean' use='required'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='templateValues'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='templateValue' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+    
+        <xs:element name='templateValue'>
+            <xs:complexType>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
+                <xs:attribute name='node' type='xs:IDREF' use='required'/>
+                <xs:attribute name='templateAttribute' type='xs:IDREF' use='required'/>
+                <xs:attribute name='value' type='xs:string' use='required'/>
+            </xs:complexType>
+        </xs:element>
+    
+</xs:schema>
+    

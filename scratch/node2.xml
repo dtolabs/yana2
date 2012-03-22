@@ -1,0 +1,9 @@
+<node id="2">
+  <attributes/>
+  <description>the 2th ubuntu</description>
+  <externalAttributes/>
+  <name>ubuntu2</name>
+  <osFamily>unix</osFamily>
+  <osName>Ubuntu</osName>
+  <tags/>
+</node>

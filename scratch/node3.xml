@@ -1,0 +1,13 @@
+<node id="3">
+  <name>ubuntu3</name>
+  <description>the 3th ubuntu</description>
+  <externalAttributes/>
+  <osFamily>unix</osFamily>
+  <osName>ubuntu</osName>
+  <tags>
+    <tag id="1">
+      <name>web</name>
+      <node ref="../.."/>
+    </tag>
+  </tags>
+</node>

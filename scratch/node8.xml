@@ -1,0 +1,41 @@
+<node>
+  <attributes>
+    <attribute>
+      <dataType>string</dataType>
+      <name>primary-interface</name>
+      <node ref="../.."/>
+      <value>eth0</value>
+    </attribute>
+  </attributes>
+  <description>the 8th ubuntu</description>
+  <name>ubuntu8</name>
+  <osFamily>unix</osFamily>
+  <osName>ubuntu</osName>
+  <tags>
+    <tag>
+      <name>web</name>
+    </tag>
+    <tag>
+      <name>dev</name>
+    </tag>
+  </tags>
+  <externalAttributes>
+    <attributes>
+      <external>
+	<externalAttribute>
+	  <attributes ref="../.."/>
+	  <dataType>string</dataType>
+	  <name>hoho</name>
+	  <value>501</value>
+	</externalAttribute>
+	<externalAttribute>
+	  <attributes ref="../.."/>
+	  <dataType>string</dataType>
+	  <name>alexh</name>
+	  <value>500</value>
+	</externalAttribute>
+      </external>
+      <name>users</name>
+    </attributes>
+  </externalAttributes>
+</node>

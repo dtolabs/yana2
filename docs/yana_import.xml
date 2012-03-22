@@ -1,0 +1,72 @@
+<yana>
+    <locations>
+        <location id="Main_Location" provider="Rackspace" city="Berkeley" state="CA" country="USA" zip="94703"/>
+    </locations>
+    <attributes>
+        <attribute id="Friendly_Name" filter="String"/>
+        <attribute id="Brand" filter="String"/>
+        <attribute id="Model" filter="String"/>
+        <attribute id="Serial_Number" filter="String"/>
+        <attribute id="Management_IP" filter="IP"/>
+        <attribute id="Gateway" filter="IP"/>
+        <attribute id="Number_of_CPUs" filter="String"/>
+        <attribute id="RAM" filter="String"/>
+        <attribute id="HDD" filter="String"/>
+        <attribute id="Blackout_Starttime" filter="Time"/>
+        <attribute id="Blackout_Endtime" filter="Time"/>
+        <attribute id="OS_Name" filter="String"/>
+        <attribute id="OS_Family" filter="OS"/>
+        <attribute id="Hostname" filter="URL"/>
+    </attributes>
+    <nodetypes>
+        <nodetype id="Server"/>
+    </nodetypes>
+    <solutions>
+        <solution id="Test_Solution"/>
+    </solutions>
+    <artifacts>
+        <artifact id="Jetty"/>
+    </artifacts>
+    <nodes>
+        <node id="test.server.com" template="Server_Template" nodetype="Server" location="Main_Location" solution="Test_Solution"/>
+    </nodes>
+    <instances>
+        <instance artifact="Jetty" node="test.server.com" softwareversion="1.0"/>
+    </instances>
+    <templates>
+        <template id="Server_Template" nodetype="Server">
+            <templateAttributes>
+                <templateAttribute id="ta1" template="Server_Template" attribute="Friendly_Name" required="false"/>
+                <templateAttribute id="ta2" template="Server_Template" attribute="Brand" required="false"/>
+                <templateAttribute id="ta3" template="Server_Template" attribute="Model" required="false"/>
+                <templateAttribute id="ta4" template="Server_Template" attribute="Serial_Number" required="false"/>
+                <templateAttribute id="ta5" template="Server_Template" attribute="Management_IP" required="false"/>
+                <templateAttribute id="ta6" template="Server_Template" attribute="Gateway" required="false"/>
+                <templateAttribute id="ta7" template="Server_Template" attribute="Number_of_CPUs" required="false"/>
+                <templateAttribute id="ta8" template="Server_Template" attribute="RAM" required="false"/>
+                <templateAttribute id="ta9" template="Server_Template" attribute="HDD" required="false"/>
+                <templateAttribute id="ta10" template="Server_Template" attribute="Blackout_Starttime" required="false"/>
+                <templateAttribute id="ta11" template="Server_Template" attribute="Blackout_Endtime" required="false"/>
+                <templateAttribute id="ta12" template="Server_Template" attribute="OS_Name" required="false"/>
+                <templateAttribute id="ta13" template="Server_Template" attribute="OS_Family" required="false"/>
+                <templateAttribute id="ta14" template="Server_Template" attribute="Hostname" required="false"/>
+            </templateAttributes>
+            <templateValues>
+                <templateValue id="tv1" node="test.server.com" templateAttribute="ta1" value="Test_Server"/>
+                <templateValue id="tv2" node="test.server.com" templateAttribute="ta2" value="Dell"/>
+                <templateValue id="tv3" node="test.server.com" templateAttribute="ta3" value="dps-256"/>
+                <templateValue id="tv4" node="test.server.com" templateAttribute="ta4" value="12345"/>
+                <templateValue id="tv5" node="test.server.com" templateAttribute="ta5" value="127.0.0.1"/>
+                <templateValue id="tv6" node="test.server.com" templateAttribute="ta6" value="127.0.0.1"/>
+                <templateValue id="tv7" node="test.server.com" templateAttribute="ta7" value="2"/>
+                <templateValue id="tv8" node="test.server.com" templateAttribute="ta8" value="4GB"/>
+                <templateValue id="tv9" node="test.server.com" templateAttribute="ta9" value="2TB"/>
+                <templateValue id="tv10" node="test.server.com" templateAttribute="ta10" value="10am"/>
+                <templateValue id="tv11" node="test.server.com" templateAttribute="ta11" value="12pm"/>
+                <templateValue id="tv12" node="test.server.com" templateAttribute="ta12" value="Ubuntu_Test_Server"/>
+                <templateValue id="tv13" node="test.server.com" templateAttribute="ta13" value="Linux"/>
+                <templateValue id="tv14" node="test.server.com" templateAttribute="ta14" value="hostname.test.com"/>
+            </templateValues>
+        </template>
+    </templates>
+</yana>
