@@ -10,28 +10,38 @@
     <r:layoutResources/>
 	<g:javascript src="jquery.json-2.3.js"/>
     <g:layoutHead />
+    
+	<link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'ddsmoothmenu.css')}" />
+	<link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'ddsmoothmenu-v.css')}" />
+	
+	<script type="text/javascript" src="/js/ddsmoothmenu.js"></script>
+	
+	<script type="text/javascript">
+	
+	ddsmoothmenu.init({
+		mainmenuid: "smoothmenu", //menu DIV id
+		orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
+		classname: 'ddsmoothmenu', //class added to menu's outer DIV
+		customtheme: ["#d6d6d6", "#999"],
+		contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+	
+	</script>
 
   </head>
   <body>
-   <div>
-     <div id="hd">
-       <a href="<g:createLinkTo dir="/"/>">
-       <img id="logo"
-	    src="${createLinkTo(dir: 'images', file: 'headerlogo.png')}"
-	    alt="YANA logo"/>
-     </a>
-     </div>
-     <div id="bd"><!--start body-->
-     <g:layoutBody />
-     </div><!--end body-->
-     <div id="ft">
-       <div id="footerText">
-	 YANA - Yet another node authority!
+  
+	<div id="container">
+	    <div id="header"><g:render template="/common/header" /></div>
+	    <div id="body"><br>
 
-	 &copy; Copyright 2010 <a href="https://github.com/dtolabs">DTO Labs</a>.
-	 All rights reserved.
-       </div>
-     </div>
-   </div>
+			<table border=0 width='100%' height=100% cellspacing=0 cellpadding=0 valign=top align=middle>
+				<tr><td width=100% height=100% valign=top><g:layoutBody /></td></tr>
+			</table>
+
+		</div>
+		<div id="footer"><g:render template="/common/footer" /></div>
+	</div>
+   
   </body>
 </html>

@@ -8,9 +8,6 @@ class UrlMappings {
             }
         }
 
-        "/login/$action?"(controller: "login")
-        "/logout/$action?"(controller: "logout")
-
         // Nodes
         "/api/nodes"(controller: "nodeRest",  parseRequest:true) {
             action = [ GET: "list" , POST: "add" ]

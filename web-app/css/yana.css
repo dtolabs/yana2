@@ -2,8 +2,8 @@
 
 body {
 
-    background: #dddddd;
-    padding-top: 4px;
+    background: #ffffff;
+    padding:0x;
     font-family: "Helvetica";
 }
 
@@ -262,7 +262,7 @@ td.errors textarea {
 
 
 
-/* TABLES */
+/* TABLES 
 
 table {
     border: 1px solid #ccc;
@@ -304,6 +304,7 @@ th.asc a {
 th.desc a {
     background-image: url(../images/skin/sorted_desc.gif);
 }
+*/
 
 .odd {
     background: #f7f7f7;
@@ -391,3 +392,5 @@ th.desc a {
     background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
     padding-left: 28px;
 }
+
+

@@ -9,69 +9,53 @@
 </style>
 
 
-<table border=0 cellspacing=0 cellpadding=0 width='100%'>
+<table border=0 cellspacing=0 cellpadding=0 width='100%' valign=top>
 	<tr>
-		<td align=left width=255 height=52><img src="<g:createLinkTo dir='images' file='yana_logo1.png'/>" width='255px' height='52px'/></td>
+		<td align=left width=255 height=52 valign=bottom><img src="<g:createLinkTo dir='images' file='yana_logo1.png'/>" width='255px' height='52px' style="vertical-align:bottom;"/></td>
 		<td width='*'>&nbsp;</td>
 	</tr>
 	<tr>
-		<td align=left width=255 height=24 style="background-color:#d6d6d6;"><img src="<g:createLinkTo dir='images' file='yana_logo2.png'/>" width='46px' height='24px'/></td>
-		<td width='*'>
-			<div class="topnav">
-				<div id="nav">
-			        <ul style="position:relative;top:-10px;">
+		<td align=left width=255 height=24 style="background-color:#d6d6d6" valign=top><img src="<g:createLinkTo dir='images' file='yana_logo2.png'/>" width='46px' height='24px'/></td>
+		<td height=24 bgcolor="#d6d6d6">
+
 			
 					<sec:ifNotLoggedIn>
-					          <li><a href="${grailsApplication.config.grails.serverURL}/login">Login</a></li>
+					          <li><g:link controller="login" action="auth">Login</g:link></li>
 					</sec:ifNotLoggedIn>
 			
 					<sec:ifLoggedIn>
-			          <sec:ifAnyGranted roles="ROLE_USER">
-			            <li><a href="${grailsApplication.config.grails.serverURL}/">Configuration</a>
-			              <div class="drop"><div class="drop-t"></div>
-			                <div class="drop-c">
-			                  <div class="container">
-			                    <strong class="title"></strong>
-			                    <ul>
-			                    	<li><g:link controller="solution" action="list">Solutions</g:link></li>
-			                    	<li><g:link controller="location" action="list">Locations</g:link></li>
-			                      	<li><g:link controller="node" action="list">Nodes</g:link></li>
-			                      	<li><g:link controller="nodetype" action="list">Nodetypes</g:link></li>
-			                      	<li><g:link controller="artifact" action="list">Artifacts</g:link></li>
-			                      	<li><g:link controller="instances" action="list">Instances</g:link></li>
-			                      	<li><g:link controller="template" action="list">Templates</g:link></li>
-			                    </ul>
-			                  </div>
-			                </div>
-			                <div class="drop-b">&nbsp;</div>
-			              </div>
-			            </li>
-			          </sec:ifAnyGranted>
-			
-					<sec:ifAnyGranted roles="ROLE_ROOT,ROLE_USER">
-			          <li><a href="${grailsApplication.config.grails.serverURL}/account">Account</a></li>
-			        </sec:ifAnyGranted>
-			        
-			          <sec:ifAnyGranted roles="ROLE_ROOT">
-			            <li><a href="${grailsApplication.config.grails.serverURL}/admin">Admin</a>
-			              <div class="drop"><div class="drop-t"></div>
-			                <div class="drop-c">
-			                  <div class="container">
-			                    <strong class="title"></strong>
-			                    <ul>
-			                    	<li><g:link controller="admin" action="importxml">Import Resources</g:link></li>
-			                    </ul>
-			                  </div>
-			                </div>
-			                <div class="drop-b">&nbsp;</div>
-			              </div>
-			            </li>
-			          </sec:ifAnyGranted>
+
+						<div id="smoothmenu" class="ddsmoothmenu">
+						<ul>
+						<sec:ifAnyGranted roles="ROLE_ROOT,ROLE_USER">
+						<li><a href="${grailsApplication.config.grails.serverURL}/">Configuration</a>
+						  <ul>
+	                    	<li><g:link controller="solution" action="list">Solutions</g:link></li>
+	                    	<li><g:link controller="location" action="list">Locations</g:link></li>
+	                      	<li><g:link controller="node" action="list">Nodes</g:link></li>
+	                      	<li><g:link controller="nodetype" action="list">Nodetypes</g:link></li>
+	                      	<li><g:link controller="artifact" action="list">Artifacts</g:link></li>
+	                      	<li><g:link controller="instances" action="list">Instances</g:link></li>
+	                      	<li><g:link controller="template" action="list">Templates</g:link></li>
+						  </ul>
+						</li>
+						</sec:ifAnyGranted>
+						<sec:ifAnyGranted roles="ROLE_ROOT,ROLE_USER">
+						<li><a href="${grailsApplication.config.grails.serverURL}/account">Account</a></li>
+						</sec:ifAnyGranted>
+						<sec:ifAnyGranted roles="ROLE_ROOT">
+						<li><a href="${grailsApplication.config.grails.serverURL}/admin">Admin</a>
+						  <ul>
+						  <li><g:link controller="admin" action="importxml">Import Resources</g:link></li>
+						  </ul>
+						</li>
+						</sec:ifAnyGranted>
+						</ul>
+						<br style="clear: left" />
+						</div>
+			          
 			          </sec:ifLoggedIn>
-			
-			        </ul>
-				</div>
-			</div>
+
 		</td>
 	</tr>
 </table>
