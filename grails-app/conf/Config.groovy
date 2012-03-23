@@ -100,6 +100,7 @@ environments {
 		grails.plugins.springsecurity.portMapper.httpPort = 8080
 		grails.plugins.springsecurity.portMapper.httpsPort = 8443
 		
+		grails.resources.processing.enabled = false
 		grails.app.context = "/"
 		
 		// log4j configuration - log info and above to console
@@ -118,6 +119,7 @@ environments {
 		grails.plugins.springsecurity.portMapper.httpPort = 80
 		grails.plugins.springsecurity.portMapper.httpsPort = 443
 		
+		grails.resources.processing.enabled = false
 		grails.app.context = "/"
 		
 		// log4j configuration - log info and above to console
