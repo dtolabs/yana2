@@ -1,41 +1,72 @@
 <?xml version="1.0" ?>
 <breadcrumbs>
-    <controller name='main'>
-        <action name='index'>Home Page</action>
+    <controller name='login'>
+        <action name='login'>Login</action>
     </controller>
-    <controller name='applicationInfo'>
-        <action name='index' parent='dashboard' >Application List</action>
-        <action name='list' parent='dashboard' >Application List</action>
-        <action name='show' parent='dashboard'>Application Info</action>
-        <action name='edit' parent='dashboard' >Edit Application Info</action>
-        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    <controller name='artifact'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
     </controller>
-    <controller name='facilities'>
-        <action name='index' parent='dashboard' >Facilities List</action>
-        <action name='list' parent='dashboard' >Facilities List</action>
-        <action name='create' parent='dashboard'>New Facilities</action>
-        <action name='show' parent='dashboard'>Facilities Info</action>
-        <action name='edit' parent='dashboard' >Edit Facilities Info</action>
-        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    <controller name='attribute'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
     </controller>
-    <controller name='applicationcontacts'>
-        <action name='index' parent='dashboard' >Application Contacts List</action>
-        <action name='list' parent='dashboard' >Application Contacts List</action>
-        <action name='show' parent='dashboard'>Application Contacts Info</action>
-        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    <controller name='filter'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
     </controller>
-    <controller name='contacts'>
-        <action name='index' parent='dashboard' >Contacts List</action>
-        <action name='list' parent='dashboard' >Contacts List</action>
-        <action name='show' parent='dashboard'>Contacts Info</action>
-        <action name='edit' parent='dashboard' >Edit Contacts Info</action>
-        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    <controller name='instance'>
+        <action name='show' url='instance/list'>Show</action>
+        <action name='edit' url='instance/list'>Edit</action>
+        <action name='create' url='instance/list'>Create</action>
+        <action name='list' url='/index'>List</action>
     </controller>
-    <controller name='contactsinfo'>
-        <action name='index' parent='dashboard' >Contacts Info List</action>
-        <action name='list' parent='dashboard' >Contacts Info List</action>
-        <action name='show' parent='dashboard'>More Contacts Info</action>
-        <action name='edit' parent='dashboard' >Edit Contacts Info</action>
-        <action name='dashboard' url='dashboard/list'>Dashboard</action>
+    <controller name='location'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
+    </controller>
+    <controller name='node'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
+    </controller>
+    <controller name='nodetype'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
+    </controller>
+    <controller name='solution'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
+    </controller>
+    <controller name='template'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
+    </controller>
+    <controller name='templateattribute'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
+    </controller>
+    <controller name='templatevalue'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list' url='/index'>List</action>
     </controller>
 </breadcrumbs>

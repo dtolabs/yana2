@@ -26,6 +26,10 @@ class BootStrap {
 		Filter fIP = Filter.findByDataType('IP') ?: new Filter(dataType:'IP',regex:"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\$",dateCreated:now).save(failOnError:true)
 		Filter fOS = Filter.findByDataType('OS') ?: new Filter(dataType:'OS',regex:'^(Linux|linux|Unix|unix|Windows|windows|Mac|mac|Sun|sun|BSD|bsd)\$',dateCreated:now).save(failOnError:true)
 
+		NodeType server = NodeType.findByName('Server') ?: new NodeType(name:'Server',dateCreated:now)
+		NodeType soft = NodeType.findByName('Software') ?: new NodeType(name:'Software',dateCreated:now)
+		NodeType db = NodeType.findByName('Database') ?: new NodeType(name:'Database',dateCreated:now)
+		
     }
     def destroy = {}
 }

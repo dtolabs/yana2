@@ -16,14 +16,12 @@ class TransferService {
 
     static transactional = false
     static scope = "prototype"
-	def grailsApplication
     
 	// def file = request.getFile('import')
     def checkImport(MultipartFile file) {
 		def message;
 		
 		def yana = new XmlSlurper().parse(file.inputStream)
-println(yana);
 		def locations = yana.locations
 		def attributes = yana.attributes
 		def nodetypes = yana.nodetypes

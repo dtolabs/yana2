@@ -1,120 +1,15 @@
 <html>
-  <head>
-    <title>Welcome</title>
-    <meta name="layout" content="main" />
-    <style type="text/css" media="screen">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="layout" content="main" />
+        <title>Welcome To Yana</title>
+    </head>
+    <body>
+        <div class="body">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut urna enim, eleifend quis imperdiet eget, hendrerit et purus. Cras bibendum ornare massa, nec fringilla dolor venenatis in. Sed faucibus blandit metus non molestie. Quisque consectetur arcu ante, et facilisis arcu. Phasellus posuere, nisi at porttitor tincidunt, justo leo accumsan massa, eu ultricies lorem tellus et turpis. In blandit malesuada bibendum. In non eros sem. Morbi tincidunt vulputate congue. Nulla sit amet sapien at risus mattis viverra. Curabitur a neque at nunc lacinia molestie a non ligula. Donec mattis odio ut mauris porta hendrerit. Donec interdum faucibus dolor sit amet aliquet. Phasellus quam arcu, vehicula id malesuada a, dictum nec ante. Donec id eros lorem, rhoncus hendrerit dui.</p>
 
-      #nav {
-      margin-top:20px;
-      margin-left:30px;
-      width:228px;
-      float:left;
+		<p>Phasellus a metus in elit laoreet consequat. Donec id massa arcu, ac euismod justo. Aliquam venenatis adipiscing placerat. Phasellus iaculis ipsum quis neque pulvinar consequat. Sed ut massa eu turpis lacinia adipiscing a a mi. Maecenas eleifend interdum tempus. Vivamus porta sem non arcu faucibus rhoncus. Fusce aliquet velit vitae magna ultricies rhoncus.</p>
 
-      }
-      .homePagePanel * {
-      margin:0px;
-      }
-      .homePagePanel .panelBody ul {
-      list-style-type:none;
-      margin-bottom:10px;
-      }
-      .homePagePanel .panelBody h1 {
-      text-transform:uppercase;
-      font-size:1.1em;
-      margin-bottom:10px;
-      }
-      .homePagePanel .panelBody {
-      background: url(images/leftnav_midstretch.png) repeat-y top;
-      margin:0px;
-      padding:15px;
-      }
-      .homePagePanel .panelBtm {
-      background: url(images/leftnav_btm.png) no-repeat top;
-      height:20px;
-      margin:0px;
-      }
-
-      .homePagePanel .panelTop {
-      background: url(images/leftnav_top.png) no-repeat top;
-      height:11px;
-      margin:0px;
-      }
-      h2 {
-      margin-top:15px;
-      margin-bottom:15px;
-      font-size:1.2em;
-      }
-      #pageBody {
-      margin-left:280px;
-      margin-right:20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="nav">
-      <!--
-	  <div class="homePagePanel">
-	  <div class="panelTop"></div>
-	  <div class="panelBody">
-	  
-	  </div>
-	  <div class="panelBtm"></div>
-	  </div>
-      -->
-    </div>
-    <div id="pageBody">
-      <!--
-	  <h1>Welcome to YANA</h1>
-	  <p>
-	  </p>
-      -->
-      <div id="controllerList" class="dialog">
-	<!--
-	    <h2>Available Controllers:</h2>
-	-->
-	<ul>
-	  <li>
-	    <a href ="${request.contextPath}/solution">
-	      Solutions
-	    </a>
-	  </li>
-	  <li>
-	    <a href ="${request.contextPath}/location">
-	      Locations
-	    </a>
-	  </li>
-	  <li>
-	    <a href ="${request.contextPath}/node">
-	      Nodes
-	    </a>
-	  </li>
-	  <li>
-	    <a href ="${request.contextPath}/nodetype">
-	      NodeTypes
-	    </a>
-	  </li>
-	  <li>
-	    <a href ="${request.contextPath}/artifact">
-	      Artifacts
-	    </a>
-	  </li>
-	  <li>
-	    <a href ="${request.contextPath}/template">
-	      Templates
-	    </a>
-	  </li>
-	  <li>
-	    <a href ="${request.contextPath}/attribute">
-	      Attributes
-	    </a>
-	  </li>
-	  <li>
-	    <a href ="${request.contextPath}/filter">
-	      Filters
-	    </a>
-	  </li>
-	</ul>
-      </div>
-    </div>
-  </body>
+        </div>
+    </body>
 </html>
