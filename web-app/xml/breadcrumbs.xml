@@ -7,66 +7,66 @@
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Artifacts</action>
     </controller>
     <controller name='attribute'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Attributes</action>
     </controller>
     <controller name='filter'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Filters</action>
     </controller>
     <controller name='instance'>
         <action name='show' url='instance/list'>Show</action>
         <action name='edit' url='instance/list'>Edit</action>
         <action name='create' url='instance/list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Instances</action>
     </controller>
     <controller name='location'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Locations</action>
     </controller>
     <controller name='node'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Nodes</action>
     </controller>
     <controller name='nodetype'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>NodeTypes</action>
     </controller>
     <controller name='solution'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Solutions</action>
     </controller>
     <controller name='template'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Templates</action>
     </controller>
     <controller name='templateattribute'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Template Attributes</action>
     </controller>
     <controller name='templatevalue'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list' url='/index'>List</action>
+        <action name='list'>Template Values</action>
     </controller>
 </breadcrumbs>

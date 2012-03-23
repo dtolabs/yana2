@@ -27,7 +27,6 @@ class YanaTagLib {
 					if(count > 0){
 						output += " > "
 					}
-					println("${links[0]} / ${links[1]}")
 					output += (it.name==actionName || (count+1)==crumbs.size())?"""<div style="color:#ff6600;display:inline;">${it.name}</div>""":"""<a href="${createLink(controller:links[0],action:links[1])}">${it.name}</a>"""
 					++count
 				}

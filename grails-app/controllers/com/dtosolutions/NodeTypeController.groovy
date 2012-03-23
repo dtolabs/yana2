@@ -12,91 +12,91 @@ class NodeTypeController {
 
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [NodeTypeInstanceList: NodeType.list(params), NodeTypeInstanceTotal: NodeType.count()]
+        [nodeTypeInstanceList: NodeType.list(params), nodeTypeInstanceTotal: NodeType.count()]
     }
 
     def create() {
-        [NodeTypeInstance: new NodeType(params)]
+        [nodeTypeInstance: new NodeType(params)]
     }
 
     def save() {
-        def NodeTypeInstance = new NodeType(params)
-        if (!NodeTypeInstance.save(flush: true)) {
-            render(view: "create", model: [NodeTypeInstance: NodeTypeInstance])
+        def nodeTypeInstance = new NodeType(params)
+        if (!nodeTypeInstance.save(flush: true)) {
+            render(view: "create", model: [nodeTypeInstance: nodeTypeInstance])
             return
         }
 
-		flash.message = message(code: 'default.created.message', args: [message(code: 'NodeType.label', default: 'NodeType'), NodeTypeInstance.id])
-        redirect(action: "show", id: NodeTypeInstance.id)
+		flash.message = message(code: 'default.created.message', args: [message(code: 'nodeType.label', default: 'NodeType'), nodeTypeInstance.id])
+        redirect(action: "show", id: nodeTypeInstance.id)
     }
 
     def show() {
-        def NodeTypeInstance = NodeType.get(params.id)
-        if (!NodeTypeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'NodeType.label', default: 'NodeType'), params.id])
+        def nodeTypeInstance = NodeType.get(params.id)
+        if (!nodeTypeInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
             return
         }
 
-        [NodeTypeInstance: NodeTypeInstance]
+        [nodeTypeInstance: nodeTypeInstance]
     }
 
     def edit() {
-        def NodeTypeInstance = NodeType.get(params.id)
-        if (!NodeTypeInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'NodeType.label', default: 'NodeType'), params.id])
+        def nodeTypeInstance = NodeType.get(params.id)
+        if (!nodeTypeInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
             return
         }
 
-        [NodeTypeInstance: NodeTypeInstance]
+        [nodeTypeInstance: nodeTypeInstance]
     }
 
     def update() {
-        def NodeTypeInstance = NodeType.get(params.id)
-        if (!NodeTypeInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'NodeType.label', default: 'NodeType'), params.id])
+        def nodeTypeInstance = NodeType.get(params.id)
+        if (!nodeTypeInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
             return
         }
 
         if (params.version) {
             def version = params.version.toLong()
-            if (NodeTypeInstance.version > version) {
-                NodeTypeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'NodeType.label', default: 'NodeType')] as Object[],
+            if (nodeTypeInstance.version > version) {
+                nodeTypeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+                          [message(code: 'nodeType.label', default: 'NodeType')] as Object[],
                           "Another user has updated this NodeType while you were editing")
-                render(view: "edit", model: [NodeTypeInstance: NodeTypeInstance])
+                render(view: "edit", model: [nodeTypeInstance: nodeTypeInstance])
                 return
             }
         }
 
-        NodeTypeInstance.properties = params
+        nodeTypeInstance.properties = params
 
-        if (!NodeTypeInstance.save(flush: true)) {
-            render(view: "edit", model: [NodeTypeInstance: NodeTypeInstance])
+        if (!nodeTypeInstance.save(flush: true)) {
+            render(view: "edit", model: [nodeTypeInstance: nodeTypeInstance])
             return
         }
 
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'NodeType.label', default: 'NodeType'), NodeTypeInstance.id])
-        redirect(action: "show", id: NodeTypeInstance.id)
+		flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeType.label', default: 'NodeType'), nodeTypeInstance.id])
+        redirect(action: "show", id: nodeTypeInstance.id)
     }
 
     def delete() {
-        def NodeTypeInstance = NodeType.get(params.id)
-        if (!NodeTypeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'NodeType.label', default: 'NodeType'), params.id])
+        def nodeTypeInstance = NodeType.get(params.id)
+        if (!nodeTypeInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
             return
         }
 
         try {
-            NodeTypeInstance.delete(flush: true)
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'NodeType.label', default: 'NodeType'), params.id])
+            nodeTypeInstance.delete(flush: true)
+			flash.message = message(code: 'default.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
         }
         catch (DataIntegrityViolationException e) {
-			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'NodeType.label', default: 'NodeType'), params.id])
+			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "show", id: params.id)
         }
     }

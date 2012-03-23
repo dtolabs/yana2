@@ -1,10 +1,12 @@
 
 
+html,
 body {
-
-    background: #ffffff;
-    padding:0x;
-    font-family: "Helvetica";
+   margin:0;
+   padding:0;
+   height:100%;
+   background: #ffffff;
+   font-family: "Helvetica";
 }
 
 h1 {

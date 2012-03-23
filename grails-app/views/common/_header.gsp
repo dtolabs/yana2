@@ -80,4 +80,4 @@
 		</td>
 	</tr>
 </table>
-<div style="position:absolute;left:7px;top:95px;width:600px;text-align:left;"><dto:breadcrumbs>${it}</dto:breadcrumbs></div>
+<div style="position:absolute;left:7px;top:85px;width:600px;text-align:left;"><dto:breadcrumbs>${it}</dto:breadcrumbs></div>

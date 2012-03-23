@@ -1,0 +1,159 @@
+package com.dtosolutions
+
+
+
+import org.junit.*
+import grails.test.mixin.*
+
+@TestFor(NodeTypeController)
+@Mock(NodeType)
+class NodeTypeControllerTests {
+
+
+    def populateValidParams(params) {
+      assert params != null
+      // TODO: Populate valid properties like...
+      //params["name"] = 'someValidName'
+    }
+
+    void testIndex() {
+        controller.index()
+        assert "/nodeType/list" == response.redirectedUrl
+    }
+
+    void testList() {
+
+        def model = controller.list()
+
+        assert model.nodeTypeInstanceList.size() == 0
+        assert model.nodeTypeInstanceTotal == 0
+    }
+
+    void testCreate() {
+       def model = controller.create()
+
+       assert model.nodeTypeInstance != null
+    }
+
+    void testSave() {
+        controller.save()
+
+        assert model.nodeTypeInstance != null
+        assert view == '/nodeType/create'
+
+        response.reset()
+
+        populateValidParams(params)
+        controller.save()
+
+        assert response.redirectedUrl == '/nodeType/show/1'
+        assert controller.flash.message != null
+        assert NodeType.count() == 1
+    }
+
+    void testShow() {
+        controller.show()
+
+        assert flash.message != null
+        assert response.redirectedUrl == '/nodeType/list'
+
+
+        populateValidParams(params)
+        def nodeType = new NodeType(params)
+
+        assert nodeType.save() != null
+
+        params.id = nodeType.id
+
+        def model = controller.show()
+
+        assert model.nodeTypeInstance == nodeType
+    }
+
+    void testEdit() {
+        controller.edit()
+
+        assert flash.message != null
+        assert response.redirectedUrl == '/nodeType/list'
+
+
+        populateValidParams(params)
+        def nodeType = new NodeType(params)
+
+        assert nodeType.save() != null
+
+        params.id = nodeType.id
+
+        def model = controller.edit()
+
+        assert model.nodeTypeInstance == nodeType
+    }
+
+    void testUpdate() {
+        controller.update()
+
+        assert flash.message != null
+        assert response.redirectedUrl == '/nodeType/list'
+
+        response.reset()
+
+
+        populateValidParams(params)
+        def nodeType = new NodeType(params)
+
+        assert nodeType.save() != null
+
+        // test invalid parameters in update
+        params.id = nodeType.id
+        //TODO: add invalid values to params object
+
+        controller.update()
+
+        assert view == "/nodeType/edit"
+        assert model.nodeTypeInstance != null
+
+        nodeType.clearErrors()
+
+        populateValidParams(params)
+        controller.update()
+
+        assert response.redirectedUrl == "/nodeType/show/$nodeType.id"
+        assert flash.message != null
+
+        //test outdated version number
+        response.reset()
+        nodeType.clearErrors()
+
+        populateValidParams(params)
+        params.id = nodeType.id
+        params.version = -1
+        controller.update()
+
+        assert view == "/nodeType/edit"
+        assert model.nodeTypeInstance != null
+        assert model.nodeTypeInstance.errors.getFieldError('version')
+        assert flash.message != null
+    }
+
+    void testDelete() {
+        controller.delete()
+        assert flash.message != null
+        assert response.redirectedUrl == '/nodeType/list'
+
+        response.reset()
+
+        populateValidParams(params)
+        def nodeType = new NodeType(params)
+
+        assert nodeType.save() != null
+        assert NodeType.count() == 1
+
+        params.id = nodeType.id
+
+        controller.delete()
+
+        assert NodeType.count() == 0
+        assert NodeType.get(nodeType.id) == null
+        assert response.redirectedUrl == '/nodeType/list'
+    }
+}

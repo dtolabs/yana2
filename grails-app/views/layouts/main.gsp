@@ -33,10 +33,10 @@
   
 	<div id="container">
 	    <div id="header"><g:render template="/common/header" /></div>
-	    <div id="body" style="height:100%;"><br>
+	    <div id="body">
 
-			<table border=0 width='100%' height=100% cellspacing=0 cellpadding=0 valign=top align=middle>
-				<tr><td width=100% height=100% valign=top><g:layoutBody /></td></tr>
+			<table border=0 width='100%' cellspacing=0 cellpadding=20 valign=top align=middle>
+				<tr><td width=100% valign=top><g:layoutBody /></td></tr>
 			</table>
 
 		</div>

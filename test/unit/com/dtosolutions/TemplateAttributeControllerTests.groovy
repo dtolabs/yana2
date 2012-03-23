@@ -1,0 +1,159 @@
+package com.dtosolutions
+
+
+
+import org.junit.*
+import grails.test.mixin.*
+
+@TestFor(TemplateAttributeController)
+@Mock(TemplateAttribute)
+class TemplateAttributeControllerTests {
+
+
+    def populateValidParams(params) {
+      assert params != null
+      // TODO: Populate valid properties like...
+      //params["name"] = 'someValidName'
+    }
+
+    void testIndex() {
+        controller.index()
+        assert "/templateAttribute/list" == response.redirectedUrl
+    }
+
+    void testList() {
+
+        def model = controller.list()
+
+        assert model.templateAttributeInstanceList.size() == 0
+        assert model.templateAttributeInstanceTotal == 0
+    }
+
+    void testCreate() {
+       def model = controller.create()
+
+       assert model.templateAttributeInstance != null
+    }
+
+    void testSave() {
+        controller.save()
+
+        assert model.templateAttributeInstance != null
+        assert view == '/templateAttribute/create'
+
+        response.reset()
+
+        populateValidParams(params)
+        controller.save()
+
+        assert response.redirectedUrl == '/templateAttribute/show/1'
+        assert controller.flash.message != null
+        assert TemplateAttribute.count() == 1
+    }
+
+    void testShow() {
+        controller.show()
+
+        assert flash.message != null
+        assert response.redirectedUrl == '/templateAttribute/list'
+
+
+        populateValidParams(params)
+        def templateAttribute = new TemplateAttribute(params)
+
+        assert templateAttribute.save() != null
+
+        params.id = templateAttribute.id
+
+        def model = controller.show()
+
+        assert model.templateAttributeInstance == templateAttribute
+    }
+
+    void testEdit() {
+        controller.edit()
+
+        assert flash.message != null
+        assert response.redirectedUrl == '/templateAttribute/list'
+
+
+        populateValidParams(params)
+        def templateAttribute = new TemplateAttribute(params)
+
+        assert templateAttribute.save() != null
+
+        params.id = templateAttribute.id
+
+        def model = controller.edit()
+
+        assert model.templateAttributeInstance == templateAttribute
+    }
+
+    void testUpdate() {
+        controller.update()
+
+        assert flash.message != null
+        assert response.redirectedUrl == '/templateAttribute/list'
+
+        response.reset()
+
+
+        populateValidParams(params)
+        def templateAttribute = new TemplateAttribute(params)
+
+        assert templateAttribute.save() != null
+
+        // test invalid parameters in update
+        params.id = templateAttribute.id
+        //TODO: add invalid values to params object
+
+        controller.update()
+
+        assert view == "/templateAttribute/edit"
+        assert model.templateAttributeInstance != null
+
+        templateAttribute.clearErrors()
+
+        populateValidParams(params)
+        controller.update()
+
+        assert response.redirectedUrl == "/templateAttribute/show/$templateAttribute.id"
+        assert flash.message != null
+
+        //test outdated version number
+        response.reset()
+        templateAttribute.clearErrors()
+
+        populateValidParams(params)
+        params.id = templateAttribute.id
+        params.version = -1
+        controller.update()
+
+        assert view == "/templateAttribute/edit"
+        assert model.templateAttributeInstance != null
+        assert model.templateAttributeInstance.errors.getFieldError('version')
+        assert flash.message != null
+    }
+
+    void testDelete() {
+        controller.delete()
+        assert flash.message != null
+        assert response.redirectedUrl == '/templateAttribute/list'
+
+        response.reset()
+
+        populateValidParams(params)
+        def templateAttribute = new TemplateAttribute(params)
+
+        assert templateAttribute.save() != null
+        assert TemplateAttribute.count() == 1
+
+        params.id = templateAttribute.id
+
+        controller.delete()
+
+        assert TemplateAttribute.count() == 0
+        assert TemplateAttribute.get(templateAttribute.id) == null
+        assert response.redirectedUrl == '/templateAttribute/list'
+    }
+}
