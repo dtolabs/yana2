@@ -37,9 +37,9 @@
 							    <li><g:link controller="node" action="create">Create</g:link></li>
 							    </ul>
 							</li>
-	                      	<li><g:link controller="nodetype" action="list">Nodetypes</g:link>
+	                      	<li><g:link controller="nodeType" action="list">Nodetypes</g:link>
 							    <ul>
-							    <li><g:link controller="nodetype" action="create">Create</g:link></li>
+							    <li><g:link controller="nodeType" action="create">Create</g:link></li>
 							    </ul>
 							</li>
 	                      	<li><g:link controller="artifact" action="list">Artifacts</g:link>
