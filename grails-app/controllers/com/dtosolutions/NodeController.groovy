@@ -24,16 +24,25 @@ class NodeController {
     }
 
     def save() {
-        def nodeInstance = new Node(params)
-		
+		Node nodeInstance  = new Node()
+		nodeInstance.name = params.name
+		nodeInstance.description = params.description
+		nodeInstance.template = Template.get(params.template.id.toLong())
+		nodeInstance.status = params.status
+		nodeInstance.importance = params.importance
+		nodeInstance.nodetype = NodeType.get(params.nodetype.id.toLong())
+		nodeInstance.dateCreated = new Date()
+		nodeInstance.dateModified = new Date()
+		//n.save(failOnError:true)
+					
         if (!nodeInstance.save(flush: true)) {
             render(view: "create", model: [nodeInstance: nodeInstance])
             return
         }else{
 			Date now = new Date()
 			params.each{ key, val ->
-				if (key.contains('att')) {
-					TemplateAttribute att = TemplateAttribute.get(key.toInteger())
+				if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
+					TemplateAttribute att = TemplateAttribute.get(key[3..-1].toInteger())
 				   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
 				}
 			}
@@ -114,20 +123,14 @@ class NodeController {
 	
 	def getNodeParents = {
 		def response = []
-		List atts = []
 		if(params.id){
-			atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N where N.node.id=${params.id}");
-		}else{
-			atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N");
+			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N where N.nodetype.id=${params.id}");
+			atts.each(){
+				response += [id:it.id,name:it.name];
+			}
+			render response as JSON
 		}
-
-		atts.each(){
-			response += [id:it.id,name:it.name];
-		}
-
-
-		render response as JSON
-}
+	}
 	
 	def getTemplateAttributes = {
 			def response = []

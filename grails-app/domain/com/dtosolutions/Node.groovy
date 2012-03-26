@@ -12,18 +12,20 @@ class Node {
 	Status status
 	Importance importance
 	String tags
+	Solution solution
 	NodeType nodetype
     Date dateCreated
     Date dateModified = new Date()
 	Node parent
 
     static constraints = {
-        name(unique:true, blank:false)
+        name(blank:false)
         description(blank:true, nullable:true)
 		template(nullable:false)
 		status(nullable:false)
 		importance(nullable:false)
         tags(nullable:true)
+		solution(nullable:true)
 		nodetype(nullable:false)
 		parent(nullable:true)
     }

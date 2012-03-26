@@ -11,11 +11,17 @@
   	function init() {
   		getNodeParents();
   	}
-  		
+
+  	function getFormFields(){
+		getTemplates();
+		getNodeParents();
+  	}
+  	
   	function getNodeParents(){
-  		var solution = $("#solution").val();
+  		var nodetype = $("#nodetype").val();
+  		var selected = $("#parent").val();
 		$.ajaxSetup({contentType:"application/json"});
-		$.getJSON("${request.contextPath}/node/getNodeParents",{id:solution,ajax:'true'},function(json){
+		$.getJSON("${request.contextPath}/node/getNodeParents",{id:nodetype,ajax:'true'},function(json){
 			if(json){
 				var select = document.getElementById("parent");
 				select.innerHTML = '';
@@ -184,7 +190,7 @@
 						<g:message code="node.nodetype.label" default="Nodetype" />
 						<span class="required-indicator">*</span>
 					</label>
-					<g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one" onchange="getTemplates();"/>
+					<g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one" onchange="getFormFields();""/>
 				</div>
 				
 				<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'template', 'error')} required">
