@@ -56,8 +56,10 @@
 				}
 			});
 			$("#template_wrapper").show();
+			$("#attributes").hide();
   		}else{
   			$("#template_wrapper").hide();
+  			$("#attributes").hide();
   	  	}
   	}
 
@@ -216,23 +218,6 @@
 					</label>
 					<g:textField name="tags" value="${nodeInstance?.tags}"/>
 				</div>
-				
-				<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'location', 'error')} required">
-					<label for="location">
-						<g:message code="node.location.label" default="Location" />
-						<span class="required-indicator">*</span>
-					</label>
-					<g:select id="location" name="location.id" from="${com.dtosolutions.Location.list()}" optionKey="id" required="" value="${nodeInstance?.location?.id}" class="many-to-one"/>
-				</div>
-				
-				<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'solution', 'error')} ">
-					<label for="solution">
-						<g:message code="node.solution.label" default="Solution" />
-						
-					</label>
-					<g:select id="solution" name="solution.id" from="${com.dtosolutions.Solution.list()}" optionKey="id" value="${nodeInstance?.solution?.id}" class="many-to-one" noSelection="['null': '']" onchange="getNodeParents();"/>
-				</div>
-				
 				
 				<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'parent', 'error')} ">
 					<label for="parent">

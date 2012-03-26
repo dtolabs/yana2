@@ -32,8 +32,6 @@ class NodeController {
         }else{
 			Date now = new Date()
 			params.each{ key, val ->
-				println("${key}/${val}")
-				// get attributes and insert into attributevalues
 				if (key.contains('att')) {
 					TemplateAttribute att = TemplateAttribute.get(key.toInteger())
 				   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
@@ -118,11 +116,11 @@ class NodeController {
 		def response = []
 		List atts = []
 		if(params.id){
-			atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N where N.solution.id=${params.id}");
+			atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N where N.node.id=${params.id}");
 		}else{
-			atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N where N.solution is null");
+			atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N");
 		}
-		println("test: ${atts}")
+
 		atts.each(){
 			response += [id:it.id,name:it.name];
 		}
@@ -134,12 +132,13 @@ class NodeController {
 	def getTemplateAttributes = {
 			def response = []
 			if(params.templateid){
+				List atts = []
 				if(params.node){
-					List atts = TemplateAttribute.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.values as TV left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}");
+					atts = TemplateAttribute.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.values as TV left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}");
 				}else{
-					List atts = TemplateAttribute.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.values as TV left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
+					atts = TemplateAttribute.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.values as TV left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
 				}
-				println("test: ${atts}")
+
 				atts.each(){
 					response += [tid:it.tid,attid:it.att_id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter];
 				}
@@ -149,7 +148,6 @@ class NodeController {
 	}
 	
 	def getTemplates = {
-		println(params)
 			def response = []
 			if(params.id){
 				List temps = Template.executeQuery("select new map(T.id as id,T.templateName as name) from Template as T where T.nodetype.id=${params.id}");

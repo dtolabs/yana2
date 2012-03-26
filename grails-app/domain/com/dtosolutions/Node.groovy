@@ -3,7 +3,7 @@ package com.dtosolutions
 class Node {
 
     static searchable = true
-	static hasMany = [instances:Instance,templateValues:TemplateValue,nodes:Node]
+	static hasMany = [templateValues:TemplateValue,nodes:Node]
 	static belongsTo = [Solution]
 	
     String name
@@ -12,8 +12,6 @@ class Node {
 	Status status
 	Importance importance
 	String tags
-	Location location
-	Solution solution
 	NodeType nodetype
     Date dateCreated
     Date dateModified = new Date()
@@ -26,8 +24,6 @@ class Node {
 		status(nullable:false)
 		importance(nullable:false)
         tags(nullable:true)
-		location(nullable:false)
-		solution(nullable:true)
 		nodetype(nullable:false)
 		parent(nullable:true)
     }

@@ -41,13 +41,26 @@ class BootStrap {
 		Attribute att12 = Attribute.findByName('OS Family') ?: new Attribute(name:'OS Family',filter:fStr,dateCreated:now).save(failOnError:true)
 		Attribute att13 = Attribute.findByName('Hostname') ?: new Attribute(name:'Hostname',filter:fURL,dateCreated:now).save(failOnError:true)
 		
+		// Software Attributes
+		Attribute att14 = Attribute.findByName('Version') ?: new Attribute(name:'Version',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att15 = Attribute.findByName('License') ?: new Attribute(name:'License',filter:fStr,dateCreated:now).save(failOnError:true)
+		
+		// Location Attributes
+		Attribute att16 = Attribute.findByName('Provider Name') ?: new Attribute(name:'Provider Name',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att17 = Attribute.findByName('City') ?: new Attribute(name:'City',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att18 = Attribute.findByName('State/Province') ?: new Attribute(name:'State/Province',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att19 = Attribute.findByName('Country') ?: new Attribute(name:'Country',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att20 = Attribute.findByName('Postal Code') ?: new Attribute(name:'Postal Code',filter:fStr,dateCreated:now).save(failOnError:true)
+		
 		NodeType server = NodeType.findByName('Server') ?: new NodeType(name:'Server',dateCreated:now).save(failOnError:true)
 		NodeType soft = NodeType.findByName('Software') ?: new NodeType(name:'Software',dateCreated:now).save(failOnError:true)
 		NodeType db = NodeType.findByName('Database') ?: new NodeType(name:'Database',dateCreated:now).save(failOnError:true)
+		NodeType loc = NodeType.findByName('Location') ?: new NodeType(name:'Location',dateCreated:now).save(failOnError:true)
 		
-		Template serverTemp = Template.findByTemplateName('Server') ?: new Template(templateName:'Server',nodetype:server,dateCreated:now).save(failOnError:true)
-		Template softTemp = Template.findByTemplateName('Software') ?: new Template(templateName:'Software',nodetype:soft,dateCreated:now).save(failOnError:true)
-		Template dbTemp = Template.findByTemplateName('Database') ?: new Template(templateName:'database',nodetype:db,dateCreated:now).save(failOnError:true)
+		Template serverTemp = Template.findByTemplateName('Server_default') ?: new Template(templateName:'Server_default',nodetype:server,dateCreated:now).save(failOnError:true)
+		Template softTemp = Template.findByTemplateName('Software_default') ?: new Template(templateName:'Software_default',nodetype:soft,dateCreated:now).save(failOnError:true)
+		Template dbTemp = Template.findByTemplateName('Database_default') ?: new Template(templateName:'database_default',nodetype:db,dateCreated:now).save(failOnError:true)
+		Template locTemp = Template.findByTemplateName('Location_default') ?: new Template(templateName:'Location_default',nodetype:db,dateCreated:now).save(failOnError:true)
 		
 		// server template attributes
 		TemplateAttribute serverTA1 = TemplateAttribute.findByAttributeAndTemplate(att1,serverTemp) ?: new TemplateAttribute(attribute:att1,template:serverTemp).save(failOnError:true)
@@ -63,6 +76,17 @@ class BootStrap {
 		TemplateAttribute serverTA11 = TemplateAttribute.findByAttributeAndTemplate(att11,serverTemp) ?: new TemplateAttribute(attribute:att11,template:serverTemp).save(failOnError:true)
 		TemplateAttribute serverTA12 = TemplateAttribute.findByAttributeAndTemplate(att12,serverTemp) ?: new TemplateAttribute(attribute:att12,template:serverTemp).save(failOnError:true)
 		TemplateAttribute serverTA13 = TemplateAttribute.findByAttributeAndTemplate(att13,serverTemp) ?: new TemplateAttribute(attribute:att13,template:serverTemp).save(failOnError:true)
+
+		// software template attributes
+		TemplateAttribute softTA14 = TemplateAttribute.findByAttributeAndTemplate(att14,softTemp) ?: new TemplateAttribute(attribute:att14,template:softTemp).save(failOnError:true)
+		TemplateAttribute softTA15 = TemplateAttribute.findByAttributeAndTemplate(att15,softTemp) ?: new TemplateAttribute(attribute:att15,template:softTemp).save(failOnError:true)
+		
+		// location template attributes
+		TemplateAttribute locTA16 = TemplateAttribute.findByAttributeAndTemplate(att16,locTemp) ?: new TemplateAttribute(attribute:att16,template:locTemp).save(failOnError:true)
+		TemplateAttribute locTA17 = TemplateAttribute.findByAttributeAndTemplate(att17,locTemp) ?: new TemplateAttribute(attribute:att17,template:locTemp).save(failOnError:true)
+		TemplateAttribute locTA18 = TemplateAttribute.findByAttributeAndTemplate(att18,locTemp) ?: new TemplateAttribute(attribute:att18,template:locTemp).save(failOnError:true)
+		TemplateAttribute locTA19 = TemplateAttribute.findByAttributeAndTemplate(att19,locTemp) ?: new TemplateAttribute(attribute:att19,template:locTemp).save(failOnError:true)
+		TemplateAttribute locTA20 = TemplateAttribute.findByAttributeAndTemplate(att20,locTemp) ?: new TemplateAttribute(attribute:att20,template:locTemp).save(failOnError:true)
 
     }
     def destroy = {}

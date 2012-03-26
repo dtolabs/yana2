@@ -70,24 +70,6 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${nodeInstance?.location}">
-				<li class="fieldcontain">
-					<span id="location-label" class="property-label"><g:message code="node.location.label" default="Location" /></span>
-					
-						<span class="property-value" aria-labelledby="location-label"><g:link controller="location" action="show" id="${nodeInstance?.location?.id}">${nodeInstance?.location?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${nodeInstance?.solution}">
-				<li class="fieldcontain">
-					<span id="solution-label" class="property-label"><g:message code="node.solution.label" default="Solution" /></span>
-					
-						<span class="property-value" aria-labelledby="solution-label"><g:link controller="solution" action="show" id="${nodeInstance?.solution?.id}">${nodeInstance?.solution?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
 				<g:if test="${nodeInstance?.nodetype}">
 				<li class="fieldcontain">
 					<span id="nodetype-label" class="property-label"><g:message code="node.nodetype.label" default="Nodetype" /></span>
@@ -120,17 +102,6 @@
 					<span id="dateModified-label" class="property-label"><g:message code="node.dateModified.label" default="Date Modified" /></span>
 					
 						<span class="property-value" aria-labelledby="dateModified-label"><g:formatDate date="${nodeInstance?.dateModified}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${nodeInstance?.instances}">
-				<li class="fieldcontain">
-					<span id="instances-label" class="property-label"><g:message code="node.instances.label" default="Instances" /></span>
-					
-						<g:each in="${nodeInstance.instances}" var="i">
-						<span class="property-value" aria-labelledby="instances-label"><g:link controller="instance" action="show" id="${i.id}">${i?.encodeAsHTML()}</g:link></span>
-						</g:each>
 					
 				</li>
 				</g:if>
