@@ -149,7 +149,7 @@ grails.plugins.springsecurity.secureChannel.definition = [
 	'/layouts/**':				'ANY_CHANNEL',
 	'/login/**':				'REQUIRES_SECURE_CHANNEL',
 	'/register/**':				'REQUIRES_SECURE_CHANNEL',
-	'/test/**':					'REQUIRES_SECURE_CHANNEL',
+	'/test/**':					'ANY_CHANNEL',
 	'/images/**':				'ANY_CHANNEL',
 	'/css/**':					'ANY_CHANNEL',
 	'/xml/**':					'ANY_CHANNEL',
@@ -158,5 +158,5 @@ grails.plugins.springsecurity.secureChannel.definition = [
 	'/role/**':					'REQUIRES_SECURE_CHANNEL',
 	'/registrationCode/**':		'REQUIRES_SECURE_CHANNEL',
 	'/securityInfo/**':			'REQUIRES_SECURE_CHANNEL',
-	'/admin/**':				'REQUIRES_SECURE_CHANNEL',
+	'/admin/**':				'ANY_CHANNEL',
  ]
