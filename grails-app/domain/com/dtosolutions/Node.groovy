@@ -4,7 +4,6 @@ class Node {
 
     static searchable = true
 	static hasMany = [templateValues:TemplateValue,nodes:Node]
-	static belongsTo = [Solution]
 	
     String name
     String description
@@ -12,7 +11,6 @@ class Node {
 	Status status
 	Importance importance
 	String tags
-	Solution solution
 	NodeType nodetype
     Date dateCreated
     Date dateModified = new Date()
@@ -25,7 +23,6 @@ class Node {
 		status(nullable:false)
 		importance(nullable:false)
         tags(nullable:true)
-		solution(nullable:true)
 		nodetype(nullable:false)
 		parent(nullable:true)
     }
