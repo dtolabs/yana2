@@ -16,17 +16,24 @@ class NodeController {
     }
 
     def list() {
+		
 		if(params.format){
-			switch(format){
+			def response = []
+			switch(params.format){
 				case 'xml':
 				case 'XML':
-					def query = """
-
-"""
-					atts = TemplateAttribute.executeQuery();
-					//render list as XML
+					def nodequery = "select N.id,N.name,N.description,T.templateName,NT.name as nodetype,N.status,N.importance,N.tags from Node as N left join N.nodetype as NT left join N.template as T"
+					
+					def nodes = Node.executeQuery(nodequery);
+					
+					nodes.each(){
+						def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${it[0].toLong()}"
+						def values = TemplateValue.executeQuery(attributequery);
+						response += [attribute:[values.attribute,values.value],required:values.required];
+					}
 					break;
 			}
+			render response as XML
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]

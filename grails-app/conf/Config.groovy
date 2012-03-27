@@ -1,15 +1,6 @@
 
-import grails.plugins.springsecurity.SecurityConfigType
 
-def deps = [
-	"mysql-connector-java-5.1.6-bin.jar"
-]
 
-grails.war.dependencies = {
-	fileset(dir: "libs") {
-		deps.each { pattern -> include(name: pattern) }
-	}
-}
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
