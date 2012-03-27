@@ -190,7 +190,7 @@
 						<g:message code="node.nodetype.label" default="Nodetype" />
 						<span class="required-indicator">*</span>
 					</label>
-					<g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one" onchange="getFormFields();""/>
+					<g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one" onchange="getFormFields();"/>
 				</div>
 				
 				<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'template', 'error')} required">
