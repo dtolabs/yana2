@@ -8,10 +8,9 @@ Yana strives to offer a simple and basic node metadata service.
 
 ## Concepts
 
-The basic concept of Yana is a "Node" which represents a host on the network.
-Information about a node can be defined using an "Attribute", a simple
-name/value pair. The concept of "Tag" provides a method to match
-Nodes based on a symbolic name.
+The basic concept of Yana is a "Node" which represents an object in a network.
+Nodes are defined in terms of a "NodeType" which defines a set of attributes
+about a node.
 
 ## Interfaces
 
