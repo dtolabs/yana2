@@ -45,15 +45,26 @@ class AdminController {
 					n.dateModified = new Date()
 					n.save(failOnError:true)
 
-					//new Node(name:location.@id.toString(),template:locTemp,status:Status.IMP,importance:Importance.MED,nodetype:locType).save(failOnError:true)
 				}
 
+				loc = Node.findByName(location.@id.toString())
+				
 				if(!loc){
-					TemplateAttribute locatt1 = TemplateAttribute.findByName('Provider Name')
-					TemplateAttribute locatt2 = TemplateAttribute.findByName('City')
-					TemplateAttribute locatt3 = TemplateAttribute.findByName('State/Province')
-					TemplateAttribute locatt4 = TemplateAttribute.findByName('Country')
-					TemplateAttribute locatt5 = TemplateAttribute.findByName('Postal Code')
+					println(loc)
+					Attribute att1 = Attribute.findByName('Provider Name')
+					TemplateAttribute locatt1 = TemplateAttribute.findByAttribute(att1)
+					
+					Attribute att2 = Attribute.findByName('City')
+					TemplateAttribute locatt2 = TemplateAttribute.findByAttribute(att2)
+					
+					Attribute att3 = Attribute.findByName('State/Province')
+					TemplateAttribute locatt3 = TemplateAttribute.findByAttribute(att3)
+					
+					Attribute att4 = Attribute.findByName('Country')
+					TemplateAttribute locatt4 = TemplateAttribute.findByAttribute(att4)
+					
+					Attribute att5 = Attribute.findByName('Postal Code')
+					TemplateAttribute locatt5 = TemplateAttribute.findByAttribute(att5)
 					
 					new TemplateValue(node:loc,templateattribute:locatt1,value:location.@provider.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
 					new TemplateValue(node:loc,templateattribute:locatt2,value:location.@city.toString(),dateCreated:now,dateModified:now).save(failOnError:true)

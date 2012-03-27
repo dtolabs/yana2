@@ -2,6 +2,7 @@ package com.dtosolutions
 
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
+import grails.converters.XML
 import java.util.Date;
 
 class NodeController {
@@ -15,8 +16,21 @@ class NodeController {
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]
+		if(params.format){
+			switch(format){
+				case 'xml':
+				case 'XML':
+					def query = """
+
+"""
+					atts = TemplateAttribute.executeQuery();
+					//render list as XML
+					break;
+			}
+		}else{
+        	params.max = Math.min(params.max ? params.int('max') : 10, 100)
+			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]
+		}
     }
 
     def create() {

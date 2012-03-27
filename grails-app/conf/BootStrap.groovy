@@ -5,14 +5,6 @@ class BootStrap {
     def init = { servletContext ->
 		
 		Date now = new Date()
-
-		SecRole rootRole = SecRole.findByAuthority('ROLE_ROOT')?: new SecRole(authority:'ROLE_ROOT').save(faileOnError:true)
-		SecRole userRole = SecRole.findByAuthority('ROLE_USER')?: new SecRole(authority:'ROLE_USER').save(faileOnError:true)
-		SecUser adminUser = SecUser.findByUsername('admin')?: new SecUser(username:'admin',password:'admin',enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
-		
-		if(!adminUser?.authorities?.contains(rootRole)){
-			SecUserSecRole.create adminUser,rootRole
-		}
 		
 		Filter fStr = Filter.findByDataType('String') ?: new Filter(dataType:'String',regex:'^.*\$',dateCreated:now).save(failOnError:true)
 		Filter fBool = Filter.findByDataType('Boolean') ?: new Filter(dataType:'Boolean',regex:"^([0-1]|true|false)\$",dateCreated:now).save(failOnError:true)
@@ -60,7 +52,7 @@ class BootStrap {
 		Template serverTemp = Template.findByTemplateName('Server_default') ?: new Template(templateName:'Server_default',nodetype:server,dateCreated:now).save(failOnError:true)
 		Template softTemp = Template.findByTemplateName('Software_default') ?: new Template(templateName:'Software_default',nodetype:soft,dateCreated:now).save(failOnError:true)
 		Template dbTemp = Template.findByTemplateName('Database_default') ?: new Template(templateName:'database_default',nodetype:db,dateCreated:now).save(failOnError:true)
-		Template locTemp = Template.findByTemplateName('Location_default') ?: new Template(templateName:'Location_default',nodetype:db,dateCreated:now).save(failOnError:true)
+		Template locTemp = Template.findByTemplateName('Location_default') ?: new Template(templateName:'Location_default',nodetype:loc,dateCreated:now).save(failOnError:true)
 		
 		// server template attributes
 		TemplateAttribute serverTA1 = TemplateAttribute.findByAttributeAndTemplate(att1,serverTemp) ?: new TemplateAttribute(attribute:att1,template:serverTemp).save(failOnError:true)
