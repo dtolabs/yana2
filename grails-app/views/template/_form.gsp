@@ -18,14 +18,14 @@
 	
 <ul class="one-to-many">
 <g:each in="${templateInstance?.attributes?}" var="a">
-    <li><g:link controller="templateAttribute" action="show" id="${a.id}">${a?.encodeAsHTML()}</g:link></li>
+    <li><g:link controller="templateAttribute" action="show" id="${a.id}">${a?.attribute?.name?.encodeAsHTML()}</g:link></li>
 </g:each>
-<li class="add">
-<g:link controller="templateAttribute" action="create" params="['template.id': templateInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute')])}</g:link>
-</li>
 </ul>
 
+<g:link controller="templateAttribute" action="create" params="['template.id': templateInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute')])}</g:link>
+
 </div>
+</br>
 
 <div class="fieldcontain ${hasErrors(bean: templateInstance, field: 'nodetype', 'error')} required">
 	<label for="nodetype">
