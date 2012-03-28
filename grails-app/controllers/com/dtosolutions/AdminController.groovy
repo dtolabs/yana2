@@ -2,26 +2,32 @@ package com.dtosolutions
 
 import java.util.Date;
 
-import javax.xml.XMLConstants
+//import javax.xml.XMLConstants
 import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
+import javax.xml.validation.Validator
+
 import org.xml.sax.SAXException
 
 class AdminController {
 
-	
     def index() { }
 	
-	def importxml() {
-		
-	}
+	def importxml() {}
 	
 	def savexml() {
 		def xml = new XmlSlurper().parse(request.getFile("yanaimport").inputStream)
 		
-		def factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-		def schema = factory.newSchema(new StreamSource(getClass().classLoader.getResourceAsStream("docs/yana.xsd")))
-		def validator = schema.newValidator()
+		//SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+		//Schema schema = factory.newSchema(new StreamSource(getClass().classLoader.getResourceAsStream("/docs/yana.xsd")))
+		//Validator validator = schema.newValidator()
+
+		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+		//Schema schema = factory.newSchema(new StreamSource(getClass().classLoader.getResourceAsStream("/docs/yana.xsd")));
+		Schema schema = factory.newSchema(new File("docs/yana.xsd"));
+		Validator validator = schema.newValidator()
+		
 		
 		Date now = new Date()
 		
@@ -50,7 +56,7 @@ class AdminController {
 				loc = Node.findByName(location.@id.toString())
 				
 				if(!loc){
-					println(loc)
+
 					Attribute att1 = Attribute.findByName('Provider Name')
 					TemplateAttribute locatt1 = TemplateAttribute.findByAttribute(att1)
 					
@@ -156,7 +162,6 @@ class AdminController {
 
 				def tav = [:]
 				template.templateAttributes.children().each{ templateAttribute ->
-					println("test: ${}")
 					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
 					TemplateAttribute ta = new TemplateAttribute()
 					ta.template = temp
