@@ -20,7 +20,7 @@
 					
 						<g:sortableColumn property="name" title="${message(code: 'node.name.label', default: 'Name')}" />
 					
-						<g:sortableColumn property="description" title="${message(code: 'node.description.label', default: 'Description')}" />
+						<g:sortableColumn property="nodetype" title="${message(code: 'node.nodetype.name.label', default: 'Nodetype')}" />
 					
 						<th><g:message code="node.template.label" default="Template" /></th>
 					
@@ -38,7 +38,7 @@
 					
 						<td><g:link action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link></td>
 					
-						<td>${fieldValue(bean: nodeInstance, field: "description")}</td>
+						<td><g:link controller="nodetype" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link></td>
 					
 						<td>${fieldValue(bean: nodeInstance, field: "template")}</td>
 					

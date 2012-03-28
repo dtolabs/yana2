@@ -21,35 +21,32 @@
     <nodetypes>
         <nodetype id="Server"/>
     </nodetypes>
-    <solutions>
-        <solution id="Test_Solution"/>
-    </solutions>
     <artifacts>
         <artifact id="Jetty"/>
     </artifacts>
     <nodes>
-        <node id="test.server.com" template="Server_Template" nodetype="Server" location="Main_Location" solution="Test_Solution"/>
+        <node id="test.server.com" template="Server_default" nodetype="Server" location="Main_Location"/>
     </nodes>
     <instances>
         <instance artifact="Jetty" node="test.server.com" softwareversion="1.0"/>
     </instances>
     <templates>
-        <template id="Server_Template" nodetype="Server">
+        <template id="Server_default" nodetype="Server">
             <templateAttributes>
-                <templateAttribute id="ta1" template="Server_Template" attribute="Friendly_Name" required="false"/>
-                <templateAttribute id="ta2" template="Server_Template" attribute="Brand" required="false"/>
-                <templateAttribute id="ta3" template="Server_Template" attribute="Model" required="false"/>
-                <templateAttribute id="ta4" template="Server_Template" attribute="Serial_Number" required="false"/>
-                <templateAttribute id="ta5" template="Server_Template" attribute="Management_IP" required="false"/>
-                <templateAttribute id="ta6" template="Server_Template" attribute="Gateway" required="false"/>
-                <templateAttribute id="ta7" template="Server_Template" attribute="Number_of_CPUs" required="false"/>
-                <templateAttribute id="ta8" template="Server_Template" attribute="RAM" required="false"/>
-                <templateAttribute id="ta9" template="Server_Template" attribute="HDD" required="false"/>
-                <templateAttribute id="ta10" template="Server_Template" attribute="Blackout_Starttime" required="false"/>
-                <templateAttribute id="ta11" template="Server_Template" attribute="Blackout_Endtime" required="false"/>
-                <templateAttribute id="ta12" template="Server_Template" attribute="OS_Name" required="false"/>
-                <templateAttribute id="ta13" template="Server_Template" attribute="OS_Family" required="false"/>
-                <templateAttribute id="ta14" template="Server_Template" attribute="Hostname" required="false"/>
+                <templateAttribute id="ta1" template="Server_default" attribute="Friendly_Name" required="false"/>
+                <templateAttribute id="ta2" template="Server_default" attribute="Brand" required="false"/>
+                <templateAttribute id="ta3" template="Server_default" attribute="Model" required="false"/>
+                <templateAttribute id="ta4" template="Server_default" attribute="Serial_Number" required="false"/>
+                <templateAttribute id="ta5" template="Server_default" attribute="Management_IP" required="false"/>
+                <templateAttribute id="ta6" template="Server_default" attribute="Gateway" required="false"/>
+                <templateAttribute id="ta7" template="Server_default" attribute="Number_of_CPUs" required="false"/>
+                <templateAttribute id="ta8" template="Server_default" attribute="RAM" required="false"/>
+                <templateAttribute id="ta9" template="Server_default" attribute="HDD" required="false"/>
+                <templateAttribute id="ta10" template="Server_default" attribute="Blackout_Starttime" required="false"/>
+                <templateAttribute id="ta11" template="Server_default" attribute="Blackout_Endtime" required="false"/>
+                <templateAttribute id="ta12" template="Server_default" attribute="OS_Name" required="false"/>
+                <templateAttribute id="ta13" template="Server_default" attribute="OS_Family" required="false"/>
+                <templateAttribute id="ta14" template="Server_default" attribute="Hostname" required="false"/>
             </templateAttributes>
             <templateValues>
                 <templateValue id="tv1" node="test.server.com" templateAttribute="ta1" value="Test_Server"/>

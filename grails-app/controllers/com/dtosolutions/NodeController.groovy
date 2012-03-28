@@ -158,7 +158,7 @@ class NodeController {
 			if(params.templateid){
 				List atts = []
 				if(params.node){
-					atts = TemplateAttribute.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.values as TV left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}");
+					atts = TemplateValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}");
 				}else{
 					atts = TemplateAttribute.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.values as TV left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
 				}

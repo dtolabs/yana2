@@ -7,7 +7,6 @@
                     <xs:element ref="locations" maxOccurs="1"/>
                     <xs:element ref="attributes"  maxOccurs="1"/>
                     <xs:element ref="nodetypes"  maxOccurs="1"/>
-                    <xs:element ref="solutions"  maxOccurs="1"/>
                     <xs:element ref="artifacts"  maxOccurs="1"/>
                     <xs:element ref="nodes"  maxOccurs="1"/>
                     <xs:element ref="instances" maxOccurs="1"/>
@@ -64,21 +63,6 @@
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='solutions'>
-            <xs:complexType>
-                <xs:sequence>
-                    <xs:element ref='solution' maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:complexType>
-        </xs:element>
-        
-        <xs:element name='solution'>
-            <xs:complexType>
-                <xs:attribute name='id' type='xs:ID' use='required'/>
-                <xs:attribute name='parent' type='xs:IDREF'/>
-            </xs:complexType>
-        </xs:element>
-        
         <xs:element name='artifacts'>
             <xs:complexType>
                 <xs:sequence>
@@ -107,7 +91,6 @@
                 <xs:attribute name='template' type='xs:IDREF' use='required'/>
                 <xs:attribute name='nodetype' type='xs:IDREF' use='required'/>
                 <xs:attribute name='location' type='xs:IDREF' use='required'/>
-                <xs:attribute name='solution' type='xs:IDREF'/>
                 <xs:attribute name='parent' type='xs:IDREF'/>
             </xs:complexType>
         </xs:element>

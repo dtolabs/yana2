@@ -10,6 +10,11 @@
   	window.onload = init;
   	function init() {
   		getNodeParents();
+  		var nodetype = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
+  		var template = ("${nodeInstance?.template?.id}") ? "${nodeInstance?.template?.id}" : $("#template").val();
+  		if(nodetype && template){
+			getAttributes();
+  	  	}
   	}
 
   	function getFormFields(){
@@ -74,7 +79,7 @@
   		var template = $("#template").val();
   	  	if(template!=null){
 			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getTemplateAttributes",{templateid:template,node:nodeajax:'true'},function(json){
+			$.getJSON("${request.contextPath}/node/getTemplateAttributes",{templateid:template,node:node,ajax:'true'},function(json){
 				if(json){
 					var div = document.getElementById("attributes");
 					div.innerHTML = '';
@@ -233,7 +238,7 @@
 					<g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${nodeInstance?.parent?.id}" class="many-to-one" noSelection="['null': '']"/>
 				</div>
 				
-
+				<div id="attributes" style="display:none;"></div>
 
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
