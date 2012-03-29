@@ -96,6 +96,7 @@ class NodeController {
 
     def update() {
         def nodeInstance = Node.get(params.id)
+		Date now = new Date()
         if (!nodeInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
             redirect(action: "list")
@@ -113,15 +114,30 @@ class NodeController {
             }
         }
 
-        nodeInstance.properties = params
-
+		nodeInstance.name = params.name
+		nodeInstance.description = params.description
+		nodeInstance.status = params.status
+		nodeInstance.importance = params.importance
+		nodeInstance.dateCreated = now
+		nodeInstance.dateModified = now
+		
         if (!nodeInstance.save(flush: true)) {
             render(view: "edit", model: [nodeInstance: nodeInstance])
             return
+        }else{
+			params.each{ key, val ->
+				if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
+					TemplateValue tval = TemplateValue.get(key[3..-1].toInteger())
+					tval.value = val
+					tval.dateCreated = now
+					tval.dateModified = now
+					tval.save(flush: true)
+				}
+			}
+			flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
+	        redirect(action: "show", id: nodeInstance.id)
         }
-
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
-        redirect(action: "show", id: nodeInstance.id)
+		render(view: "edit", model: [nodeInstance: nodeInstance])
     }
 
     def delete() {
@@ -159,9 +175,9 @@ class NodeController {
 				println("")
 				List atts = []
 				if(params.node){
-					atts = TemplateValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}");
+					atts = TemplateValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}");
 				}else{
-					atts = TemplateAttribute.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as att_id,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.values as TV left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
+					atts = TemplateAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
 				}
 				atts.each(){
 					response += [tid:it.tid,attid:it.att_id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter];

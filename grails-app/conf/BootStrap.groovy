@@ -19,18 +19,18 @@ class BootStrap {
 		Filter fOS = Filter.findByDataType('OS') ?: new Filter(dataType:'OS',regex:'^(Linux|linux|Unix|unix|Windows|windows|Mac|mac|Sun|sun|BSD|bsd)\$',dateCreated:now).save(failOnError:true)
 
 		// Server Attributes
-		Attribute att1 = Attribute.findByName('Friendly Name') ?: new Attribute(name:'Friendly Name',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att1 = Attribute.findByName('Friendly_Name') ?: new Attribute(name:'Friendly_Name',filter:fStr,dateCreated:now).save(failOnError:true)
 		Attribute att2 = Attribute.findByName('Brand') ?: new Attribute(name:'Brand',filter:fStr,dateCreated:now).save(failOnError:true)
 		Attribute att3 = Attribute.findByName('Model') ?: new Attribute(name:'Model',filter:fStr,dateCreated:now).save(failOnError:true)
-		Attribute att4 = Attribute.findByName('Management IP') ?: new Attribute(name:'Management IP',filter:fIP,dateCreated:now).save(failOnError:true)
+		Attribute att4 = Attribute.findByName('Management_IP') ?: new Attribute(name:'Management_IP',filter:fIP,dateCreated:now).save(failOnError:true)
 		Attribute att5 = Attribute.findByName('Gateway') ?: new Attribute(name:'Gateway',filter:fIP,dateCreated:now).save(failOnError:true)
-		Attribute att6 = Attribute.findByName('Number of CPUs') ?: new Attribute(name:'Number of CPUs',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att6 = Attribute.findByName('Number_of_CPUs') ?: new Attribute(name:'Number_of_CPUs',filter:fStr,dateCreated:now).save(failOnError:true)
 		Attribute att7 = Attribute.findByName('RAM') ?: new Attribute(name:'RAM',filter:fStr,dateCreated:now).save(failOnError:true)
 		Attribute att8 = Attribute.findByName('HDD') ?: new Attribute(name:'HDD',filter:fStr,dateCreated:now).save(failOnError:true)
-		Attribute att9 = Attribute.findByName('Blackout Starttime') ?: new Attribute(name:'Blackout Starttime',filter:fTime,dateCreated:now).save(failOnError:true)
-		Attribute att10 = Attribute.findByName('Blackout Endtime') ?: new Attribute(name:'Blackout Endtime',filter:fTime,dateCreated:now).save(failOnError:true)
-		Attribute att11 = Attribute.findByName('OS Name') ?: new Attribute(name:'OS Name',filter:fStr,dateCreated:now).save(failOnError:true)
-		Attribute att12 = Attribute.findByName('OS Family') ?: new Attribute(name:'OS Family',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att9 = Attribute.findByName('Blackout_Starttime') ?: new Attribute(name:'Blackout_Starttime',filter:fTime,dateCreated:now).save(failOnError:true)
+		Attribute att10 = Attribute.findByName('Blackout_Endtime') ?: new Attribute(name:'Blackout_Endtime',filter:fTime,dateCreated:now).save(failOnError:true)
+		Attribute att11 = Attribute.findByName('OS_Name') ?: new Attribute(name:'OS_Name',filter:fStr,dateCreated:now).save(failOnError:true)
+		Attribute att12 = Attribute.findByName('OS_Family') ?: new Attribute(name:'OS_Family',filter:fStr,dateCreated:now).save(failOnError:true)
 		Attribute att13 = Attribute.findByName('Hostname') ?: new Attribute(name:'Hostname',filter:fURL,dateCreated:now).save(failOnError:true)
 		
 		// Software Attributes

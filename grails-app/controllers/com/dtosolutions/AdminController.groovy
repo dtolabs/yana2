@@ -163,10 +163,13 @@ class AdminController {
 				def tav = [:]
 				template.templateAttributes.children().each{ templateAttribute ->
 					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
-					TemplateAttribute ta = new TemplateAttribute()
-					ta.template = temp
-					ta.attribute = attribute
-					ta.save(failOnError:true)
+					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(temp,attribute)
+					if(!ta){
+						ta = new TemplateAttribute()
+						ta.template = temp
+						ta.attribute = attribute
+						ta.save(failOnError:true)
+					}
 					tav.putAt("${templateAttribute.@id.toString()[2..-1]}",ta)
 				}
 				

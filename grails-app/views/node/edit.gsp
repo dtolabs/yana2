@@ -31,9 +31,9 @@
 				var select = document.getElementById("parent");
 				select.innerHTML = '';
 				var opt = document.createElement('option');
-				opt.innerHTML="Select A Value";
-				opt.setAttribute('value','NULL');
-				select.appendChild(opt)
+				opt.innerHTML="Select One";
+				opt.setAttribute('value',null);
+				select.appendChild(opt);
 				for(var i=0;i<json.length;i++){
 					var j = json[i];
 					var opt = document.createElement('option');
@@ -54,9 +54,10 @@
 					var select = document.getElementById("template");
 					select.innerHTML = '';
 					var opt = document.createElement('option');
-					opt.innerHTML="Select A Value";
-					opt.setAttribute('value','NULL');
-					select.appendChild(opt)
+					var opt = document.createElement('option');
+					opt.innerHTML="Select One";
+					opt.setAttribute('value',null);
+					select.appendChild(opt);
 					for(var i=0;i<json.length;i++){
 						var j = json[i];
 						var opt = document.createElement('option');
@@ -66,10 +67,8 @@
 					}
 				}
 			});
-			$("#template_wrapper").show();
 			$("#attributes").hide();
   		}else{
-  			$("#template_wrapper").hide();
   			$("#attributes").hide();
   	  	}
   	}
@@ -89,10 +88,10 @@
 					for(var i=0;i<json.length;i++){
 						var j = json[i];
 						var row = document.createElement("tr");
-						row.id='att'+j.attid+'_row'
+						row.id='att'+j.tid+'_row'
 						
 						var cell1 = document.createElement("td");
-						cell1.id='att'+j.attid+'_cell1'
+						cell1.id='att'+j.tid+'_cell1'
 						if(j.required){
 							cell1.innerHTML = '<b>'+j.val+' *:</b>';
 						}else{
@@ -102,27 +101,27 @@
 						row.appendChild(cell1);
 
 						var cell2 = document.createElement("td");
-						cell2.id='att'+j.attid+'_cell2'
+						cell2.id='att'+j.tid+'_cell2'
 						
 						// input hidden - attid_require
 						var require = document.createElement('input');
 						require.type='hidden';
-						require.name='att'+j.attid+'_require';
+						require.name='att'+j.tid+'_require';
 						require.value = j.required;
-						require.id='att'+j.attid+'_require';
+						require.id='att'+j.tid+'_require';
 						
 						// input hidden - attid_filter
 						var filter = document.createElement('input');
 						filter.type='hidden';
-						filter.name='att'+j.attid+'_filter';
+						filter.name='att'+j.tid+'_filter';
 						filter.value = j.filter;
-						filter.id='att'+j.attid+'_filter';
+						filter.id='att'+j.tid+'_filter';
 						
 						// input text - attid
 						var input = document.createElement('input');
 						input.type='text';
-						input.name='att'+j.attid;
-						input.id='att'+j.attid;
+						input.name='att'+j.tid;
+						input.id='att'+j.tid;
 						input.value = j.key;
 						input.size = 20;
 						input.onblur =  function () {validate(this)};
@@ -177,6 +176,8 @@
 			<g:form method="post" >
 				<g:hiddenField name="id" value="${nodeInstance?.id}" />
 				<g:hiddenField name="version" value="${nodeInstance?.version}" />
+				<g:hiddenField name="nodetype" value="${nodeInstance?.nodetype?.id}" />
+				<g:hiddenField name="template" value="${nodeInstance?.template?.id}" />
 
 			<table class="scaffold" border="0" width="500px" border="0">
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'name', 'error')} required">
@@ -189,19 +190,14 @@
 					<td><g:textField name="description" value="${nodeInstance?.description}"/></td>
 				</tr>
 				
-				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'nodetype', 'error')} required">
+				<tr>
 					<td style="font-weight:bold;"><label for="nodetype"><g:message code="node.nodetype.label" default="Nodetype" />*</label>: </td>
-					<td><g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one" onchange="getFormFields();"/></td>
+					<td>${nodeInstance?.nodetype?.name}</td>
 				</tr>
 	
-				<tr id="template_wrapper" style="display:none;" class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'template', 'error')} required">
+				<tr>
 					<td style="font-weight:bold;"><label for="template"><g:message code="node.template.label" default="Template" />*</label>: </td>
-					<td><g:select id="template" name="template.id" from="${com.dtosolutions.Template.list()}" optionKey="id" required="" value="${nodeInstance?.template?.id}" class="many-to-one" onchange="getAttributes();"/></td>
-				</tr>
-			
-				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
-					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${nodeInstance?.status?.name()}"/></td>
+					<td>${nodeInstance?.template?.templateName}</td>
 				</tr>
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
