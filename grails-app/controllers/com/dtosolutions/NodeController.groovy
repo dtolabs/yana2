@@ -52,6 +52,7 @@ class NodeController {
 			nodeInstance.template = Template.get(params.template.id.toLong())
 			nodeInstance.status = params.status
 			nodeInstance.importance = params.importance
+			nodeInstance.tags = params.tags
 			nodeInstance.nodetype = NodeType.get(params.nodetype.id.toLong())
 			nodeInstance.dateCreated = new Date()
 			nodeInstance.dateModified = new Date()
@@ -124,6 +125,7 @@ class NodeController {
 			nodeInstance.description = params.description
 			nodeInstance.status = params.status
 			nodeInstance.importance = params.importance
+			nodeInstance.tags = params.tags
 			nodeInstance.dateCreated = now
 			nodeInstance.dateModified = now
 			
