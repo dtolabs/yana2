@@ -1,8 +1,7 @@
 package com.dtosolutions
 
 class Template{
-    static belongsTo = [NodeType,Node ]
-	static hasMany = [attributes:TemplateAttribute]
+	static hasMany = [attributes:TemplateAttribute,nodes:Node]
 
 	String templateName
 	NodeType nodetype
