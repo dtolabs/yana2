@@ -194,12 +194,12 @@
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
 					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${params?.status}"/></td>
+					<td><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${params?.status}" noSelection="['null': 'Select One']"/></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'importance', 'error')} required">
 					<td style="font-weight:bold;"><label for="importance"><g:message code="node.importance.label" default="Importance" /><span class="required-indicator">*</span></label>: </td>
-					<td><g:select name="importance" from="${com.dtosolutions.Importance?.values()}" keys="${com.dtosolutions.Importance.values()*.name()}" required="" value="${params?.importance}"/></td>
+					<td><g:select name="importance" from="${com.dtosolutions.Importance?.values()}" keys="${com.dtosolutions.Importance.values()*.name()}" required="" value="${params?.importance}" noSelection="['null': 'Select One']"/></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
