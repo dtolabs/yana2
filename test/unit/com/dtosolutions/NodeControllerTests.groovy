@@ -119,11 +119,6 @@ class NodeControllerTests {
     void testUpdate() {
         controller.update()
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/node/list'
-
-        response.reset()
-
 
         populateValidParams(params)
         def node = new Node(params)

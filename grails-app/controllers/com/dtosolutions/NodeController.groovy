@@ -45,7 +45,7 @@ class NodeController {
     }
 
     def save() {
-		if((params.name.trim() && params.name!='null') && (params.template.id.trim() && params.template.id!='null') && (params.status.trim() && params.status!='null') && (params.importance.trim() && params.importance!='null') && (params.nodetype.id.trim() && params.nodetype.id!='null')){
+		if((params.name && params.name!='null') && (params.template.id && params.template.id!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype.id && params.nodetype.id!='null')){
 			Node nodeInstance  = new Node()
 			nodeInstance.name = params.name
 			nodeInstance.description = params.description
@@ -100,7 +100,7 @@ class NodeController {
     }
 
     def update() {
-		if((params.name.trim() && params.name!='null') && (params.template.id.trim() && params.template.id!='null') && (params.status.trim() && params.status!='null') && (params.importance.trim() && params.importance!='null') && (params.nodetype.id.trim() && params.nodetype.id!='null')){
+		if((params.name && params.name!='null') && (params.template.id && params.template.id!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype.id && params.nodetype.id!='null')){
 	        def nodeInstance = Node.get(params.id)
 			Date now = new Date()
 	        if (!nodeInstance) {
