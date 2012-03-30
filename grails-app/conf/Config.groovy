@@ -1,16 +1,4 @@
 
-/*
-def deps = [
-	"mysql-connector-java-5.1.6-bin.jar"
-]
-
-grails.war.dependencies = {
-	fileset(dir: "libs") {
-		deps.each { pattern -> include(name: pattern) }
-	}
-}
-*/
-
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -60,6 +48,7 @@ environments {
 		
 		// log4j configuration - log error and above to rolling log file
 		log4j = {
+			rootLogger="error,stdout"
 			appenders {
 				'null' name:'stacktrace'
 				rollingFile name:'file',
@@ -70,6 +59,7 @@ environments {
 			root {
 				error 'file'
 				additivity = true
+				
 			}
 		}
 		// TODO: grails.serverURL = "http://www.changeme.com""
@@ -109,7 +99,7 @@ environments {
 				'null' name:'stacktrace'
 			}
 			root {
-				info 'stdout'
+				error 'stdout'
 				additivity = true
 			}
 		}
@@ -128,7 +118,7 @@ environments {
 				'null' name:'stacktrace'
 			}
 			root {
-				info 'stdout'
+				error 'stdout'
 				additivity = true
 			}
 		}
