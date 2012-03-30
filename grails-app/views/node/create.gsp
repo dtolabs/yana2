@@ -174,42 +174,42 @@
 			<table class="scaffold" border="0" width="500px" border="0">
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'name', 'error')} required">
 					<td style="font-weight:bold;" width="150"><label for="name"><g:message code="node.name.label" default="Name" />*</label>: </td>
-					<td><g:textField name="name" required="" value="${nodeInstance?.name}"/></td>
+					<td><g:textField name="name" required="" value="${params?.name}"/></td>
 				</tr>
 				
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'description', 'error')} ">
 					<td style="font-weight:bold;"><label for="description"><g:message code="node.description.label" default="Description" /></label>: </td>
-					<td><g:textField name="description" value="${nodeInstance?.description}"/></td>
+					<td><g:textField name="description" value="${params?.description}"/></td>
 				</tr>
 				
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'nodetype', 'error')} required">
 					<td style="font-weight:bold;"><label for="nodetype"><g:message code="node.nodetype.label" default="Nodetype" />*</label>: </td>
-					<td><g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
+					<td><g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype.id}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
 				</tr>
 	
 				<tr id="template_wrapper" style="display:none;" class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'template', 'error')} required">
 					<td style="font-weight:bold;"><label for="template"><g:message code="node.template.label" default="Template" />*</label>: </td>
-					<td><g:select id="template" name="template.id" from="${com.dtosolutions.Template.list()}" optionKey="id" required="" value="${nodeInstance?.template?.id}" class="many-to-one" onchange="getAttributes();"  noSelection="['null': 'Select One']"/></td>
+					<td><g:select id="template" name="template.id" from="${com.dtosolutions.Template.list()}" optionKey="id" required="" value="${params?.template.id}" class="many-to-one" onchange="getAttributes();"  noSelection="['null': 'Select One']"/></td>
 				</tr>
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
 					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${nodeInstance?.status?.name()}"/></td>
+					<td><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${params?.status}"/></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'importance', 'error')} required">
 					<td style="font-weight:bold;"><label for="importance"><g:message code="node.importance.label" default="Importance" /><span class="required-indicator">*</span></label>: </td>
-					<td><g:select name="importance" from="${com.dtosolutions.Importance?.values()}" keys="${com.dtosolutions.Importance.values()*.name()}" required="" value="${nodeInstance?.importance?.name()}"/></td>
+					<td><g:select name="importance" from="${com.dtosolutions.Importance?.values()}" keys="${com.dtosolutions.Importance.values()*.name()}" required="" value="${params?.importance}"/></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
 					<td style="font-weight:bold;"><label for="tags"><g:message code="node.tags.label" default="Tags" /></label>: </td>
-					<td><g:textField name="tags" value="${nodeInstance?.tags}"/></td>
+					<td><g:textField name="tags" value="${params?.tags}"/></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'parent', 'error')} ">
 					<td style="font-weight:bold;"><label for="parent"><g:message code="node.parent.label" default="Parent" /></label>: </td>
-					<td><g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${nodeInstance?.parent?.id}" class="many-to-one" noSelection="['null': '']"/></td>
+					<td><g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${params?.parent.id}" class="many-to-one" noSelection="['null': '']"/></td>
 				</tr>
 			</table>
 		

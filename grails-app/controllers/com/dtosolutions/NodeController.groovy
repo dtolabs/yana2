@@ -45,31 +45,36 @@ class NodeController {
     }
 
     def save() {
-		Node nodeInstance  = new Node()
-		nodeInstance.name = params.name
-		nodeInstance.description = params.description
-		nodeInstance.template = Template.get(params.template.id.toLong())
-		nodeInstance.status = params.status
-		nodeInstance.importance = params.importance
-		nodeInstance.nodetype = NodeType.get(params.nodetype.id.toLong())
-		nodeInstance.dateCreated = new Date()
-		nodeInstance.dateModified = new Date()
-		//n.save(failOnError:true)
-					
-        if (!nodeInstance.save(flush: true)) {
-            render(view: "create", model: [nodeInstance: nodeInstance])
-            return
-        }else{
-			Date now = new Date()
-			params.each{ key, val ->
-				if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
-					TemplateAttribute att = TemplateAttribute.get(key[3..-1].toInteger())
-				   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
+		if((params.name.trim() && params.name!='null') && (params.template.id.trim() && params.template.id!='null') && (params.status.trim() && params.status!='null') && (params.importance.trim() && params.importance!='null') && (params.nodetype.id.trim() && params.nodetype.id!='null')){
+			Node nodeInstance  = new Node()
+			nodeInstance.name = params.name
+			nodeInstance.description = params.description
+			nodeInstance.template = Template.get(params.template.id.toLong())
+			nodeInstance.status = params.status
+			nodeInstance.importance = params.importance
+			nodeInstance.nodetype = NodeType.get(params.nodetype.id.toLong())
+			nodeInstance.dateCreated = new Date()
+			nodeInstance.dateModified = new Date()
+			//n.save(failOnError:true)
+						
+	        if (!nodeInstance.save(flush: true)) {
+	            render(view: "create", model: [nodeInstance: nodeInstance])
+	            return
+	        }else{
+				Date now = new Date()
+				params.each{ key, val ->
+					if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
+						TemplateAttribute att = TemplateAttribute.get(key[3..-1].toInteger())
+					   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
+					}
 				}
-			}
-			flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
-	        redirect(action: "show", id: nodeInstance.id)
-        }
+				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
+		        redirect(action: "show", id: nodeInstance.id)
+	        }
+		}else{
+			flash.message = 'Required fields not filled out. Please try again'
+			render(view: "create", model: [params: params])
+		}
     }
 
     def show() {
@@ -95,49 +100,54 @@ class NodeController {
     }
 
     def update() {
-        def nodeInstance = Node.get(params.id)
-		Date now = new Date()
-        if (!nodeInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
-            redirect(action: "list")
-            return
-        }
-
-        if (params.version) {
-            def version = params.version.toLong()
-            if (nodeInstance.version > version) {
-                nodeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'node.label', default: 'Node')] as Object[],
-                          "Another user has updated this Node while you were editing")
-                render(view: "edit", model: [nodeInstance: nodeInstance])
-                return
-            }
-        }
-
-		nodeInstance.name = params.name
-		nodeInstance.description = params.description
-		nodeInstance.status = params.status
-		nodeInstance.importance = params.importance
-		nodeInstance.dateCreated = now
-		nodeInstance.dateModified = now
-		
-        if (!nodeInstance.save(flush: true)) {
-            render(view: "edit", model: [nodeInstance: nodeInstance])
-            return
-        }else{
-			params.each{ key, val ->
-				if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
-					TemplateValue tval = TemplateValue.get(key[3..-1].toInteger())
-					tval.value = val
-					tval.dateCreated = now
-					tval.dateModified = now
-					tval.save(flush: true)
+		if((params.name.trim() && params.name!='null') && (params.template.id.trim() && params.template.id!='null') && (params.status.trim() && params.status!='null') && (params.importance.trim() && params.importance!='null') && (params.nodetype.id.trim() && params.nodetype.id!='null')){
+	        def nodeInstance = Node.get(params.id)
+			Date now = new Date()
+	        if (!nodeInstance) {
+	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
+	            redirect(action: "list")
+	            return
+	        }
+	
+	        if (params.version) {
+	            def version = params.version.toLong()
+	            if (nodeInstance.version > version) {
+	                nodeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+	                          [message(code: 'node.label', default: 'Node')] as Object[],
+	                          "Another user has updated this Node while you were editing")
+	                render(view: "edit", model: [nodeInstance: nodeInstance])
+	                return
+	            }
+	        }
+	
+			nodeInstance.name = params.name
+			nodeInstance.description = params.description
+			nodeInstance.status = params.status
+			nodeInstance.importance = params.importance
+			nodeInstance.dateCreated = now
+			nodeInstance.dateModified = now
+			
+	        if (!nodeInstance.save(flush: true)) {
+	            render(view: "edit", model: [nodeInstance: nodeInstance])
+	            return
+	        }else{
+				params.each{ key, val ->
+					if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
+						TemplateValue tval = TemplateValue.get(key[3..-1].toInteger())
+						tval.value = val
+						tval.dateCreated = now
+						tval.dateModified = now
+						tval.save(flush: true)
+					}
 				}
-			}
-			flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
-	        redirect(action: "show", id: nodeInstance.id)
-        }
-		render(view: "edit", model: [nodeInstance: nodeInstance])
+				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
+		        redirect(action: "show", id: nodeInstance.id)
+	        }
+			render(view: "edit", model: [nodeInstance: nodeInstance])
+		}else{
+		flash.message = 'Required fields not filled out. Please try again'
+		render(view: "create", model: [params: params])
+	}
     }
 
     def delete() {
@@ -171,7 +181,7 @@ class NodeController {
 	
 	def getTemplateAttributes = {
 			def response = []
-			println(params)
+
 			if(params.templateid){
 				println("")
 				List atts = []
