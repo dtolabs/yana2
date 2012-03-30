@@ -217,7 +217,7 @@
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'parent', 'error')} ">
 					<td style="font-weight:bold;"><label for="parent"><g:message code="node.parent.label" default="Parent" /></label>: </td>
-					<td><g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${params?.parent.id}" class="many-to-one" noSelection="['null': '']"/></td>
+					<td><g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${params?.parent?.id}" class="many-to-one" noSelection="['null': '']"/></td>
 				</tr>
 			</table>
 				
