@@ -100,7 +100,7 @@ class NodeController {
     }
 
     def update() {
-		if((params.name && params.name!='null') && (params.template.id && params.template.id!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype.id && params.nodetype.id!='null')){
+		if((params.name && params.name!='null') && (params.template && params.template!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
 	        def nodeInstance = Node.get(params.id)
 			Date now = new Date()
 	        if (!nodeInstance) {
