@@ -171,6 +171,7 @@ class NodeController {
 	
 	def getTemplateAttributes = {
 			def response = []
+			println(params)
 			if(params.templateid){
 				println("")
 				List atts = []
@@ -180,7 +181,7 @@ class NodeController {
 					atts = TemplateAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
 				}
 				atts.each(){
-					response += [tid:it.tid,attid:it.att_id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter];
+					response += [tid:it.tid,id:it.id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter];
 				}
 			}
 
