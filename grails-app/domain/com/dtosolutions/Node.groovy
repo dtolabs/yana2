@@ -3,8 +3,7 @@ package com.dtosolutions
 class Node {
 
     static searchable = true
-	static hasMany = [instances:Instance,templateValues:TemplateValue,nodes:Node]
-	static belongsTo = [Solution]
+	static hasMany = [templateValues:TemplateValue,nodes:Node]
 	
     String name
     String description
@@ -12,22 +11,18 @@ class Node {
 	Status status
 	Importance importance
 	String tags
-	Location location
-	Solution solution
 	NodeType nodetype
     Date dateCreated
     Date dateModified = new Date()
 	Node parent
 
     static constraints = {
-        name(unique:true, blank:false)
+        name(blank:false)
         description(blank:true, nullable:true)
 		template(nullable:false)
 		status(nullable:false)
 		importance(nullable:false)
         tags(nullable:true)
-		location(nullable:false)
-		solution(nullable:true)
 		nodetype(nullable:false)
 		parent(nullable:true)
     }

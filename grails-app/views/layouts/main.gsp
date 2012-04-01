@@ -3,7 +3,7 @@
   <head>
     <title>YANA <g:layoutTitle default="Welcome" /></title>
     <link rel="stylesheet" href="${resource(dir:'css',file:'yana.css')}" />
-    <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
+    <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}?v=2" />
     <g:javascript library="jquery" plugin="jquery"/>
    	<r:require module="jquery-ui"/>
 

@@ -1,57 +1,27 @@
 
-import org.codehaus.groovy.grails.orm.hibernate.cfg.GrailsAnnotationConfiguration
 dataSource {
-	configClass = GrailsAnnotationConfiguration.class
-	   pooled = true
-	   driverClassName = "com.mysql.jdbc.Driver"
-	   dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
-	   //    properties {
-	   //        minEvictableIdleTimeMillis = 1000 * 60 * 30
-	   //        timeBetweenEvictionRunsMillis = 1000 * 60 * 30
-	   //        numTestsPerEvictionRun = 3
-	   //        testOnBorrow = false
-	   //        testWhileIdle = true
-	   //        testOnReturn =  false
-	   //        validationQuery = 'SELECT 1 FROM DUAL'
-	   //    }
-	   // logSql = true
+	driverClassName = "org.h2.Driver"
+    username = "sa"
+    password = ""
+	pooled = false
 }
-hibernate {
-    cache.use_second_level_cache=true
-    cache.use_query_cache=true
-    cache.provider_class='net.sf.ehcache.hibernate.EhCacheProvider'
-}
-// environment specific settings
 environments {
-    development {
-        dataSource {
-            dbCreate="update"
-            url = "jdbc:mysql://localhost/yana3"
-            username = 'yana'
-            password='1234'
-        }
-    }
-    test {
-        dataSource {
-            url = "jdbc:mysql://localhost/yana3"
-            username = 'yana'
-            password='1234'
-        }
-    }
-	staging {
+	development {
 		dataSource {
-			url = "jdbc:mysql://localhost/yana3"
-			username = 'yana'
-			password='1234'
+			dbCreate = "update"
+			url = "jdbc:h2:file:./db/devDb"
+		}
+	}
+	test {
+		dataSource {
+			dbCreate = "update"
+			url = "jdbc:h2:file:./db/testDb"
 		}
 	}
 	production {
 		dataSource {
-			pooled = false
 			dbCreate = "update"
-			jndiName = "jdbc/mydatasource"
+			url = "jdbc:h2:file:./db/prodDb"
 		}
 	}
 }
-
-

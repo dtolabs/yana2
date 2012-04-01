@@ -20,53 +20,18 @@
 
 						<div id="smoothmenu" class="ddsmoothmenu">
 						<ul>
-						<li><a href="${grailsApplication.config.grails.serverURL}/">Configuration</a>
+						<li><g:link controller="node" action="list">Nodes</g:link>
 						  <ul>
-	                    	<li><g:link controller="solution" action="list">Solutions</g:link>
-							    <ul>
-							    <li><g:link controller="solution" action="create">Create</g:link></li>
-							    <li><g:link controller="solution" action="edit">Edit</g:link></li>
-							    </ul>
-							</li>
-	                    	<li><g:link controller="location" action="list">Locations</g:link>
-							    <ul>
-							    <li><g:link controller="location" action="create">Create</g:link></li>
-							    <li><g:link controller="location" action="edit">Edit</g:link></li>
-							    </ul>
-							</li>
-	                      	<li><g:link controller="node" action="list">Nodes</g:link>
-							    <ul>
-							    <li><g:link controller="node" action="create">Create</g:link></li>
-							    <li><g:link controller="node" action="edit">Edit</g:link></li>
-							    </ul>
-							</li>
-	                      	<li><g:link controller="nodetype" action="list">Nodetypes</g:link>
-							    <ul>
-							    <li><g:link controller="nodetype" action="create">Create</g:link></li>
-							    <li><g:link controller="nodetype" action="edit">Edit</g:link></li>
-							    </ul>
-							</li>
-	                      	<li><g:link controller="artifact" action="list">Artifacts</g:link>
-							    <ul>
-							    <li><g:link controller="artifact" action="create">Create</g:link></li>
-							    <li><g:link controller="artifact" action="edit">Edit</g:link></li>
-							    </ul>
-							</li>
-	                      	<li><g:link controller="instance" action="list">Instances</g:link>
-							    <ul>
-							    <li><g:link controller="instance" action="create">Create</g:link></li>
-							    <li><g:link controller="instance" action="edit">Edit</g:link></li>
-							    </ul>
-							</li>
-	                      	<li><g:link controller="template" action="list">Templates</g:link>
-							    <ul>
-							    <li><g:link controller="template" action="create">Create</g:link></li>
-							    <li><g:link controller="template" action="edit">Edit</g:link></li>
-							    </ul>
-							</li>
+						  	<li><g:link controller="node" action="list">List</g:link></li>
+							<li><g:link controller="node" action="create">Create</g:link></li>
 						  </ul>
 						</li>
-						<li><a href="${grailsApplication.config.grails.serverURL}/account">Account</a></li>
+                      	<li><g:link controller="nodeType" action="list">Types</g:link>
+						    <ul>
+						    <li><g:link controller="nodeType" action="list">List</g:link></li>
+						    <li><g:link controller="nodeType" action="create">Create</g:link></li>
+						    </ul>
+						</li>
 						<li><a href="${grailsApplication.config.grails.serverURL}/admin">Admin</a>
 						  <ul>
 						  <li><g:link controller="admin" action="importxml">Import Resources</g:link></li>

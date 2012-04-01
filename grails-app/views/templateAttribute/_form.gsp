@@ -26,20 +26,3 @@
 	<g:checkBox name="required" value="${templateAttributeInstance?.required}" />
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: templateAttributeInstance, field: 'values', 'error')} ">
-	<label for="values">
-		<g:message code="templateAttribute.values.label" default="Values" />
-		
-	</label>
-	
-<ul class="one-to-many">
-<g:each in="${templateAttributeInstance?.values?}" var="v">
-    <li><g:link controller="templateValue" action="show" id="${v.id}">${v?.encodeAsHTML()}</g:link></li>
-</g:each>
-<li class="add">
-<g:link controller="templateValue" action="create" params="['templateAttribute.id': templateAttributeInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateValue.label', default: 'TemplateValue')])}</g:link>
-</li>
-</ul>
-
-</div>
-

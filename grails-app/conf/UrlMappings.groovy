@@ -8,19 +8,6 @@ class UrlMappings {
             }
         }
 		
-        // rundeck api
-        "/rundeckapi/$action"{
-			constraints {
-				controller = "rundeck"
-				parseRequest = true
-				switch(action){
-					case 'getNodes':
-						action = [ POST: "getNodesAsXML" ]
-						break;
-				}
-			}
-        }
-
         "/"(view: "/index")
         "500"(view:'/error')
     }

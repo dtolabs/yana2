@@ -1,16 +1,4 @@
 
-import grails.plugins.springsecurity.SecurityConfigType
-
-def deps = [
-	"mysql-connector-java-5.1.6-bin.jar"
-]
-
-grails.war.dependencies = {
-	fileset(dir: "libs") {
-		deps.each { pattern -> include(name: pattern) }
-	}
-}
-
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -55,11 +43,12 @@ grails.exceptionresolver.params.exclude = ['password']
 // set per-environment serverURL stem for creating absolute links
 environments {
 	production {
-		grails.plugins.springsecurity.portMapper.httpPort = 80
-		grails.plugins.springsecurity.portMapper.httpsPort = 443
+		//grails.plugins.springsecurity.portMapper.httpPort = 80
+		//grails.plugins.springsecurity.portMapper.httpsPort = 443
 		
 		// log4j configuration - log error and above to rolling log file
 		log4j = {
+			rootLogger="error,stdout"
 			appenders {
 				'null' name:'stacktrace'
 				rollingFile name:'file',
@@ -70,13 +59,14 @@ environments {
 			root {
 				error 'file'
 				additivity = true
+				
 			}
 		}
 		// TODO: grails.serverURL = "http://www.changeme.com""
 	}
 	staging {
-		grails.plugins.springsecurity.portMapper.httpPort = 80
-		grails.plugins.springsecurity.portMapper.httpsPort = 443
+		//grails.plugins.springsecurity.portMapper.httpPort = 80
+		//grails.plugins.springsecurity.portMapper.httpsPort = 443
 		
 		grails.app.context = "/"
 		
@@ -97,8 +87,8 @@ environments {
 		// TODO: grails.serverURL = "http://www.changeme.com"
 	}
 	development {
-		grails.plugins.springsecurity.portMapper.httpPort = 8080
-		grails.plugins.springsecurity.portMapper.httpsPort = 8443
+		//grails.plugins.springsecurity.portMapper.httpPort = 8080
+		//grails.plugins.springsecurity.portMapper.httpsPort = 8443
 		
 		grails.resources.processing.enabled = false
 		grails.app.context = "/"
@@ -109,15 +99,15 @@ environments {
 				'null' name:'stacktrace'
 			}
 			root {
-				info 'stdout'
+				error 'stdout'
 				additivity = true
 			}
 		}
 		grails.serverURL = "http://localhost:8080"
 	}
 	test {
-		grails.plugins.springsecurity.portMapper.httpPort = 80
-		grails.plugins.springsecurity.portMapper.httpsPort = 443
+		//grails.plugins.springsecurity.portMapper.httpPort = 80
+		//grails.plugins.springsecurity.portMapper.httpsPort = 443
 		
 		grails.resources.processing.enabled = false
 		grails.app.context = "/"
@@ -128,7 +118,7 @@ environments {
 				'null' name:'stacktrace'
 			}
 			root {
-				info 'stdout'
+				error 'stdout'
 				additivity = true
 			}
 		}
@@ -138,25 +128,3 @@ environments {
 
 // jquery
 grails.views.javascript.library="jquery"
-
-// Added by the Spring Security Core plugin:
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.dtosolutions.SecUser'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.dtosolutions.SecUserSecRole'
-grails.plugins.springsecurity.authority.className = 'com.dtosolutions.SecRole'
-
-grails.plugins.springsecurity.secureChannel.definition = [
-	'/common/**':				'ANY_CHANNEL',
-	'/layouts/**':				'ANY_CHANNEL',
-	'/login/**':				'REQUIRES_SECURE_CHANNEL',
-	'/register/**':				'REQUIRES_SECURE_CHANNEL',
-	'/test/**':					'REQUIRES_SECURE_CHANNEL',
-	'/images/**':				'ANY_CHANNEL',
-	'/css/**':					'ANY_CHANNEL',
-	'/xml/**':					'ANY_CHANNEL',
-	'/logout/**':				'ANY_CHANNEL',
-	'/user/**':					'REQUIRES_SECURE_CHANNEL',
-	'/role/**':					'REQUIRES_SECURE_CHANNEL',
-	'/registrationCode/**':		'REQUIRES_SECURE_CHANNEL',
-	'/securityInfo/**':			'REQUIRES_SECURE_CHANNEL',
-	'/admin/**':				'REQUIRES_SECURE_CHANNEL',
- ]
