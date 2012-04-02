@@ -1,7 +1,7 @@
 package com.dtosolutions
 
 class Template{
-	static hasMany = [attributes:TemplateAttribute,nodes:Node]
+	//static hasMany = [attributes:TemplateAttribute,nodes:Node]
 
 	String templateName
 	NodeType nodetype

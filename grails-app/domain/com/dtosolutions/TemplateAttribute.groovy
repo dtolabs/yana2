@@ -5,7 +5,8 @@ class TemplateAttribute{
 	static hasMany = [values:TemplateValue]
 
 	Attribute attribute
-	Template template
+	//Template template
+	NodeType template
 	Boolean required = false
 	
     static constraints = {

@@ -22,8 +22,6 @@
 					
 						<g:sortableColumn property="nodetype" title="${message(code: 'node.nodetype.name.label', default: 'Nodetype')}" />
 					
-						<th><g:message code="node.template.label" default="Template" /></th>
-					
 						<g:sortableColumn property="status" title="${message(code: 'node.status.label', default: 'Status')}" />
 					
 						<g:sortableColumn property="importance" title="${message(code: 'node.importance.label', default: 'Importance')}" />
@@ -39,8 +37,6 @@
 						<td><g:link action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link></td>
 					
 						<td><g:link controller="nodetype" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link></td>
-					
-						<td>${fieldValue(bean: nodeInstance, field: "template")}</td>
 					
 						<td>${fieldValue(bean: nodeInstance, field: "status")}</td>
 					

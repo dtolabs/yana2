@@ -24,8 +24,8 @@ class TemplateAttributeControllerTests {
 	  params["id"] = 1
 	  params["version"] = 1
       params["attribute"] = Attribute.get(1)
-	  params["template"] = Template.get(1)
-	  params["reuired"] = 'false'
+	  params["template"] = NodeType.get(1)
+	  params["required"] = 'false'
     }
 
     void testIndex() {
