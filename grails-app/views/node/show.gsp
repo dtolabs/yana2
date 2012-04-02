@@ -73,6 +73,7 @@
 			<g:if test="${nodeInstance?.nodes}">
 			<tr>
 				<td colspan=2>
+					<b>Node Children</b>
 					<ul>
 					<g:each in="${nodeInstance.nodes}" var="n">
 					<li><span class="property-value" aria-labelledby="nodes-label"><g:link controller="node" action="show" id="${n.id}">${n?.encodeAsHTML()}</g:link></span></li>

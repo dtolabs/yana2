@@ -173,7 +173,7 @@ class NodeController {
 	def getNodeParents = {
 		def response = []
 		if(params.id){
-			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N where N.nodetype.id=${params.id}");
+			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N");
 			atts.each(){
 				response += [id:it.id,name:it.name];
 			}

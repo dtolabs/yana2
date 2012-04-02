@@ -34,52 +34,8 @@ class AdminController {
 		try{
 			// attempt to validate first
 			validator.validate(new StreamSource(request.getFile("yanaimport").inputStream))
-				
-			xml.locations.children().each{ location ->
-				//get dependencies first
-				Template locTemp = Template.findByTemplateName('Location_default')
-				NodeType locType = NodeType.findByName('Location')
-				Node loc = Node.findByName(location.@id.toString())
-				if(!loc){
-					Node n = new Node()
-					n.name = location.@id
-					n.template = locTemp
-					n.status = Status.IMP
-					n.importance = Importance.MED
-					n.nodetype = locType
-					n.dateCreated = new Date()
-					n.dateModified = new Date()
-					n.save(failOnError:true)
-
-				}
-
-				loc = Node.findByName(location.@id.toString())
-				
-				if(!loc){
-
-					Attribute att1 = Attribute.findByName('Provider Name')
-					TemplateAttribute locatt1 = TemplateAttribute.findByAttribute(att1)
-					
-					Attribute att2 = Attribute.findByName('City')
-					TemplateAttribute locatt2 = TemplateAttribute.findByAttribute(att2)
-					
-					Attribute att3 = Attribute.findByName('State/Province')
-					TemplateAttribute locatt3 = TemplateAttribute.findByAttribute(att3)
-					
-					Attribute att4 = Attribute.findByName('Country')
-					TemplateAttribute locatt4 = TemplateAttribute.findByAttribute(att4)
-					
-					Attribute att5 = Attribute.findByName('Postal Code')
-					TemplateAttribute locatt5 = TemplateAttribute.findByAttribute(att5)
-					
-					new TemplateValue(node:loc,templateattribute:locatt1,value:location.@provider.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
-					new TemplateValue(node:loc,templateattribute:locatt2,value:location.@city.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
-					new TemplateValue(node:loc,templateattribute:locatt3,value:location.@state.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
-					new TemplateValue(node:loc,templateattribute:locatt4,value:location.@country.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
-					new TemplateValue(node:loc,templateattribute:locatt5,value:location.@zip.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
-				}
-			}
 			
+			// parse attributes
 			xml.attributes.children().each{ attribute ->
 				Attribute att = Attribute.findByName(attribute.@id.toString())
 				if(!att){
@@ -94,7 +50,7 @@ class AdminController {
 					att.save(failOnError:true)
 				}
 			}
-			
+		
 			xml.nodetypes.children().each{ nodetype ->
 				NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 				if(!ntype){
@@ -103,36 +59,11 @@ class AdminController {
 					nt.dateCreated = new Date()
 					nt.dateModified = new Date()
 					nt.save(failOnError:true)
-				}
-			}
-
-			
-			xml.artifacts.children().each{ artifact ->
-				//get dependencies first
-				Template softTemp = Template.findByTemplateName('Software_default')
-				NodeType softType = NodeType.findByName('Software')
-				
-				Node n1 = new Node()
-				n1.name = artifact.@id
-				n1.template = softTemp
-				n1.status = Status.IMP
-				n1.importance = Importance.MED
-				n1.nodetype = softType
-				n1.dateCreated = new Date()
-				n1.dateModified = new Date()
-				n1.save(failOnError:true)
-				//Node soft = Node.findByName(artifact.@id.toString()) ?: new Node(name:artifact.@id,template:softTemp,status:Status.IMP,importance:Importance.MED,nodetype:softType).save(failOnError:true)
-			}
-			
-			// initial creation of templates before creation of nodes
-			xml.templates.children().each{ template ->
-				Template tmp = Template.findByTemplateName(template.@id.toString())
-				if(!tmp){
-					NodeType nodetype = NodeType.findByName(template.@nodetype.toString())
 					
+					ntype = NodeType.findByName(nodetype.@id.toString())
 					Template temp = new Template()
-					temp.templateName = template.@id
-					temp.nodetype = nodetype
+					temp.templateName = nodetype.@id
+					temp.nodetype = ntype
 					temp.save(failOnError:true)
 				}
 			}
@@ -141,7 +72,7 @@ class AdminController {
 				Node nd = Node.findByName(node.@id.toString())
 				if(!nd){
 					// get dependencies
-					Template template = Template.findByTemplateName(node.@template.toString())
+					Template template = Template.findByTemplateName(node.@nodetype.toString())
 					NodeType nodetype = NodeType.findByName(node.@nodetype.toString())
 					
 					nd = new Node()
@@ -156,12 +87,12 @@ class AdminController {
 				}
 			}
 			
-			xml.templates.children().each{ template ->
+			xml.nodetypes.children().each{ nodetype ->
 				//get dependencies
-				Template temp = Template.findByTemplateName(template.@id.toString())
+				Template temp = Template.findByTemplateName(nodetype.@id.toString())
 
 				def tav = [:]
-				template.templateAttributes.children().each{ templateAttribute ->
+				nodetype.templateAttributes.children().each{ templateAttribute ->
 					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
 					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(temp,attribute)
 					if(!ta){
@@ -173,7 +104,7 @@ class AdminController {
 					tav.putAt("${templateAttribute.@id.toString()[2..-1]}",ta)
 				}
 				
-				template.templateValues.children().each{ templateValue ->
+				nodetype.templateValues.children().each{ templateValue ->
 					Node node = Node.findByName(templateValue.@node.toString())
 					TemplateValue tv = new TemplateValue()
 					tv.node = node
@@ -185,27 +116,13 @@ class AdminController {
 				}
 			}
 			
-			xml.instances.children().each{ instance ->
+			xml.nodechildren.children().each{ nodechild ->
 				// get dependencies
+				Node parent = Node.findByName(nodechild.@parent.toString())
+				Node child = Node.findByName(nodechild.@child.toString())
 
-				Node node = Node.findByName(instance.@artifact.toString())
-				//Node node = Node.findByName(instance.@node.toString())
-				
-				Attribute vers = Attribute.findByName("Version")
-				TemplateAttribute ta1 = new TemplateAttribute()
-				ta1.template = node.template
-				ta1.attribute = vers
-				ta1.save(failOnError:true);
-				
-				new TemplateValue(node:node,templateattribute:ta1,value:instance.@softwareversion.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
-				
-				Attribute license = Attribute.findByName("License")
-				TemplateAttribute ta2 = new TemplateAttribute()
-				ta2.template = node.template
-				ta2.attribute = license
-				ta2.save(failOnError:true);
-				
-				new TemplateValue(node:node,templateattribute:ta2,value:instance.@license.toString(),dateCreated:now,dateModified:now).save(failOnError:true)
+				child.parent = parent
+				child.save(failOnError:true)
 			}
 
 			

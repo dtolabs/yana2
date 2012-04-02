@@ -8,13 +8,13 @@ dataSource {
 environments {
 	development {
 		dataSource {
-			dbCreate = "update"
+			dbCreate = "create-drop"
 			url = "jdbc:h2:file:./db/devDb"
 		}
 	}
 	test {
 		dataSource {
-			dbCreate = "update"
+			dbCreate = "create-drop"
 			url = "jdbc:h2:file:./db/testDb"
 		}
 	}

@@ -23,6 +23,7 @@
   	}
   	
   	function getNodeParents(){
+  	  	var parent = "${nodeInstance?.parent?.id}"
   		var nodetype = $("#nodetype").val();
   		var selected = $("#parent").val();
 		$.ajaxSetup({contentType:"application/json"});
@@ -39,6 +40,9 @@
 					var opt = document.createElement('option');
 					opt.innerHTML=j.name;
 					opt.setAttribute('value',j.id);
+					if(parent=j.id){
+						opt.setAttribute("selected","selected");
+					}
 					select.appendChild(opt)
 				}
 			}
