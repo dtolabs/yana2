@@ -54,12 +54,6 @@ class AdminController {
 					nt.dateCreated = new Date()
 					nt.dateModified = new Date()
 					nt.save(failOnError:true)
-					
-					ntype = NodeType.findByName(nodetype.@id.toString())
-					Template temp = new Template()
-					temp.templateName = nodetype.@id
-					temp.nodetype = ntype
-					temp.save(failOnError:true)
 				}
 			}
 			
@@ -67,12 +61,10 @@ class AdminController {
 				Node nd = Node.findByName(node.@id.toString())
 				if(!nd){
 					// get dependencies
-					Template template = Template.findByTemplateName(node.@nodetype.toString())
 					NodeType nodetype = NodeType.findByName(node.@nodetype.toString())
 					
 					nd = new Node()
 					nd.name = node.@id
-					//nd.template = template
 					nd.status = Status.IMP
 					nd.importance = Importance.MED
 					nd.nodetype = nodetype
@@ -84,7 +76,6 @@ class AdminController {
 			
 			xml.nodetypes.children().each{ nodetype ->
 				//get dependencies
-				Template temp = Template.findByTemplateName(nodetype.@id.toString())
 				NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 				
 				def tav = [:]
@@ -93,7 +84,6 @@ class AdminController {
 					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
 					if(!ta){
 						ta = new TemplateAttribute()
-						//ta.template = temp
 						ta.template = ntype
 						ta.attribute = attribute
 						ta.save(failOnError:true)

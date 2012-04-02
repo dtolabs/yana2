@@ -35,7 +35,7 @@
 				<td style="font-weight:bold;"><g:message code="node.importance.label" default="Importance" />: </td>
 				<td><g:fieldValue bean="${nodeInstance}" field="importance"/></td>
 			</tr>
-
+			
 			<g:if test="${nodeInstance?.tags}">
 			<tr>
 					<td style="font-weight:bold;"><g:message code="node.tags.label" default="Tags" />: </td>

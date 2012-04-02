@@ -43,19 +43,6 @@
 			</tr>
 			</g:if>
 			
-			
-			<g:if test="${nodeTypeInstance?.templates}">
-			<tr>
-				<td colspan=2>
-					<b><span id="templates-label" class="property-label"><g:message code="nodeType.templates.label" default="Templates" /></span></b>
-					<ul>
-						<g:each in="${nodeTypeInstance.templates}" var="t">
-						<li><span class="property-value" aria-labelledby="templates-label"><g:link controller="template" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></span></li>
-						</g:each>
-					</ul>
-				</td>
-			</tr>
-			</g:if>
 
 			<tr>
 				<td colspan=2>

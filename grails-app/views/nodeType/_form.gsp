@@ -35,20 +35,3 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeTypeInstance, field: 'templates', 'error')} ">
-	<label for="templates">
-		<g:message code="nodeType.templates.label" default="Templates" />
-		
-	</label>
-	
-<ul class="one-to-many">
-<g:each in="${nodeTypeInstance?.templates?}" var="t">
-    <li><g:link controller="template" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></li>
-</g:each>
-<li class="add">
-<g:link controller="template" action="create" params="['nodeType.id': nodeTypeInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'template.label', default: 'Template')])}</g:link>
-</li>
-</ul>
-
-</div>
-

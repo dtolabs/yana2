@@ -19,7 +19,10 @@ class Node {
     static constraints = {
         name(blank:false)
         description(blank:true, nullable:true)
+<<<<<<< HEAD
 		//template(nullable:false)
+=======
+>>>>>>> owens_branch
 		status(nullable:false)
 		importance(nullable:false)
         tags(nullable:true)

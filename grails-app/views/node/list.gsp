@@ -17,7 +17,7 @@
 			<table>
 				<thead>
 					<tr>
-					
+				
 						<g:sortableColumn property="name" title="${message(code: 'node.name.label', default: 'Name')}" />
 					
 						<g:sortableColumn property="nodetype" title="${message(code: 'node.nodetype.name.label', default: 'Nodetype')}" />

@@ -1,14 +1,11 @@
 package com.dtosolutions
 
-
-
 import org.junit.*
 import grails.test.mixin.*
 
 @TestFor(TemplateAttributeController)
 @Mock(TemplateAttribute)
 class TemplateAttributeControllerTests {
-
 
     def populateValidParams(params) {
       assert params != null
@@ -19,7 +16,6 @@ class TemplateAttributeControllerTests {
 	  mockDomain(Attribute, [new Attribute(id:1,version:1,name:'Friendly_Name',filter:fStr,dateCreated:now)])
 	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
 	  NodeType server = NodeType.get(1)
-	  mockDomain(Template, [new Template(id:1,version:1,templateName:'Server_default',nodetype:server,dateCreated:now)])
 	  
 	  params["id"] = 1
 	  params["version"] = 1
@@ -134,10 +130,6 @@ class TemplateAttributeControllerTests {
 		templateAttribute.clearErrors()
 		populateValidParams(params)
 		
-		
-		
-
-
         //test outdated version number
         response.reset()
         templateAttribute.clearErrors()

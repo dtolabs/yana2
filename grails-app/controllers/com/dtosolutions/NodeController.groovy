@@ -45,15 +45,14 @@ class NodeController {
     }
 
     def save() {
-		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype.id && params.nodetype.id!='null')){
+		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
 			Node nodeInstance  = new Node()
 			nodeInstance.name = params.name
 			nodeInstance.description = params.description
-			//nodeInstance.template = Template.get(params.template.id.toLong())
 			nodeInstance.status = params.status
 			nodeInstance.importance = params.importance
 			nodeInstance.tags = params.tags
-			nodeInstance.nodetype = NodeType.get(params.nodetype.id.toLong())
+			nodeInstance.nodetype = NodeType.get(params.nodetype.toLong())
 			nodeInstance.dateCreated = new Date()
 			nodeInstance.dateModified = new Date()
 						
@@ -147,9 +146,9 @@ class NodeController {
 			render(view: "edit", model: [nodeInstance: nodeInstance])
 		}else{
 
-		flash.message = 'Required fields not filled out. Please try again'
-		render(view: "edit", model: [params: params])
-	}
+			flash.message = 'Required fields not filled out. Please try again'
+			render(view: "edit", model: [params: params])
+		}
     }
 
     def delete() {

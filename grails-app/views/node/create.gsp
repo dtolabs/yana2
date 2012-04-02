@@ -147,7 +147,7 @@
 					<td style="font-weight:bold;" width="150"><label for="name"><g:message code="node.name.label" default="Name" />*</label>: </td>
 					<td><g:textField name="name" required="" value="${params?.name}"/></td>
 				</tr>
-				
+			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'description', 'error')} ">
 					<td style="font-weight:bold;"><label for="description"><g:message code="node.description.label" default="Description" /></label>: </td>
 					<td><g:textField name="description" value="${params?.description}"/></td>
