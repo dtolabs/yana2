@@ -13,7 +13,7 @@
   	}
 
   	function getFormFields(){
-		getTemplates();
+  		getAttributes();
 		getNodeParents();
   	}
   	
@@ -39,38 +39,9 @@
 			}
 		});
   	}
-  	
-  	function getTemplates(){
-  		var nodetype = $("#nodetype").val();
-  		if(nodetype!='null'){
-			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getTemplates",{id:nodetype,ajax:'true'},function(json){
-				if(json){
-					var select = document.getElementById("template");
-					select.innerHTML = '';
-					var opt = document.createElement('option');
-					opt.innerHTML="Select One";
-					opt.setAttribute('value',null);
-					select.appendChild(opt);
-					for(var i=0;i<json.length;i++){
-						var j = json[i];
-						var opt = document.createElement('option');
-						opt.innerHTML=j.name;
-						opt.setAttribute('value',j.id);
-						select.appendChild(opt)
-					}
-				}
-			});
-			$("#template_wrapper").show();
-			$("#attributes").hide();
-  		}else{
-  			$("#template_wrapper").hide();
-  			$("#attributes").hide();
-  	  	}
-  	}
 
   	function getAttributes(){
-  		var template = $("#template").val();
+  		var template = $("#nodetype").val();
   	  	if(template!=null){
 			$.ajaxSetup({contentType:"application/json"});
 			$.getJSON("${request.contextPath}/node/getTemplateAttributes",{templateid:template,ajax:'true'},function(json){
@@ -176,7 +147,7 @@
 					<td style="font-weight:bold;" width="150"><label for="name"><g:message code="node.name.label" default="Name" />*</label>: </td>
 					<td><g:textField name="name" required="" value="${params?.name}"/></td>
 				</tr>
-				
+			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'description', 'error')} ">
 					<td style="font-weight:bold;"><label for="description"><g:message code="node.description.label" default="Description" /></label>: </td>
 					<td><g:textField name="description" value="${params?.description}"/></td>
@@ -184,12 +155,7 @@
 				
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'nodetype', 'error')} required">
 					<td style="font-weight:bold;"><label for="nodetype"><g:message code="node.nodetype.label" default="Nodetype" />*</label>: </td>
-					<td><g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype?.id}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
-				</tr>
-	
-				<tr id="template_wrapper" style="display:none;" class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'template', 'error')} required">
-					<td style="font-weight:bold;"><label for="template"><g:message code="node.template.label" default="Template" />*</label>: </td>
-					<td><g:select id="template" name="template.id" from="${com.dtosolutions.Template.list()}" optionKey="id" required="" value="${params?.template?.id}" class="many-to-one" onchange="getAttributes();"  noSelection="['null': 'Select One']"/></td>
+					<td><g:select id="nodetype" name="nodetype" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
 				</tr>
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
@@ -209,7 +175,7 @@
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'parent', 'error')} ">
 					<td style="font-weight:bold;"><label for="parent"><g:message code="node.parent.label" default="Parent" /></label>: </td>
-					<td><g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${params?.parent?.id}" class="many-to-one" noSelection="['null': '']"/></td>
+					<td><g:select id="parent" name="parent" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${params?.parent}" class="many-to-one" noSelection="['null': '']"/></td>
 				</tr>
 			</table>
 		

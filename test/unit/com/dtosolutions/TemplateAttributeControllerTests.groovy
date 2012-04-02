@@ -19,13 +19,12 @@ class TemplateAttributeControllerTests {
 	  mockDomain(Attribute, [new Attribute(id:1,version:1,name:'Friendly_Name',filter:fStr,dateCreated:now)])
 	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
 	  NodeType server = NodeType.get(1)
-	  mockDomain(Template, [new Template(id:1,version:1,templateName:'Server_default',nodetype:server,dateCreated:now)])
 	  
 	  params["id"] = 1
 	  params["version"] = 1
       params["attribute"] = Attribute.get(1)
-	  params["template"] = Template.get(1)
-	  params["reuired"] = 'false'
+	  params["template"] = NodeType.get(1)
+	  params["required"] = 'false'
     }
 
     void testIndex() {
@@ -134,10 +133,6 @@ class TemplateAttributeControllerTests {
 		templateAttribute.clearErrors()
 		populateValidParams(params)
 		
-		
-		
-
-
         //test outdated version number
         response.reset()
         templateAttribute.clearErrors()

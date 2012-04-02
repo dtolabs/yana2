@@ -16,13 +16,11 @@ class NodeControllerTests {
 	  Date now = new Date()
 	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
 	  NodeType server = NodeType.get(1)
-	  mockDomain(Template, [new Template(id:1,version:1,templateName:'Server_default',nodetype:server)])
 	  
 	  params["id"] = 1
 	  params["version"] = 1
       params["name"] = 'node_name'
 	  params["description"] = "some description"
-	  params["template"] = Template.get(1)
 	  params["status"] = Status.IMP
 	  params["importance"] = Importance.MED
 	  params["tags"] = "this,is,a,test"

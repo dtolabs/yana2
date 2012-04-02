@@ -7,7 +7,7 @@ class Node {
 	
     String name
     String description
-	Template template
+	//Template template
 	Status status
 	Importance importance
 	String tags
@@ -19,7 +19,6 @@ class Node {
     static constraints = {
         name(blank:false)
         description(blank:true, nullable:true)
-		template(nullable:false)
 		status(nullable:false)
 		importance(nullable:false)
         tags(nullable:true)

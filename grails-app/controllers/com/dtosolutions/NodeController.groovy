@@ -22,7 +22,7 @@ class NodeController {
 			switch(params.format){
 				case 'xml':
 				case 'XML':
-					def nodequery = "select N.id,N.name,N.description,T.templateName,NT.name as nodetype,N.status,N.importance,N.tags from Node as N left join N.nodetype as NT left join N.template as T"
+					def nodequery = "select N.id,N.name,N.description,NT.name as nodetype,N.status,N.importance,N.tags from Node as N left join N.nodetype as NT"
 					
 					def nodes = Node.executeQuery(nodequery);
 					
@@ -45,18 +45,16 @@ class NodeController {
     }
 
     def save() {
-		if((params.name && params.name!='null') && (params.template.id && params.template.id!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype.id && params.nodetype.id!='null')){
+		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
 			Node nodeInstance  = new Node()
 			nodeInstance.name = params.name
 			nodeInstance.description = params.description
-			nodeInstance.template = Template.get(params.template.id.toLong())
 			nodeInstance.status = params.status
 			nodeInstance.importance = params.importance
 			nodeInstance.tags = params.tags
-			nodeInstance.nodetype = NodeType.get(params.nodetype.id.toLong())
+			nodeInstance.nodetype = NodeType.get(params.nodetype.toLong())
 			nodeInstance.dateCreated = new Date()
 			nodeInstance.dateModified = new Date()
-			//n.save(failOnError:true)
 						
 	        if (!nodeInstance.save(flush: true)) {
 	            render(view: "create", model: [nodeInstance: nodeInstance])
@@ -101,7 +99,7 @@ class NodeController {
     }
 
     def update() {
-		if((params.name && params.name!='null') && (params.template && params.template!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
+		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
 	        def nodeInstance = Node.get(params.id)
 			Date now = new Date()
 	        if (!nodeInstance) {
@@ -147,27 +145,31 @@ class NodeController {
 	        }
 			render(view: "edit", model: [nodeInstance: nodeInstance])
 		}else{
+
 		flash.message = 'Required fields not filled out. Please try again'
-		render(view: "create", model: [params: params])
+		render(view: "edit", model: [params: params])
 	}
     }
 
     def delete() {
-        def nodeInstance = Node.get(params.id)
-        if (!nodeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
-            redirect(action: "list")
-            return
-        }
-
-        try {
-            nodeInstance.delete(flush: true)
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'node.label', default: 'Node'), params.id])
-            redirect(action: "list")
-        }catch (Exception e) {
-			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'node.label', default: 'Node'), params.id])
-            redirect(action: "show", id: params.id)
-        }
+		Node.withTransaction{ status ->
+	        def nodeInstance = Node.get(params.id)
+	        if (!nodeInstance) {
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
+	            redirect(action: "list")
+	            return
+	        }
+	
+	        try {
+	            nodeInstance.delete(flush: true)
+				flash.message = message(code: 'default.deleted.message', args: [message(code: 'node.label', default: 'Node'), params.id])
+				redirect(action: "list")
+	        }catch (Exception e) {
+				status.setRollbackOnly()
+				flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'node.label', default: 'Node'), params.id])
+	            redirect(action: "show", id: params.id)
+	        }
+		}
     }
 	
 	def getNodeParents = {
@@ -199,16 +201,5 @@ class NodeController {
 
 			render response as JSON
 	}
-	
-	def getTemplates = {
-			def response = []
-			if(params.id){
-				List temps = Template.executeQuery("select new map(T.id as id,T.templateName as name) from Template as T where T.nodetype.id=${params.id}");
-				temps.each(){
-					response += [id:it.id,name:it.name];
-				}
-			}
 
-			render response as JSON
-	}
 }

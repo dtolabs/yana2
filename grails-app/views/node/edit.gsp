@@ -11,14 +11,13 @@
   	function init() {
   		getNodeParents();
   		var nodetype = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
-  		var template = ("${nodeInstance?.template?.id}") ? "${nodeInstance?.template?.id}" : $("#template").val();
-  		if(nodetype && template){
+  		if(nodetype){
 			getAttributes();
   	  	}
   	}
 
   	function getFormFields(){
-		getTemplates();
+  		getAttributes();
 		getNodeParents();
   	}
   	
@@ -48,38 +47,10 @@
 			}
 		});
   	}
-  	
-  	function getTemplates(){
-  		var nodetype = $("#nodetype").val();
-  		if(nodetype!='null'){
-			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getTemplates",{id:nodetype,ajax:'true'},function(json){
-				if(json){
-					var select = document.getElementById("template");
-					select.innerHTML = '';
-					var opt = document.createElement('option');
-					var opt = document.createElement('option');
-					opt.innerHTML="Select One";
-					opt.setAttribute('value',null);
-					select.appendChild(opt);
-					for(var i=0;i<json.length;i++){
-						var j = json[i];
-						var opt = document.createElement('option');
-						opt.innerHTML=j.name;
-						opt.setAttribute('value',j.id);
-						select.appendChild(opt)
-					}
-				}
-			});
-			$("#attributes").hide();
-  		}else{
-  			$("#attributes").hide();
-  	  	}
-  	}
 
   	function getAttributes(){
   	  	var node = "${nodeInstance?.id}"
-  		var template = $("#template").val();
+  		var template = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
   	  	if(template!=null){
 			$.ajaxSetup({contentType:"application/json"});
 			$.getJSON("${request.contextPath}/node/getTemplateAttributes",{templateid:template,node:node,ajax:'true'},function(json){
@@ -181,7 +152,6 @@
 				<g:hiddenField name="id" value="${nodeInstance?.id}" />
 				<g:hiddenField name="version" value="${nodeInstance?.version}" />
 				<g:hiddenField name="nodetype" value="${nodeInstance?.nodetype?.id}" />
-				<g:hiddenField name="template" value="${nodeInstance?.template?.id}" />
 
 			<table class="scaffold" border="0" width="500px" border="0">
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'name', 'error')} required">
@@ -197,11 +167,6 @@
 				<tr>
 					<td style="font-weight:bold;"><label for="nodetype"><g:message code="node.nodetype.label" default="Nodetype" />*</label>: </td>
 					<td>${nodeInstance?.nodetype?.name}</td>
-				</tr>
-	
-				<tr>
-					<td style="font-weight:bold;"><label for="template"><g:message code="node.template.label" default="Template" />*</label>: </td>
-					<td>${nodeInstance?.template?.templateName}</td>
 				</tr>
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
@@ -226,7 +191,7 @@
 			</table>
 				
 				<div id="attributes" style="display:none;"></div>
-
+				
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" formnovalidate="" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
