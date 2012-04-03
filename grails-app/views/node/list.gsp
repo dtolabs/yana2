@@ -36,7 +36,7 @@
 					
 						<td><g:link action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link></td>
 					
-						<td><g:link controller="nodetype" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link></td>
+						<td><g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link></td>
 					
 						<td>${fieldValue(bean: nodeInstance, field: "status")}</td>
 					
