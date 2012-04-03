@@ -108,8 +108,13 @@ class AdminController {
 				Node parent = Node.findByName(nodechild.@parent.toString())
 				Node child = Node.findByName(nodechild.@child.toString())
 
-				child.parent = parent
-				child.save(failOnError:true)
+				ChildNode childnode = ChildNode.findByChildAndParent(child,parent)
+				if(!childnode){
+					childnode  = new ChildNode()
+					childnode.child = child
+					childnode.parent = parent
+					childnode.save(flush: true)
+				}
 			}
 
 			

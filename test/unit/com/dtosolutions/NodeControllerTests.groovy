@@ -25,7 +25,7 @@ class NodeControllerTests {
 	  params["nodetype"] = server
 	  params["dateCreated"] = new Date()
 	  params["dateModified"] = new Date()
-	  params["parent"] = null
+
     }
 
     void testIndex() {

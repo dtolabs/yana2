@@ -9,7 +9,6 @@
   	<script type="text/javascript">
   	window.onload = init;
   	function init() {
-  		getNodeParents();
   		var nodetype = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
   		if(nodetype){
 			getAttributes();
@@ -18,34 +17,6 @@
 
   	function getFormFields(){
   		getAttributes();
-		getNodeParents();
-  	}
-  	
-  	function getNodeParents(){
-  	  	var parent = "${nodeInstance?.parent?.id}"
-  		var nodetype = $("#nodetype").val();
-  		var selected = $("#parent").val();
-		$.ajaxSetup({contentType:"application/json"});
-		$.getJSON("${request.contextPath}/node/getNodeParents",{id:nodetype,ajax:'true'},function(json){
-			if(json){
-				var select = document.getElementById("parent");
-				select.innerHTML = '';
-				var opt = document.createElement('option');
-				opt.innerHTML="Select One";
-				opt.setAttribute('value',null);
-				select.appendChild(opt);
-				for(var i=0;i<json.length;i++){
-					var j = json[i];
-					var opt = document.createElement('option');
-					opt.innerHTML=j.name;
-					opt.setAttribute('value',j.id);
-					if(parent=j.id){
-						opt.setAttribute("selected","selected");
-					}
-					select.appendChild(opt)
-				}
-			}
-		});
   	}
 
   	function getAttributes(){
@@ -182,11 +153,6 @@
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
 					<td style="font-weight:bold;"><label for="tags"><g:message code="node.tags.label" default="Tags" /></label>: </td>
 					<td><g:textField name="tags" value="${nodeInstance?.tags}"/></td>
-				</tr>
-	
-				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'parent', 'error')} ">
-					<td style="font-weight:bold;"><label for="parent"><g:message code="node.parent.label" default="Parent" /></label>: </td>
-					<td><g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${nodeInstance?.parent?.id}" class="many-to-one" noSelection="['null': 'Select One']"/></td>
 				</tr>
 			</table>
 				

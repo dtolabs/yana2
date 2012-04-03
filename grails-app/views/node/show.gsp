@@ -47,13 +47,6 @@
 				<td style="font-weight:bold;"><g:message code="node.nodetype.label" default="Nodetype" />: </td>
 				<td><g:link controller="nodeType" action="show" id="${nodeInstance?.nodetype?.id}">${nodeInstance?.nodetype?.encodeAsHTML()}</g:link></td>
 			</tr>
-			
-			<g:if test="${nodeInstance?.parent}">
-			<tr>
-				<td style="font-weight:bold;"><g:message code="node.parent.label" default="Parent" />: </td>
-				<td><g:link controller="node" action="show" id="${nodeInstance?.parent?.id}">${nodeInstance?.parent?.encodeAsHTML()}</g:link></td>
-			</tr>
-			</g:if>
 
 			<tr>
 				<td style="font-weight:bold;"><g:message code="node.dateCreated.label" default="Date Created" />: </td>
@@ -64,20 +57,6 @@
 				<td style="font-weight:bold;"><g:message code="node.dateModified.label" default="Date Modified" />: </td>
 				<td><g:formatDate date="${nodeInstance?.dateModified}" /></td>
 			</tr>
-
-
-			<g:if test="${nodeInstance?.nodes}">
-			<tr>
-				<td colspan=2>
-					<b>Node Children</b>
-					<ul>
-					<g:each in="${nodeInstance.nodes}" var="n">
-					<li><span class="property-value" aria-labelledby="nodes-label"><g:link controller="node" action="show" id="${n.id}">${n?.encodeAsHTML()}</g:link></span></li>
-					</g:each>
-					</ul>
-				</td>
-			</tr>
-			</g:if>
 			
 			<g:if test="${nodeInstance?.templateValues}">
 				<g:each in="${nodeInstance.templateValues}" var="t">
