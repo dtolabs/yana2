@@ -1,5 +1,7 @@
 package com.dtosolutions
 
+import groovy.xml.MarkupBuilder
+import org.custommonkey.xmlunit.*
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
 import grails.converters.XML
@@ -16,24 +18,38 @@ class NodeController {
     }
 
     def list() {
-		
+
 		if(params.format){
-			def response = []
+			def writer = new StringWriter()
+			def xml = new MarkupBuilder(writer)
+			//def response = []
 			switch(params.format){
 				case 'xml':
 				case 'XML':
+
 					def nodequery = "select N.id,N.name,N.description,NT.name as nodetype,N.status,N.importance,N.tags from Node as N left join N.nodetype as NT"
-					
 					def nodes = Node.executeQuery(nodequery);
 					
-					nodes.each(){
-						def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${it[0].toLong()}"
-						def values = TemplateValue.executeQuery(attributequery);
-						response += [attribute:[values.attribute,values.value],required:values.required];
+					xml.yana() {
+						nodes.each(){
+							def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${it[0].toLong()}"
+							def values = TemplateValue.executeQuery(attributequery);
+
+							def id = it[0]
+							def name = it[1]
+							def tags = it[6]
+							
+							  node(id:id,name:name,tags:tags){
+								  values.each{ val ->
+									  attribute(name:val.attribute,value:val.value,required:val.required)
+								  }
+							  }
+						}
 					}
 					break;
 			}
-			render response as XML
+
+			render(text: writer.toString(), contentType: "text/xml")
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]
