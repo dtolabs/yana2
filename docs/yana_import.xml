@@ -25,10 +25,64 @@
         <attribute id="Postal_Code" filter="String"/>
     </attributes>
 
+    <nodetypes>
+        <nodetype id="Server">
+			<templateAttribute id="ta1" attribute="Friendly_Name" required="false"/>
+			<templateAttribute id="ta2" attribute="Brand" required="false"/>
+			<templateAttribute id="ta3" attribute="Model" required="false"/>
+			<templateAttribute id="ta4" attribute="Serial_Number" required="false"/>
+			<templateAttribute id="ta5" attribute="Management_IP" required="false"/>
+			<templateAttribute id="ta6" attribute="Gateway" required="false"/>
+			<templateAttribute id="ta7" attribute="Number_of_CPUs" required="false"/>
+			<templateAttribute id="ta8" attribute="RAM" required="false"/>
+			<templateAttribute id="ta9" attribute="HDD" required="false"/>
+			<templateAttribute id="ta10" attribute="Blackout_Starttime" required="false"/>
+			<templateAttribute id="ta11" attribute="Blackout_Endtime" required="false"/>
+			<templateAttribute id="ta12" attribute="OS_Name" required="false"/>
+			<templateAttribute id="ta13" attribute="OS_Family" required="false"/>
+			<templateAttribute id="ta14" attribute="Hostname" required="false"/>
+        </nodetype>
+        <nodetype id="Software">
+			<templateAttribute id="ta15" attribute="Version" required="false"/>
+			<templateAttribute id="ta16" attribute="License" required="false"/>
+        </nodetype>
+        <nodetype id="Location">
+			<templateAttribute id="ta17" attribute="Provider_Name" required="false"/>
+			<templateAttribute id="ta18" attribute="City" required="false"/>
+			<templateAttribute id="ta19" attribute="State" required="false"/>
+			<templateAttribute id="ta20" attribute="Country" required="false"/>
+			<templateAttribute id="ta21" attribute="Postal_Code" required="false"/>
+        </nodetype>
+    </nodetypes>
+    
     <nodes>
-    	<node id="test.server.com" nodetype="Server"/>
-    	<node id="Jetty" nodetype="Software"/>
-    	<node id="Main_Location" nodetype="Location"/>
+		<node id="test.server.com" nodetype="Server">
+			<attributeValue templateAttribute="ta1" value="Test_Server"/>
+			<attributeValue templateAttribute="ta2" value="Dell"/>
+			<attributeValue templateAttribute="ta3" value="dps-256"/>
+			<attributeValue templateAttribute="ta4" value="12345"/>
+			<attributeValue templateAttribute="ta5" value="127.0.0.1"/>
+			<attributeValue templateAttribute="ta6" value="127.0.0.1"/>
+			<attributeValue templateAttribute="ta7" value="2"/>
+			<attributeValue templateAttribute="ta8" value="4GB"/>
+			<attributeValue templateAttribute="ta9" value="2TB"/>
+			<attributeValue templateAttribute="ta10" value="10am"/>
+			<attributeValue templateAttribute="ta11" value="12pm"/>
+			<attributeValue templateAttribute="ta12" value="Ubuntu_Test_Server"/>
+			<attributeValue templateAttribute="ta13" value="Linux"/>
+			<attributeValue templateAttribute="ta14" value="hostname.test.com"/>
+		</node>
+    	<node id="Jetty" nodetype="Software">
+			<attributeValue templateAttribute="ta15" value="1.0"/>
+			<attributeValue templateAttribute="ta16" value="1.234.56.7"/>
+		</node>
+    	<node id="Main_Location" nodetype="Location">
+			<attributeValue templateAttribute="ta17" value="Rackspace"/>
+			<attributeValue templateAttribute="ta18" value="Berkeley"/>
+			<attributeValue templateAttribute="ta19" value="CA"/>
+			<attributeValue templateAttribute="ta20" value="USA"/>
+			<attributeValue templateAttribute="ta21" value="94703"/>
+		</node>
     </nodes>
 
     <nodechildren>
@@ -36,70 +90,4 @@
         <nodechild parent="test.server.com" child="Main_Location"/>
     </nodechildren>
     
-    <nodetypes>
-        <nodetype id="Server">
-            <templateAttributes>
-                <templateAttribute id="ta1" attribute="Friendly_Name" required="false"/>
-                <templateAttribute id="ta2" attribute="Brand" required="false"/>
-                <templateAttribute id="ta3" attribute="Model" required="false"/>
-                <templateAttribute id="ta4" attribute="Serial_Number" required="false"/>
-                <templateAttribute id="ta5" attribute="Management_IP" required="false"/>
-                <templateAttribute id="ta6" attribute="Gateway" required="false"/>
-                <templateAttribute id="ta7" attribute="Number_of_CPUs" required="false"/>
-                <templateAttribute id="ta8" attribute="RAM" required="false"/>
-                <templateAttribute id="ta9" attribute="HDD" required="false"/>
-                <templateAttribute id="ta10" attribute="Blackout_Starttime" required="false"/>
-                <templateAttribute id="ta11" attribute="Blackout_Endtime" required="false"/>
-                <templateAttribute id="ta12" attribute="OS_Name" required="false"/>
-                <templateAttribute id="ta13" attribute="OS_Family" required="false"/>
-                <templateAttribute id="ta14" attribute="Hostname" required="false"/>
-            </templateAttributes>
-            <templateValues>
-                <templateValue id="tv1" node="test.server.com" templateAttribute="ta1" value="Test_Server"/>
-                <templateValue id="tv2" node="test.server.com" templateAttribute="ta2" value="Dell"/>
-                <templateValue id="tv3" node="test.server.com" templateAttribute="ta3" value="dps-256"/>
-                <templateValue id="tv4" node="test.server.com" templateAttribute="ta4" value="12345"/>
-                <templateValue id="tv5" node="test.server.com" templateAttribute="ta5" value="127.0.0.1"/>
-                <templateValue id="tv6" node="test.server.com" templateAttribute="ta6" value="127.0.0.1"/>
-                <templateValue id="tv7" node="test.server.com" templateAttribute="ta7" value="2"/>
-                <templateValue id="tv8" node="test.server.com" templateAttribute="ta8" value="4GB"/>
-                <templateValue id="tv9" node="test.server.com" templateAttribute="ta9" value="2TB"/>
-                <templateValue id="tv10" node="test.server.com" templateAttribute="ta10" value="10am"/>
-                <templateValue id="tv11" node="test.server.com" templateAttribute="ta11" value="12pm"/>
-                <templateValue id="tv12" node="test.server.com" templateAttribute="ta12" value="Ubuntu_Test_Server"/>
-                <templateValue id="tv13" node="test.server.com" templateAttribute="ta13" value="Linux"/>
-                <templateValue id="tv14" node="test.server.com" templateAttribute="ta14" value="hostname.test.com"/>
-            </templateValues>
-        </nodetype>
-        <nodetype id="Software">
-            <templateAttributes>
-                <templateAttribute id="ta15" attribute="Version" required="false"/>
-                <templateAttribute id="ta16" attribute="License" required="false"/>
-            </templateAttributes>
-            <templateValues>
-            	<templateValue id="tv15" node="Jetty" templateAttribute="ta15" value="1.0"/>
-            	<templateValue id="tv16" node="Jetty" templateAttribute="ta16" value="1.234.56.7"/>
-            </templateValues>
-        </nodetype>
-        <nodetype id="Database">
-        	<templateAttributes></templateAttributes>
-        	<templateValues></templateValues>
-        </nodetype>
-        <nodetype id="Location">
-            <templateAttributes>
-                <templateAttribute id="ta17" attribute="Provider_Name" required="false"/>
-                <templateAttribute id="ta18" attribute="City" required="false"/>
-                <templateAttribute id="ta19" attribute="State" required="false"/>
-                <templateAttribute id="ta20" attribute="Country" required="false"/>
-                <templateAttribute id="ta21" attribute="Postal_Code" required="false"/>
-            </templateAttributes>
-            <templateValues>
-                <templateValue id="tv17" node="Main_Location" templateAttribute="ta17" value="Rackspace"/>
-                <templateValue id="tv18" node="Main_Location" templateAttribute="ta18" value="Berkeley"/>
-                <templateValue id="tv19" node="Main_Location" templateAttribute="ta19" value="CA"/>
-                <templateValue id="tv20" node="Main_Location" templateAttribute="ta20" value="USA"/>
-                <templateValue id="tv21" node="Main_Location" templateAttribute="ta21" value="94703"/>
-            </templateValues>
-        </nodetype>
-    </nodetypes>
 </yana>

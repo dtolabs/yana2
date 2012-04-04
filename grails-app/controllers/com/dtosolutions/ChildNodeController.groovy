@@ -16,7 +16,9 @@ class ChildNodeController {
     }
 
     def create() {
-        [childNodeInstance: new ChildNode(params)]
+		if(params.parent){
+			[parent: ChildNode.get(params.parent?.toInteger()),child: ChildNode.get(params.parent?.toInteger())]
+		}
     }
 
     def save() {

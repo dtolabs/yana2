@@ -20,7 +20,16 @@
 				<td style="font-weight:bold;"><g:message code="nodeType.name.label" default="Name" />: </td>
 				<td><g:fieldValue bean="${nodeTypeInstance}" field="name"/></td>
 			</tr>
-
+			
+			<g:if test="${nodeTypeInstance?.attributes}">
+					<g:each in="${nodeTypeInstance.attributes}" var="a">
+					<tr>
+						<td style="font-weight:bold;">${com.dtosolutions.Attribute.get(a.attribute.id)}: </td>
+						<td>${a.required.encodeAsHTML()}</td>
+					</tr>
+					</g:each>
+			</g:if>
+			
 			<tr>
 				<td style="font-weight:bold;"><g:message code="nodeType.dateCreated.label" default="Date Created" />: </td>
 				<td><g:formatDate date="${nodeTypeInstance?.dateCreated}" /></td>
@@ -30,19 +39,6 @@
 				<td style="font-weight:bold;"><g:message code="nodeType.dateModified.label" default="Date Modified" />: </td>
 				<td><g:formatDate date="${nodeTypeInstance?.dateModified}" /></td>
 			</tr>
-			
-			<g:if test="${nodeInstance?.nodes}">
-			<tr>
-				<td colspan=2>
-					<ul>
-					<g:each in="${nodeInstance.nodes}" var="n">
-					<li><span class="property-value" aria-labelledby="nodes-label"><g:link controller="node" action="show" id="${n.id}">${n?.encodeAsHTML()}</g:link></span></li>
-					</g:each>
-					</ul>
-				</td>
-			</tr>
-			</g:if>
-			
 
 			<tr>
 				<td colspan=2>

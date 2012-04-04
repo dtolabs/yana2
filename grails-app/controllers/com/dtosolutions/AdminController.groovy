@@ -42,10 +42,11 @@ class AdminController {
 					att.filter = filter
 					att.dateCreated = new Date()
 					att.dateModified = new Date()
-					att.save(failOnError:true)
+					att.save(flush: true)
 				}
 			}
 		
+			// parse nodetypes and templateattributes
 			xml.nodetypes.children().each{ nodetype ->
 				NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 				if(!ntype){
@@ -53,16 +54,26 @@ class AdminController {
 					nt.name = nodetype.@id
 					nt.dateCreated = new Date()
 					nt.dateModified = new Date()
-					nt.save(failOnError:true)
+					nt.save(flush: true)
+				}
+				
+				nodetype.children().each{ templateAttribute ->
+					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
+					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
+					if(!ta){
+						ta = new TemplateAttribute()
+						ta.template = ntype
+						ta.attribute = attribute
+						ta.save(flush: true)
+					}
 				}
 			}
 			
+			// parse nodes and attributevalues
 			xml.nodes.children().each{ node ->
 				Node nd = Node.findByName(node.@id.toString())
+				NodeType nodetype = NodeType.findByName(node.@nodetype.toString())
 				if(!nd){
-					// get dependencies
-					NodeType nodetype = NodeType.findByName(node.@nodetype.toString())
-					
 					nd = new Node()
 					nd.name = node.@id
 					nd.status = Status.IMP
@@ -70,39 +81,31 @@ class AdminController {
 					nd.nodetype = nodetype
 					nd.dateCreated = new Date()
 					nd.dateModified = new Date()
-					nd.save(failOnError:true)
-				}
-			}
-			
-			xml.nodetypes.children().each{ nodetype ->
-				//get dependencies
-				NodeType ntype = NodeType.findByName(nodetype.@id.toString())
-				
-				def tav = [:]
-				nodetype.templateAttributes.children().each{ templateAttribute ->
-					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
-					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
-					if(!ta){
-						ta = new TemplateAttribute()
-						ta.template = ntype
-						ta.attribute = attribute
-						ta.save(failOnError:true)
-					}
-					tav.putAt("${templateAttribute.@id.toString()[2..-1]}",ta)
+					nd.save(flush: true)
 				}
 				
-				nodetype.templateValues.children().each{ templateValue ->
-					Node node = Node.findByName(templateValue.@node.toString())
+				def vals = TemplateValue.findAllByNode(nd)
+				vals.each{ val ->
+					val.delete(flush:true)
+				}
+				
+				node.children().each{ templateValue ->
+					//def templateAttribute = templateValue.@templateAttribute.toString()
+					def att = xml.nodetypes.nodetype.templateAttribute.findAll { it.@id.text()==templateValue.@templateAttribute.toString() }
+					Attribute attribute = Attribute.findByName(att.@attribute.toString())
+					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(nodetype,attribute)
+
 					TemplateValue tv = new TemplateValue()
-					tv.node = node
-					tv.templateattribute = tav.getAt("${templateValue.@id.toString()[2..-1]}")
-					tv.value = templateValue.@value
+					tv.node = nd
+					tv.templateattribute = ta
+					tv.value = templateValue.@value.toString()
 					tv.dateCreated = new Date()
 					tv.dateModified = new Date()
-					tv.save(failOnError:true)
+					tv.save(flush: true)
 				}
 			}
 			
+			// parse node parent/child
 			xml.nodechildren.children().each{ nodechild ->
 				// get dependencies
 				Node parent = Node.findByName(nodechild.@parent.toString())

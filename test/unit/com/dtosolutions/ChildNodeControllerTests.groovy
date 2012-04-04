@@ -44,12 +44,6 @@ class ChildNodeControllerTests {
         assert model.childNodeInstanceTotal == 0
     }
 
-    void testCreate() {
-       def model = controller.create()
-
-       assert model.childNodeInstance != null
-    }
-
     void testSave() {
         controller.save()
 

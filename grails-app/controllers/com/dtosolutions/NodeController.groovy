@@ -30,7 +30,7 @@ class NodeController {
 					def nodequery = "select N.id,N.name,N.description,NT.name as nodetype,N.status,N.importance,N.tags from Node as N left join N.nodetype as NT"
 					def nodes = Node.executeQuery(nodequery);
 					
-					xml.yana() {
+					xml.nodes() {
 						nodes.each(){
 							def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${it[0].toLong()}"
 							def values = TemplateValue.executeQuery(attributequery);
@@ -38,8 +38,9 @@ class NodeController {
 							def id = it[0]
 							def name = it[1]
 							def tags = it[6]
+							def nodetype = it[3]
 							
-							  node(id:id,name:name,tags:tags){
+							  node(id:id,name:name,type:nodetype,tags:tags){
 								  values.each{ val ->
 									  attribute(name:val.attribute,value:val.value,required:val.required)
 								  }

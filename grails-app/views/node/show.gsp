@@ -68,6 +68,10 @@
 			</g:if>
 			
 			<tr>
+				<td colspan=2><g:link controller="childNode" action="create" params="['parent': nodeInstance?.id,'child': nodeInstance?.id]">Add Child/Parent Node</g:link></td>
+			</tr>
+			
+			<tr>
 				<td colspan=2>
 			<g:form>
 				<fieldset class="buttons">

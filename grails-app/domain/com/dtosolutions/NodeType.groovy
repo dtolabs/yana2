@@ -7,11 +7,13 @@ class NodeType{
 	static hasMany = [nodes:Node,attributes:TemplateAttribute]
 
 	String name
+	String description
 	Date dateCreated
 	Date dateModified = new Date()
 	
     static constraints = {
         name(blank:false)
+		description(blank:true, nullable:true)
     }
 
     def String toString() {

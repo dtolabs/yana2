@@ -5,9 +5,10 @@
             <xs:complexType>
                 <xs:sequence>
                     <xs:element ref="attributes"  maxOccurs="1"/>
+                    <xs:element ref="nodetypes" maxOccurs="1"/>
                     <xs:element ref="nodes"  maxOccurs="1"/>
                     <xs:element ref="nodechildren"  maxOccurs="1"/>
-                    <xs:element ref="nodetypes" maxOccurs="1"/>
+                    
                 </xs:sequence>
             </xs:complexType>
         </xs:element>
@@ -38,8 +39,18 @@
         
         <xs:element name='node'>
             <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='attributeValue' maxOccurs="unbounded"/>
+                </xs:sequence>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
                 <xs:attribute name='nodetype' type='xs:IDREF' use='required'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='attributeValue'>
+            <xs:complexType>
+                <xs:attribute name='templateAttribute' type='xs:IDREF' use='required'/>
+                <xs:attribute name='value' type='xs:string' use='required'/>
             </xs:complexType>
         </xs:element>
         
@@ -69,18 +80,9 @@
         <xs:element name='nodetype'>
             <xs:complexType>
                 <xs:sequence maxOccurs="unbounded">
-                    <xs:element ref='templateAttributes' maxOccurs="unbounded"/>
-                    <xs:element ref='templateValues' maxOccurs="unbounded"/>
-                </xs:sequence>
-                <xs:attribute name='id' type='xs:ID' use='required'/>
-            </xs:complexType>
-        </xs:element>
-        
-        <xs:element name='templateAttributes'>
-            <xs:complexType>
-                <xs:sequence minOccurs="0" maxOccurs="unbounded" >
                     <xs:element ref='templateAttribute' maxOccurs="unbounded"/>
                 </xs:sequence>
+                <xs:attribute name='id' type='xs:ID' use='required'/>
             </xs:complexType>
         </xs:element>
         
@@ -92,22 +94,6 @@
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='templateValues'>
-            <xs:complexType>
-                <xs:sequence minOccurs='0' maxOccurs="unbounded">
-                    <xs:element ref='templateValue' maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:complexType>
-        </xs:element>
-    
-        <xs:element name='templateValue'>
-            <xs:complexType>
-                <xs:attribute name='id' type='xs:ID' use='required'/>
-                <xs:attribute name='node' type='xs:string' use='required'/>
-                <xs:attribute name='templateAttribute' type='xs:IDREF' use='required'/>
-                <xs:attribute name='value' type='xs:string' use='required'/>
-            </xs:complexType>
-        </xs:element>
     
 </xs:schema>
     
