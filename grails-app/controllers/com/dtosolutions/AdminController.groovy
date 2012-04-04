@@ -1,6 +1,7 @@
 package com.dtosolutions
 
 import java.util.Date;
+import java.util.Set;
 
 //import javax.xml.XMLConstants
 import javax.xml.transform.stream.StreamSource
@@ -42,7 +43,7 @@ class AdminController {
 					att.filter = filter
 					att.dateCreated = new Date()
 					att.dateModified = new Date()
-					att.save(flush: true)
+					att.save(flush: true,failOnError:true)
 				}
 			}
 		
@@ -50,13 +51,13 @@ class AdminController {
 			xml.nodetypes.children().each{ nodetype ->
 				NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 				if(!ntype){
-					NodeType nt = new NodeType()
-					nt.name = nodetype.@id
-					nt.dateCreated = new Date()
-					nt.dateModified = new Date()
-					nt.save(flush: true)
+					ntype = new NodeType()
+					ntype.name = nodetype.@id
+					ntype.dateCreated = new Date()
+					ntype.dateModified = new Date()
+					ntype.save(flush: true,failOnError:true)
 				}
-				
+			
 				nodetype.children().each{ templateAttribute ->
 					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
 					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
@@ -64,7 +65,7 @@ class AdminController {
 						ta = new TemplateAttribute()
 						ta.template = ntype
 						ta.attribute = attribute
-						ta.save(flush: true)
+						ta.save(flush: true,failOnError:true)
 					}
 				}
 			}
@@ -81,17 +82,15 @@ class AdminController {
 					nd.nodetype = nodetype
 					nd.dateCreated = new Date()
 					nd.dateModified = new Date()
-					nd.save(flush: true)
+					nd.save(flush: true,failOnError:true)
+				}else{
+					TemplateValue.executeUpdate("delete TemplateValue TV where TV.node = ?", [nd])
 				}
-				
-				def vals = TemplateValue.findAllByNode(nd)
-				vals.each{ val ->
-					val.delete(flush:true)
-				}
+
 				
 				node.children().each{ templateValue ->
-					//def templateAttribute = templateValue.@templateAttribute.toString()
-					def att = xml.nodetypes.nodetype.templateAttribute.findAll { it.@id.text()==templateValue.@templateAttribute.toString() }
+					def templateAttribute = templateValue.@templateAttribute.toString()
+					def att = xml.nodetypes.nodetype.templateAttribute.findAll { it.@id.text()==templateAttribute }
 					Attribute attribute = Attribute.findByName(att.@attribute.toString())
 					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(nodetype,attribute)
 
@@ -101,7 +100,7 @@ class AdminController {
 					tv.value = templateValue.@value.toString()
 					tv.dateCreated = new Date()
 					tv.dateModified = new Date()
-					tv.save(flush: true)
+					tv.save(flush: true,failOnError:true)
 				}
 			}
 			
@@ -116,7 +115,7 @@ class AdminController {
 					childnode  = new ChildNode()
 					childnode.child = child
 					childnode.parent = parent
-					childnode.save(flush: true)
+					childnode.save(flush: true,failOnError:true)
 				}
 			}
 
