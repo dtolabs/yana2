@@ -28,9 +28,23 @@
 						</li>
                       	<li><g:link controller="nodeType" action="list">Types</g:link>
 						    <ul>
-						    <li><g:link controller="nodeType" action="list">List</g:link></li>
-						    <li><g:link controller="nodeType" action="create">Create</g:link></li>
+						    <li><g:link controller="nodeType" action="list">NodeTypes</g:link>
+								<ul>
+									<li><g:link controller="node" action="create">Create NodeType</g:link></li>
+								</ul>
+							</li>
+						    <li><g:link controller="attribute" action="list">Attributes</g:link>
+								<ul>
+									<li><g:link controller="attribute" action="create">Create Attribute</g:link></li>
+								</ul>
+							</li>
+						    <li><g:link controller="filter" action="list">Filters</g:link>
+								<ul>
+									<li><g:link controller="filter" action="create">Create Filter</g:link></li>
+								</ul>
+							</li>
 						    </ul>
+
 						</li>
 						<li><a href="${grailsApplication.config.grails.serverURL}/admin">Admin</a>
 						  <ul>
