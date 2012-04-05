@@ -18,11 +18,9 @@ class NodeController {
     }
 
     def list() {
-
 		if(params.format){
 			def writer = new StringWriter()
 			def xml = new MarkupBuilder(writer)
-			//def response = []
 			switch(params.format){
 				case 'xml':
 				case 'XML':
@@ -38,9 +36,10 @@ class NodeController {
 							def id = it[0]
 							def name = it[1]
 							def tags = it[6]
+							def desc = it[2]
 							def nodetype = it[3]
 							
-							  node(id:id,name:name,type:nodetype,tags:tags){
+							  node(id:id,name:name,description:desc,type:nodetype,tags:tags){
 								  values.each{ val ->
 									  attribute(name:val.attribute,value:val.value,required:val.required)
 								  }
@@ -58,10 +57,24 @@ class NodeController {
     }
 
     def create() {
-        [nodeInstance: new Node(params)]
+        [nodeList: Node.list(),nodeInstance: new Node(params)]
     }
 
     def save() {
+		def adults = ''
+		def parents
+		params.parents.each{ key ->
+			adults += "${key},"
+		}
+		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (${adults[0..-2]})") }
+		
+		def kinder = ''
+		def children
+		params.children.each{ key ->
+			kinder += "${key},"
+		}
+		if(params.children){ children = Node.findAll("from Node as N where N.id IN (${kinder[0..-2]})") }
+
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
 			Node nodeInstance  = new Node()
 			nodeInstance.name = params.name
@@ -84,12 +97,36 @@ class NodeController {
 					   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
 					}
 				}
+				
+				if(parents){
+					parents.each{ parent ->
+						ChildNode parentNode = ChildNode.findByParentAndChild(parent,nodeInstance)
+						if(!parentNode){
+							parentNode = new ChildNode()
+							parentNode.parent = parent
+							parentNode.child = nodeInstance
+							parentNode.save(flush: true)
+						}
+					}
+				}
+				if(children){
+					children.each{ child ->
+						ChildNode childNode = ChildNode.findByParentAndChild(nodeInstance,child)
+						if(!childNode){
+							childNode = new ChildNode()
+							childNode.parent = nodeInstance
+							childNode.child = child
+							childNode.save(flush: true)
+						}
+					}
+				}
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
 	        }
 		}else{
+			Node nodeInstance  = new Node()
 			flash.message = 'Required fields not filled out. Please try again'
-			render(view: "create", model: [params: params])
+			render(view: "create", model: [nodeInstance: nodeInstance,parents:parents,children:children,params: params])
 		}
     }
 
@@ -106,16 +143,36 @@ class NodeController {
 
     def edit() {
         def nodeInstance = Node.get(params.id)
+		//def nodes = Node.findAll("from Node as N where N.id!=${params.id}") 
+		def criteria = Node.createCriteria()
+		def nodes = criteria.list{
+			ne ("id", params.id?.toLong())
+		}
+		
         if (!nodeInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
             redirect(action: "list")
             return
         }
 
-        [nodeInstance: nodeInstance]
+        [nodes:nodes,nodeInstance: nodeInstance]
     }
 
     def update() {
+		def adults = ''
+		def parents
+		params.parents.each{ key ->
+			adults += "${key},"
+		}
+		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (${adults[0..-2]}) and N.id!=${params.id}") }
+		
+		def kinder = ''
+		def children
+		params.children.each{ key ->
+			kinder += "${key},"
+		}
+		if(params.children){ children = Node.findAll("from Node as N where N.id IN (${kinder[0..-2]}) and N.id!=${params.id}") }
+		
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
 	        def nodeInstance = Node.get(params.id)
 			Date now = new Date()
@@ -160,11 +217,11 @@ class NodeController {
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
 	        }
-			render(view: "edit", model: [nodeInstance: nodeInstance])
+			render(view: "edit", model: [nodeList: Node.list(),nodeInstance: nodeInstance])
 		}else{
-
+			def nodeInstance = Node.get(params.id)
 			flash.message = 'Required fields not filled out. Please try again'
-			render(view: "edit", model: [params: params])
+			render(view: "edit", model: [parents:parents,children:children,nodeInstance: nodeInstance,params: params])
 		}
     }
 

@@ -57,7 +57,7 @@ class AdminController {
 					ntype.dateModified = new Date()
 					ntype.save(flush: true,failOnError:true)
 				}
-			
+				def order = 1
 				nodetype.children().each{ templateAttribute ->
 					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
 					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
@@ -65,7 +65,9 @@ class AdminController {
 						ta = new TemplateAttribute()
 						ta.template = ntype
 						ta.attribute = attribute
+						//ta.order = order
 						ta.save(flush: true,failOnError:true)
+						order++
 					}
 				}
 			}

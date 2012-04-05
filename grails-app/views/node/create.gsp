@@ -8,7 +8,12 @@
 		
   	<script type="text/javascript">
   	window.onload = init;
-  	function init() {}
+  	function init() {
+  		var nodetype = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
+  		if(nodetype){
+			getAttributes();
+  	  	}
+  	}
 
   	function getFormFields(){
   		getAttributes();
@@ -47,14 +52,14 @@
 						// input hidden - attid_require
 						var require = document.createElement('input');
 						require.type='hidden';
-						require.name='att'+j.attid+'_require';
+						require.name='att'+j.id+'_require';
 						require.value = j.required;
 						require.id='att'+j.id+'_require';
 						
 						// input hidden - attid_filter
 						var filter = document.createElement('input');
 						filter.type='hidden';
-						filter.name='att'+j.attid+'_filter';
+						filter.name='att'+j.id+'_filter';
 						filter.value = j.filter;
 						filter.id='att'+j.id+'_filter';
 						
@@ -145,6 +150,14 @@
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
 					<td style="font-weight:bold;"><label for="tags"><g:message code="node.tags.label" default="Tags" /></label>: </td>
 					<td><g:textField name="tags" value="${params?.tags}"/></td>
+				</tr>
+				<tr>
+					<td style="font-weight:bold;" valign=top>Node Parents: </td>
+					<td><g:select name="parents" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${parents?.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
+				</tr>
+				<tr>
+					<td style="font-weight:bold;" valign=top>Node Children: </td>
+					<td><g:select name="children" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${children?.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
 				</tr>
 			</table>
 		

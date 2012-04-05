@@ -30,6 +30,13 @@
 					</g:each>
 			</g:if>
 			
+			<g:if test="${nodeTypeInstance?.description}">
+			<tr>
+					<td style="font-weight:bold;"><g:message code="nodeType.description.label" default="Description" />: </td>
+					<td><g:fieldValue bean="${nodeTypeInstance}" field="description"/></td>
+			</tr>
+			</g:if>
+			
 			<tr>
 				<td style="font-weight:bold;"><g:message code="nodeType.dateCreated.label" default="Date Created" />: </td>
 				<td><g:formatDate date="${nodeTypeInstance?.dateCreated}" /></td>
