@@ -68,7 +68,27 @@
 			</g:if>
 			
 			<tr>
-				<td colspan=2><g:link controller="childNode" action="create" params="['parent': nodeInstance?.id,'child': nodeInstance?.id]">Add Child/Parent Node</g:link></td>
+				<td colspan=2><b>Node Parents</b><br>
+				<ul>
+				<g:if test="${parents}">
+				<g:each in="${parents}" status="i" var="parent">
+					<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${parent?.parent?.id}">${parent?.parent?.name?.encodeAsHTML()}</g:link></span></li>
+				</g:each>
+				</g:if>
+				</ul>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan=2><b>Node Children</b><br>
+				<ul>
+				<g:if test="${children}">
+				<g:each in="${children}" status="i" var="child">
+					<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${child?.child?.id}">${child?.child?.name?.encodeAsHTML()}</g:link></span></li>
+				</g:each>
+				</g:if>
+				</ul>
+				</td>
 			</tr>
 			
 			<tr>
