@@ -28,7 +28,7 @@
 				<li class="fieldcontain">
 					<span id="template-label" class="property-label"><g:message code="templateAttribute.template.label" default="Template" /></span>
 					
-						<span class="property-value" aria-labelledby="template-label"><g:link controller="template" action="show" id="${templateAttributeInstance?.template?.id}">${templateAttributeInstance?.template?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="template-label"><g:link controller="nodeType" action="show" id="${templateAttributeInstance?.template?.id}">${templateAttributeInstance?.template?.name?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
@@ -42,16 +42,6 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${templateAttributeInstance?.values}">
-				<li class="fieldcontain">
-					<span id="values-label" class="property-label"><g:message code="templateAttribute.values.label" default="Values" /></span>
-					
-						<g:each in="${templateAttributeInstance.values}" var="v">
-						<span class="property-value" aria-labelledby="values-label"><g:link controller="templateValue" action="show" id="${v.id}">${v?.encodeAsHTML()}</g:link></span>
-						</g:each>
-					
-				</li>
-				</g:if>
 			
 			</ol>
 			<g:form>
