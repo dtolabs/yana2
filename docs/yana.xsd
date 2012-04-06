@@ -40,14 +40,22 @@
         <xs:element name='node'>
             <xs:complexType>
                 <xs:sequence>
-                    <xs:element ref='attributeValue' maxOccurs="unbounded"/>
+                	<xs:element name='description'/>
+                    <xs:element ref='values'/>
                 </xs:sequence>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
                 <xs:attribute name='nodetype' type='xs:IDREF' use='required'/>
+                <xs:attribute name='tags' type='xs:string'/>
             </xs:complexType>
         </xs:element>
         
-
+        <xs:element name='values'>
+            <xs:complexType>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref='attributeValue' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
         
 		<xs:element name='attributeValue'>
 			<xs:complexType>

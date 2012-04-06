@@ -56,32 +56,41 @@
     </nodetypes>
     
     <nodes>
-		<node id="test.server.com" nodetype="Server">
-			<attributeValue templateAttribute="ta1">Test_Server</attributeValue>
-			<attributeValue templateAttribute="ta2">Dell</attributeValue>
-			<attributeValue templateAttribute="ta3">dps-256</attributeValue>
-			<attributeValue templateAttribute="ta4">12345</attributeValue>
-			<attributeValue templateAttribute="ta5">127.0.0.1</attributeValue>
-			<attributeValue templateAttribute="ta6">127.0.0.1</attributeValue>
-			<attributeValue templateAttribute="ta7">2</attributeValue>
-			<attributeValue templateAttribute="ta8">4GB</attributeValue>
-			<attributeValue templateAttribute="ta9">2TB"</attributeValue>
-			<attributeValue templateAttribute="ta10">10am</attributeValue>
-			<attributeValue templateAttribute="ta11">12pm</attributeValue>
-			<attributeValue templateAttribute="ta12">Ubuntu_Test_Server</attributeValue>
-			<attributeValue templateAttribute="ta13">Linux</attributeValue>
-			<attributeValue templateAttribute="ta14">hostname.test.com</attributeValue>
+		<node id="test.server.com" nodetype="Server" tags="">
+			<description>This is a server</description>
+			<values>
+				<attributeValue templateAttribute="ta1">Test_Server</attributeValue>
+				<attributeValue templateAttribute="ta2">Dell</attributeValue>
+				<attributeValue templateAttribute="ta3">dps-256</attributeValue>
+				<attributeValue templateAttribute="ta4">12345</attributeValue>
+				<attributeValue templateAttribute="ta5">127.0.0.1</attributeValue>
+				<attributeValue templateAttribute="ta6">127.0.0.1</attributeValue>
+				<attributeValue templateAttribute="ta7">2</attributeValue>
+				<attributeValue templateAttribute="ta8">4GB</attributeValue>
+				<attributeValue templateAttribute="ta9">2TB"</attributeValue>
+				<attributeValue templateAttribute="ta10">10am</attributeValue>
+				<attributeValue templateAttribute="ta11">12pm</attributeValue>
+				<attributeValue templateAttribute="ta12">Ubuntu_Test_Server</attributeValue>
+				<attributeValue templateAttribute="ta13">Linux</attributeValue>
+				<attributeValue templateAttribute="ta14">hostname.test.com</attributeValue>
+			</values>
 		</node>
     	<node id="Jetty" nodetype="Software">
-			<attributeValue templateAttribute="ta15">1.0</attributeValue>
-			<attributeValue templateAttribute="ta16">1.234.56.7</attributeValue>
+    		<description>This is a software attached to the server</description>
+    		<values>
+				<attributeValue templateAttribute="ta15">1.0</attributeValue>
+				<attributeValue templateAttribute="ta16">1.234.56.7</attributeValue>
+			</values>
 		</node>
     	<node id="Main_Location" nodetype="Location">
-			<attributeValue templateAttribute="ta17">Rackspace</attributeValue>
-			<attributeValue templateAttribute="ta18">Berkeley</attributeValue>
-			<attributeValue templateAttribute="ta19">CA</attributeValue>
-			<attributeValue templateAttribute="ta20">USA</attributeValue>
-			<attributeValue templateAttribute="ta21">94703</attributeValue>
+    		<description>This is a location attached to the server</description>
+    		<values>
+				<attributeValue templateAttribute="ta17">Rackspace</attributeValue>
+				<attributeValue templateAttribute="ta18">Berkeley</attributeValue>
+				<attributeValue templateAttribute="ta19">CA</attributeValue>
+				<attributeValue templateAttribute="ta20">USA</attributeValue>
+				<attributeValue templateAttribute="ta21">94703</attributeValue>
+			</values>
 		</node>
     </nodes>
 

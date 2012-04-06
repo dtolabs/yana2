@@ -79,8 +79,10 @@ class AdminController {
 				if(!nd){
 					nd = new Node()
 					nd.name = node.@id
+					nd.description = node.description.toString()
 					nd.status = Status.IMP
 					nd.importance = Importance.MED
+					nd.tags = node.@tags.toString()
 					nd.nodetype = nodetype
 					nd.dateCreated = new Date()
 					nd.dateModified = new Date()
@@ -89,7 +91,7 @@ class AdminController {
 					TemplateValue.executeUpdate("delete TemplateValue TV where TV.node = ?", [nd])
 				}
 
-				node.children().each{ templateValue ->
+				node.values.children().each{ templateValue ->
 					def templateAttribute = templateValue.@templateAttribute.toString()
 					def att = xml.nodetypes.nodetype.templateAttribute.findAll { it.@id.text()==templateAttribute }
 					Attribute attribute = Attribute.findByName(att.@attribute.toString())
