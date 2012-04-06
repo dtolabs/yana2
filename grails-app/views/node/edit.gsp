@@ -39,11 +39,11 @@
 						var cell1 = document.createElement("td");
 						cell1.id='att'+j.tid+'_cell1'
 						if(j.required){
-							cell1.innerHTML = '<b>'+j.val+' *:</b>';
+							cell1.innerHTML = '<b>'+j.val+'</b> ['+j.datatype+'] *:';
 						}else{
-							cell1.innerHTML = '<b>'+j.val+':</b>';
+							cell1.innerHTML = '<b>'+j.val+'</b> ['+j.datatype+']:';
 						}
-						cell1.style.width = '150px';
+						cell1.style.width = '200px';
 						row.appendChild(cell1);
 
 						var cell2 = document.createElement("td");
@@ -126,7 +126,7 @@
 
 			<table class="scaffold" border="0" width="500px" border="0">
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'name', 'error')} required">
-					<td style="font-weight:bold;" width="150"><label for="name"><g:message code="node.name.label" default="Name" />*</label>: </td>
+					<td style="font-weight:bold;" width="200"><label for="name"><g:message code="node.name.label" default="Name" />*</label>: </td>
 					<td><g:textField name="name" required="" value="${((params?.name)?params.name:nodeInstance?.name)}"/></td>
 				</tr>
 				
