@@ -28,7 +28,7 @@ class NodeController {
 				case 'XML':
 					xml.nodes() {
 						nodes.each(){ val1 ->
-							def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()}"
+							def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong() order by A.name desc}"
 							def values = TemplateValue.executeQuery(attributequery);
 							
 							node(id:val1.id,name:val1.name,type:val1.nodetype.name,tags:val1.tags){

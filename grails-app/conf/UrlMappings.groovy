@@ -8,7 +8,7 @@ class UrlMappings {
             }
         }
 		
-		"/node/api/$id"(controller: "nodeApi", parseRequest: true) {
+		"/nodeapi/$id"(controller: "nodeApi", parseRequest: true) {
 			action = [PUT: "update", DELETE: "delete"]
 		}
 		

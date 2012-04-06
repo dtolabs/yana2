@@ -87,32 +87,34 @@
       </ul>
     </g:if>
 
-    <g:if test="${haveResults}">
-      <div class="results">
-        <g:each var="result" in="${searchResult.results}" status="index">
-          <div class="result">
-            <g:set var="className" value="${ClassUtils.getShortName(result.getClass())}" />
-            <g:set var="link" value="${createLink(controller: className[0].toLowerCase() + className[1..-1], action: 'show', id: result.id)}" />
-            <div class="name"><a href="${link}">${className} #${result.id}</a></div>
-            <g:set var="desc" value="${result.toString()}" />
-            <g:if test="${desc.size() > 120}"><g:set var="desc" value="${desc[0..120] + '...'}" /></g:if>
-            <div class="desc">${desc.encodeAsHTML()}</div>
-            <div class="displayLink">${link}</div>
-          </div>
-        </g:each>
-      </div>
 
-      <div>
-        <div class="paging">
-          <g:if test="${haveResults}">
-              Page:
-              <g:set var="totalPages" value="${Math.ceil(searchResult.total / searchResult.max)}" />
-              <g:if test="${totalPages == 1}"><span class="currentStep">1</span></g:if>
-              <g:else><g:paginate controller="searchable" action="index" params="[q: params.q]" total="${searchResult.total}" prev="&lt; previous" next="next &gt;"/></g:else>
-          </g:if>
-        </div>
-      </div>
-    </g:if>
+<g:if test="${haveResults}">
+		<div id="list-node" class="content scaffold-list" role="main">
+			<table>
+				<tbody>
+				<g:each var="result" in="${searchResult.results}" status="index">
+					<g:set var="name" value="${ClassUtils.getShortName(result.getClass())}" />
+            		<g:set var="className" value="${ClassUtils.getShortName(result.getClass())}" />
+            		<g:set var="link" value="${createLink(controller: className[0].toLowerCase() + className[1..-1], action: 'show', id: result.id)}" />
+					<tr class="${(index % 2) == 0 ? 'even' : 'odd'}">
+						<td><a href="${link}">${Node.get(result.id.toLong()).name}</a> : ${Node.get(result.id.toLong()).description}</br><div class="displayLink">${link}</div></td>
+					</tr>
+				</g:each>
+				</tbody>
+			</table>
+			<div class="pagination">
+	          <g:if test="${haveResults}">
+	          </br>
+	              Page:
+	              <g:set var="totalPages" value="${Math.ceil(searchResult.total / searchResult.max)}" />
+	              <g:if test="${totalPages == 1}"><span class="currentStep">1</span></g:if>
+	              <g:else><g:paginate controller="searchable" action="index" params="[q: params.q]" total="${searchResult.total}" prev="&lt; previous" next="next &gt;"/></g:else>
+	          </g:if>
+			</div>
+		</div>
+</g:if>
+
+
   </div>
   </body>
 </html>
