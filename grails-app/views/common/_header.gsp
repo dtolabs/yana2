@@ -12,7 +12,16 @@
 <table border=0 cellspacing=0 cellpadding=0 width='100%' valign=top>
 	<tr>
 		<td align=left width=255 height=52 valign=bottom><img src="<g:createLinkTo dir='images' file='yana_logo1.png'/>" width='255px' height='52px' style="vertical-align:bottom;"/></td>
-		<td width='*'>&nbsp;</td>
+		<td width='*'>
+			<center>
+			<div>
+			  <g:form url='[controller: "search", action: "index"]' id="searchableForm" name="searchableForm" method="get">
+			      <g:textField name="q" value="${params.q}" size="50"/> <input type="submit" value="Search" />
+			  </g:form>
+			  <div style="clear: both; display: none;" class="hint">See <a href="http://lucene.apache.org/java/docs/queryparsersyntax.html">Lucene query syntax</a> for advanced queries</div>
+			</div>
+			</center>
+		</td>
 	</tr>
 	<tr>
 		<td align=left width=255 height=24 style="background-color:#d6d6d6" valign=top><img src="<g:createLinkTo dir='images' file='yana_logo2.png'/>" width='46px' height='24px'/></td>

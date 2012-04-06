@@ -8,8 +8,9 @@ import grails.converters.XML
 import java.util.Date;
 
 class NodeController {
-
-	def springSecurityService
+	
+	def searchableService
+	//def springSecurityService
 	
     static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
 
