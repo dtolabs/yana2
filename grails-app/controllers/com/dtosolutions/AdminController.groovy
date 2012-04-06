@@ -89,7 +89,6 @@ class AdminController {
 					TemplateValue.executeUpdate("delete TemplateValue TV where TV.node = ?", [nd])
 				}
 
-				
 				node.children().each{ templateValue ->
 					def templateAttribute = templateValue.@templateAttribute.toString()
 					def att = xml.nodetypes.nodetype.templateAttribute.findAll { it.@id.text()==templateAttribute }
@@ -99,7 +98,7 @@ class AdminController {
 					TemplateValue tv = new TemplateValue()
 					tv.node = nd
 					tv.templateattribute = ta
-					tv.value = templateValue.@value.toString()
+					tv.value = templateValue.toString()
 					tv.dateCreated = new Date()
 					tv.dateModified = new Date()
 					tv.save(flush: true,failOnError:true)

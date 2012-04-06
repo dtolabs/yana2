@@ -57,31 +57,31 @@
     
     <nodes>
 		<node id="test.server.com" nodetype="Server">
-			<attributeValue templateAttribute="ta1" value="Test_Server"/>
-			<attributeValue templateAttribute="ta2" value="Dell"/>
-			<attributeValue templateAttribute="ta3" value="dps-256"/>
-			<attributeValue templateAttribute="ta4" value="12345"/>
-			<attributeValue templateAttribute="ta5" value="127.0.0.1"/>
-			<attributeValue templateAttribute="ta6" value="127.0.0.1"/>
-			<attributeValue templateAttribute="ta7" value="2"/>
-			<attributeValue templateAttribute="ta8" value="4GB"/>
-			<attributeValue templateAttribute="ta9" value="2TB"/>
-			<attributeValue templateAttribute="ta10" value="10am"/>
-			<attributeValue templateAttribute="ta11" value="12pm"/>
-			<attributeValue templateAttribute="ta12" value="Ubuntu_Test_Server"/>
-			<attributeValue templateAttribute="ta13" value="Linux"/>
-			<attributeValue templateAttribute="ta14" value="hostname.test.com"/>
+			<attributeValue templateAttribute="ta1">Test_Server</attributeValue>
+			<attributeValue templateAttribute="ta2">Dell</attributeValue>
+			<attributeValue templateAttribute="ta3">dps-256</attributeValue>
+			<attributeValue templateAttribute="ta4">12345</attributeValue>
+			<attributeValue templateAttribute="ta5">127.0.0.1</attributeValue>
+			<attributeValue templateAttribute="ta6">127.0.0.1</attributeValue>
+			<attributeValue templateAttribute="ta7">2</attributeValue>
+			<attributeValue templateAttribute="ta8">4GB</attributeValue>
+			<attributeValue templateAttribute="ta9">2TB"</attributeValue>
+			<attributeValue templateAttribute="ta10">10am</attributeValue>
+			<attributeValue templateAttribute="ta11">12pm</attributeValue>
+			<attributeValue templateAttribute="ta12">Ubuntu_Test_Server</attributeValue>
+			<attributeValue templateAttribute="ta13">Linux</attributeValue>
+			<attributeValue templateAttribute="ta14">hostname.test.com</attributeValue>
 		</node>
     	<node id="Jetty" nodetype="Software">
-			<attributeValue templateAttribute="ta15" value="1.0"/>
-			<attributeValue templateAttribute="ta16" value="1.234.56.7"/>
+			<attributeValue templateAttribute="ta15"></attributeValue>
+			<attributeValue templateAttribute="ta16"></attributeValue>
 		</node>
     	<node id="Main_Location" nodetype="Location">
-			<attributeValue templateAttribute="ta17" value="Rackspace"/>
-			<attributeValue templateAttribute="ta18" value="Berkeley"/>
-			<attributeValue templateAttribute="ta19" value="CA"/>
-			<attributeValue templateAttribute="ta20" value="USA"/>
-			<attributeValue templateAttribute="ta21" value="94703"/>
+			<attributeValue templateAttribute="ta17">Rackspace</attributeValue>
+			<attributeValue templateAttribute="ta18">Berkeley</attributeValue>
+			<attributeValue templateAttribute="ta19">CA</attributeValue>
+			<attributeValue templateAttribute="ta20">USA</attributeValue>
+			<attributeValue templateAttribute="ta21">94703</attributeValue>
 		</node>
     </nodes>
 

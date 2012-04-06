@@ -17,29 +17,82 @@ class NodeController {
         redirect(action: "list", params: params)
     }
 
+	def criteriaBuilder(json){
+		def criteria = Node.createCriteria()
+		def nodes = criteria.list{
+			def count=0
+			def jsonSize = json.size()
+			json.each{ key,val ->
+				if(count==1){
+					and{
+				}
+				switch(key){
+					case 'between':
+						break;
+					case 'eq':
+						eq("${val[0]}", Node.get(params.id?.toLong()))
+						break;
+					case 'eqProperty':
+						break;
+					case 'gt':
+						break;
+					case 'gtProperty':
+						break;
+					case 'ge':
+						break;
+					case 'geProperty':
+						break;
+					case 'idEq':
+						break;
+					case 'in':
+						break;
+					case 'isNull':
+						break;
+					case 'isNotNull':
+						break;
+					case 'lt':
+						break;
+					case 'ltProperty':
+						break;
+					case 'le':
+						break;
+					case 'leProperty':
+						break;
+					case 'like':
+						break;
+					case 'ne':
+						break;
+					case 'neProperty':
+						break;
+					case 'order':
+						break;
+				}
+				count++
+				if(count>=jsonSize){
+					}
+				}
+			}
+			//eq("child", Node.get(params.id?.toLong()))
+		}
+	}
+	
     def list() {
+		if(params.query){
+			JSON.parse(params.query)
+		}
+		def nodes = Node.list(params)
 		if(params.format){
 			def writer = new StringWriter()
 			def xml = new MarkupBuilder(writer)
 			switch(params.format){
 				case 'xml':
 				case 'XML':
-
-					def nodequery = "select N.id,N.name,N.description,NT.name as nodetype,N.status,N.importance,N.tags from Node as N left join N.nodetype as NT"
-					def nodes = Node.executeQuery(nodequery);
-					
 					xml.nodes() {
 						nodes.each(){
-							def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${it[0].toLong()}"
+							def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${it.id.toLong()}"
 							def values = TemplateValue.executeQuery(attributequery);
-
-							def id = it[0]
-							def name = it[1]
-							def tags = it[6]
-							def desc = it[2]
-							def nodetype = it[3]
 							
-							  node(id:id,name:name,description:desc,type:nodetype,tags:tags){
+							  node(id:it.id,name:it.name,description:it.description,type:it.nodetype.name,tags:it.tags){
 								  values.each{ val ->
 									  attribute(name:val.attribute,value:val.value,required:val.required)
 								  }

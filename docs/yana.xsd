@@ -47,12 +47,20 @@
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='attributeValue'>
-            <xs:complexType>
-                <xs:attribute name='templateAttribute' type='xs:IDREF' use='required'/>
-                <xs:attribute name='value' type='xs:string' use='required'/>
-            </xs:complexType>
-        </xs:element>
+
+        
+		<xs:element name='attributeValue'>
+			<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="xs:string">
+						<xs:attribute name='templateAttribute' type='xs:IDREF' use='required'/>
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+		</xs:element>
+        
+        
+        
         
         <xs:element name='nodechildren'>
             <xs:complexType>
