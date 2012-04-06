@@ -23,10 +23,10 @@
 						<g:sortableColumn property="nodetype" title="${message(code: 'node.nodetype.name.label', default: 'Nodetype')}" />
 					
 						<g:sortableColumn property="status" title="${message(code: 'node.status.label', default: 'Status')}" />
-					
-						<g:sortableColumn property="importance" title="${message(code: 'node.importance.label', default: 'Importance')}" />
-					
+						
 						<g:sortableColumn property="tags" title="${message(code: 'node.tags.label', default: 'Tags')}" />
+						
+						<g:sortableColumn property="description" title="${message(code: 'node.description.label', default: 'Description')}" />
 					
 					</tr>
 				</thead>
@@ -40,9 +40,9 @@
 					
 						<td>${fieldValue(bean: nodeInstance, field: "status")}</td>
 					
-						<td>${fieldValue(bean: nodeInstance, field: "importance")}</td>
-					
 						<td>${fieldValue(bean: nodeInstance, field: "tags")}</td>
+					
+						<td>${fieldValue(bean: nodeInstance, field: "description")}</td>
 					
 					</tr>
 				</g:each>

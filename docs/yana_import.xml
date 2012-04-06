@@ -56,7 +56,7 @@
     </nodetypes>
     
     <nodes>
-		<node id="test.server.com" nodetype="Server" tags="">
+		<node id="test.server.com" nodetype="Server" tags="server,test">
 			<description>This is a server</description>
 			<values>
 				<attributeValue templateAttribute="ta1">Test_Server</attributeValue>
@@ -75,14 +75,14 @@
 				<attributeValue templateAttribute="ta14">hostname.test.com</attributeValue>
 			</values>
 		</node>
-    	<node id="Jetty" nodetype="Software">
+    	<node id="Jetty" nodetype="Software" tags="jetty,software,test">
     		<description>This is a software attached to the server</description>
     		<values>
 				<attributeValue templateAttribute="ta15">1.0</attributeValue>
 				<attributeValue templateAttribute="ta16">1.234.56.7</attributeValue>
 			</values>
 		</node>
-    	<node id="Main_Location" nodetype="Location">
+    	<node id="Main_Location" nodetype="Location" tags="location,berkeley,ca,test">
     		<description>This is a location attached to the server</description>
     		<values>
 				<attributeValue templateAttribute="ta17">Rackspace</attributeValue>
