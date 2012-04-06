@@ -2,7 +2,6 @@ package com.dtosolutions
 
 import groovy.xml.MarkupBuilder
 import org.custommonkey.xmlunit.*
-import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
 import grails.converters.XML
 import java.util.Date;
