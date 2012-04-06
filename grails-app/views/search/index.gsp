@@ -113,7 +113,7 @@
             		<g:set var="link" value="${createLink(controller: className[0].toLowerCase() + className[1..-1], action: 'show', id: result.id)}" />
 					<tr class="${(index % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link></td>
+						<td><g:link controller="node" action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link></td>
 					
 						<td><g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link></td>
 					

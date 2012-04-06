@@ -23,8 +23,9 @@
 			
 			<g:if test="${nodeTypeInstance?.attributes}">
 					<g:each in="${nodeTypeInstance.attributes}" var="a">
+					<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.get(a.attribute.id)}"/>
 					<tr>
-						<td style="font-weight:bold;">${com.dtosolutions.Attribute.get(a.attribute.id)}: </td>
+						<td><b>${attributeInstance.name}</b> [${attributeInstance.filter.dataType}]: </td>
 						<td>${a.required.encodeAsHTML()}</td>
 					</tr>
 					</g:each>
