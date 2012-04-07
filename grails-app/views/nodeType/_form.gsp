@@ -33,8 +33,10 @@
 	</label>
 	
 <ul class="one-to-many">
+
 <g:each in="${nodeTypeInstance?.attributes?}" var="a">
-    <li><g:link controller="TemplateAttribute" action="show" id="${a.id}">${a?.attribute?.name?.encodeAsHTML()}</g:link></li>
+	<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.get(a.attribute.id)}"/>
+    <li><g:link controller="TemplateAttribute" action="show" id="${a.id}">${attributeInstance.name} [${attributeInstance.filter.dataType}]</g:link></li>
 </g:each>
 </ul>
 
