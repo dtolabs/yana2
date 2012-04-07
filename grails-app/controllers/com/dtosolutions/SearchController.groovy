@@ -23,7 +23,7 @@ class SearchController {
 				results.results.each{ val1 ->
 					if(val1.class==Node){
 						def nd = Node.get(val1.id.toLong())
-						def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()}"
+						def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
 						def values = TemplateValue.executeQuery(attributequery)
 						
 						node(id:nd.id,name:nd.name,type:nd.nodetype.name,tags:nd.tags){
@@ -31,6 +31,16 @@ class SearchController {
 							attributes(){
 								values.each{ val2 ->
 									attribute(name:val2.attribute,value:val2.value,required:val2.required)
+								}
+							}
+							parents(){
+								nd.parents.each{ parent ->
+									node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags)
+								}
+							}
+							children(){
+								nd.children.each{ child ->
+									node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags)
 								}
 							}
 						}

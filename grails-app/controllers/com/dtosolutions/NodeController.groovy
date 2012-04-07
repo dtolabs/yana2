@@ -17,6 +17,23 @@ class NodeController {
         redirect(action: "list", params: params)
     }
 	
+	def api(){
+		switch(request.method){
+			case "POST":
+				this.create()
+				break
+			case "GET":
+				this.show()
+				break
+			case "PUT":
+				this.update()
+				break
+			case "DELETE":
+				this.delete()
+				break
+		  }
+	}
+	
     def list() {
 
 		def nodes = Node.list(params)
@@ -33,11 +50,21 @@ class NodeController {
 							
 							node(id:val1.id,name:val1.name,type:val1.nodetype.name,tags:val1.tags){
 								description(val1.description)
-									attributes(){
-										values.each{ val2 ->
-											attribute(name:val2.attribute,value:val2.value,required:val2.required)
-										}
+								attributes(){
+									values.each{ val2 ->
+										attribute(name:val2.attribute,value:val2.value,required:val2.required)
 									}
+								}
+								parents(){
+									val1.parents.each{ parent ->
+										node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags)
+									}
+								}
+								children(){
+									val1.children.each{ child ->
+										node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags)
+									}
+								}
 							}
 						}
 					}
@@ -232,9 +259,11 @@ class NodeController {
     }
 
     def delete() {
+		println(params)
 		Node.withTransaction{ status ->
 	        def nodeInstance = Node.get(params.id)
 	        if (!nodeInstance) {
+				println("delete: nodeinstance found")
 				flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
 	            redirect(action: "list")
 	            return
