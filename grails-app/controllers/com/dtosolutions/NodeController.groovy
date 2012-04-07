@@ -55,8 +55,10 @@ class NodeController {
 										attribute(name:val2.attribute,value:val2.value,required:val2.required)
 									}
 								}
+								
 								parents(){
-									val1.parents.each{ parent ->
+									def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
+									rents.each{ parent ->
 										node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags)
 									}
 								}

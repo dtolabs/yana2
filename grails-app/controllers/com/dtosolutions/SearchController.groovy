@@ -33,11 +33,14 @@ class SearchController {
 									attribute(name:val2.attribute,value:val2.value,required:val2.required)
 								}
 							}
+							
 							parents(){
-								nd.parents.each{ parent ->
+								def rents = ChildNode.findByChild(nd);
+								rents.each{ parent ->
 									node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags)
 								}
 							}
+							
 							children(){
 								nd.children.each{ child ->
 									node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags)
