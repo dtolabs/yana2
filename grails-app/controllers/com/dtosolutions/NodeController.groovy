@@ -1,22 +1,21 @@
 package com.dtosolutions
 
-import groovy.xml.MarkupBuilder
-import org.custommonkey.xmlunit.*
 import grails.converters.JSON
-import grails.converters.XML
 import java.util.Date;
 
 class NodeController {
 	
 	def searchableService
-	//def springSecurityService
+	def xmlService
 	
     static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
 
-    def index() {
-        redirect(action: "list", params: params)
-    }
-	
+	/*
+	 * Restful function to handle routing
+	 * URLMapping wants to route everything to node or take over routing for node; needed to build
+	 * routing function to handle REST handling to do custom routing for anything that doesn't 
+	 * look like it is handled by controller
+	 */
 	def api(){
 		switch(request.method){
 			case "POST":
@@ -34,46 +33,20 @@ class NodeController {
 		  }
 	}
 	
-    def list() {
+    def index() {
+        redirect(action: "list", params: params)
+    }
 
+    def list() {
 		def nodes = Node.list(params)
 		if(params.format){
-			def writer = new StringWriter()
-			def xml = new MarkupBuilder(writer)
 			switch(params.format){
 				case 'xml':
 				case 'XML':
-					xml.nodes() {
-						nodes.each(){ val1 ->
-							def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
-							def values = TemplateValue.executeQuery(attributequery);
-							
-							node(id:val1.id,name:val1.name,type:val1.nodetype.name,tags:val1.tags){
-								description(val1.description)
-								attributes(){
-									values.each{ val2 ->
-										attribute(name:val2.attribute,value:val2.value,required:val2.required)
-									}
-								}
-								
-								parents(){
-									def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
-									rents.each{ parent ->
-										node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags)
-									}
-								}
-								children(){
-									val1.children.each{ child ->
-										node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags)
-									}
-								}
-							}
-						}
-					}
+					def xml = xmlService.formatNodes(nodes)
+					render(text: xml, contentType: "text/xml")
 					break;
 			}
-
-			render(text: writer.toString(), contentType: "text/xml")
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]
@@ -85,30 +58,18 @@ class NodeController {
     }
 
     def save() {
-		def adults = ''
+		Long[] adults = Eval.me("${params.parents}")
 		def parents
-		params.parents.each{ key ->
-			adults += "${key},"
-		}
-		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (${adults[0..-2]})") }
+		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids)",[ids:adults]) }
 		
-		def kinder = ''
+		Long[] kinder = Eval.me("${params.children}")
 		def children
-		params.children.each{ key ->
-			kinder += "${key},"
-		}
-		if(params.children){ children = Node.findAll("from Node as N where N.id IN (${kinder[0..-2]})") }
+		if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:children]) }
 
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
-			Node nodeInstance  = new Node()
-			nodeInstance.name = params.name
-			nodeInstance.description = params.description
-			nodeInstance.status = params.status
-			nodeInstance.importance = params.importance
-			nodeInstance.tags = params.tags
-			nodeInstance.nodetype = NodeType.get(params.nodetype.toLong())
+			params.nodetype = NodeType.get(params.nodetype.toLong())
+			Node nodeInstance  = new Node(params)
 			nodeInstance.dateCreated = new Date()
-			nodeInstance.dateModified = new Date()
 						
 	        if (!nodeInstance.save(flush: true)) {
 	            render(view: "create", model: [nodeInstance: nodeInstance])
@@ -194,19 +155,13 @@ class NodeController {
     }
 
     def update() {
-		def adults = ''
+		Long[] adults = Eval.me("${params.parents}")
 		def parents
-		params.parents.each{ key ->
-			adults += "${key},"
-		}
-		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (${adults[0..-2]}) and N.id!=${params.id}") }
+		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:adults]) }
 		
-		def kinder = ''
+		Long[] kinder = Eval.me("${params.children}")
 		def children
-		params.children.each{ key ->
-			kinder += "${key},"
-		}
-		if(params.children){ children = Node.findAll("from Node as N where N.id IN (${kinder[0..-2]}) and N.id!=${params.id}") }
+		if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:children]) }
 		
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
 	        def nodeInstance = Node.get(params.id)
@@ -261,7 +216,6 @@ class NodeController {
     }
 
     def delete() {
-		println(params)
 		Node.withTransaction{ status ->
 	        def nodeInstance = Node.get(params.id)
 	        if (!nodeInstance) {
