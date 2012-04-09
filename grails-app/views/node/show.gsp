@@ -31,10 +31,6 @@
 				<td style="font-weight:bold;"><g:message code="node.status.label" default="Status" />: </td>
 				<td><g:fieldValue bean="${nodeInstance}" field="status"/></td>
 			</tr>
-			<tr>
-				<td style="font-weight:bold;"><g:message code="node.importance.label" default="Importance" />: </td>
-				<td><g:fieldValue bean="${nodeInstance}" field="importance"/></td>
-			</tr>
 			
 			<g:if test="${nodeInstance?.tags}">
 			<tr>

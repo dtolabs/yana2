@@ -66,7 +66,7 @@ class NodeController {
 		def children
 		if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:children]) }
 
-		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
+		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
 			params.nodetype = NodeType.get(params.nodetype.toLong())
 			Node nodeInstance  = new Node(params)
 			nodeInstance.dateCreated = new Date()
@@ -163,7 +163,7 @@ class NodeController {
 		def children
 		if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:children]) }
 		
-		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.importance && params.importance!='null') && (params.nodetype && params.nodetype!='null')){
+		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
 	        def nodeInstance = Node.get(params.id)
 			Date now = new Date()
 	        if (!nodeInstance) {
@@ -186,7 +186,6 @@ class NodeController {
 			nodeInstance.name = params.name
 			nodeInstance.description = params.description
 			nodeInstance.status = params.status
-			nodeInstance.importance = params.importance
 			nodeInstance.tags = params.tags
 			nodeInstance.dateCreated = now
 			nodeInstance.dateModified = now

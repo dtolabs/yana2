@@ -34,14 +34,6 @@
 	<g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${nodeInstance?.status?.name()}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'importance', 'error')} required">
-	<label for="importance">
-		<g:message code="node.importance.label" default="Importance" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:select name="importance" from="${com.dtosolutions.Importance?.values()}" keys="${com.dtosolutions.Importance.values()*.name()}" required="" value="${nodeInstance?.importance?.name()}"/>
-</div>
-
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
 	<label for="tags">
 		<g:message code="node.tags.label" default="Tags" />
@@ -94,7 +86,6 @@
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'nodes', 'error')} ">
 	<label for="nodes">
 		<g:message code="node.nodes.label" default="Nodes" />
-		
 	</label>
 	
 <ul class="one-to-many">

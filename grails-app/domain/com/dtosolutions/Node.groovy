@@ -9,7 +9,6 @@ class Node {
     String name
     String description
 	Status status
-	Importance importance
 	String tags
 	NodeType nodetype
     Date dateCreated
@@ -71,28 +70,4 @@ public enum Status {
 	 static list(){
 		 [DEV,TEST,STAGE,PROD,IMP,BKP,OTHER]
 	 }
-}
-
-public enum Importance {
-	HIGH("High"),
-	LOW("Low"),
-	MED("Medium")
-   
-	private final String value
-   
-	Importance(String value){
-	 this.value = value;
-	}
-   
-	String toString() {
-	 value
-	}
-   
-	String getKey() {
-	 name()
-	}
-   
-	static list(){
-		[HIGH,LOW,MED]
-	}
 }
