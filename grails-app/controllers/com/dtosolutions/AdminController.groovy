@@ -81,7 +81,6 @@ class AdminController {
 					nd.name = node.@id
 					nd.description = node.description.toString()
 					nd.status = Status.IMP
-					nd.importance = Importance.MED
 					nd.tags = node.@tags.toString()
 					nd.nodetype = nodetype
 					nd.dateCreated = new Date()
