@@ -16,7 +16,7 @@
 		</g:if>
 		<table class="scaffold" border="0">
 			<tr class="results">
-				<td style="font-weight:bold;"><g:message code="node.name.label" default="Name" />: </td>
+				<td style="font-weight:bold;" width="250"><g:message code="node.name.label" default="Name" />: </td>
 				<td><g:fieldValue bean="${nodeInstance}" field="name"/></td>
 			</tr>
 
@@ -60,8 +60,9 @@
 			
 			<g:if test="${nodeInstance?.templateValues}">
 				<g:each in="${nodeInstance.templateValues}" var="t">
+				<g:set var="attribute" value="${com.dtosolutions.Attribute.get(t?.templateattribute?.attribute?.id)}" />
 					<tr>
-						<td style="font-weight:bold;">${com.dtosolutions.Attribute.get(t?.templateattribute?.attribute?.id)}: </td>
+						<td><b>${attribute?.name}</b> [${attribute.filter.dataType}]: </td>
 						<td>${t?.value?.encodeAsHTML()}</td>
 					</tr>
 				</g:each>
