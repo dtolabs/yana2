@@ -18,7 +18,6 @@ class Node {
         name(blank:false)
         description(blank:true, nullable:true)
 		status(nullable:false)
-		importance(nullable:false)
         tags(nullable:true)
 		nodetype(nullable:false)
     }

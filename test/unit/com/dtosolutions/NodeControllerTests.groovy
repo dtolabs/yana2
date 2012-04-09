@@ -20,7 +20,6 @@ class NodeControllerTests {
       params["name"] = 'node_name'
 	  params["description"] = "some description"
 	  params["status"] = Status.IMP
-	  params["importance"] = Importance.MED
 	  params["tags"] = "this,is,a,test"
 	  params["nodetype"] = server
 	  params["dateCreated"] = new Date()
