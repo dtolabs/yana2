@@ -1,11 +1,12 @@
 package com.dtosolutions
 
 import org.compass.core.engine.SearchEngineQueryParseException
-import groovy.xml.MarkupBuilder
-import org.custommonkey.xmlunit.*
+import grails.plugins.springsecurity.Secured
 
+@Secured(['ROLE_ADMIN','ROLE_USER','ROLE_ARCHITECT','ROLE_SUPER_USER'])
 class SearchController {
 	
+	def springSecurityService
     def searchableService
 	def xmlService
 

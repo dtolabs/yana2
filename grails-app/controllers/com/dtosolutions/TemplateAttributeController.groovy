@@ -1,9 +1,13 @@
 package com.dtosolutions
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.plugins.springsecurity.Secured
 
+@Secured(['ROLE_ADMIN','ROLE_ARCHITECT','ROLE_SUPER_USER'])
 class TemplateAttributeController {
 
+	def springSecurityService
+	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {

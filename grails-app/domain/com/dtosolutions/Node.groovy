@@ -3,6 +3,7 @@ package com.dtosolutions
 class Node {
 
     static searchable = true
+
 	static mappedBy = [children: 'child', parents: 'parent']
 	static hasMany = [templateValues:TemplateValue,children:ChildNode,parents:ChildNode]
 	

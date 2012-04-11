@@ -8,12 +8,15 @@ import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
-
+import grails.plugins.springsecurity.Secured
 import org.xml.sax.SAXException
 
+@Secured(['ROLE_ADMIN','ROLE_SUPER_USER'])
 class AdminController {
 
-    def index() { }
+	def springSecurityService
+	
+    def index() {}
 	
 	def importxml() {}
 	
@@ -21,7 +24,6 @@ class AdminController {
 		def xml = new XmlSlurper().parse(request.getFile("yanaimport").inputStream)
 
 		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-		//Schema schema = factory.newSchema(new StreamSource(getClass().classLoader.getResourceAsStream("/docs/yana.xsd")));
 		Schema schema = factory.newSchema(new File("docs/yana.xsd"));
 		Validator validator = schema.newValidator()
 		

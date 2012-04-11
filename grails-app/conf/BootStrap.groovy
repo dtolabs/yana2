@@ -6,6 +6,17 @@ class BootStrap {
 		
 		Date now = new Date()
 
+		Role adminRole = Role.findByAuthority('ROLE_ADMIN')?: new Role(authority:'ROLE_ADMIN').save(faileOnError:true)
+		Role userRole = Role.findByAuthority('ROLE_USER')?: new Role(authority:'ROLE_USER').save(faileOnError:true)
+		Role archRole = Role.findByAuthority('ROLE_ARCHITECT')?: new Role(authority:'ROLE_ARCHITECT').save(faileOnError:true)
+		Role rootRole = Role.findByAuthority('ROLE_SUPER_USER')?: new Role(authority:'ROLE_SUPER_USER').save(faileOnError:true)
+		
+		User adminUser = User.findByUsername('admin')?: new User(username:'admin',password:'admin',enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
+		if(!adminUser?.authorities?.contains(rootRole)){
+			UserRole.create adminUser,rootRole
+		}
+
+		
 		Filter fStr = Filter.findByDataType('String') ?: new Filter(dataType:'String',regex:'^.*\$',dateCreated:now).save(failOnError:true)
 		Filter fBool = Filter.findByDataType('Boolean') ?: new Filter(dataType:'Boolean',regex:"^([0-1]|true|false)\$",dateCreated:now).save(failOnError:true)
 		Filter fInt = Filter.findByDataType('Integer') ?: new Filter(dataType:'Integer',regex:"^[0-9]\$",dateCreated:now).save(failOnError:true)

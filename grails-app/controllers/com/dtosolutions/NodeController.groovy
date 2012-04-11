@@ -2,10 +2,12 @@ package com.dtosolutions
 
 import grails.converters.JSON
 import java.util.Date;
+import grails.plugins.springsecurity.Secured
 
+@Secured(['ROLE_ADMIN','ROLE_USER','ROLE_ARCHITECT','ROLE_SUPER_USER'])
 class NodeController {
 	
-	def searchableService
+	def springSecurityService
 	def xmlService
 	
     static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]

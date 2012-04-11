@@ -3,7 +3,8 @@ package com.dtosolutions
 import java.util.Date;
 
 class NodeType{
-
+	//static searchable = true
+	
 	static hasMany = [nodes:Node,attributes:TemplateAttribute]
 
 	String name

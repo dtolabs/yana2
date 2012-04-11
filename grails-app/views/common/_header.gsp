@@ -58,6 +58,16 @@
 						<li><a href="${grailsApplication.config.grails.serverURL}/admin">Admin</a>
 						  <ul>
 						  <li><g:link controller="admin" action="importxml">Import Resources</g:link></li>
+						  <li><g:link controller="user" action="search">Users</g:link>
+								<ul>
+									<li><g:link controller="user" action="create">Create User</g:link></li>
+								</ul>
+						  </li>
+						  <li><g:link controller="role" action="search">Roles</g:link>
+								<ul>
+									<li><g:link controller="role" action="create">Create Role</g:link></li>
+								</ul>
+						  </li>
 						  </ul>
 						</li>
 						</ul>
