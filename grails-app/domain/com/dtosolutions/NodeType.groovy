@@ -5,7 +5,8 @@ import java.util.Date;
 class NodeType{
 	//static searchable = true
 	
-	static hasMany = [nodes:Node,attributes:TemplateAttribute]
+	static mappedBy = [children: 'child', parents: 'parent']
+	static hasMany = [nodes:Node,attributes:TemplateAttribute,children:NodeTypeRelationship,parents:NodeTypeRelationship]
 
 	String name
 	String description

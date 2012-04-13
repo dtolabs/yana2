@@ -7,8 +7,8 @@
                     <xs:element ref="attributes"  maxOccurs="1"/>
                     <xs:element ref="nodetypes" maxOccurs="1"/>
                     <xs:element ref="nodes"  maxOccurs="1"/>
-                    <xs:element ref="nodechildren"  maxOccurs="1"/>
-                    
+                    <xs:element ref="nodetyperelationships"  maxOccurs="1"/>
+                    <xs:element ref="noderelationships"  maxOccurs="1"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:element>
@@ -68,18 +68,35 @@
 		</xs:element>
         
         
-        
-        
-        <xs:element name='nodechildren'>
+        <xs:element name='nodetyperelationships'>
             <xs:complexType>
                 <xs:sequence>
-                    <xs:element ref='nodechild' maxOccurs="unbounded"/>
+                    <xs:element ref='nodetyperelationship' maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:element>
     
-        <xs:element name='nodechild'>
+        <xs:element name='nodetyperelationship'>
             <xs:complexType>
+            	<xs:attribute name='rolename' type='xs:string' use='required'/>
+            	<xs:attribute name='parentCardinality' type='xs:integer'/>
+            	<xs:attribute name='childCardinality' type='xs:integer'/>
+                <xs:attribute name='parent' type='xs:IDREF' use='required'/>
+                <xs:attribute name='child' type='xs:IDREF' use='required'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='noderelationships'>
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element ref='noderelationship' maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+    
+        <xs:element name='noderelationship'>
+            <xs:complexType>
+            	<xs:attribute name='relationshipname' type='xs:string' use='required'/>
                 <xs:attribute name='parent' type='xs:IDREF' use='required'/>
                 <xs:attribute name='child' type='xs:IDREF' use='required'/>
             </xs:complexType>

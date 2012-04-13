@@ -108,18 +108,47 @@ class AdminController {
 				}
 			}
 			
+			// parse nodetype parent/child
+			xml.nodetyperelationships.children().each{ nodetypechild ->
+				// get dependencies
+				NodeType parent = NodeType.findByName(nodetypechild.@parent.toString())
+				NodeType child = NodeType.findByName(nodetypechild.@child.toString())
+
+				NodeTypeRelationship childnodetype = NodeTypeRelationship.findByChildAndParent(child,parent)
+				if(!childnodetype){
+					childnodetype  = new NodeTypeRelationship()
+					childnodetype.roleName = nodetypechild.@rolename.toString()
+					if(nodetypechild.@parentCardinality.toString()){
+						childnodetype.parentCardinality = nodetypechild.@parentCardinality.toInteger()
+					}
+					if(nodetypechild.@childCardinality.toString()){
+						childnodetype.childCardinality = nodetypechild.@childCardinality.toInteger()
+					}
+					childnodetype.child = child
+					childnodetype.parent = parent
+					childnodetype.save(flush: true,failOnError:true)
+				}
+			}
+			
 			// parse node parent/child
-			xml.nodechildren.children().each{ nodechild ->
+			xml.noderelationships.children().each{ nodechild ->
 				// get dependencies
 				Node parent = Node.findByName(nodechild.@parent.toString())
 				Node child = Node.findByName(nodechild.@child.toString())
-
+				def childNodeTypes = Node.findByNodetype(child.nodetype)
+				def parentNodeTypes = Node.findByNodetype(parent.nodetype)
+				
+				NodeTypeRelationship childnodetype = NodeTypeRelationship.findByChildAndParent(child.nodetype,parent.nodetype)
+				
 				ChildNode childnode = ChildNode.findByChildAndParent(child,parent)
-				if(!childnode){
+				if(!childnode && childnodetype && (!childnodetype.childCardinality || childnodetype.childCardinality==0 || (childNodetypes.size()+1<=childnodetype.childCardinality)) && (!childnodetype.parentCardinality || childnodetype.parentCardinality==0 || (parentNodetypes.size()+1<=childnodetype.parentCardinality))){
 					childnode  = new ChildNode()
+					childnode.relationshipName = nodechild.@relationshipname.toString()
 					childnode.child = child
 					childnode.parent = parent
 					childnode.save(flush: true,failOnError:true)
+				}else{
+					//throw new SAXException( "Nodechild relationship not within bounds as described by nodetypechild." )
 				}
 			}
 

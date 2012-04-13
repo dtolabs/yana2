@@ -75,14 +75,14 @@
 				<attributeValue templateAttribute="ta14">hostname.test.com</attributeValue>
 			</values>
 		</node>
-    	<node id="Jetty" nodetype="Software" tags="jetty,software,test">
+    	<node id="Jetty" nodetype="Software" tags="jetty,software">
     		<description>This is a software attached to the server</description>
     		<values>
 				<attributeValue templateAttribute="ta15">1.0</attributeValue>
 				<attributeValue templateAttribute="ta16">1.234.56.7</attributeValue>
 			</values>
 		</node>
-    	<node id="Main_Location" nodetype="Location" tags="location,berkeley,ca,test">
+    	<node id="Main_Location" nodetype="Location" tags="location,berkeley,ca">
     		<description>This is a location attached to the server</description>
     		<values>
 				<attributeValue templateAttribute="ta17">Rackspace</attributeValue>
@@ -94,9 +94,14 @@
 		</node>
     </nodes>
 
-    <nodechildren>
-        <nodechild parent="test.server.com" child="Jetty"/>
-        <nodechild parent="test.server.com" child="Main_Location"/>
-    </nodechildren>
+	<nodetyperelationships>
+		<nodetyperelationship rolename="sofwareInstallation" parent="Server" child="Software"/>
+		<nodetyperelationship rolename="serverInstallation" parent="Location" child="Server"/>
+	</nodetyperelationships>
+	
+    <noderelationships>
+        <noderelationship relationshipname="test.server.com_Jetty [softwareInstallation]" parent="test.server.com" child="Jetty"/>
+        <noderelationship relationshipname="Main_Location_test.server.com [serverInstallation]" parent="Main_Location" child="test.server.com" />
+    </noderelationships>
     
 </yana>

@@ -9,7 +9,7 @@
   	<script type="text/javascript">
   	window.onload = init;
   	function init() {
-  		var nodetype = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
+  		var nodetype = $("#nodetype").val();
   		if(nodetype){
 			getAttributes();
   	  	}
@@ -17,8 +17,59 @@
 
   	function getFormFields(){
   		getAttributes();
+		getNodeParents();
+		getNodeChildren();
   	}
 
+  	function getNodeParents(){
+  		var nodetype = $("#nodetype").val();
+		
+		if(nodetype){
+			$.ajaxSetup({contentType:"application/json"});
+			$.getJSON("${request.contextPath}/node/getNodeParents",{id:nodetype,ajax:'true'},function(json){
+				if(json){
+					var select = document.getElementById("parents");
+					select.innerHTML = '';
+					var opt = document.createElement('option');
+					opt.innerHTML="Select A Value";
+					opt.setAttribute('value','NULL');
+					select.appendChild(opt)
+					for(var i=0;i<json.length;i++){
+						var j = json[i];
+						var opt = document.createElement('option');
+						opt.innerHTML=j.name;
+						opt.setAttribute('value',j.id);
+						select.appendChild(opt)
+					}
+				}
+			});
+  		}
+  	}
+
+  	function getNodeChildren(){
+  		var nodetype = $("#nodetype").val();
+  		if(nodetype && nodetype!=null){
+			$.ajaxSetup({contentType:"application/json"});
+			$.getJSON("${request.contextPath}/node/getNodeChildren",{id:nodetype,ajax:'true'},function(json){
+				if(json){
+					var select = document.getElementById("children");
+					select.innerHTML = '';
+					var opt = document.createElement('option');
+					opt.innerHTML="Select A Value";
+					opt.setAttribute('value','NULL');
+					select.appendChild(opt)
+					for(var i=0;i<json.length;i++){
+						var j = json[i];
+						var opt = document.createElement('option');
+						opt.innerHTML=j.name;
+						opt.setAttribute('value',j.id);
+						select.appendChild(opt)
+					}
+				}
+			});
+  		}
+  	}
+  	
   	function getAttributes(){
   		var template = $("#nodetype").val();
   	  	if(template!=null){
@@ -148,11 +199,11 @@
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Parents: </td>
-					<td><g:select name="parents" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${parents?.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
+					<td><select name="parents" id="parents" value="${parents?.id}" multiple="multiple"></select></td>
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Children: </td>
-					<td><g:select name="children" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${children?.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
+					<td><select name="children" id="children" value="${children?.id}" multiple="multiple"></select></td>
 				</tr>
 			</table>
 		

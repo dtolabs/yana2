@@ -8,7 +8,8 @@ class UrlMappings {
             }
         }
 		
-		"/api/node/$id"(controller: "node", action:"api")
+		"/webhook/$controller/$director"(action:"webhook",params:["director",director], parseRequest: true)
+		"/api/$controller/$id"(action:"api", parseRequest: true)
 		
         "/"(view: "/index")
         "500"(view:'/error')

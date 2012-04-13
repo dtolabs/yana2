@@ -22,10 +22,20 @@
 			</div>
 			</center>
 		</td>
+	    <td width='280' >
+	      <div style="position:relative;top:5px;float:right;padding:20px;">
+	        <sec:ifLoggedIn>
+				Welcome back, <sec:username/> | <a href="${createLink(controller:'logout',action:'index')}">Logout</a>
+	        </sec:ifLoggedIn>
+	        <sec:ifNotLoggedIn>
+	          <a href="${createLink(controller:'login',action:'auth')}">Login</a>
+	        </sec:ifNotLoggedIn>
+	      </div>
+	    </td>
 	</tr>
 	<tr>
 		<td align=left width=255 height=24 style="background-color:#d6d6d6" valign=top><img src="<g:createLinkTo dir='images' file='yana_logo2.png'/>" width='46px' height='24px'/></td>
-		<td height=24 bgcolor="#d6d6d6">
+		<td height=24 bgcolor="#d6d6d6" colspan=2>
 
 						<div id="smoothmenu" class="ddsmoothmenu">
 						<ul>
@@ -33,6 +43,11 @@
 						  <ul>
 						  	<li><g:link controller="node" action="list">List</g:link></li>
 							<li><g:link controller="node" action="create">Create</g:link></li>
+							<li><g:link controller="childNode" action="list">Node Relationships</g:link>
+								<ul>
+									<li><g:link controller="childNode" action="create">Create Node Relationship</g:link></li>
+								</ul>
+							</li>
 						  </ul>
 						</li>
                       	<li><g:link controller="nodeType" action="list">Types</g:link>

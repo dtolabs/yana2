@@ -13,6 +13,38 @@ class NodeController {
     static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
 
 	/*
+	* Restful Webhook function to handle routing
+	* URLMapping wants to route everything to node or take over routing for node; needed to build
+	* routing function to handle REST handling to do custom routing for anything that doesn't
+	* look like it is handled by controller
+	*/
+   def webhook(){
+	   println("webhook found : ${params}")
+	   switch(request.method){
+		   case "POST":
+		   		println("director found : ${params.director}")
+				switch(params.director.toLowerCase()){
+					case "create":
+						//this.save()
+				  		break;
+					case "delete":
+					   //this.delete()
+					   break;
+					case "list":
+					default:
+				   		println("list found : ${params.director}")
+				   		def json = request.JSON
+				   		this.list()
+				   		break;
+			   }
+			   break
+			default:
+				println("INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN.")
+				break;
+	   }
+   }
+   
+	/*
 	 * Restful function to handle routing
 	 * URLMapping wants to route everything to node or take over routing for node; needed to build
 	 * routing function to handle REST handling to do custom routing for anything that doesn't 
@@ -21,7 +53,7 @@ class NodeController {
 	def api(){
 		switch(request.method){
 			case "POST":
-				this.create()
+				this.save()
 				break
 			case "GET":
 				this.show()
@@ -40,8 +72,10 @@ class NodeController {
     }
 
     def list() {
+		println("made it to list")
 		def nodes = Node.list(params)
 		if(params.format){
+			println("format equals xml")
 			switch(params.format){
 				case 'xml':
 				case 'XML':
@@ -50,6 +84,7 @@ class NodeController {
 					break;
 			}
 		}else{
+			println("routing to list view")
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]
 		}
@@ -153,7 +188,10 @@ class NodeController {
             return
         }
 
-        [nodes:nodes,nodeInstance: nodeInstance]
+		def parents = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${nodeInstance.nodetype.id} and (NTP.childCardinality<=(select count(*) from NodeType where id=NTP.parent.id) or NTP.childCardinality is null)")
+		def children = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${nodeInstance.nodetype.id} and (NTP.parentCardinality<=(select count(*) from NodeType where id=NTP.child.id) or NTP.parentCardinality is null)")
+		
+        [parents:parents,children:children,nodes:nodes,nodeInstance: nodeInstance]
     }
 
     def update() {
@@ -240,8 +278,20 @@ class NodeController {
 	
 	def getNodeParents = {
 		def response = []
-		if(params.id){
-			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N");
+		if(params?.id.trim()){
+			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${params.id.toLong()} and (NTP.childCardinality<=(select count(*) from NodeType where id=NTP.parent.id) or NTP.childCardinality is null)")
+			atts.each(){
+				response += [id:it.id,name:it.name];
+			}
+			render response as JSON
+		}
+	}
+	
+
+	def getNodeChildren = {
+		def response = []
+		if(params?.id.trim()){
+			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${params.id.toLong()} and (NTP.parentCardinality<=(select count(*) from NodeType where id=NTP.child.id) or NTP.parentCardinality is null)")
 			atts.each(){
 				response += [id:it.id,name:it.name];
 			}

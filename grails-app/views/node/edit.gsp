@@ -19,6 +19,7 @@
   		getAttributes();
   	}
 
+  	
   	function getAttributes(){
   	  	var node = "${nodeInstance?.id}"
   		var template = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
@@ -152,12 +153,13 @@
 				
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Parents: </td>
-					<td><g:select name="parents" from="${nodes}" optionKey="id" value="${((parents?.id)?parents.id:nodeInstance.children.parent)}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
+					<td><g:select name="parents" from="${parents}" optionKey="id" optionValue="name" value="${nodeInstance.children.parent.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Children: </td>
-					<td><g:select name="children" from="${nodes}" optionKey="id" value="${((children?.id)?children.id:nodeInstance.parents.child)}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
+					<td><g:select name="children" from="${children}" optionKey="id" optionValue="name" value="${nodeInstance.parents.child.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
 				</tr>
+
 			</table>
 				
 				<div id="attributes" style="display:none;"></div>
