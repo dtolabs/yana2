@@ -41,8 +41,8 @@ class NodeController {
 		switch(request.method){
 			case "POST":
 			   	def json = request.JSON
-				params.service = "node"
-				def webhookInstance = Webhook.findByUrl(params.url)
+				params.service = params.controller
+				def webhookInstance = Webhook.findByUrlAndService(params.url,params.controller)
 				if(!webhookInstance){
 					webhookInstance = new Webhook(params)
 				}
@@ -138,11 +138,7 @@ class NodeController {
 				}
 				ArrayList nodes = [nodeInstance]
 				def xml = xmlService.formatNodes(nodes)
-				def hooks = Webhook.list()
-
-				hooks.each(){ hook ->
-					webhookService.postToURL( hook.url, xml.toString())
-				}
+				webhookService.postToURL( params.controller, xml.toString())
 				
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)

@@ -67,6 +67,11 @@
 									<li><g:link controller="filter" action="create">Create Filter</g:link></li>
 								</ul>
 							</li>
+						    <li><g:link controller="nodeTypeRelationship" action="list">Nodetype Relationship</g:link>
+								<ul>
+									<li><g:link controller="nodeTypeRelationship" action="create">Create Nodetype Relationship</g:link></li>
+								</ul>
+							</li>
 						    </ul>
 
 						</li>
