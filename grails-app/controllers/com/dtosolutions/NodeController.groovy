@@ -9,40 +9,9 @@ class NodeController {
 	
 	def springSecurityService
 	def xmlService
+	def webhookService
 	
     static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
-
-	/*
-	* Restful Webhook function to handle routing
-	* URLMapping wants to route everything to node or take over routing for node; needed to build
-	* routing function to handle REST handling to do custom routing for anything that doesn't
-	* look like it is handled by controller
-	*/
-   def webhook(){
-	   println("webhook found : ${params}")
-	   switch(request.method){
-		   case "POST":
-		   		println("director found : ${params.director}")
-				switch(params.director.toLowerCase()){
-					case "create":
-						//this.save()
-				  		break;
-					case "delete":
-					   //this.delete()
-					   break;
-					case "list":
-					default:
-				   		println("list found : ${params.director}")
-				   		def json = request.JSON
-				   		this.list()
-				   		break;
-			   }
-			   break
-			default:
-				println("INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN.")
-				break;
-	   }
-   }
    
 	/*
 	 * Restful function to handle routing
@@ -53,6 +22,7 @@ class NodeController {
 	def api(){
 		switch(request.method){
 			case "POST":
+				def json = request.JSON
 				this.save()
 				break
 			case "GET":
@@ -67,15 +37,35 @@ class NodeController {
 		  }
 	}
 	
+	def webhook(){
+		switch(request.method){
+			case "POST":
+			   	def json = request.JSON
+				params.service = "node"
+				def webhookInstance = Webhook.findByUrl(params.url)
+				if(!webhookInstance){
+					webhookInstance = new Webhook(params)
+				}
+			    if (!webhookInstance.save(flush: true)) {
+			        println("INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
+			        return
+			    }
+				flash.message = message(code: 'default.created.message', args: [message(code: 'webhook.label', default: 'Webhook'), webhookInstance.id])
+		        redirect(action: "show", id: webhookInstance.id)
+				break
+			default:
+				println("INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN.")
+				break;
+	   }
+   }
+	
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
-		println("made it to list")
 		def nodes = Node.list(params)
 		if(params.format){
-			println("format equals xml")
 			switch(params.format){
 				case 'xml':
 				case 'XML':
@@ -84,7 +74,6 @@ class NodeController {
 					break;
 			}
 		}else{
-			println("routing to list view")
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
 			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]
 		}
@@ -95,14 +84,19 @@ class NodeController {
     }
 
     def save() {
-		Long[] adults = Eval.me("${params.parents}")
+		println(params)
 		def parents
-		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids)",[ids:adults]) }
+		if(params.parents){
+			Long[] adults = Eval.me("${params.parents}")
+			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids)",[ids:adults]) }
+		}
 		
-		Long[] kinder = Eval.me("${params.children}")
 		def children
-		if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:children]) }
-
+		if(params.children){
+			Long[] kinder = Eval.me("${params.children}")
+			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:children]) }
+		}
+		
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
 			params.nodetype = NodeType.get(params.nodetype.toLong())
 			Node nodeInstance  = new Node(params)
@@ -142,6 +136,14 @@ class NodeController {
 						}
 					}
 				}
+				ArrayList nodes = [nodeInstance]
+				def xml = xmlService.formatNodes(nodes)
+				def hooks = Webhook.list()
+
+				hooks.each(){ hook ->
+					webhookService.postToURL( hook.url, xml.toString())
+				}
+				
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
 	        }
@@ -195,13 +197,17 @@ class NodeController {
     }
 
     def update() {
-		Long[] adults = Eval.me("${params.parents}")
 		def parents
-		if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:adults]) }
+		if(params.parents){
+			Long[] adults = Eval.me("${params.parents}")
+			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:adults]) }
+		}
 		
-		Long[] kinder = Eval.me("${params.children}")
 		def children
-		if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:children]) }
+		if(params.children){
+			Long[] kinder = Eval.me("${params.children}")
+			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:children]) }
+		}
 		
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
 	        def nodeInstance = Node.get(params.id)

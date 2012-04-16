@@ -5,30 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException
 class WebhookController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
-	/*
-	 * Restful function to handle routing
-	 * URLMapping wants to route everything to node or take over routing for node; needed to build
-	 * routing function to handle REST handling to do custom routing for anything that doesn't 
-	 * look like it is handled by controller
-	 */
-	def api(){
-		switch(request.method){
-			case "POST":
-				this.save()
-				break
-			case "GET":
-				this.show()
-				break
-			case "PUT":
-				this.update()
-				break
-			case "DELETE":
-				this.delete()
-				break
-		  }
-	}
-	
+   
     def index() {
         redirect(action: "list", params: params)
     }
@@ -43,7 +20,11 @@ class WebhookController {
     }
 
     def save() {
-        def webhookInstance = new Webhook(params)
+		def webhookInstance = Webhook.findByUrl(params.url)
+		if(!webhookInstance){
+			webhookInstance = new Webhook(params)
+		}
+		
         if (!webhookInstance.save(flush: true)) {
             render(view: "create", model: [webhookInstance: webhookInstance])
             return
