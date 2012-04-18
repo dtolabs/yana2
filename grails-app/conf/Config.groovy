@@ -1,5 +1,19 @@
 
-grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
+// locations to search for config files that get merged into the main config
+// config files can either be Java properties files or ConfigSlurper scripts
+
+// grails.config.locations = [ "classpath:${appName}-config.properties",
+//                             "classpath:${appName}-config.groovy",
+//                             "file:${userHome}/.grails/${appName}-config.properties",
+//                             "file:${userHome}/.grails/${appName}-config.groovy"]
+
+// if(System.properties["${appName}.config.location"]) {
+//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+// }
+
+grails.config.locations = [ "classpath:config.properties"  ]
+
+//grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
 grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
@@ -46,13 +60,15 @@ environments {
 		grails.plugins.springsecurity.portMapper.httpPort = 80
 		grails.plugins.springsecurity.portMapper.httpsPort = 443
 		
+		grails.app.context = "/"
+		
 		// log4j configuration - log error and above to rolling log file
 		log4j = {
 			rootLogger="error,stdout"
 			appenders {
 				'null' name:'stacktrace'
 				rollingFile name:'file',
-				file: (System.getProperty('catalina.base') ?: 'target') + '/logs/mylog.log',
+				file: (System.getProperty('catalina.base') ?: 'target') + '/logs/yana.log',
 				maxFileSize:"1MB",
 				layout: pattern(conversionPattern: '%d %-5p %c{2} %m%n')
 			}
@@ -75,7 +91,7 @@ environments {
 			appenders {
 				'null' name:'stacktrace'
 				rollingFile name:'file',
-				file: (System.getProperty('catalina.base') ?: 'target') + '/logs/mylog.log',
+				file: (System.getProperty('catalina.base') ?: 'target') + '/logs/yana.log',
 				maxFileSize:"1MB",
 				layout: pattern(conversionPattern: '%d %-5p %c{2} %m%n')
 			}
@@ -122,7 +138,7 @@ environments {
 				additivity = true
 			}
 		}
-		// TODO: grails.serverURL = "http://www.changeme.com"
+		grails.serverURL = "http://localhost:8080"
 	}
 }
 
@@ -150,7 +166,7 @@ grails.plugins.springsecurity.secureChannel.definition = [
 	'/securityInfo/**':			'REQUIRES_SECURE_CHANNEL',
  ]
 
-/*
+
 grails {
 	mail {
 	  host = "smtp.your.mailhost"
@@ -160,4 +176,4 @@ grails {
 	  password = "password"
 	}
 }
-*/
+
