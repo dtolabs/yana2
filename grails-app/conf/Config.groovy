@@ -78,7 +78,6 @@ environments {
 				
 			}
 		}
-		grails.serverURL = "http://test.yana.com"
 	}
 	staging {
 		grails.plugins.springsecurity.portMapper.httpPort = 80
