@@ -10,12 +10,14 @@ class NodeType{
 
 	String name
 	String description
+	String image
 	Date dateCreated
 	Date dateModified = new Date()
 	
     static constraints = {
         name(blank:false)
 		description(blank:true, nullable:true)
+		image(blank:true, nullable:true)
     }
 
     def String toString() {

@@ -84,7 +84,6 @@ class NodeController {
     }
 
     def save() {
-		println(params)
 		def parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
@@ -125,6 +124,7 @@ class NodeController {
 						}
 					}
 				}
+				
 				if(children){
 					children.each{ child ->
 						ChildNode childNode = ChildNode.findByParentAndChild(nodeInstance,child)
@@ -136,6 +136,7 @@ class NodeController {
 						}
 					}
 				}
+				
 				ArrayList nodes = [nodeInstance]
 				def xml = xmlService.formatNodes(nodes)
 				webhookService.postToURL( params.controller, xml.toString())

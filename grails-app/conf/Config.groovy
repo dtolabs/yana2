@@ -52,7 +52,7 @@ environments {
 			appenders {
 				'null' name:'stacktrace'
 				rollingFile name:'file',
-				file:"/var/log/${appName}.log",
+				file: (System.getProperty('catalina.base') ?: 'target') + '/logs/mylog.log',
 				maxFileSize:"1MB",
 				layout: pattern(conversionPattern: '%d %-5p %c{2} %m%n')
 			}
@@ -62,7 +62,7 @@ environments {
 				
 			}
 		}
-		// TODO: grails.serverURL = "http://www.changeme.com""
+		grails.serverURL = "http://test.yana.com"
 	}
 	staging {
 		grails.plugins.springsecurity.portMapper.httpPort = 80
@@ -75,7 +75,7 @@ environments {
 			appenders {
 				'null' name:'stacktrace'
 				rollingFile name:'file',
-				file:"/var/log/${appName}.log",
+				file: (System.getProperty('catalina.base') ?: 'target') + '/logs/mylog.log',
 				maxFileSize:"1MB",
 				layout: pattern(conversionPattern: '%d %-5p %c{2} %m%n')
 			}
@@ -84,7 +84,7 @@ environments {
 				additivity = true
 			}
 		}
-		// TODO: grails.serverURL = "http://www.changeme.com"
+		grails.serverURL = "http://localhost:8080"
 	}
 	development {
 		grails.plugins.springsecurity.portMapper.httpPort = 8080
