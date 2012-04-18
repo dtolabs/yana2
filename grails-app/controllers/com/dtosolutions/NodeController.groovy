@@ -154,23 +154,34 @@ class NodeController {
     def show() {
         def nodeInstance = Node.get(params.id)
 		
-		def criteria = ChildNode.createCriteria()
-		def parents = criteria.list{
-			eq("child", Node.get(params.id?.toLong()))
-		}
-		
-		def criteria2 = ChildNode.createCriteria()
-		def children = criteria2.list{
-			eq ("parent", Node.get(params.id?.toLong()))
-		}
-		
-        if (!nodeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
-            redirect(action: "list")
-            return
-        }
+		if(params.format){
+			switch(params.format){
+				case 'xml':
+				case 'XML':
+					ArrayList nodes = [nodeInstance]
+					def xml = xmlService.formatNodes(nodes)
+					render(text: xml, contentType: "text/xml")
+					break;
+			}
+		}else{
+			def criteria = ChildNode.createCriteria()
+			def parents = criteria.list{
+				eq("child", Node.get(params.id?.toLong()))
+			}
+			
+			def criteria2 = ChildNode.createCriteria()
+			def children = criteria2.list{
+				eq ("parent", Node.get(params.id?.toLong()))
+			}
+			
+	        if (!nodeInstance) {
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
+	            redirect(action: "list")
+	            return
+	        }
 
-        [children:children,parents:parents,nodeInstance: nodeInstance]
+			[children:children,parents:parents,nodeInstance: nodeInstance]
+		}
     }
 
     def edit() {
