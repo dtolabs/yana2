@@ -2,7 +2,7 @@ package com.dtosolutions
 
 import grails.plugins.springsecurity.Secured
 
-@Secured(['ROLE_ADMIN','ROLE_SUPER_USER'])
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_SUPERUSER'])
 class PersistentLoginController extends grails.plugins.springsecurity.ui.PersistentLoginController {
 
 }

@@ -3,7 +3,7 @@ package com.dtosolutions
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
 
-@Secured(['ROLE_ADMIN','ROLE_ARCHITECT','ROLE_SUPER_USER'])
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class AttributeController {
 
 	def springSecurityService

@@ -1,7 +1,9 @@
 package com.dtosolutions
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.plugins.springsecurity.Secured
 
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class ChildNodeController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]

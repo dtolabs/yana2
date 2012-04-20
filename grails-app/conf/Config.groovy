@@ -2,16 +2,19 @@
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
+/*
+grails.config.locations = [ "classpath:${appName}-config.properties",
+                            "classpath:${appName}-config.groovy",
+                            "file:${userHome}/.grails/${appName}-config.properties",
+                            "file:${userHome}/.grails/${appName}-config.groovy"]
 
-// if(System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
+if(System.properties["${appName}.config.location"]) {
+   grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+}
 
-grails.config.locations = [ "file:${userHome}/.yana/config.properties"  ]
+*/
+
+grails.config.locations = ["file:${userHome}/.grails/config.properties"]
 
 //grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
@@ -145,11 +148,33 @@ environments {
 grails.views.javascript.library="jquery"
 
 // Added by the Spring Security Core plugin:
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.dtosolutions.User'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.dtosolutions.UserRole'
-grails.plugins.springsecurity.authority.className = 'com.dtosolutions.Role'
+grails.plugins.springsecurity.userLookup.userDomainClassName = "com.dtosolutions.User"
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = "com.dtosolutions.UserRole"
+grails.plugins.springsecurity.authority.className = "com.dtosolutions.Role"
 grails.plugins.springsecurity.rememberMe.persistent = true
-grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = 'com.dtosolutions.PersistentLogin'
+grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = "com.dtosolutions.PersistentLogin"
+
+
+// LDAP CONFIGURATION
+/*
+grails.plugins.springsecurity.ldap.context.managerDn = 'CN=Yana Admin,OU=Yana,DC=dtolabs,DC=local'
+grails.plugins.springsecurity.ldap.context.managerPassword = 'Welcome123'
+grails.plugins.springsecurity.ldap.context.server = 'ldap://innobiz.no-ip.biz:10389'
+grails.plugins.springsecurity.ldap.authorities.groupSearchBase = 'OU=Yana,DC=dtolabs,DC=local'
+grails.plugins.springsecurity.ldap.search.base = 'OU=Yana,DC=dtolabs,DC=local'
+grails.plugins.springsecurity.ldap.authorities.ignorePartialResultException = true
+grails.plugins.springsecurity.ldap.search.filter="sAMAccountName={0}"
+grails.plugins.springsecurity.ldap.search.searchSubtree = true
+grails.plugins.springsecurity.ldap.auth.hideUserNotFoundExceptions = false
+grails.plugins.springsecurity.ldap.search.attributesToReturn = ['mail','displayName']
+grails.plugins.springsecurity.providerNames = ['ldapAuthProvider','anonymousAuthenticationProvider']
+// role-specific LDAP config
+grails.plugins.springsecurity.ldap.useRememberMe = false
+grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = true
+grails.plugins.springsecurity.ldap.authorities.groupSearchFilter = 'member={0}'
+*/
+
+
 
 grails.plugins.springsecurity.secureChannel.definition = [
 	'/login/**':				'REQUIRES_SECURE_CHANNEL',

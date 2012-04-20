@@ -4,7 +4,7 @@ import grails.converters.JSON
 import java.util.Date;
 import grails.plugins.springsecurity.Secured
 
-@Secured(['ROLE_ADMIN','ROLE_USER','ROLE_ARCHITECT','ROLE_SUPER_USER'])
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class NodeController {
 	
 	def springSecurityService

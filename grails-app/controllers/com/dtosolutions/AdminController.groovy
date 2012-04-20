@@ -11,7 +11,7 @@ import javax.xml.validation.Validator
 import grails.plugins.springsecurity.Secured
 import org.xml.sax.SAXException
 
-@Secured(['ROLE_ADMIN','ROLE_SUPER_USER'])
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_SUPERUSER'])
 class AdminController {
 
 	def springSecurityService

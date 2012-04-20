@@ -1,10 +1,5 @@
 
-dataSource {
-	driverClassName = "org.h2.Driver"
-    username = "sa"
-    password = ""
-	pooled = false
-}
+
 environments {
 	development {
 		dataSource {

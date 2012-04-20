@@ -6,14 +6,14 @@ class BootStrap {
 		
 		Date now = new Date()
 
-		Role adminRole = Role.findByAuthority('ROLE_ADMIN')?: new Role(authority:'ROLE_ADMIN').save(faileOnError:true)
-		Role userRole = Role.findByAuthority('ROLE_USER')?: new Role(authority:'ROLE_USER').save(faileOnError:true)
-		Role archRole = Role.findByAuthority('ROLE_ARCHITECT')?: new Role(authority:'ROLE_ARCHITECT').save(faileOnError:true)
-		Role rootRole = Role.findByAuthority('ROLE_SUPER_USER')?: new Role(authority:'ROLE_SUPER_USER').save(faileOnError:true)
+		Role adminRole = Role.findByAuthority('ROLE_YANA_ADMIN')?: new Role(authority:'ROLE_YANA_ADMIN').save(faileOnError:true)
+		Role userRole = Role.findByAuthority('ROLE_YANA_USER')?: new Role(authority:'ROLE_YANA_USER').save(faileOnError:true)
+		Role archRole = Role.findByAuthority('ROLE_YANA_ARCHITECT')?: new Role(authority:'ROLE_YANA_ARCHITECT').save(faileOnError:true)
+		Role rootRole = Role.findByAuthority('ROLE_YANA_SUPERUSER')?: new Role(authority:'ROLE_YANA_SUPERUSER').save(faileOnError:true)
 		
-		User adminUser = User.findByUsername('admin')?: new User(username:'admin',password:'admin',enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
-		if(!adminUser?.authorities?.contains(rootRole)){
-			UserRole.create adminUser,rootRole
+		User rootUser = User.findByUsername('admin')?: new User(username:'admin',password:'admin',enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
+		if(!rootUser?.authorities?.contains(rootRole)){
+			UserRole.create rootUser,rootRole
 		}
 
 		
