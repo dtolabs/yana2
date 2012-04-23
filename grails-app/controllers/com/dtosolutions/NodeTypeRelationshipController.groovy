@@ -24,15 +24,24 @@ class NodeTypeRelationshipController {
 
     def save() {
 		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
-
-        def nodeTypeRelationshipInstance = new NodeTypeRelationship(params)
-        if (!nodeTypeRelationshipInstance.save(flush: true)) {
-            render(view: "create", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
-            return
-        }
-
-		flash.message = message(code: 'default.created.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), nodeTypeRelationshipInstance.id])
-        redirect(action: "show", id: nodeTypeRelationshipInstance.id)
+		def parent = NodeType.get(params.parent.toLong())
+		def child = NodeType.get(params.child.toLong())
+		def exists= NodeTypeRelationship.findByParentAndChild(parent,child)
+		
+		if(!exists){
+	        def nodeTypeRelationshipInstance = new NodeTypeRelationship(params)
+	        if (!nodeTypeRelationshipInstance.save(flush: true)) {
+	            render(view: "create", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
+	            return
+	        }
+	
+			flash.message = message(code: 'default.created.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), nodeTypeRelationshipInstance.id])
+	        redirect(action: "show", id: nodeTypeRelationshipInstance.id)
+		}else{
+			flash.message = message("Existing relationship for that Parent and child NodeType already exists. Please try again.")
+	        render(view: "create", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
+			return
+		}
     }
 
     def show() {
