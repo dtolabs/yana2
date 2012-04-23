@@ -15,7 +15,7 @@
 		<g:message code="nodeTypeRelationship.parentCardinality.label" default="Parent Cardinality" />
 		
 	</label>
-	<g:field type="number" name="parentCardinality" value="${fieldValue(bean: nodeTypeRelationshipInstance, field: 'parentCardinality')}"/>
+	<g:select name="parentCardinality" from="${cardinality}" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'childCardinality', 'error')} ">
@@ -23,7 +23,7 @@
 		<g:message code="nodeTypeRelationship.childCardinality.label" default="Child Cardinality" />
 		
 	</label>
-	<g:field type="number" name="childCardinality" value="${fieldValue(bean: nodeTypeRelationshipInstance, field: 'childCardinality')}"/>
+	<g:select name="childCardinality" from="${cardinality}" />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'parent', 'error')} required">

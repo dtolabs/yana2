@@ -18,13 +18,16 @@ class NodeTypeRelationshipController {
     }
 
     def create() {
-        [nodeTypeRelationshipInstance: new NodeTypeRelationship(params)]
+		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
+        [nodeTypeRelationshipInstance: new NodeTypeRelationship(params),cardinality:cardinality]
     }
 
     def save() {
+		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
+
         def nodeTypeRelationshipInstance = new NodeTypeRelationship(params)
         if (!nodeTypeRelationshipInstance.save(flush: true)) {
-            render(view: "create", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance])
+            render(view: "create", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
             return
         }
 
@@ -50,11 +53,13 @@ class NodeTypeRelationshipController {
             redirect(action: "list")
             return
         }
-
-        [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance]
+		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
+        [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality]
     }
 
     def update() {
+		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
+		
         def nodeTypeRelationshipInstance = NodeTypeRelationship.get(params.id)
         if (!nodeTypeRelationshipInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), params.id])
@@ -68,7 +73,7 @@ class NodeTypeRelationshipController {
                 nodeTypeRelationshipInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
                           [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship')] as Object[],
                           "Another user has updated this NodeTypeRelationship while you were editing")
-                render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance])
+                render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
                 return
             }
         }
