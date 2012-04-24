@@ -69,7 +69,7 @@
 				<ul>
 				<g:if test="${parents}">
 				<g:each in="${parents}" status="i" var="parent">
-					<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${parent?.parent?.id}">${parent?.parent?.name?.encodeAsHTML()}</g:link></span></li>
+					<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${parent?.parent?.id}">${parent?.parent?.name?.encodeAsHTML()} [${com.dtosolutions.NodeTypeRelationship.findByParentAndChild(parent?.parent?.nodetype,parent?.child?.nodetype).roleName}]</g:link></span></li>
 				</g:each>
 				</g:if>
 				</ul>
@@ -81,7 +81,7 @@
 				<ul>
 				<g:if test="${children}">
 				<g:each in="${children}" status="i" var="child">
-					<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${child?.child?.id}">${child?.child?.name?.encodeAsHTML()}</g:link></span></li>
+					<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${child?.child?.id}">${child?.child?.name?.encodeAsHTML()} [${com.dtosolutions.NodeTypeRelationship.findByParentAndChild(child?.parent?.nodetype,child?.child?.nodetype).roleName}]</g:link></span></li>
 				</g:each>
 				</g:if>
 				</ul>

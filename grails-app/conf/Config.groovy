@@ -155,27 +155,6 @@ grails.plugins.springsecurity.rememberMe.persistent = true
 grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = "com.dtosolutions.PersistentLogin"
 
 
-// LDAP CONFIGURATION
-/*
-grails.plugins.springsecurity.ldap.context.managerDn = 'CN=Yana Admin,OU=Yana,DC=dtolabs,DC=local'
-grails.plugins.springsecurity.ldap.context.managerPassword = 'Welcome123'
-grails.plugins.springsecurity.ldap.context.server = 'ldap://innobiz.no-ip.biz:10389'
-grails.plugins.springsecurity.ldap.authorities.groupSearchBase = 'OU=Yana,DC=dtolabs,DC=local'
-grails.plugins.springsecurity.ldap.search.base = 'OU=Yana,DC=dtolabs,DC=local'
-grails.plugins.springsecurity.ldap.authorities.ignorePartialResultException = true
-grails.plugins.springsecurity.ldap.search.filter="sAMAccountName={0}"
-grails.plugins.springsecurity.ldap.search.searchSubtree = true
-grails.plugins.springsecurity.ldap.auth.hideUserNotFoundExceptions = false
-grails.plugins.springsecurity.ldap.search.attributesToReturn = ['mail','displayName']
-grails.plugins.springsecurity.providerNames = ['ldapAuthProvider','anonymousAuthenticationProvider']
-// role-specific LDAP config
-grails.plugins.springsecurity.ldap.useRememberMe = false
-grails.plugins.springsecurity.ldap.authorities.retrieveGroupRoles = true
-grails.plugins.springsecurity.ldap.authorities.groupSearchFilter = 'member={0}'
-*/
-
-
-
 grails.plugins.springsecurity.secureChannel.definition = [
 	'/login/**':				'REQUIRES_SECURE_CHANNEL',
 	'/register/**':				'REQUIRES_SECURE_CHANNEL',
@@ -190,14 +169,4 @@ grails.plugins.springsecurity.secureChannel.definition = [
 	'/securityInfo/**':			'REQUIRES_SECURE_CHANNEL',
  ]
 
-
-grails {
-	mail {
-	  host = "smtp.your.mailhost"
-	  from = "do.not.reply@your.mailhost.domain"
-	  port = 2525
-	  username = "username"
-	  password = "password"
-	}
-}
 

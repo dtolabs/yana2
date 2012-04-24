@@ -22,14 +22,23 @@ class ChildNodeController {
     }
 
     def save() {
-        def childNodeInstance = new ChildNode(params)
-        if (!childNodeInstance.save(flush: true)) {
-            render(view: "create", model: [childNodeInstance: childNodeInstance])
-            return
-        }
-
-		flash.message = message(code: 'default.created.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
-        redirect(action: "show", id: childNodeInstance.id)
+		Node parent = Node.get(params.parent.toLong())
+		Node child = Node.get(params.child.toLong())
+		def exists = ChildNode.findByParentAndChild(parent,child)
+		if(!exists){
+	        def childNodeInstance = new ChildNode(params)
+	        if (!childNodeInstance.save(flush: true)) {
+	            render(view: "create", model: [childNodeInstance: childNodeInstance])
+	            return
+	        }
+	
+			flash.message = message(code: 'default.created.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
+	        redirect(action: "show", id: childNodeInstance.id)
+		}else{
+			flash.message = message("Existing relationship for that Parent and child node already exists. Please try again.")
+	        render(view: "create", model: [childNodeInstance: childNodeInstance])
+			return
+		}
     }
 
     def show() {
