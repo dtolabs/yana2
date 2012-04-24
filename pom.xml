@@ -67,6 +67,11 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>3.0.7.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+			<version>3.0.7.RELEASE</version>
+		</dependency>
 		<!-- Spring core dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -103,6 +108,7 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
 		<!-- Misc dependencies -->
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -180,6 +186,72 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<mkdir dir="${basedir}/target/package/"/>
+
+								<unzip  src="${basedir}/target/${project.artifactId}-${project.version}.war" dest="${basedir}/target/package}"/>
+
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<goals>
+							<goal>attached-rpm</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<copyright>2012 DTO Labs</copyright>
+					<distribution>DTO Labs</distribution>
+					<group>Application/Sample</group>
+					<name>Yana${project.version}</name>					
+					<mappings>
+						<mapping>
+							<directory>/opt/yana/${project.version}</directory>
+							<filemode>755</filemode>
+							<sources>
+								<source>
+									<location>${pom.basedir}/target/package</location>
+								</source>
+							</sources>
+						</mapping>
+					</mappings>
+					<preinstallScriptlet>
+						<scriptFile>src/main/scripts/preinstall</scriptFile>
+						<fileEncoding>utf-8</fileEncoding>
+					</preinstallScriptlet>
+					<postinstallScriptlet>
+						<scriptFile>src/main/scripts/postinstall</scriptFile>
+						<fileEncoding>utf-8</fileEncoding>
+					</postinstallScriptlet>
+					<preremoveScriptlet>
+						<scriptFile>src/main/scripts/preremove</scriptFile>
+						<fileEncoding>utf-8</fileEncoding>
+					</preremoveScriptlet>
+					<provides>
+						<provide>Yana${package.version}</provide>
+					</provides>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>
