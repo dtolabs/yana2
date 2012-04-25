@@ -5,7 +5,7 @@ body {
    margin:0;
    padding:0;
    height:100%;
-   background: #ffffff;
+   background: url(/images/yana_bg.png) repeat-y;
    font-family: "Helvetica";
 }
 
@@ -14,10 +14,26 @@ h1 {
     font-weight: bold;
 }
 
+
 #container {
    min-height:100%;
    position:relative;
+	width: 100%;
+	margin: 0 auto;
 }
+#primary {
+	float: left;
+	width: 20%;
+}
+#content {
+	float: left;
+	width: 60%;
+}
+#secondary {
+	float: left;
+	width: 20%;
+}
+
 #header {
    padding:0px;
 }
@@ -28,7 +44,7 @@ h1 {
 #footer {
    position:absolute;
    bottom:0;
-   width:100%;
+   width:60%;
    height:51px;   /* Height of the footer */
 }
 
