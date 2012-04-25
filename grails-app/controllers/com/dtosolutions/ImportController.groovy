@@ -12,7 +12,7 @@ import grails.plugins.springsecurity.Secured
 import org.xml.sax.SAXException
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_SUPERUSER'])
-class AdminController {
+class ImportController {
 
 	def springSecurityService
 	

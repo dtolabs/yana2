@@ -1,11 +1,13 @@
 package com.dtosolutions
 
+import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class NodeTypeController {
 
+	def iconService;
 	def springSecurityService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -20,7 +22,10 @@ class NodeTypeController {
     }
 
     def create() {
-        [nodeTypeInstance: new NodeType(params)]
+		def externalPath = servletContext.getRealPath("${grailsApplication.config.images.icons.large}")
+		def defaultPath = servletContext.getRealPath("/images/icons/64")
+		def images = iconService.listImages(defaultPath,externalPath)
+        [nodeTypeInstance: new NodeType(params),images:images]
     }
 
     def save() {
@@ -35,6 +40,7 @@ class NodeTypeController {
     }
 
     def show() {
+		def path = iconService.getLargeIconPath()
         def nodeTypeInstance = NodeType.get(params.id)
         if (!nodeTypeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
@@ -42,7 +48,7 @@ class NodeTypeController {
             return
         }
 
-        [nodeTypeInstance: nodeTypeInstance]
+        [nodeTypeInstance: nodeTypeInstance,path:path]
     }
 
     def edit() {

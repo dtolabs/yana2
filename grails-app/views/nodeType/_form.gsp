@@ -18,14 +18,13 @@
 	<g:textField name="description" value="${nodeTypeInstance?.description}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeTypeInstance, field: 'dateModified', 'error')} required">
-	<label for="dateModified">
-		<g:message code="nodeType.dateModified.label" default="Date Modified" />
-		<span class="required-indicator">*</span>
+<div class="fieldcontain ${hasErrors(bean: nodeTypeInstance, field: 'image', 'error')} ">
+	<label for="image">
+		<g:message code="nodeType.image.label" default="Image" />
 	</label>
-	<g:datePicker name="dateModified" precision="day"  value="${nodeTypeInstance?.dateModified}"  />
+	<g:select name="image" from="${images}" value="${nodeTypeInstance?.image}"/>
 </div>
-
+                            
 <div class="fieldcontain ${hasErrors(bean: nodeTypeInstance, field: 'attributes', 'error')} ">
 	<label for="attributes">
 		<g:message code="nodeType.attributes.label" default="Attributes" />

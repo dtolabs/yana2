@@ -3,8 +3,7 @@ package com.dtosolutions
 import java.util.Date;
 
 class NodeType{
-	//static searchable = true
-	
+
 	static mappedBy = [children: 'child', parents: 'parent']
 	static hasMany = [nodes:Node,attributes:TemplateAttribute,children:NodeTypeRelationship,parents:NodeTypeRelationship]
 

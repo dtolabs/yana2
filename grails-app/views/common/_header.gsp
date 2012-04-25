@@ -75,9 +75,9 @@
 						    </ul>
 
 						</li>
-						<li><a href="${grailsApplication.config.grails.serverURL}/admin">Admin</a>
+						<li><a href="${grailsApplication.config.grails.serverURL}/import">Admin</a>
 						  <ul>
-						  <li><g:link controller="admin" action="importxml">Import Resources</g:link></li>
+						  <li><g:link controller="import" action="importxml">Import Resources</g:link></li>
 						  <li><g:link controller="user" action="search">Users</g:link>
 								<ul>
 									<li><g:link controller="user" action="create">Create User</g:link></li>

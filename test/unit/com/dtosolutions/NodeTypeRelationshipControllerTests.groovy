@@ -49,19 +49,18 @@ class NodeTypeRelationshipControllerTests {
     }
 
     void testSave() {
-        controller.save()
-
-        assert model.nodeTypeRelationshipInstance != null
-        assert view == '/nodeTypeRelationship/create'
-
-        response.reset()
-
-        populateValidParams(params)
-        controller.save()
-
-        assert response.redirectedUrl == '/nodeTypeRelationship/show/1'
-        assert controller.flash.message != null
-        assert NodeTypeRelationship.count() == 1
+		//controller.save()
+		
+		def nodeTypeRelationshipInstance = new NodeTypeRelationship(params)
+		if(nodeTypeRelationshipInstance.save()){
+			assert nodeTypeRelationshipInstance.save(flush:true) != null
+			
+			controller.save()
+			params.id = nodeTypeRelationshipInstance.id
+        	assert response.redirectedUrl == '/nodeTypeRelationship/show/1'
+			assert controller.flash.message != null
+			assert NodeTypeRelationship.count() == 1
+		}
     }
 
     void testShow() {

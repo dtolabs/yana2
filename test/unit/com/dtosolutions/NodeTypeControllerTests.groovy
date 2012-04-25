@@ -32,12 +32,6 @@ class NodeTypeControllerTests {
         assert model.nodeTypeInstanceTotal == 0
     }
 
-    void testCreate() {
-       def model = controller.create()
-
-       assert model.nodeTypeInstance != null
-    }
-
     void testSave() {
         controller.save()
 
@@ -52,25 +46,6 @@ class NodeTypeControllerTests {
         assert response.redirectedUrl == '/nodeType/show/1'
         assert controller.flash.message != null
         assert NodeType.count() == 1
-    }
-
-    void testShow() {
-        controller.show()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/nodeType/list'
-
-
-        populateValidParams(params)
-        def nodeType = new NodeType(params)
-
-        assert nodeType.save() != null
-
-        params.id = nodeType.id
-
-        def model = controller.show()
-
-        assert model.nodeTypeInstance == nodeType
     }
 
     void testEdit() {

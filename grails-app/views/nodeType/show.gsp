@@ -15,6 +15,8 @@
 		<div class="message" role="status">${flash.message}</div>
 		</g:if>
 			
+		<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" />
+
 		<table class="scaffold" border="0">
 			<tr class="results">
 				<td style="font-weight:bold;"><g:message code="nodeType.name.label" default="Name" />: </td>

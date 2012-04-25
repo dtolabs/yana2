@@ -331,5 +331,4 @@ class NodeController {
 
 			render response as JSON
 	}
-
 }
