@@ -24,7 +24,7 @@
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>
-				<fieldset class="buttons">
+				<fieldset class="form_footer">
 					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
 				</fieldset>
 			</g:form>

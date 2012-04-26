@@ -15,6 +15,6 @@
 		<g:message code="filter.regex.label" default="Regex" />
 		
 	</label>
-	<g:textArea name="regex" cols="40" rows="5" maxlength="500" value="${filterInstance?.regex}"/>
+	<span class="styled-select"><g:textArea name="regex" cols="40" rows="5" maxlength="500" value="${filterInstance?.regex}"/></span>
 </div>
 

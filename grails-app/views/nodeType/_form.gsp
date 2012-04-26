@@ -22,7 +22,7 @@
 	<label for="image">
 		<g:message code="nodeType.image.label" default="Image" />
 	</label>
-	<g:select name="image" from="${images}" value="${nodeTypeInstance?.image}"/>
+	<span class="styled-select"><g:select name="image" from="${images}" value="${nodeTypeInstance?.image}"/></span>
 </div>
                             
 <div class="fieldcontain ${hasErrors(bean: nodeTypeInstance, field: 'attributes', 'error')} ">

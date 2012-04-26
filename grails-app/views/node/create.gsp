@@ -185,12 +185,12 @@
 				
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'nodetype', 'error')} required">
 					<td style="font-weight:bold;"><label for="nodetype"><g:message code="node.nodetype.label" default="Nodetype" />*</label>: </td>
-					<td><g:select id="nodetype" name="nodetype" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
+					<td class="styled-select"><g:select id="nodetype" name="nodetype" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
 				</tr>
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
 					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${params?.status}" noSelection="['null': 'Select One']"/></td>
+					<td class="styled-select"><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${params?.status}" noSelection="['null': 'Select One']"/></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
@@ -199,17 +199,17 @@
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Parents: </td>
-					<td><select name="parents" id="parents" value="${parents?.id}" multiple="multiple"></select></td>
+					<td class="styled-select"><select name="parents" id="parents" value="${parents?.id}" multiple="multiple"></select></td>
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Children: </td>
-					<td><select name="children" id="children" value="${children?.id}" multiple="multiple"></select></td>
+					<td class="styled-select"><select name="children" id="children" value="${children?.id}" multiple="multiple"></select></td>
 				</tr>
 			</table>
 		
 			<div id="attributes" style="display:none;"></div>
 		
-				<fieldset class="buttons">
+				<fieldset class="form_footer">
 					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
 				</fieldset>
 			</g:form>

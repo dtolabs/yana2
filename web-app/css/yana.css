@@ -83,6 +83,7 @@ html,body,#fullheightcontainer,#wrapper,* html #wrapper,#outer{height:100%;}
 	width:250px;
 	border-bottom: 2px solid #0431f7;
 }
+
 .header_spacer{
 	border-bottom: 2px solid #0431f7;
 }
@@ -108,6 +109,31 @@ input[type=password] {
     color:#89a9ff;
 }
 
+textarea {
+    border-width: 1px;
+    border-color: #0431f7;
+    background-color: #0a0926;
+    color:#89a9ff;
+}
+
+select {
+    border-width: 1px;
+    border-color: #0431f7;
+    background-color: #0a0926;
+    color:#89a9ff;
+}
+
+.styled-select textarea {
+   background: transparent;
+   border: 1px solid #0431f7;
+}
+
+.styled-select select {
+   background: transparent;
+   border: 1px solid #0431f7;
+}
+
+
 input[type=submit] {
     border: 1.5px solid #0431f7;
     background: #021faf;
@@ -129,6 +155,14 @@ input[type=submit] {
 	height:25px;
 	border: 2px solid #0431f7;
 	background-color:#010e66;
+}
+
+.auth{
+	width:350px;
+	border: 2px solid #0431f7;
+	background-color:#010e66;
+   font: verdana, arial, helvetica, sans-serif;
+   color:#ffffff;
 }
 
 .header_login_side{

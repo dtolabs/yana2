@@ -86,7 +86,8 @@
 
 <body>
 <div id='login'>
-	<div class='inner'>
+	<center>
+	<div class='auth'>
 		<div class='fheader'><g:message code="springSecurity.login.header"/></div>
 
 		<g:if test='${flash.message}'>
@@ -114,6 +115,7 @@
 			</p>
 		</form>
 	</div>
+	</center>
 </div>
 <script type='text/javascript'>
 	<!--

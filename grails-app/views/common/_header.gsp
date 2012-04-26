@@ -1,12 +1,3 @@
-<style type="text/css">
-	.topnav {
-	    background:#615e54;
-	    //margin:5px;
-	    padding:5px 0px 5px 0px;
-	    width:100%;
-	    font: bold 13px helvetica, verdana, arial, sans-serif;
-	}
-</style>
 
 <br><br>
 <table border=0 cellspacing=0 cellpadding=0 width='100%' valign=top>

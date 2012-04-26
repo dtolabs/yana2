@@ -18,9 +18,7 @@
 				<g:if test="${templateAttributeInstance?.attribute}">
 				<li class="fieldcontain">
 					<span id="attribute-label" class="property-label"><g:message code="templateAttribute.attribute.label" default="Attribute" /></span>
-					
 						<span class="property-value" aria-labelledby="attribute-label"><g:link controller="attribute" action="show" id="${templateAttributeInstance?.attribute?.id}">${templateAttributeInstance?.attribute?.encodeAsHTML()}</g:link></span>
-					
 				</li>
 				</g:if>
 			

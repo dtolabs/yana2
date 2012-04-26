@@ -15,7 +15,7 @@
 		<g:message code="nodeTypeRelationship.parentCardinality.label" default="Parent Cardinality" />
 		
 	</label>
-	<g:select name="parentCardinality" from="${cardinality}" />
+	<span class="styled-select"><g:select name="parentCardinality" from="${cardinality}" /></span>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'childCardinality', 'error')} ">
@@ -23,7 +23,7 @@
 		<g:message code="nodeTypeRelationship.childCardinality.label" default="Child Cardinality" />
 		
 	</label>
-	<g:select name="childCardinality" from="${cardinality}" />
+	<span class="styled-select"><g:select name="childCardinality" from="${cardinality}" /></span>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'parent', 'error')} required">
@@ -31,7 +31,7 @@
 		<g:message code="nodeTypeRelationship.parent.label" default="Parent" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="parent" name="parent.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeTypeRelationshipInstance?.parent?.id}" class="many-to-one"/>
+	<span class="styled-select"><g:select id="parent" name="parent.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeTypeRelationshipInstance?.parent?.id}" class="many-to-one"/></span>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'child', 'error')} required">
@@ -39,6 +39,6 @@
 		<g:message code="nodeTypeRelationship.child.label" default="Child" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="child" name="child.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeTypeRelationshipInstance?.child?.id}" class="many-to-one"/>
+	<span class="styled-select"><g:select id="child" name="child.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeTypeRelationshipInstance?.child?.id}" class="many-to-one"/></span>
 </div>
 
