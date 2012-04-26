@@ -9,7 +9,6 @@ class XmlService {
 	static scope = "prototype"
 	
 	String formatNodes(ArrayList nodes){
-		println(nodes)
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)
 			

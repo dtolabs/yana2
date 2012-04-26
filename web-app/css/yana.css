@@ -368,6 +368,7 @@ th.desc a {
 }
 .list th, .list td {
     border: 1px solid #0431f7;
+    padding:4px;
 }
 .list th:hover, .list tr:hover {
 	background-color:#021faf;

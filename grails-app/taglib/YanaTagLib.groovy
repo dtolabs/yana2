@@ -15,7 +15,7 @@ class YanaTagLib {
 	def breadcrumbs = { attrs,body ->
 
 		def crumbs = breadcrumbService.getCrumb(controllerName,actionName)
-		def output = "<div style='width:600px;font:bold 12px Helvetica, Arial, sans-serif;color:#0431f7;padding:0px 5px 3px 5px;'>"
+		def output = "<div style='width:600px;font:bold 12px Helvetica, Arial, sans-serif;color:#ffffff;padding:0px 5px 3px 5px;'>"
 		def count = 0
 
 		if(crumbs!=null){
