@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<a href="#list-attribute" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div id="list-attribute" class="content scaffold-list" role="main">
+		<div id="list-attribute" class="list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>

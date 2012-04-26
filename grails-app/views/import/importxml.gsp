@@ -29,7 +29,7 @@
                     </table>
                 </div>
                 <div class="buttons">
-                    <span class="button"><g:submitButton name="import" class="save" value="import" /></span>
+                    <g:submitButton name="import" class="button" value="import" />
                 </div>
             </g:uploadForm>
         </div>

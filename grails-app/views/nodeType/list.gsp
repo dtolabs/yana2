@@ -9,7 +9,7 @@
 	</head>
 	<body>
 
-		<div id="list-nodeType" class="content scaffold-list" role="main">
+		<div id="list-nodeType" class="list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
