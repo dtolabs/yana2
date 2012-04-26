@@ -9,12 +9,13 @@
 	</head>
 	<body>
 
-	<div id="show-template" class="content scaffold-show" role="main">
+	<div>
 		<h1><g:message code="default.show.label" args="[entityName]" /></h1>
 		<g:if test="${flash.message}">
 		<div class="message" role="status">${flash.message}</div>
 		</g:if>
-		<table class="scaffold" border="0">
+		<table width="100%" border="0">
+			<tbody>
 			<tr class="results">
 				<td style="font-weight:bold;" width="250"><g:message code="node.name.label" default="Name" />: </td>
 				<td><g:fieldValue bean="${nodeInstance}" field="name"/></td>
@@ -99,6 +100,7 @@
 			</g:form>
 				</td>
 			</tr>
+			</tbody>
 		</table>
 	</div>
 

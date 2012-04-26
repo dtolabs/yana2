@@ -5,8 +5,23 @@ body {
    margin:0;
    padding:0;
    height:100%;
-   background: url(/images/yana_bg.png) repeat-y;
+   border:0;
+   background: url(/images/yana_bg.png) repeat;
    font-family: "Helvetica";
+   font: 13px verdana, arial, helvetica, sans-serif;
+   color:#ffffff;
+}
+
+a:link{
+	font: 13px verdana, arial, helvetica, sans-serif;
+	text-decoration:none;
+	color:#89a9ff;
+}
+
+a:visited{
+	font: 13px verdana, arial, helvetica, sans-serif;
+	text-decoration:none;
+	color:#89a9ff;
 }
 
 h1 {
@@ -15,41 +30,138 @@ h1 {
 }
 
 
-#container {
-   min-height:100%;
-   position:relative;
-	width: 100%;
-	margin: 0 auto;
-}
-#primary {
-	float: left;
-	width: 20%;
-}
-#content {
-	float: left;
-	width: 60%;
-}
-#secondary {
-	float: left;
-	width: 20%;
-}
+
+.clear{clear:both;height:1px;overflow:hidden;line-height:1%;font-size:0px;margin-bottom:-1px}
+* html .clear{height:auto;margin-bottom:0}
+#fullheightcontainer{margin-left:auto;margin-right:auto;text-align:left;position:relative;width:782px;height:100%;}
+#wrapper{min-height:100%}
+#outer{z-index:1;position:relative}
+#float-wrap{margin-right:-1px;float:left;display:inline}
+#left{float:left;position:relative;display:inline}
+#right{float:left;margin-left:-1px;position:relative;display:inline}
+
+html,body,#fullheightcontainer,#wrapper,* html #wrapper,#outer{height:100%;}
+* html #right{margin-left:0px;margin-right:-500px}
+* html #left{margin-right:-3px}
+#center{margin-left:-1;pxwidth:782px;}
+
+#center{float:right;display:inline;width:782px}
+
+/***.gfx_bg{top:0px;position:absolute;height:100%;overflow:hidden}***/
+#gfx_bg_middle{top:0px;position:absolute;height:100%;overflow:hidden}
+* html #gfx_bg_middle{display:none}
+#subheader1,#subheader2,#subheader3,#subheader4,#subheader5,#subfooter1,#subfooter2,#subfooter3,#subfooter4{text-align:center;overflow:hidden}
+.outer_horiz_border,.sb_outer_horiz_border,#headergap,#clearheadercenter,#clearheaderleft,#clearheaderright,#clearfootercenter,#clearfooterleft,#clearfooterright,.bottomtopmargin{overflow:hidden}
 
 #header {
    padding:0px;
 }
 #body {
-   height:100%;
    padding-bottom:51px;   /* Height of the footer */
 }
 #footer {
-   position:absolute;
-   bottom:0;
-   width:60%;
+   width:100%;
    height:51px;   /* Height of the footer */
 }
 
+.foot_style{
+	height:50px;
+	border: 2px solid #0431f7;
+	background-color:#010e66;
+}
+.logo{
+	background: url(../images/yana_logo2.png) no-repeat;
+	height:25px;
+	width:81px;
+	border-bottom: 2px solid #0431f7;
+}
 
+.header_login{
+	padding:0px;
+	margin:0px;
+	height:27px;
+	width:250px;
+	border-bottom: 2px solid #0431f7;
+}
+.header_spacer{
+	border-bottom: 2px solid #0431f7;
+}
+.header_login_body{
+	padding:0px;
+	margin:0px;
+	border-top: 2px solid #0431f7;
+	border-right: 2px solid #0431f7;
+	background-color:#010e66;
+	width:223px;
+	height:25px;
+}
 
+.search_input {
+    border: 1px solid #0431f7;
+    background: #0a0926;
+    color:#89a9ff;
+}
+
+.button {
+    border: 1px solid #0431f7;
+    background: #021faf;
+    font: 13px verdana, arial, helvetica, sans-serif;
+    color:#89a9ff;
+}
+
+.header_login_side{
+	padding:0px;
+	margin:0px;
+	border-left: 2px solid #0431f7;
+	border-bottom: 2px solid #0431f7;
+	background-color:#010e66;
+	width:25px;
+	height:25px;
+}
+
+.header_login_side2{
+	padding:0px;
+	margin:0px;
+	border-bottom: 2px solid #0431f7;
+	border-left: 2px solid #0431f7;
+	background-color:#010e66;
+	width:25px;
+	height:25px;
+}
+
+.header_login_corner{
+	padding:0px;
+	margin:0px;
+	background-image: url('/images/yana_uleft_corner.png');
+	background-repeat: no-repeat;
+	height:27px;
+	width:27px;
+}
+
+.header_login_corner2{
+	padding:0px;
+	margin:0px;
+	background-image: url('/images/yana_uleft_corner.png');
+	background-repeat: no-repeat;
+	height:27px;
+	width:27px;
+}
+
+.header_bottom_corner{
+	padding:0px;
+	margin:0px;
+	background: url('/images/yana_header_thumb.png');
+	background-repeat: no-repeat;
+	position:relative;top:-4px;
+	height:27px;
+	width:51px;
+}
+
+.header_search{
+	background-color:#010e66;
+	border-right: 2px solid #0431f7;
+	border-bottom: 2px solid #0431f7;
+}
 
 input, select, textarea {
     background-color: #fcfcfc;
