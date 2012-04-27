@@ -33,24 +33,6 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${filterInstance?.dateCreated}">
-				<li class="fieldcontain">
-					<span id="dateCreated-label" class="property-label"><g:message code="filter.dateCreated.label" default="Date Created" /></span>
-					
-						<span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${filterInstance?.dateCreated}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${filterInstance?.dateModified}">
-				<li class="fieldcontain">
-					<span id="dateModified-label" class="property-label"><g:message code="filter.dateModified.label" default="Date Modified" /></span>
-					
-						<span class="property-value" aria-labelledby="dateModified-label"><g:formatDate date="${filterInstance?.dateModified}" /></span>
-					
-				</li>
-				</g:if>
-			
 			</ol>
 			<g:form>
 				<fieldset class="form_footer">
