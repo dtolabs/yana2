@@ -1,5 +1,6 @@
 package com.dtosolutions
 
+import grails.converters.JSON
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
@@ -110,4 +111,18 @@ class NodeTypeController {
             redirect(action: "show", id: params.id)
         }
     }
+	
+	def getNodeTypes(){
+		def response = []
+		List origList = Topic.executeQuery( "select  new map(T.id as id, T.topicName as topicName) from Topic T");
+		List delList = PostTopics.executeQuery( "select  new map(T.id as id, T.topicName as topicName) from Topic T left join T.posts P where P.post.id=?",[params.id.toLong()]);
+		List addList = origList - delList
+
+
+		
+		//List origList = NodeType.findAll()
+
+		response = [dellist:dellist,addlist:addlist];
+		render response as JSON
+	}
 }

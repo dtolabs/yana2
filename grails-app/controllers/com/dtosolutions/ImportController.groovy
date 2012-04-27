@@ -69,6 +69,8 @@ class ImportController {
 					att.filter = filter
 					att.dateCreated = new Date()
 					att.dateModified = new Date()
+					att.description=''
+					
 					att.save(flush: true,failOnError:true)
 				}
 			}

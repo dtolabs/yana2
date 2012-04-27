@@ -20,9 +20,7 @@
 					
 						<g:sortableColumn property="name" title="${message(code: 'nodeType.name.label', default: 'Name')}" />
 					
-						<g:sortableColumn property="dateCreated" title="${message(code: 'nodeType.dateCreated.label', default: 'Date Created')}" />
-					
-						<g:sortableColumn property="dateModified" title="${message(code: 'nodeType.dateModified.label', default: 'Date Modified')}" />
+						<g:sortableColumn property="description" title="${message(code: 'nodeType.description.label', default: 'Description')}" />
 					
 					</tr>
 				</thead>
@@ -31,10 +29,12 @@
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
 						<td><g:link action="show" id="${nodeTypeInstance.id}">${fieldValue(bean: nodeTypeInstance, field: "name")}</g:link></td>
-					
-						<td><g:formatDate date="${nodeTypeInstance.dateCreated}" /></td>
-					
-						<td><g:formatDate date="${nodeTypeInstance.dateModified}" /></td>
+						<g:if test="${nodeTypeInstance.description?.size()>50}">
+						<td>${nodeTypeInstance.description[0..50]}...</td>
+						</g:if>
+						<g:else>
+						<td>${nodeTypeInstance.description}</td>
+						</g:else>
 					
 					</tr>
 				</g:each>

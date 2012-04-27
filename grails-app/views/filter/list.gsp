@@ -21,10 +21,6 @@
 					
 						<g:sortableColumn property="regex" title="${message(code: 'filter.regex.label', default: 'Regex')}" />
 					
-						<g:sortableColumn property="dateCreated" title="${message(code: 'filter.dateCreated.label', default: 'Date Created')}" />
-					
-						<g:sortableColumn property="dateModified" title="${message(code: 'filter.dateModified.label', default: 'Date Modified')}" />
-					
 					</tr>
 				</thead>
 				<tbody>
@@ -34,10 +30,6 @@
 						<td><g:link action="show" id="${filterInstance.id}">${fieldValue(bean: filterInstance, field: "dataType")}</g:link></td>
 					
 						<td>${fieldValue(bean: filterInstance, field: "regex")}</td>
-					
-						<td><g:formatDate date="${filterInstance.dateCreated}" /></td>
-					
-						<td><g:formatDate date="${filterInstance.dateModified}" /></td>
 					
 					</tr>
 				</g:each>

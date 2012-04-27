@@ -22,10 +22,6 @@
 					
 						<th><g:message code="attribute.filter.label" default="Filter" /></th>
 					
-						<g:sortableColumn property="dateCreated" title="${message(code: 'attribute.dateCreated.label', default: 'Date Created')}" />
-					
-						<g:sortableColumn property="dateModified" title="${message(code: 'attribute.dateModified.label', default: 'Date Modified')}" />
-					
 					</tr>
 				</thead>
 				<tbody>
@@ -35,10 +31,6 @@
 						<td><g:link action="show" id="${attributeInstance.id}">${fieldValue(bean: attributeInstance, field: "name")}</g:link></td>
 					
 						<td>${fieldValue(bean: attributeInstance, field: "filter")}</td>
-					
-						<td><g:formatDate date="${attributeInstance.dateCreated}" /></td>
-					
-						<td><g:formatDate date="${attributeInstance.dateModified}" /></td>
 					
 					</tr>
 				</g:each>
