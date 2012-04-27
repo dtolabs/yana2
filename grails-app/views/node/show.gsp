@@ -56,8 +56,8 @@
 			</tr>
 			
 			<g:if test="${nodeInstance?.templateValues}">
-				<g:each in="${nodeInstance.templateValues}" var="t">
-				<g:set var="attribute" value="${com.dtosolutions.Attribute.get(t?.templateattribute?.attribute?.id)}" />
+				<g:each in="${com.dtosolutions.TemplateValue.findAllByNode(com.dtosolutions.Node.get(nodeInstance?.id), [sort:'id',order:'asc'])}" var="t">
+				<g:set var="attribute" value="${com.dtosolutions.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
 					<tr>
 						<td><b>${attribute?.name}</b> [${attribute.filter.dataType}]: </td>
 						<td>${t?.value?.encodeAsHTML()}</td>
