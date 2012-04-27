@@ -147,6 +147,18 @@ environments {
 // jquery
 grails.views.javascript.library="jquery"
 
+grails.resources.modules = {
+    core {
+        dependsOn 'jquery-ui'
+    }
+    // Define reference to custom jQuery UI theme
+    overrides {
+        'jquery-theme' {
+            resource id: 'theme', url: '/css/jquery-ui-1.8.19.custom.css'
+        }
+    }
+}
+
 // Added by the Spring Security Core plugin:
 grails.plugins.springsecurity.userLookup.userDomainClassName = "com.dtosolutions.User"
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = "com.dtosolutions.UserRole"

@@ -9,10 +9,8 @@
 
 <div>
 
-	<s2ui:form width='100%' height='375' elementId='formContainer'
-	           titleCode='spring.security.ui.user.search'>
 
-	<g:form action='userSearch' name='userSearchForm'>
+	<g:form action='userSearch' name='userSearchForm' width='100%' height='375' elementId='formContainer' titleCode='spring.security.ui.user.search'>
 
 		<br/>
 
@@ -61,7 +59,6 @@
 		</table>
 	</g:form>
 
-	</s2ui:form>
 
 	<g:if test='${searched}'>
 

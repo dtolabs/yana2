@@ -134,8 +134,23 @@ select {
 }
 
 
-input[type=submit] {
+input[type=submit]{
     border: 1.5px solid #0431f7;
+    background: #021faf;
+    font: 13px verdana, arial, helvetica, sans-serif;
+    color:#89a9ff;
+    text-align:center;
+}
+
+.ui-state-highlight a {color:auto !important;}
+.ui-button{}
+.ui-widget{}
+.ui-state-default{}
+.ui-corner-all{}
+.ui-button-text-only{}
+
+.ui-button-text{
+	border: 1.5px solid #0431f7;
     background: #021faf;
     font: 13px verdana, arial, helvetica, sans-serif;
     color:#89a9ff;
@@ -234,6 +249,12 @@ input, select, textarea {
     margin: 2px 0;
     padding: 2px 4px;
 }
+
+input.s2ui_hidden_button{
+	border:0px;
+	background-color:transparent;
+}
+
 select {
    padding: 2px 2px 2px 0;
 }
@@ -244,11 +265,12 @@ textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-    border: 1px solid #b2d1ff;
+    border: 1px solid #ff6600;
 }
 
 option[selected]{
 	background-color:#ff6600;
+	color:#0a0926;
 }
 
 /* NAVIGATION MENU */
@@ -389,9 +411,7 @@ th.desc a {
 /* PAGINATION */
 
 .paginateButtons {
-    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
-    border: 1px solid #ccc;
-    border-top: 0;
+    background: url(../images/skin/shadow.jpg) bottom repeat-x;
     color: #666;
     font-size: 10px;
     overflow: hidden;
