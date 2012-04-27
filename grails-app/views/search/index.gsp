@@ -87,7 +87,7 @@
       </ul>
     </g:if>
 
-
+	<g:if test="${searchResult?.results}">
 		<div id="list-node" class="content scaffold-list" role="main">
 			<table>
 				<thead>
@@ -131,7 +131,10 @@
 				<g:paginate total="${Node.count()}" />
 			</div>
 		</div>
-
+	</g:if>
+    <g:else>
+    <div class="message" role="status">Invalid search: Please try again.</div>
+    </g:else>
   </div>
   </body>
 </html>

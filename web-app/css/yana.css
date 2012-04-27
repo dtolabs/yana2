@@ -116,6 +116,12 @@ textarea {
     color:#89a9ff;
 }
 
+option {
+    border: 1px solid #0431f7;
+    background: #0a0926;
+    color:#89a9ff;
+}
+
 select {
     border-width: 1px;
     border-color: #0431f7;
@@ -309,9 +315,9 @@ option[selected]{
 /* MESSAGES AND ERRORS */
 
 .message {
-    background: #f3f8fc url(../images/skin/information.png) 8px 50% no-repeat;
-    border: 1px solid #b2d1ff;
-    color: #006dba;
+	border: 2px solid #ff6600;
+	background-color: #021faf;
+    color: #ff6600;
     margin: 10px 0 5px 0;
     padding: 5px 5px 5px 30px
 }
