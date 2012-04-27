@@ -71,7 +71,7 @@ h2 {
 
 /* code snippet */
 .snippet {
-	background-color: #fff;
+	background-color: #010e66;
 	font-family: monospace;
 }
 
@@ -80,7 +80,7 @@ h2 {
 }
 
 .snippet .lineNumber {
-	background-color: #ddd;
+	background-color: #0431f7;
 	color: #999;
 	display: inline-block;
 	margin-right: 5px;
@@ -90,12 +90,12 @@ h2 {
 }
 
 .snippet .error {
-	background-color: #fff3f3;
+	background-color: #0431f7;
 	font-weight: bold;
 }
 
 .snippet .error .lineNumber {
-	background-color: #faa;
+	background-color: #ff6600;
 	color: #333;
 	font-weight: bold;
 }
