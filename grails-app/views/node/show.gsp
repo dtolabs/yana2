@@ -59,8 +59,20 @@
 				<g:each in="${com.dtosolutions.TemplateValue.findAllByNode(com.dtosolutions.Node.get(nodeInstance?.id), [sort:'id',order:'asc'])}" var="t">
 				<g:set var="attribute" value="${com.dtosolutions.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
 					<tr>
-						<td><b>${attribute?.name}</b> [${attribute.filter.dataType}]: </td>
-						<td>${t?.value?.encodeAsHTML()}</td>
+						<td><b>${attribute?.name[0]}</b> ${attribute.filter.dataType}:</td>
+						<td>
+						<g:if test="${attribute.filter.dataType[0]=='URL'}">
+							<g:if test="${t?.value[0..3]!='http'}">
+								<a href="http://${t?.value?.encodeAsHTML()}">${t?.value?.encodeAsHTML()}</a>
+							</g:if>
+							<g:else>
+								<a href="${t?.value?.encodeAsHTML()}">${t?.value?.encodeAsHTML()}</a>
+							</g:else>
+						</g:if>
+						<g:else>
+						${t?.value?.encodeAsHTML()}
+						</g:else>
+						</td>
 					</tr>
 				</g:each>
 			</g:if>
