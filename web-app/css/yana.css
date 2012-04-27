@@ -15,7 +15,7 @@ body {
 a:link{
 	font: 13px verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
-	color:#ffcc00;
+	color:#ff6600;
 }
 
 a:visited{
@@ -142,13 +142,21 @@ input[type=submit] {
     text-align:center;
 }
 
-.fake_button,.fake_button a:link,.fake_button a:visited{
+.fake_button{
 	padding:3px;
     border: 1.5px solid #0431f7;
     background: #021faf;
     font: 13px verdana, arial, helvetica, sans-serif;
     color:#89a9ff;
     text-align:center;
+}
+
+.fake_button a:link{
+    color:#89a9ff;
+}
+
+.fake_button a:visited{
+    color:#89a9ff;
 }
 
 .form_footer{
@@ -239,6 +247,9 @@ input:focus, select:focus, textarea:focus {
     border: 1px solid #b2d1ff;
 }
 
+option[selected]{
+	background-color:#ff6600;
+}
 
 /* NAVIGATION MENU */
 .nav {

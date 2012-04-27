@@ -143,7 +143,7 @@
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
 					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${((params?.status)?params.status:nodeInstance?.status?.name())}" noSelection="['null': 'Select One']"/></td>
+					<td><span class="styled-select"><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${((params?.status)?params.status:nodeInstance?.status?.name())}" noSelection="['null': 'Select One']"/></span></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
@@ -153,11 +153,11 @@
 				
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Parents: </td>
-					<td><g:select name="parents" from="${parents}" optionKey="id" optionValue="name" value="${nodeInstance.children.parent.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
+					<td><span class="styled-select"><g:select name="parents" from="${parents}" optionKey="id" optionValue="name" value="${nodeInstance.children.parent.id}" multiple="true" noSelection="['null': 'Select One or More']"/></span></td>
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Children: </td>
-					<td><g:select name="children" from="${children}" optionKey="id" optionValue="name" value="${nodeInstance.parents.child.id}" multiple="true" noSelection="['null': 'Select One or More']"/></td>
+					<td><span class="styled-select"><g:select name="children" from="${children}" optionKey="id" optionValue="name" value="${nodeInstance.parents.child.id}" multiple="true" noSelection="['null': 'Select One or More']"/></span></td>
 				</tr>
 
 			</table>

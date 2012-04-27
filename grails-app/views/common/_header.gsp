@@ -4,7 +4,7 @@
 	<tr>
 		<td width="27">&nbsp;</td>
 		<td align=left class="logo">&nbsp;</td>
-		<td class="header_spacer"><div style="width:300px;heigt:27px;padding-right:0px;margin:0px;position:relative;top:4px;"><dto:breadcrumbs>${it}</dto:breadcrumbs></div></td>
+		<td class="header_spacer"><div style="width:300px;padding-right:0px;margin:0px;position:relative;top:4px;left:20px;"><dto:breadcrumbs>${it}</dto:breadcrumbs></div></td>
 		<td class="header_login_corner">&nbsp;</td>
 		<td class="header_login_body">
 	        <sec:ifLoggedIn>
