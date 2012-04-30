@@ -17,7 +17,7 @@
 		<table width="100%" border="0">
 			<tbody>
 			<tr class="results">
-				<td style="font-weight:bold;" width="250"><g:message code="node.name.label" default="Name" />: </td>
+				<td style="font-weight:bold;" width="150"><g:message code="node.name.label" default="Name" />: </td>
 				<td><g:fieldValue bean="${nodeInstance}" field="name"/></td>
 			</tr>
 
@@ -56,26 +56,38 @@
 			</tr>
 			
 			<g:if test="${nodeInstance?.templateValues}">
-				<g:each in="${com.dtosolutions.TemplateValue.findAllByNode(com.dtosolutions.Node.get(nodeInstance?.id), [sort:'id',order:'asc'])}" var="t">
-				<g:set var="attribute" value="${com.dtosolutions.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
-					<tr>
-						<td><b>${attribute?.name[0]}</b> ${attribute.filter.dataType}:</td>
-						<td>
-						<g:if test="${attribute.filter.dataType[0]=='URL'}">
-							<g:if test="${t?.value[0..3]!='http'}">
-								<a href="http://${t?.value?.encodeAsHTML()}">${t?.value?.encodeAsHTML()}</a>
-							</g:if>
-							<g:else>
-								<a href="${t?.value?.encodeAsHTML()}">${t?.value?.encodeAsHTML()}</a>
-							</g:else>
-						</g:if>
-						<g:else>
-						${t?.value?.encodeAsHTML()}
-						</g:else>
-						</td>
-					</tr>
-				</g:each>
+			<tr>
+				<td colspan=2>
+			
+					<div class="list" >
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Datatype</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						<g:each in="${com.dtosolutions.TemplateValue.findAllByNode(com.dtosolutions.Node.get(nodeInstance?.id), [sort:'id',order:'asc'])}" status="i" var="t">
+							<g:set var="attribute" value="${com.dtosolutions.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
+							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+								<td>${attribute.name[0]}</td>
+								<td>${attribute.filter.dataType[0]}</td>
+								<td>${t.value.encodeAsHTML()}</td>
+							</tr>
+						</g:each>
+
+						</tbody>
+					</table>
+					</div>
+			
+				</td>
+			</tr>
 			</g:if>
+			
+
 			
 			<tr>
 				<td colspan=2><b>Node Parents</b><br>
