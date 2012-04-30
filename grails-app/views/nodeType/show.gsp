@@ -15,23 +15,15 @@
 		<div class="message" role="status">${flash.message}</div>
 		</g:if>
 			
+		<g:if test="${nodeTypeInstance.image}">
 		<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" />
+		</g:if>
 
 		<table class="scaffold" border="0">
 			<tr class="results">
 				<td style="font-weight:bold;"><g:message code="nodeType.name.label" default="Name" />: </td>
 				<td><g:fieldValue bean="${nodeTypeInstance}" field="name"/></td>
 			</tr>
-			
-			<g:if test="${nodeTypeInstance?.attributes}">
-					<g:each in="${nodeTypeInstance.attributes}" var="a">
-					<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.get(a.attribute.id)}"/>
-					<tr>
-						<td><b>${attributeInstance.name}</b> [${attributeInstance.filter.dataType}]: </td>
-						<td>${a.required.encodeAsHTML()}</td>
-					</tr>
-					</g:each>
-			</g:if>
 			
 			<g:if test="${nodeTypeInstance?.description}">
 			<tr>
@@ -49,7 +41,36 @@
 				<td style="font-weight:bold;"><g:message code="nodeType.dateModified.label" default="Date Modified" />: </td>
 				<td><g:formatDate date="${nodeTypeInstance?.dateModified}" /></td>
 			</tr>
-
+			<tr>
+				<td colspan=2>
+			
+					<div class="list" >
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Datatype</th>
+								<th>Required?</th>
+							</tr>
+						</thead>
+						<tbody>
+						<g:if test="${nodeTypeInstance?.attributes}">
+							
+							<g:each in="${nodeTypeInstance.attributes}" status="i" var="a">
+							<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.get(a.attribute.id)}"/>
+							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+								<td>${attributeInstance.name}</td>
+								<td>${attributeInstance.filter.dataType}</td>
+								<td>${a.required.encodeAsHTML()}</td>
+							</tr>
+							</g:each>
+						</g:if>
+						</tbody>
+					</table>
+					</div>
+			
+				</td>
+			</tr>
 			<tr>
 				<td colspan=2>
 					<g:form>
