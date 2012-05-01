@@ -27,31 +27,40 @@
 
     <nodetypes>
         <nodetype id="Server">
-			<templateAttribute id="ta1" attribute="Friendly_Name" required="false"/>
-			<templateAttribute id="ta2" attribute="Brand" required="false"/>
-			<templateAttribute id="ta3" attribute="Model" required="false"/>
-			<templateAttribute id="ta4" attribute="Serial_Number" required="false"/>
-			<templateAttribute id="ta5" attribute="Management_IP" required="false"/>
-			<templateAttribute id="ta6" attribute="Gateway" required="false"/>
-			<templateAttribute id="ta7" attribute="Number_of_CPUs" required="false"/>
-			<templateAttribute id="ta8" attribute="RAM" required="false"/>
-			<templateAttribute id="ta9" attribute="HDD" required="false"/>
-			<templateAttribute id="ta10" attribute="Blackout_Starttime" required="false"/>
-			<templateAttribute id="ta11" attribute="Blackout_Endtime" required="false"/>
-			<templateAttribute id="ta12" attribute="OS_Name" required="false"/>
-			<templateAttribute id="ta13" attribute="OS_Family" required="false"/>
-			<templateAttribute id="ta14" attribute="Hostname" required="false"/>
+        	<description></description>
+        	<templateAttributes>
+				<templateAttribute id="ta1" attribute="Friendly_Name" required="false"/>
+				<templateAttribute id="ta2" attribute="Brand" required="false"/>
+				<templateAttribute id="ta3" attribute="Model" required="false"/>
+				<templateAttribute id="ta4" attribute="Serial_Number" required="false"/>
+				<templateAttribute id="ta5" attribute="Management_IP" required="false"/>
+				<templateAttribute id="ta6" attribute="Gateway" required="false"/>
+				<templateAttribute id="ta7" attribute="Number_of_CPUs" required="false"/>
+				<templateAttribute id="ta8" attribute="RAM" required="false"/>
+				<templateAttribute id="ta9" attribute="HDD" required="false"/>
+				<templateAttribute id="ta10" attribute="Blackout_Starttime" required="false"/>
+				<templateAttribute id="ta11" attribute="Blackout_Endtime" required="false"/>
+				<templateAttribute id="ta12" attribute="OS_Name" required="false"/>
+				<templateAttribute id="ta13" attribute="OS_Family" required="false"/>
+				<templateAttribute id="ta14" attribute="Hostname" required="false"/>
+			</templateAttributes>
         </nodetype>
         <nodetype id="Software">
-			<templateAttribute id="ta15" attribute="Version" required="false"/>
-			<templateAttribute id="ta16" attribute="License" required="false"/>
+        	<description></description>
+        	<templateAttributes>
+				<templateAttribute id="ta15" attribute="Version" required="false"/>
+				<templateAttribute id="ta16" attribute="License" required="false"/>
+			</templateAttributes>
         </nodetype>
         <nodetype id="Location">
-			<templateAttribute id="ta17" attribute="Provider_Name" required="false"/>
-			<templateAttribute id="ta18" attribute="City" required="false"/>
-			<templateAttribute id="ta19" attribute="State" required="false"/>
-			<templateAttribute id="ta20" attribute="Country" required="false"/>
-			<templateAttribute id="ta21" attribute="Postal_Code" required="false"/>
+        	<description></description>
+        	<templateAttributes>
+				<templateAttribute id="ta17" attribute="Provider_Name" required="false"/>
+				<templateAttribute id="ta18" attribute="City" required="false"/>
+				<templateAttribute id="ta19" attribute="State" required="false"/>
+				<templateAttribute id="ta20" attribute="Country" required="false"/>
+				<templateAttribute id="ta21" attribute="Postal_Code" required="false"/>
+			</templateAttributes>
         </nodetype>
     </nodetypes>
     

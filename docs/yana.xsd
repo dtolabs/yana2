@@ -113,9 +113,18 @@
         <xs:element name='nodetype'>
             <xs:complexType>
                 <xs:sequence maxOccurs="unbounded">
-                    <xs:element ref='templateAttribute' maxOccurs="unbounded"/>
+                	<xs:element name='description'/>
+                    <xs:element ref='templateAttributes'/>
                 </xs:sequence>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
+            </xs:complexType>
+        </xs:element>
+        
+        <xs:element name='templateAttributes'>
+            <xs:complexType>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref='templateAttribute' maxOccurs="unbounded"/>
+                </xs:sequence>
             </xs:complexType>
         </xs:element>
         

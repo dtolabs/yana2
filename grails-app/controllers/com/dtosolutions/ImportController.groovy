@@ -82,12 +82,13 @@ class ImportController {
 					if(!ntype){
 						ntype = new NodeType()
 						ntype.name = nodetype.@id
+						ntype.description=nodetype.@description
 						ntype.dateCreated = new Date()
 						ntype.dateModified = new Date()
 						ntype.save(flush: true,failOnError:true)
 					}
 					def order = 1
-					nodetype.children().each{ templateAttribute ->
+					nodetype.templateAttributes.children().each{ templateAttribute ->
 						Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
 						TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
 						if(!ta){
@@ -121,7 +122,7 @@ class ImportController {
 	
 					node.values.children().each{ templateValue ->
 						def templateAttribute = templateValue.@templateAttribute.toString()
-						def att = xml.nodetypes.nodetype.templateAttribute.findAll { it.@id.text()==templateAttribute }
+						def att = xml.nodetypes.nodetype.templateAttributes.templateAttribute.findAll { it.@id.text()==templateAttribute }
 						Attribute attribute = Attribute.findByName(att.@attribute.toString())
 						TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(nodetype,attribute)
 	
