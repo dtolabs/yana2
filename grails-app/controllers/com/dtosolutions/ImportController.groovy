@@ -89,6 +89,7 @@ class ImportController {
 						ntype = new NodeType()
 						ntype.name = nodetype.@id
 						ntype.description=nodetype.description.text()
+						ntype.image=nodetype.image.text()
 						ntype.dateCreated = new Date()
 						ntype.dateModified = new Date()
 						ntype.save(flush: true,failOnError:true)
