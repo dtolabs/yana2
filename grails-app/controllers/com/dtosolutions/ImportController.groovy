@@ -82,7 +82,7 @@ class ImportController {
 					if(!ntype){
 						ntype = new NodeType()
 						ntype.name = nodetype.@id
-						ntype.description=nodetype.@description
+						ntype.description=nodetype.description.text()
 						ntype.dateCreated = new Date()
 						ntype.dateModified = new Date()
 						ntype.save(flush: true,failOnError:true)

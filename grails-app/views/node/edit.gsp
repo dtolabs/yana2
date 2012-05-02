@@ -27,7 +27,6 @@
 			$.ajaxSetup({contentType:"application/json"});
 			$.getJSON("${request.contextPath}/node/getTemplateAttributes",{templateid:template,node:node,ajax:'true'},function(json){
 				if(json){
-					alert("test");
 					var div = document.getElementById("attributes");
 					div.innerHTML = '';
 					var table = document.createElement('table');
@@ -40,8 +39,6 @@
 					
 					for(var i=0;i<json.length;i++){
 						var j = json[i];
-						alert(j.attList);
-						document.write(j.attList);
 						var row = document.createElement("tr");
 						row.id='att'+j.tid+'_row'
 						
