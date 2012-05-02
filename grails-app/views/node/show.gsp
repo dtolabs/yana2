@@ -70,7 +70,7 @@
 						</thead>
 						<tbody>
 							
-						<g:each in="${com.dtosolutions.TemplateValue.findAllByNode(com.dtosolutions.Node.get(nodeInstance?.id), [sort:'id',order:'asc'])}" status="i" var="t">
+						<g:each in="${com.dtosolutions.TemplateValue.findAllByNode(com.dtosolutions.Node.get(nodeInstance?.id), [sort:'templateattribute.attribute.name',order:'asc'])}" status="i" var="t">
 							<g:set var="attribute" value="${com.dtosolutions.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
 							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 								<td>${attribute.name[0]}</td>

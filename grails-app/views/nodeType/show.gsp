@@ -56,12 +56,14 @@
 						<tbody>
 						<g:if test="${nodeTypeInstance?.attributes}">
 							
-							<g:each in="${nodeTypeInstance.attributes}" status="i" var="a">
-							<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.get(a.attribute.id)}"/>
+							<g:each in="${com.dtosolutions.TemplateAttribute.findAllByTemplate(com.dtosolutions.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
+							<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
+							
+
 							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-								<td>${attributeInstance.name}</td>
-								<td>${attributeInstance.filter.dataType}</td>
-								<td>${a.required.encodeAsHTML()}</td>
+								<td>${attributeInstance.name[0]}</td>
+								<td>${attributeInstance.filter.dataType[0]}</td>
+								<td>${t.required.encodeAsHTML()}</td>
 							</tr>
 							</g:each>
 						</g:if>
