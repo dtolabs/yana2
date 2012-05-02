@@ -33,7 +33,6 @@
 					table.style.width = '480px';
 					table.style.border = '0px';
 					var attrList = json[0].attList;
-					alert(attrList);
 					document.write(attrList);
 					var attrs = json[0].atts;
 					

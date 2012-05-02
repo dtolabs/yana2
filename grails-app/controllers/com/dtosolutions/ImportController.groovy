@@ -44,6 +44,9 @@ class ImportController {
 	
 	def importxml() {}
 	
+	
+	// all children are aspects of groovy.util.slurpersupport.NodeChild
+	// this allows us to pass them as NodeChild objects
 	def savexml() {
 		if(!request.getFile("yanaimport").empty){
 			def xml = new XmlSlurper().parse(request.getFile("yanaimport").inputStream)
@@ -63,6 +66,7 @@ class ImportController {
 					Attribute att = Attribute.findByName(attribute.@id.toString())
 					if(!att){
 						//get dependencies first
+						//println("attribute class:"+attribute.getClass())
 						Filter filter = Filter.findByDataType(attribute.@filter.toString())
 						
 						att = new Attribute()
@@ -80,6 +84,8 @@ class ImportController {
 				xml.nodetypes.children().each{ nodetype ->
 					NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 					if(!ntype){
+						println("nodetype class name:"+nodetype.getClass())
+
 						ntype = new NodeType()
 						ntype.name = nodetype.@id
 						ntype.description=nodetype.description.text()
