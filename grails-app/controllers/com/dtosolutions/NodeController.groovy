@@ -314,6 +314,7 @@ class NodeController {
 	}
 	
 	def getTemplateAttributes = {
+
 			def response = []
 
 			if(params.templateid){

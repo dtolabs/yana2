@@ -19,7 +19,6 @@
   		getAttributes();
   	}
 
-  	
   	function getAttributes(){
   	  	var node = "${nodeInstance?.id}"
   		var template = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
@@ -32,10 +31,6 @@
 					var table = document.createElement('table');
 					table.style.width = '480px';
 					table.style.border = '0px';
-					var attrList = json[0].attList;
-					document.write(attrList);
-					var attrs = json[0].atts;
-					
 					for(var i=0;i<json.length;i++){
 						var j = json[i];
 						var row = document.createElement("tr");
