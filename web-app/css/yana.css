@@ -422,13 +422,18 @@ th.desc a {
 .list table {
     border-collapse: collapse;
 }
+.list th{
+	background-color:#010e66;
+}
 .list th, .list td {
     border: 1px solid #0431f7;
     padding:4px;
 }
+/*
 .list th:hover, .list tr:hover {
 	background-color:#021faf;
 }
+*/
 
 
 /* PAGINATION */
