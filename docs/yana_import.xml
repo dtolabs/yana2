@@ -28,6 +28,7 @@
     <nodetypes>
         <nodetype id="Server">
         	<description>this is the server description</description>
+        	<image>Node.png</image>
         	<templateAttributes>
 				<templateAttribute id="ta1" attribute="Friendly_Name" required="false"/>
 				<templateAttribute id="ta2" attribute="Brand" required="false"/>
@@ -47,6 +48,7 @@
         </nodetype>
         <nodetype id="Software">
         	<description>This is the software description</description>
+        	<image>Node.png</image>
         	<templateAttributes>
 				<templateAttribute id="ta15" attribute="Version" required="false"/>
 				<templateAttribute id="ta16" attribute="License" required="false"/>
@@ -54,6 +56,7 @@
         </nodetype>
         <nodetype id="Location">
         	<description>This is the location description</description>
+        	<image>Node.png</image>
         	<templateAttributes>
 				<templateAttribute id="ta17" attribute="Provider_Name" required="false"/>
 				<templateAttribute id="ta18" attribute="City" required="false"/>
