@@ -39,7 +39,7 @@
 					var cell1 = document.createElement("td");
 					cell1.id='att'+atts[i].tid+'_cell1';
 					cell1.width='100px';
-					
+
 					var delButton = document.createElement('input');
 					delButton.type='button';
 					delButton.setAttribute("id",atts[i].tid);
@@ -52,6 +52,9 @@
 
 					var cell2 = document.createElement("td");
 					cell2.id='att'+atts[i].tid+'_cell2';
+
+					var span1=document.createElement('span');
+					span1.className="styled-select";
 					
 					var select = document.createElement('select');
 					var opt = document.createElement('option');
@@ -67,7 +70,8 @@
 						}
 						select.appendChild(opt)
 					}
-					cell2.appendChild(select);
+					span1.appendChild(select);
+					cell2.appendChild(span1);
 					row.appendChild(cell2);
 					table.appendChild(row);
 				}
@@ -90,6 +94,10 @@
 
 				var cell2 = document.createElement("td");
 				cell2.id='att'+atts[i].tid+'_cell2';
+
+				var span1=document.createElement('span');
+				span1.className="styled-select";
+
 				
 				var select = document.createElement('select');
 				select.setAttribute("id","new_attribute");
@@ -104,7 +112,8 @@
 					opt.setAttribute('value',attList[b].id);
 					select.appendChild(opt)
 				}
-				cell2.appendChild(select);
+				span1.appendChild(select);
+				cell2.appendChild(span1);
 				row.appendChild(cell2);
 				table.appendChild(row);
 
@@ -167,7 +176,7 @@
 						<td>Description:</td><td><g:textField name="description" value="${nodeTypeInstance?.description}"/></td>
 					</tr>
 					<tr valign=top>
-						<td>Image:</td><td><g:select name="image" from="${images}" value="${nodeTypeInstance?.image}"/></td>
+						<td>Image:</td><td><span class="styled-select"><g:select name="image" from="${images}" value="${nodeTypeInstance?.image}"/></span></td>
 					</tr>
 
 				</table>
