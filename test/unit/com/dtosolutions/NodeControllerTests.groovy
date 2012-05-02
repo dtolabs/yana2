@@ -85,6 +85,8 @@ class NodeControllerTests {
     }
 
     void testEdit() {
+		populateValidParams(params)
+		params.id = 1
         controller.edit()
 
         assert flash.message != null

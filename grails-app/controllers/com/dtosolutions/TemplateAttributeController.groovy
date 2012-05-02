@@ -2,6 +2,7 @@ package com.dtosolutions
 
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
+import grails.converters.JSON
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class TemplateAttributeController {
@@ -10,6 +11,34 @@ class TemplateAttributeController {
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+	/*
+	 * Restful function to handle routing
+	 * URLMapping wants to route everything to node or take over routing for node; needed to build
+	 * routing function to handle REST handling to do custom routing for anything that doesn't 
+	 * look like it is handled by controller
+	 */
+	def api(){
+		switch(request.method){
+			case "POST":
+				def json = request.JSON
+				this.saveTemplateAttribute()
+				return
+				break
+			case "GET":
+				this.show()
+				return
+				break
+			case "PUT":
+				this.update()
+				return
+				break
+			case "DELETE":
+				this.deleteTemplateAttribute()
+
+				break
+		  }
+	}
+	
     def index() {
         redirect(action: "list", params: params)
     }
@@ -24,8 +53,9 @@ class TemplateAttributeController {
     }
 
     def save() {
+		println(params)
         def templateAttributeInstance = new TemplateAttribute(params)
-        if (!templateAttributeInstance.save(flush: true)) {
+        if (!saveTemplateAttribute()) {
             render(view: "create", model: [templateAttributeInstance: templateAttributeInstance])
             return
         }
@@ -34,6 +64,19 @@ class TemplateAttributeController {
         redirect(action: "show", id: templateAttributeInstance.id)
     }
 
+	def saveTemplateAttribute(){
+		println(params)
+        def temp = new TemplateAttribute()
+		temp.template=NodeType.get(params.template.toLong())
+		temp.attribute = Attribute.get(params.attribute.toLong())
+        if (!temp.save(flush: true,failOnError:true)) {
+            render "0"
+        }else{
+			temp.save(flush: true,failOnError:true)
+			render "1"
+        }
+	}
+	
     def show() {
         def templateAttributeInstance = TemplateAttribute.get(params.id)
         if (!templateAttributeInstance) {
@@ -85,23 +128,38 @@ class TemplateAttributeController {
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
         redirect(action: "show", id: templateAttributeInstance.id)
     }
+	
 
     def delete() {
+		println("delete:"+params)
         def templateAttributeInstance = TemplateAttribute.get(params.id)
         if (!templateAttributeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
-            redirect(action: "list")
-            return
+			redirect(action: "list")
+			return
         }
 
-        try {
-            templateAttributeInstance.delete(flush: true)
+        if(deleteTemplateAttribute()){
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
+			redirect(action: "list")
+		}else{
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
-            redirect(action: "show", id: params.id)
+			redirect(action: "show", id: params.id)
         }
     }
+	
+	def deleteTemplateAttribute(){
+		def templateAttributeInstance = TemplateAttribute.get(params.id)
+        try {
+            templateAttributeInstance.delete(flush: true)
+			render "1"
+        }
+        catch (DataIntegrityViolationException e) {
+            render "0"
+        }
+	}
+
+	
+	
+
 }

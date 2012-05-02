@@ -148,6 +148,16 @@ input[type=submit]{
     text-align:center;
 }
 
+input[type=button]{
+    border: 1.5px solid #0431f7;
+    background: #021faf;
+    font: 13px verdana, arial, helvetica, sans-serif;
+    color:#89a9ff;
+    text-align:center;
+    padding:0;
+    margin:0;
+}
+
 .ui-state-highlight a {color:auto !important;}
 .ui-button{}
 .ui-widget{}

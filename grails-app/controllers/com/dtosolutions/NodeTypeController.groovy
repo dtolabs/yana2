@@ -53,6 +53,9 @@ class NodeTypeController {
     }
 
     def edit() {
+		def externalPath = servletContext.getRealPath("${grailsApplication.config.images.icons.large}")
+		def defaultPath = servletContext.getRealPath("/images/icons/64")
+		def images = iconService.listImages(defaultPath,externalPath)
         def nodeTypeInstance = NodeType.get(params.id)
         if (!nodeTypeInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
@@ -60,7 +63,7 @@ class NodeTypeController {
             return
         }
 
-        [nodeTypeInstance: nodeTypeInstance]
+        [nodeTypeInstance: nodeTypeInstance,images:images]
     }
 
     def update() {
@@ -118,11 +121,26 @@ class NodeTypeController {
 		List delList = PostTopics.executeQuery( "select  new map(T.id as id, T.topicName as topicName) from Topic T left join T.posts P where P.post.id=?",[params.id.toLong()]);
 		List addList = origList - delList
 
-
-		
 		//List origList = NodeType.findAll()
 
 		response = [dellist:dellist,addlist:addlist];
 		render response as JSON
+	}
+	
+	def getTemplateAttributes = {
+			def response = []
+			def attrs = []
+			if(params.templateid){
+				println("")
+				List attributes = Attribute.executeQuery("select new map(A.id as id,A.name as name) from Attribute as A")
+				List atts = TemplateAttribute.executeQuery("select new map(TA.id as tid,A.id as id,A.name as attributename,F.dataType as datatype) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
+				atts.each(){
+					attrs += [tid:it.tid,id:it.id,key:it.templatevalue,val:it.attributename,datatype:it.datatype];
+				}
+				
+				response += [attList:attributes,atts:attrs]
+			}
+
+			render response as JSON
 	}
 }
