@@ -33,31 +33,23 @@
 				var atts = json[0].atts;
 				
 				for (i in atts){
-					//document.write(atts[i].tid+atts[i].id+atts[i].val+atts[i].datatype);
 					var row = document.createElement("tr");
 					row.id='att'+atts[i].tid+'_row';
 					
 					var cell1 = document.createElement("td");
 					cell1.id='att'+atts[i].tid+'_cell1';
 					cell1.width='100px';
-
-					var hidden = document.createElement('input');
-					hidden.type='hidden';
-					hidden.id = 'att_'+i;
-					hidden.value=atts[i].tid
-					row.appendChild(hidden);
 					
 					var delButton = document.createElement('input');
 					delButton.type='button';
+					delButton.setAttribute("id",atts[i].tid);
 					delButton.value = '-';
 					delButton.style.position='relative';
 					delButton.style.left='52px';
-					delButton.onclick =  function () {deleteTemplateAttribute(document.getElementById("att_"+i).value)};
+					delButton.onclick =  function () {deleteTemplateAttribute(this.id)};
 					cell1.appendChild(delButton);
 					row.appendChild(cell1);
 
-
-					
 					var cell2 = document.createElement("td");
 					cell2.id='att'+atts[i].tid+'_cell2';
 					
@@ -100,7 +92,8 @@
 				cell2.id='att'+atts[i].tid+'_cell2';
 				
 				var select = document.createElement('select');
-				select.id="new_attribute";
+				select.setAttribute("id","new_attribute");
+				select.setAttribute("name","new_attribute");
 				var opt = document.createElement('option');
 				opt.innerHTML="Select A Value";
 				opt.setAttribute('value','NULL');

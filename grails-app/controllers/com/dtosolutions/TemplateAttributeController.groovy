@@ -149,6 +149,7 @@ class TemplateAttributeController {
     }
 	
 	def deleteTemplateAttribute(){
+		println(params)
 		def templateAttributeInstance = TemplateAttribute.get(params.id)
         try {
             templateAttributeInstance.delete(flush: true)
