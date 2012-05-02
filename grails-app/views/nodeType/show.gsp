@@ -16,41 +16,27 @@
 		</g:if>
 			
 		<g:if test="${nodeTypeInstance.image}">
-		<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" />
+		<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" style="vertical-align:middle;" /><span class="image-title"><g:fieldValue bean="${nodeTypeInstance}" field="name"/></span>
 		</g:if>
 
 		<table class="scaffold" border="0">
-			<tr class="results">
-				<td style="font-weight:bold;"><g:message code="nodeType.name.label" default="Name" />: </td>
-				<td><g:fieldValue bean="${nodeTypeInstance}" field="name"/></td>
-			</tr>
 			
 			<g:if test="${nodeTypeInstance?.description}">
 			<tr>
-					<td style="font-weight:bold;"><g:message code="nodeType.description.label" default="Description" />: </td>
-					<td><g:fieldValue bean="${nodeTypeInstance}" field="description"/></td>
+					<td colspan=2 class="info"><g:fieldValue bean="${nodeTypeInstance}" field="description"/></td>
 			</tr>
 			</g:if>
-			
-			<tr>
-				<td style="font-weight:bold;"><g:message code="nodeType.dateCreated.label" default="Date Created" />: </td>
-				<td><g:formatDate date="${nodeTypeInstance?.dateCreated}" /></td>
-			</tr>
-		
-			<tr>
-				<td style="font-weight:bold;"><g:message code="nodeType.dateModified.label" default="Date Modified" />: </td>
-				<td><g:formatDate date="${nodeTypeInstance?.dateModified}" /></td>
-			</tr>
+
 			<tr>
 				<td colspan=2>
-			
+					<h3>Attributes</h3>
 					<div class="list" >
-					<table>
+					<table width=375>
 						<thead>
 							<tr>
-								<th>Name</th>
-								<th>Datatype</th>
-								<th>Required?</th>
+								<th style="text-align:center;font-weight:bold;">Name</th>
+								<th style="text-align:center;font-weight:bold;">Datatype</th>
+								<th style="text-align:center;font-weight:bold;">Required?</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -71,6 +57,23 @@
 					</table>
 					</div>
 			
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table width=375>
+						<thead>
+							<tr>
+								<td style="font: bold 11px verdana, arial, helvetica, sans-serif;"><g:message code="nodeType.dateCreated.label" default="Date Created" />: </td>
+								<td style="font: 11px verdana, arial, helvetica, sans-serif;"><g:formatDate date="${nodeTypeInstance?.dateCreated}" /></td>
+							</tr>
+						
+							<tr>
+								<td style="font: bold 11px verdana, arial, helvetica, sans-serif;"><g:message code="nodeType.dateModified.label" default="Date Modified" />: </td>
+								<td style="font: 11px verdana, arial, helvetica, sans-serif;"><g:formatDate date="${nodeTypeInstance?.dateModified}" /></td>
+							</tr>
+						</thead>
+					</table>
 				</td>
 			</tr>
 			<tr>

@@ -29,7 +29,14 @@ h1 {
     font-weight: bold;
 }
 
+.info{
+	font: 15px verdana, arial, helvetica, sans-serif
+}
 
+.image-title{
+	padding:25px;
+	font: bold 17px verdana, arial, helvetica, sans-serif
+}
 
 .clear{clear:both;height:1px;overflow:hidden;line-height:1%;font-size:0px;margin-bottom:-1px}
 * html .clear{height:auto;margin-bottom:0}
@@ -405,10 +412,10 @@ th.desc a {
 */
 
 .odd {
-    background: #010e66;
+    background: #010e38;
 }
 .even {
-    background: #01137e;
+    background: #010e28;
 }
 /* LIST */
 

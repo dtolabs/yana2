@@ -43,13 +43,24 @@ class NodeTypeController {
     def show() {
 		def path = iconService.getLargeIconPath()
         def nodeTypeInstance = NodeType.get(params.id)
+		
+		def criteria = ChildNode.createCriteria()
+		def parents = criteria.list{
+			eq("child", NodeType.get(params.id?.toLong()))
+		}
+		
+		def criteria2 = ChildNode.createCriteria()
+		def children = criteria2.list{
+			eq ("parent", NodeType.get(params.id?.toLong()))
+		}
+		
         if (!nodeTypeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
             return
         }
 
-        [nodeTypeInstance: nodeTypeInstance,path:path]
+        [children:children,parents:parents,nodeTypeInstance: nodeTypeInstance,path:path]
     }
 
     def edit() {
