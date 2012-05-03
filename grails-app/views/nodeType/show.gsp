@@ -93,7 +93,8 @@
 								<ul>
 								<g:if test="${parents}">
 								<g:each in="${parents}" status="i" var="parent">
-									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="nodeType" action="show" id="${parent?.parent?.id}">${parent?.parent?.name?.encodeAsHTML()}</g:link></span></li>
+									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="nodeType" action="show" id="${parent?.parent?.id}">${parent?.parent?.name?.encodeAsHTML()} 
+									[<g:if test="${parent.parentCardinality==999999999}">MANY</g:if><g:else>${parent?.parentCardinality.encodeAsHTML()}</g:else> to <g:if test="${parent.childCardinality==999999999}">MANY</g:if><g:else>${parent?.childCardinality.encodeAsHTML()}</g:else>]</g:link></span></li>
 								</g:each>
 								</g:if>
 								</ul>
@@ -104,7 +105,8 @@
 								<ul>
 								<g:if test="${children}">
 								<g:each in="${children}" status="i" var="child">
-									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="nodeType" action="show" id="${child?.child?.id}">${child?.child?.name?.encodeAsHTML()}</g:link></span></li>
+									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="nodeType" action="show" id="${child?.child?.id}">${child?.child?.name?.encodeAsHTML()} 
+									[<g:if test="${child.childCardinality==999999999}">MANY</g:if><g:else>${child.childCardinality.encodeAsHTML()}</g:else> to <g:if test="${child.parentCardinality==999999999}">MANY</g:if><g:else>${child?.parentCardinality.encodeAsHTML()}</g:else>]</g:link></span></li>
 								</g:each>
 								</g:if>
 								</ul>

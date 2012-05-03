@@ -25,8 +25,8 @@
 						<tr style="background-color:#021faf;">
 							<td style="padding:10px;">
 							<img src="${resource(dir:path,file:nodeInstance.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
-							<span class="image-title">${nodeInstance.nodetype.name}</span>
-							<g:if test="${nodeInstance.nodetype.description}"><div class="image-description">${nodeInstance.nodetype.description}</div></g:if>
+							<span class="image-title">${nodeInstance.name} [<g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeInstance.nodetype.name}</g:link>]</span>
+							<g:if test="${nodeInstance.nodetype.description}"><div class="image-description">${nodeInstance.nodetype.description}</div></g:if><br clear=left>
 <div style="padding-top:5px;">
 	<label for="status">
 		<b><g:message code="node.status.label" default="Status" />:</b>

@@ -18,7 +18,7 @@ class NodeTypeController {
     }
 
     def list() {
-		def path = iconService.getLargeIconPath()
+		def path = iconService.getSmallIconPath()
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [nodeTypeInstanceList: NodeType.list(params), nodeTypeInstanceTotal: NodeType.count(),path:path]
     }
