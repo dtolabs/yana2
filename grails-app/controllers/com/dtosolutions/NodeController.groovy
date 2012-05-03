@@ -157,6 +157,7 @@ class NodeController {
 		def nodeTypeInstance = NodeType.get(params.id)
 		
         def nodeInstance = Node.get(params.id)
+		def tagList=[]
 		
 		if(params.format){
 			switch(params.format){
@@ -178,7 +179,9 @@ class NodeController {
 				eq ("parent", Node.get(params.id?.toLong()))
 			}
 			
-			def tagList = nodeInstance.tags.split(',')
+			if(nodeInstance){
+				tagList = nodeInstance.tags.split(',')
+			}
 			
 	        if (!nodeInstance) {
 				flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])

@@ -9,31 +9,22 @@
 	</head>
 	<body>
 
-		<div id="list-nodeType" class="list" role="main">
+		<div id="list-nodeType" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<table>
-				<thead>
-					<tr>
-					
-						<g:sortableColumn property="name" title="${message(code: 'nodeType.name.label', default: 'Name')}" />
-					
-						<g:sortableColumn property="description" title="${message(code: 'nodeType.description.label', default: 'Description')}" />
-					
-					</tr>
-				</thead>
 				<tbody>
 				<g:each in="${nodeTypeInstanceList}" status="i" var="nodeTypeInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
-						<td><g:link action="show" id="${nodeTypeInstance.id}">${fieldValue(bean: nodeTypeInstance, field: "name")}</g:link></td>
+					<tr>
+						<td style="padding-left:5px;"><img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" style="vertical-align:middle;"/></td>
+						<td style="padding-left:5px;"><g:link action="show" id="${nodeTypeInstance.id}">${fieldValue(bean: nodeTypeInstance, field: "name")}</g:link></td>
 						<g:if test="${nodeTypeInstance.description?.size()>50}">
-						<td>${nodeTypeInstance.description[0..50]}...</td>
+						<td style="padding-left:5px;">${nodeTypeInstance.description[0..50]}...</td>
 						</g:if>
 						<g:else>
-						<td>${nodeTypeInstance.description}</td>
+						<td style="padding-left:5px;">${nodeTypeInstance.description}</td>
 						</g:else>
 					
 					</tr>

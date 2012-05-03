@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'nodeType.label', default: 'NodeType')}" />
+		<g:set var="entityName" value="${message(code: 'node.label', default: 'Node')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
 	<body>
@@ -39,7 +39,7 @@
 		<b><g:message code="node.tags.label" default="Tags" />:</b>
 	</label>
 	<g:each in="${taglist}" status="i" var="t">
-		<g:link controller="search" action="index" params="[q:t]">${t}</g:link><g:if test="${i<taglist.size()}">,</g:if>
+		<g:link controller="search" action="index" params="[q:t]">${t}</g:link><g:if test="${i+1<taglist.size()}">,</g:if>
 	</g:each>
 </div>
 							</td>
@@ -55,9 +55,8 @@
 										<g:set var="attribute" value="${com.dtosolutions.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
 												
 										<tr>
-											<td width="33%">${attribute.name[0]}</td>
-											<td width="33%">${attribute.filter.dataType[0]}</td>
-											<td width=33%">${t.value.encodeAsHTML()}</td>
+											<td>${attribute.name[0]}</td>
+											<td>${t.value.encodeAsHTML()}</td>
 										</tr>
 										</g:each>
 									</g:if>
