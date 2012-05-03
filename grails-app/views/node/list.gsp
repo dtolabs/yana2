@@ -14,16 +14,16 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
-			<table width=100%>
+			<table width=100% valign=top>
 
 				<tbody>
 				<g:each in="${nodeInstanceList}" status="i" var="nodeInstance">
 					<tr>
-						<td width=16><img src="${resource(dir:path,file:nodeInstance.nodetype.image)}" alt="" style="vertical-align:middle;"/></td>
-						<td style="padding-left:5px;" width=200><g:link controller="node" action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link> [<g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link>]
-						<td style="padding-left:5px;"><g:if test="${nodeInstance.description?.size()>50}">${nodeInstance.description[0..50]}...</g:if><g:else>${nodeInstance.description}</g:else></td>					
-						<td style="padding-left:5px;">${fieldValue(bean: nodeInstance, field: "status")}</td>
-						<td style="padding-left:5px;">
+						<td width=16 valign=top><img src="${resource(dir:path,file:nodeInstance.nodetype.image)}" alt="" style="vertical-align:middle;"/></td>
+						<td style="padding-left:5px;" width=200 valign=top><g:link controller="node" action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link> [<g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link>]
+						<td style="padding-left:5px;" valign=top><g:if test="${nodeInstance.description?.size()>50}">${nodeInstance.description[0..50]}...</g:if><g:else>${nodeInstance.description}</g:else></td>					
+						<td style="padding-left:5px;" valign=top>${fieldValue(bean: nodeInstance, field: "status")}</td>
+						<td style="padding-left:5px;" valign=top>
 						<g:if test="${nodeInstance.tags}">
 						<g:each in="${nodeInstance.tags.split(',')}" status="b" var="tag">
 							<g:link controller="search" action="index" params="[q:tag]">${tag}</g:link><g:if test="${b+1<nodeInstance.tags.split(',').size()}">,</g:if>

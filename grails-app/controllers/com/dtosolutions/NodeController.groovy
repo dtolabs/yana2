@@ -85,6 +85,38 @@ class NodeController {
         [nodeList: Node.list(),nodeInstance: new Node(params)]
     }
 
+	def clone(){
+		println(params)
+		def nodeInstance = Node.get(params.id)
+
+		def now = new Date()
+		
+		def node = new Node()
+		node.name = nodeInstance.name+"_clone"
+		node.description = nodeInstance.description
+		node.status = nodeInstance.status
+		node.tags = nodeInstance.tags
+		node.nodetype = nodeInstance.nodetype
+		node.dateCreated =  now
+
+        if (!node.save(flush: true)) {
+			flash.message = message(code: 'Failed to clone node ${nodeInstance.id}')
+            redirect(action: "show", id: nodeInstance.id)
+        }else{
+			nodeInstance.templateValues.each(){
+				def tv = new TemplateValue()
+				tv.node = node
+				tv.templateattribute = it.templateattribute
+				tv.value = it.value
+				tv.dateCreated = now
+				tv.save(flush: true)
+			}
+		
+			flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
+	        redirect(action: "show", id: node.id)
+        }
+	}
+	
     def save() {
 		def parents
 		if(params.parents){
