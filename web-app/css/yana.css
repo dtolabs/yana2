@@ -33,9 +33,14 @@ h1 {
 	font: 15px verdana, arial, helvetica, sans-serif
 }
 
+
 .image-title{
-	padding:25px;
 	font: bold 17px verdana, arial, helvetica, sans-serif
+}
+
+.image-description{
+	padding-top:15px;
+	font: 13px verdana, arial, helvetica, sans-serif
 }
 
 .clear{clear:both;height:1px;overflow:hidden;line-height:1%;font-size:0px;margin-bottom:-1px}
@@ -429,11 +434,10 @@ th.desc a {
     border: 1px solid #0431f7;
     padding:4px;
 }
-/*
+
 .list th:hover, .list tr:hover {
 	background-color:#021faf;
 }
-*/
 
 
 /* PAGINATION */

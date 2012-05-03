@@ -44,12 +44,12 @@ class NodeTypeController {
 		def path = iconService.getLargeIconPath()
         def nodeTypeInstance = NodeType.get(params.id)
 		
-		def criteria = ChildNode.createCriteria()
+		def criteria = NodeTypeRelationship.createCriteria()
 		def parents = criteria.list{
 			eq("child", NodeType.get(params.id?.toLong()))
 		}
 		
-		def criteria2 = ChildNode.createCriteria()
+		def criteria2 = NodeTypeRelationship.createCriteria()
 		def children = criteria2.list{
 			eq ("parent", NodeType.get(params.id?.toLong()))
 		}

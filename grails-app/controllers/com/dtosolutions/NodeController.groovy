@@ -7,6 +7,7 @@ import grails.plugins.springsecurity.Secured
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class NodeController {
 	
+	def iconService
 	def springSecurityService
 	def xmlService
 	def webhookService
@@ -152,6 +153,9 @@ class NodeController {
     }
 
     def show() {
+		def path = iconService.getLargeIconPath()
+		def nodeTypeInstance = NodeType.get(params.id)
+		
         def nodeInstance = Node.get(params.id)
 		
 		if(params.format){
@@ -174,13 +178,15 @@ class NodeController {
 				eq ("parent", Node.get(params.id?.toLong()))
 			}
 			
+			def tagList = nodeInstance.tags.split(',')
+			
 	        if (!nodeInstance) {
 				flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
 	            redirect(action: "list")
 	            return
 	        }
 
-			[children:children,parents:parents,nodeInstance: nodeInstance]
+			[children:children,parents:parents,nodeInstance: nodeInstance,path:path,taglist:tagList]
 		}
     }
 

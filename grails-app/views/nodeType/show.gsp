@@ -14,77 +14,102 @@
 		<g:if test="${flash.message}">
 		<div class="message" role="status">${flash.message}</div>
 		</g:if>
-			
-		<g:if test="${nodeTypeInstance.image}">
-		<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" style="vertical-align:middle;" /><span class="image-title"><g:fieldValue bean="${nodeTypeInstance}" field="name"/></span>
-		</g:if>
+		
 
-		<table class="scaffold" border="0">
-			
-			<g:if test="${nodeTypeInstance?.description}">
+		<table width="100%" border="0" cellspacing=5 valign=top>
 			<tr>
-					<td colspan=2 class="info"><g:fieldValue bean="${nodeTypeInstance}" field="description"/></td>
-			</tr>
-			</g:if>
-
-			<tr>
-				<td colspan=2>
-					<h3>Attributes</h3>
-					<div class="list" >
-					<table width=375>
-						<thead>
-							<tr>
-								<th style="text-align:center;font-weight:bold;">Name</th>
-								<th style="text-align:center;font-weight:bold;">Datatype</th>
-								<th style="text-align:center;font-weight:bold;">Required?</th>
-							</tr>
-						</thead>
-						<tbody>
-						<g:if test="${nodeTypeInstance?.attributes}">
-							
-							<g:each in="${com.dtosolutions.TemplateAttribute.findAllByTemplate(com.dtosolutions.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
-							<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
-							
-
-							<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-								<td>${attributeInstance.name[0]}</td>
-								<td>${attributeInstance.filter.dataType[0]}</td>
-								<td>${t.required.encodeAsHTML()}</td>
-							</tr>
-							</g:each>
+				<td valign=top>
+					<div style="clear: left;">
+					<table class="scaffold" width="450" border="0" cellspacing=5>
+						<g:if test="${nodeTypeInstance.image}">
+						<tr style="background-color:#021faf;">
+							<td style="padding:10px;">
+							<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
+							<span class="image-title"><g:fieldValue bean="${nodeTypeInstance}" field="name"/></span>
+							<g:if test="${nodeTypeInstance?.description}"><div class="image-description"><g:fieldValue bean="${nodeTypeInstance}" field="description"/></div></g:if>
+							</td>
+						<tr>
 						</g:if>
-						</tbody>
+						<tr>
+							<td>
+			
+								<table width=250>
+									<tbody>
+									<g:if test="${nodeTypeInstance?.attributes}">
+										
+										<g:each in="${com.dtosolutions.TemplateAttribute.findAllByTemplate(com.dtosolutions.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
+										<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
+										
+										<tr>
+											<td><b>${attributeInstance.name[0]} <g:if test="${t.required}">*</g:if></b></td>
+											<td>${attributeInstance.filter.dataType[0]}</td>
+										</tr>
+										</g:each>
+									</g:if>
+									</tbody>
+								</table>
+			
+						
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h4>* = required field</h4>
+								<table width=375>
+									<thead>
+										
+										<tr>
+											<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="nodeType.dateCreated.label" default="Date Created" />: </td>
+											<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${nodeTypeInstance?.dateCreated}" /></td>
+										</tr>
+									
+										<tr>
+											<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="nodeType.dateModified.label" default="Date Modified" />: </td>
+											<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${nodeTypeInstance?.dateModified}" /></td>
+										</tr>
+									</thead>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<g:form>
+									<fieldset class="form_footer">
+										<g:hiddenField name="id" value="${nodeTypeInstance?.id}" />
+										<span class="fake_button"><g:link action="edit" id="${nodeTypeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
+										<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+									</fieldset>
+								</g:form>
+							</td>
+						</tr>
 					</table>
 					</div>
-			
 				</td>
-			</tr>
-			<tr>
-				<td>
-					<table width=375>
-						<thead>
-							<tr>
-								<td style="font: bold 11px verdana, arial, helvetica, sans-serif;"><g:message code="nodeType.dateCreated.label" default="Date Created" />: </td>
-								<td style="font: 11px verdana, arial, helvetica, sans-serif;"><g:formatDate date="${nodeTypeInstance?.dateCreated}" /></td>
-							</tr>
-						
-							<tr>
-								<td style="font: bold 11px verdana, arial, helvetica, sans-serif;"><g:message code="nodeType.dateModified.label" default="Date Modified" />: </td>
-								<td style="font: 11px verdana, arial, helvetica, sans-serif;"><g:formatDate date="${nodeTypeInstance?.dateModified}" /></td>
-							</tr>
-						</thead>
+				<td valign=top>
+					<h3>Relationships</h3>
+					<table width="225" cellspacing=5 style="border: 1px solid #0431f7;">
+						<tr>
+							<td><h3>Parents</h3>
+								<ul>
+								<g:if test="${parents}">
+								<g:each in="${parents}" status="i" var="parent">
+									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="nodeType" action="show" id="${parent?.parent?.id}">${parent?.parent?.name?.encodeAsHTML()}</g:link></span></li>
+								</g:each>
+								</g:if>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td><h3>Children</h3>
+								<ul>
+								<g:if test="${children}">
+								<g:each in="${children}" status="i" var="child">
+									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="nodeType" action="show" id="${child?.child?.id}">${child?.child?.name?.encodeAsHTML()}</g:link></span></li>
+								</g:each>
+								</g:if>
+								</ul>
+							</td>
 					</table>
-				</td>
-			</tr>
-			<tr>
-				<td colspan=2>
-					<g:form>
-						<fieldset class="form_footer">
-							<g:hiddenField name="id" value="${nodeTypeInstance?.id}" />
-							<span class="fake_button"><g:link action="edit" id="${nodeTypeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
-							<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-						</fieldset>
-					</g:form>
 				</td>
 			</tr>
 		</table>
