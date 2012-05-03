@@ -9,40 +9,27 @@
 	</head>
 	<body>
 
-		<div id="list-node" class="list" role="main">
+		<div id="list-node" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
-			<table>
-				<thead>
-					<tr>
-				
-						<g:sortableColumn property="name" title="${message(code: 'node.name.label', default: 'Name')}" />
-					
-						<g:sortableColumn property="nodetype" title="${message(code: 'node.nodetype.name.label', default: 'Nodetype')}" />
-					
-						<g:sortableColumn property="status" title="${message(code: 'node.status.label', default: 'Status')}" />
-						
-						<g:sortableColumn property="tags" title="${message(code: 'node.tags.label', default: 'Tags')}" />
-						
-						<g:sortableColumn property="description" title="${message(code: 'node.description.label', default: 'Description')}" />
-					
-					</tr>
-				</thead>
+			<table width=100%>
+
 				<tbody>
 				<g:each in="${nodeInstanceList}" status="i" var="nodeInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-
-						<td><g:link controller="node" action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link></td>
-					
-						<td><g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link></td>
-					
-						<td>${fieldValue(bean: nodeInstance, field: "status")}</td>
-					
-						<td>${fieldValue(bean: nodeInstance, field: "tags")}</td>
-					
-						<td>${fieldValue(bean: nodeInstance, field: "description")}</td>
+					<tr>
+						<td width=16><img src="${resource(dir:path,file:nodeInstance.nodetype.image)}" alt="" style="vertical-align:middle;"/></td>
+						<td style="padding-left:5px;" width=200><g:link controller="node" action="show" id="${nodeInstance.id}">${fieldValue(bean: nodeInstance, field: "name")}</g:link> [<g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}">${nodeInstance.nodetype.name}</g:link>]
+						<td style="padding-left:5px;"><g:if test="${nodeInstance.description?.size()>50}">${nodeInstance.description[0..50]}...</g:if><g:else>${nodeInstance.description}</g:else></td>					
+						<td style="padding-left:5px;">${fieldValue(bean: nodeInstance, field: "status")}</td>
+						<td style="padding-left:5px;">
+						<g:if test="${nodeInstance.tags}">
+						<g:each in="${nodeInstance.tags.split(',')}" status="b" var="tag">
+							<g:link controller="search" action="index" params="[q:tag]">${tag}</g:link><g:if test="${b+1<nodeInstance.tags.split(',').size()}">,</g:if>
+						</g:each>
+						</g:if>
+						</td>
 					
 					</tr>
 				</g:each>

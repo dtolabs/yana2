@@ -65,6 +65,7 @@ class NodeController {
     }
 
     def list() {
+		def path = iconService.getSmallIconPath()
 		def nodes = Node.list(params)
 		if(params.format){
 			switch(params.format){
@@ -76,7 +77,7 @@ class NodeController {
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count()]
+			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count(),path:path]
 		}
     }
 
@@ -214,6 +215,7 @@ class NodeController {
     }
 
     def update() {
+		println(params)
 		def parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")

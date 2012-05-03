@@ -140,6 +140,7 @@ select {
     border-color: #0431f7;
     background-color: #0a0926;
     color:#89a9ff;
+    padding: 2px 2px 2px 0;
 }
 
 .styled-select textarea {
@@ -284,9 +285,6 @@ input.s2ui_hidden_button{
 	background-color:transparent;
 }
 
-select {
-   padding: 2px 2px 2px 0;
-}
 textarea {
   width: 250px;
   height: 150px;
