@@ -43,7 +43,7 @@ class NodeController {
 			case "POST":
 			   	def json = request.JSON
 				params.service = params.controller
-				def webhookInstance = Webhook.findByUrlAndService(params.url,params.controller)
+				Webhook webhookInstance = Webhook.findByUrlAndService(params.url,params.controller)
 				if(!webhookInstance){
 					webhookInstance = new Webhook(params)
 				}
@@ -65,8 +65,8 @@ class NodeController {
     }
 
     def list() {
-		def path = iconService.getSmallIconPath()
-		def nodes = Node.list(params)
+		String path = iconService.getSmallIconPath()
+		Node[] nodes = Node.list(params)
 		if(params.format){
 			switch(params.format){
 				case 'xml':
@@ -86,12 +86,11 @@ class NodeController {
     }
 
 	def clone(){
-		println(params)
-		def nodeInstance = Node.get(params.id)
+		Node nodeInstance = Node.get(params.id)
 
-		def now = new Date()
+		Date now = new Date()
 		
-		def node = new Node()
+		Node node = new Node()
 		node.name = nodeInstance.name+"_clone"
 		node.description = nodeInstance.description
 		node.status = nodeInstance.status
@@ -118,13 +117,13 @@ class NodeController {
 	}
 	
     def save() {
-		def parents
+		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
 			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids)",[ids:adults]) }
 		}
 		
-		def children
+		Node[] children
 		if(params.children){
 			Long[] kinder = Eval.me("${params.children}")
 			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:children]) }
@@ -186,11 +185,11 @@ class NodeController {
     }
 
     def show() {
-		def path = iconService.getLargeIconPath()
-		def nodeTypeInstance = NodeType.get(params.id)
+		String path = iconService.getLargeIconPath()
+		NodeType nodeTypeInstance = NodeType.get(params.id)
 		
-        def nodeInstance = Node.get(params.id)
-		def tagList=[]
+        Node nodeInstance = Node.get(params.id)
+		List tagList=[]
 		
 		if(params.format){
 			switch(params.format){
@@ -227,8 +226,7 @@ class NodeController {
     }
 
     def edit() {
-        def nodeInstance = Node.get(params.id)
-		//def nodes = Node.findAll("from Node as N where N.id!=${params.id}") 
+        Node nodeInstance = Node.get(params.id)
 		def criteria = Node.createCriteria()
 		def nodes = criteria.list{
 			ne ("id", params.id?.toLong())
@@ -240,9 +238,25 @@ class NodeController {
             return
         }
 
-		def parents = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${nodeInstance.nodetype.id} and (NTP.childCardinality<=(select count(*) from NodeType where id=NTP.parent.id) or NTP.childCardinality is null)")
-		def children = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${nodeInstance.nodetype.id} and (NTP.parentCardinality<=(select count(*) from NodeType where id=NTP.child.id) or NTP.parentCardinality is null)")
-		
+		def pquery = """
+select new map(N.id as id,N.name as name,NTP.parentCardinality as size) 
+from Node as N 
+left join N.nodetype as NT 
+left join NT.parents as NTP 
+where NTP.child=${nodeInstance.nodetype.id} 
+and (NTP.parentCardinality>=${nodeInstance.parents.size()} or NTP.parentCardinality is null)
+"""
+		def parents = Node.executeQuery(pquery)
+
+		def cquery = """
+select new map(N.id as id,N.name as name) 
+from Node as N 
+left join N.nodetype as NT 
+left join NT.children as NTP 
+where NTP.parent=${nodeInstance.nodetype.id} 
+and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinality is null)
+"""
+		def children = Node.executeQuery(cquery)
         [parents:parents,children:children,nodes:nodes,nodeInstance: nodeInstance]
     }
 
