@@ -20,36 +20,35 @@
 			<tr>
 				<td valign=top>
 					<div style="clear: left;">
-					<span class="property-value" aria-labelledby="roleName-label">${nodeTypeRelationshipInstance.roleName}</span>
+					<span class="image-title">${nodeTypeRelationshipInstance.roleName}</span>
 					<table class="scaffold" width="450" border="0" cellspacing=5>
 						<tr style="background-color:#021faf;">
 							<td>
-							<table class="scaffold" border="0" cellspacing=5>
+							<table border="0" cellspacing=5>
 								<tr>
 									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.parent.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
-									<td style="padding-left:5px;"><b>Parent:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></td>
+									<td><b>Parent:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></td>
 								</tr>
 								<tr>
 									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.child.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
-									<td style="padding-left:5px;"><b>Child:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.child?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.child?.encodeAsHTML()}</g:link></td>
+									<td><b>Child:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.child?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.child?.encodeAsHTML()}</g:link></td>
 								</tr>
 							</table>
 							</td>
 						</tr>
 						<tr>
-						<tr>
 							<td>
 								<table width=100%>
 										<tr>
-											<td>Role Name</td>
+											<td><b>Role Name</b></td>
 											<td>${nodeTypeRelationshipInstance.roleName}</td>
 										</tr>
 										<tr>
-											<td>Parent Cardinality</td>
+											<td><b>Parent Cardinality</b></td>
 											<td>${nodeTypeRelationshipInstance.parentCardinality}</td>
 										</tr>
 										<tr>
-											<td>Child Cardinality</td>
+											<td><b>Child Cardinality</b></td>
 											<td>${nodeTypeRelationshipInstance.childCardinality}</td>
 										</tr>
 								</table>
