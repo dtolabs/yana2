@@ -36,9 +36,17 @@
 					
 						<td><g:link action="show" id="${nodeTypeRelationshipInstance.id}">${fieldValue(bean: nodeTypeRelationshipInstance, field: "roleName")}</g:link></td>
 					
-						<td>${fieldValue(bean: nodeTypeRelationshipInstance, field: "parentCardinality")}</td>
+						<td>
+						<g:if test="${nodeTypeRelationshipInstance.parentCardinality==999999999}">MANY</g:if>
+						<g:elseif test="${nodeTypeRelationshipInstance.parentCardinality}">${nodeTypeRelationshipInstance.parentCardinality.encodeAsHTML()}</g:elseif>
+						<g:else>0</g:else>
+						</td>
 					
-						<td>${fieldValue(bean: nodeTypeRelationshipInstance, field: "childCardinality")}</td>
+						<td>
+						<g:if test="${nodeTypeRelationshipInstance.childCardinality==999999999}">MANY</g:if>
+						<g:elseif test="${nodeTypeRelationshipInstance.childCardinality}">${nodeTypeRelationshipInstance.childCardinality.encodeAsHTML()}</g:elseif>
+						<g:else>0</g:else>
+						</td>
 					
 						<td>${fieldValue(bean: nodeTypeRelationshipInstance, field: "parent")}</td>
 					
