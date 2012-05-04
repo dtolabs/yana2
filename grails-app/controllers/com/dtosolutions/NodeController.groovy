@@ -212,7 +212,7 @@ class NodeController {
 				eq ("parent", Node.get(params.id?.toLong()))
 			}
 			
-			if(nodeInstance){
+			if(nodeInstance?.tags){
 				tagList = nodeInstance.tags.split(',')
 			}
 			
@@ -247,17 +247,16 @@ class NodeController {
     }
 
     def update() {
-		println(params)
-		def parents
+		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
 			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:adults]) }
 		}
 		
-		def children
+		Node[] children
 		if(params.children){
 			Long[] kinder = Eval.me("${params.children}")
-			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:children]) }
+			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:kinder]) }
 		}
 		
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
@@ -300,6 +299,33 @@ class NodeController {
 						tval.save(flush: true)
 					}
 				}
+				
+				// delete all from childnode where node is child and reassign
+				def childNodes = ChildNode.findByChild(nodeInstance)
+				childNodes.each{
+					it.delete()
+				}
+
+				parents.each{
+					def chnode = new ChildNode()
+					chnode.relationshipName = "${it.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(it.nodetype)}]"
+					chnode.parent=it
+					chnode.child=nodeInstance
+					chnode.save(flush: true)
+				}
+				// delete all from childnode where node is parent and reasign
+				def parentNodes = ChildNode.findByParent(nodeInstance)
+				parentNodes.each{
+					it.delete()
+				}
+				children.each{
+					def chnode = new ChildNode()
+					chnode.relationshipName = "${nodeInstance.name}_${it.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]"
+					chnode.parent=nodeInstance
+					chnode.child=it
+					chnode.save(flush: true)
+				}
+
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
 	        }

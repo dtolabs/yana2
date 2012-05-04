@@ -14,6 +14,8 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
+			
+			<g:if test="${nodeTypeInstanceList}">
 			<table>
 				<tbody>
 				<g:each in="${nodeTypeInstanceList}" status="i" var="nodeTypeInstance">
@@ -35,6 +37,10 @@
 			<div class="pagination">
 				<g:paginate total="${nodeTypeInstanceTotal}" />
 			</div>
+			</g:if>
+			<g:else>
+				<span style="padding:25px;"><h4>No Nodetypes loaded. Please use the <g:link controller="import" action="importxml" style="font: bold 13px verdana, arial, helvetica, sans-serif">import tool</g:link> to load your initial structure.</h4></span>
+			</g:else>
 		</div>
 	</body>
 </html>
