@@ -16,12 +16,14 @@ a:link{
 	font: 13px verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 	color:#ff6600;
+	padding: 2px 6px;
 }
 
 a:visited{
 	font: 13px verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 	color:#ff6600;
+	padding: 2px 6px;
 }
 
 h1 {
@@ -425,12 +427,12 @@ th.desc a {
 
 .list table {
     border-collapse: collapse;
+    border: 1px solid #0431f7;
 }
 .list th{
 	background-color:#010e66;
 }
 .list th, .list td {
-    border: 1px solid #0431f7;
     padding:4px;
 }
 
@@ -453,8 +455,7 @@ th.desc a {
     border: 1px solid #ccc;
     border-color: #ccc #aaa #aaa #ccc;
     color: #666;
-    margin: 0 3px;
-    padding: 2px 6px;
+    margin: 0 3px;padding: 2px 6px;
 }
 .paginateButtons span {
     padding: 2px 3px;
