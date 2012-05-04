@@ -14,61 +14,65 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
-			<ol class="property-list nodeTypeRelationship">
 			
-				<g:if test="${nodeTypeRelationshipInstance?.roleName}">
-				<li class="fieldcontain">
-					<span id="roleName-label" class="property-label"><g:message code="nodeTypeRelationship.roleName.label" default="Role Name" /></span>
-					
-						<span class="property-value" aria-labelledby="roleName-label"><g:fieldValue bean="${nodeTypeRelationshipInstance}" field="roleName"/></span>
-					
-				</li>
-				</g:if>
 			
-				<g:if test="${nodeTypeRelationshipInstance?.parentCardinality}">
-				<li class="fieldcontain">
-					<span id="parentCardinality-label" class="property-label"><g:message code="nodeTypeRelationship.parentCardinality.label" default="Parent Cardinality" /></span>
-					
-						<span class="property-value" aria-labelledby="parentCardinality-label"><g:fieldValue bean="${nodeTypeRelationshipInstance}" field="parentCardinality"/></span>
-					
-				</li>
-				</g:if>
+		<table width="100%" border="0" cellspacing=0 cellpadding=0 valign=top>
+			<tr>
+				<td valign=top>
+					<div style="clear: left;">
+					<span class="property-value" aria-labelledby="roleName-label">${nodeTypeRelationshipInstance.roleName}</span>
+					<table class="scaffold" width="450" border="0" cellspacing=5>
+						<tr style="background-color:#021faf;">
+							<td>
+							<table class="scaffold" border="0" cellspacing=5>
+								<tr>
+									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.parent.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
+									<td style="padding-left:5px;"><b>Parent:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></td>
+								</tr>
+								<tr>
+									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.child.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
+									<td style="padding-left:5px;"><b>Child:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.child?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.child?.encodeAsHTML()}</g:link></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+						<tr>
+						<tr>
+							<td>
+								<table width=100%>
+										<tr>
+											<td>Role Name</td>
+											<td>${nodeTypeRelationshipInstance.roleName}</td>
+										</tr>
+										<tr>
+											<td>Parent Cardinality</td>
+											<td>${nodeTypeRelationshipInstance.parentCardinality}</td>
+										</tr>
+										<tr>
+											<td>Child Cardinality</td>
+											<td>${nodeTypeRelationshipInstance.childCardinality}</td>
+										</tr>
+								</table>
 			
-				<g:if test="${nodeTypeRelationshipInstance?.childCardinality}">
-				<li class="fieldcontain">
-					<span id="childCardinality-label" class="property-label"><g:message code="nodeTypeRelationship.childCardinality.label" default="Child Cardinality" /></span>
-					
-						<span class="property-value" aria-labelledby="childCardinality-label"><g:fieldValue bean="${nodeTypeRelationshipInstance}" field="childCardinality"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${nodeTypeRelationshipInstance?.parent}">
-				<li class="fieldcontain">
-					<span id="parent-label" class="property-label"><g:message code="nodeTypeRelationship.parent.label" default="Parent" /></span>
-					
-						<span class="property-value" aria-labelledby="parent-label"><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${nodeTypeRelationshipInstance?.child}">
-				<li class="fieldcontain">
-					<span id="child-label" class="property-label"><g:message code="nodeTypeRelationship.child.label" default="Child" /></span>
-					
-						<span class="property-value" aria-labelledby="child-label"><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.child?.id}">${nodeTypeRelationshipInstance?.child?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-			</ol>
-			<g:form>
-				<fieldset class="form_footer">
-					<g:hiddenField name="id" value="${nodeTypeRelationshipInstance?.id}" />
-					<span class="fake_button"><g:link action="edit" id="${nodeTypeRelationshipInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<g:form>
+									<fieldset class="form_footer">
+										<g:hiddenField name="id" value="${nodeTypeRelationshipInstance?.id}" />
+										<span class="fake_button"><g:link action="edit" id="${nodeTypeRelationshipInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
+										<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+									</fieldset>
+								</g:form>
+							</td>
+						</tr>
+					</table>
+					</div>
+				</td>
+				<td valign=top width=225>&nbsp;</td>
+			</tr>
+		</table>
 		</div>
 	</body>
 </html>

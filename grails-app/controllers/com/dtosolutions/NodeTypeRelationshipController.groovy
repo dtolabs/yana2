@@ -6,6 +6,8 @@ import grails.plugins.springsecurity.Secured
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class NodeTypeRelationshipController {
 
+	def iconService
+	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
@@ -45,6 +47,7 @@ class NodeTypeRelationshipController {
     }
 
     def show() {
+		String path = iconService.getMedIconPath()
         def nodeTypeRelationshipInstance = NodeTypeRelationship.get(params.id)
         if (!nodeTypeRelationshipInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), params.id])
@@ -52,7 +55,7 @@ class NodeTypeRelationshipController {
             return
         }
 
-        [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance]
+        [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,path:path]
     }
 
     def edit() {
