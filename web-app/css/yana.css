@@ -16,14 +16,14 @@ a:link{
 	font: 13px verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 	color:#ff6600;
-	padding: 2px 6px;
+	padding: 0px 5px;
 }
 
 a:visited{
 	font: 13px verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 	color:#ff6600;
-	padding: 2px 6px;
+	padding: 0px 5px;
 }
 
 h1 {
@@ -449,6 +449,7 @@ th.desc a {
     font-size: 10px;
     overflow: hidden;
     padding: 10px 3px;
+    font-weight:bold;
 }
 .paginateButtons a {
     background: #fff;
