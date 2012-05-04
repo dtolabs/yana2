@@ -16,7 +16,7 @@
 		</g:if>
 		
 
-		<table width="100%" border="0" cellspacing=5 valign=top>
+		<table width="100%" border="0" cellspacing=0 cellpadding=0 valign=top>
 			<tr>
 				<td valign=top>
 					<div style="clear: left;">
@@ -98,11 +98,11 @@
 					</table>
 					</div>
 				</td>
-				<td valign=top>
-					<h3>Relationships</h3>
+				<td valign=top >
+					<h3 style="padding:0;margin:0;">Relationships</h3>
 					<table width="225" cellspacing=5 style="border: 1px solid #0431f7;">
 						<tr>
-							<td><h3>Parents</h3>
+							<td><h3 style="padding:0;margin:0;">Parents</h3>
 								<ul>
 								<g:if test="${parents}">
 								<g:each in="${parents}" status="i" var="parent">
@@ -113,7 +113,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><h3>Children</h3>
+							<td><h3 style="padding:0;margin:0;">Children</h3>
 								<ul>
 								<g:if test="${children}">
 								<g:each in="${children}" status="i" var="child">
