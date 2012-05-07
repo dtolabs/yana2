@@ -6,6 +6,8 @@ import grails.plugins.springsecurity.Secured
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class ChildNodeController {
 
+	def iconService
+	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
@@ -42,6 +44,7 @@ class ChildNodeController {
     }
 
     def show() {
+		String path = iconService.getSmallIconPath()
         def childNodeInstance = ChildNode.get(params.id)
         if (!childNodeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'childNode.label', default: 'ChildNode'), params.id])
@@ -49,7 +52,7 @@ class ChildNodeController {
             return
         }
 
-        [childNodeInstance: childNodeInstance]
+        [childNodeInstance: childNodeInstance,path:path]
     }
 
     def edit() {

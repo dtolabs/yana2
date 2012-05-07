@@ -71,17 +71,6 @@
 								</table>
 							</td>
 						</tr>
-						<tr>
-							<td>
-								<g:form>
-									<fieldset class="form_footer">
-										<g:hiddenField name="id" value="${nodeTypeInstance?.id}" />
-										<span class="fake_button"><g:link action="edit" id="${nodeTypeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
-										<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-									</fieldset>
-								</g:form>
-							</td>
-						</tr>
 					</table>
 					</div>
 				</td>
@@ -110,6 +99,17 @@
 								</ul>
 							</td>
 					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<g:form>
+						<fieldset class="form_footer">
+							<g:hiddenField name="id" value="${nodeTypeInstance?.id}" />
+							<span class="fake_button"><g:link action="edit" id="${nodeTypeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
+							<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+						</fieldset>
+					</g:form>
 				</td>
 			</tr>
 		</table>

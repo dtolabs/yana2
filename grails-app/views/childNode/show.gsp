@@ -14,43 +14,57 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
-			<ol class="property-list childNode">
 			
-				<g:if test="${childNodeInstance?.relationshipName}">
-				<li class="fieldcontain">
-					<span id="relationshipName-label" class="property-label"><g:message code="childNode.relationshipName.label" default="Relationship Name" /></span>
-					
-						<span class="property-value" aria-labelledby="relationshipName-label"><g:fieldValue bean="${childNodeInstance}" field="relationshipName"/></span>
-					
-				</li>
-				</g:if>
 			
-				<g:if test="${childNodeInstance?.parent}">
-				<li class="fieldcontain">
-					<span id="parent-label" class="property-label"><g:message code="childNode.parent.label" default="Parent" /></span>
-					
-						<span class="property-value" aria-labelledby="parent-label"><g:link controller="node" action="show" id="${childNodeInstance?.parent?.id}">${childNodeInstance?.parent?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${childNodeInstance?.child}">
-				<li class="fieldcontain">
-					<span id="child-label" class="property-label"><g:message code="childNode.child.label" default="Child" /></span>
-					
-						<span class="property-value" aria-labelledby="child-label"><g:link controller="node" action="show" id="${childNodeInstance?.child?.id}">${childNodeInstance?.child?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-			</ol>
-			<g:form>
-				<fieldset class="form_footer">
-					<g:hiddenField name="id" value="${childNodeInstance?.id}" />
-					<span class="fake_button"><g:link action="edit" id="${childNodeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
+		<table width="100%" border="0" cellspacing=0 cellpadding=0 valign=top>
+			<tr>
+				<td valign=top>
+					<div style="clear: left;">
+
+					<table class="scaffold" width="600" border="0" cellspacing=5>
+						<tr style="background-color:#021faf;">
+							<td style="padding:10px;">
+							<img src="${resource(dir:'images/icons/64',file:'Node.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
+							<span class="image-title">${childNodeInstance.relationshipName}</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+							
+							<table border="0" cellspacing=5>
+								<tr>
+									
+									<td><b>Parent:</b></td>
+									<td><img src="${resource(dir:path,file:childNodeInstance?.parent?.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
+									<td><g:link controller="node" action="show" id="${childNodeInstance?.parent?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.parent?.encodeAsHTML()}</g:link></td>
+								</tr>
+								<tr>
+									
+									<td><b>Child:</b></td>
+									<td><img src="${resource(dir:path,file:childNodeInstance?.child?.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
+									<td><g:link controller="node" action="show" id="${childNodeInstance?.child?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.child?.encodeAsHTML()}</g:link></td>
+								</tr>
+							</table>
+
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<g:form>
+									<fieldset class="form_footer">
+										<g:hiddenField name="id" value="${childNodeInstance?.id}" />
+										<span class="fake_button"><g:link action="edit" id="${childNodeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
+										<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+									</fieldset>
+								</g:form>
+							</td>
+						</tr>
+					</table>
+					</div>
+				</td>
+				<td valign=top width=225>&nbsp;</td>
+			</tr>
+		</table>
 		</div>
 	</body>
 </html>

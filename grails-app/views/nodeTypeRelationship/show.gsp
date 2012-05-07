@@ -20,7 +20,7 @@
 			<tr>
 				<td valign=top>
 					<div style="clear: left;">
-					<span class="image-title">${nodeTypeRelationshipInstance.roleName}</span>
+
 					<table class="scaffold" width="600" border="0" cellspacing=5>
 						<tr style="background-color:#021faf;">
 							<td style="padding:10px;">
