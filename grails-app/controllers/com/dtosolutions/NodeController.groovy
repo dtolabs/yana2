@@ -171,8 +171,8 @@ class NodeController {
 				}
 				
 				ArrayList nodes = [nodeInstance]
-				def xml = xmlService.formatNodes(nodes)
-				webhookService.postToURL( params.controller, xml.toString())
+				//def xml = xmlService.formatNodes(nodes)
+				webhookService.postToURL( params.controller, nodes)
 				
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)

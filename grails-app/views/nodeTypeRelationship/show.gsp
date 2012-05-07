@@ -21,38 +21,35 @@
 				<td valign=top>
 					<div style="clear: left;">
 					<span class="image-title">${nodeTypeRelationshipInstance.roleName}</span>
-					<table class="scaffold" width="450" border="0" cellspacing=5>
+					<table class="scaffold" width="600" border="0" cellspacing=5>
 						<tr style="background-color:#021faf;">
-							<td>
-							<table border="0" cellspacing=5>
-								<tr>
-									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.parent.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
-									<td><b>Parent:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></td>
-								</tr>
-								<tr>
-									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.child.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
-									<td><b>Child:</b><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.child?.id}" style="font: bold 17px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.child?.encodeAsHTML()}</g:link></td>
-								</tr>
-							</table>
+							<td style="padding:10px;">
+							<img src="${resource(dir:'images/icons/64',file:'NodeTypeRelationship.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
+							<span class="image-title">${nodeTypeRelationshipInstance.roleName}</span>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<table width=100%>
-										<tr>
-											<td><b>Role Name</b></td>
-											<td>${nodeTypeRelationshipInstance.roleName}</td>
-										</tr>
-										<tr>
-											<td><b>Parent Cardinality</b></td>
-											<td>${nodeTypeRelationshipInstance.parentCardinality}</td>
-										</tr>
-										<tr>
-											<td><b>Child Cardinality</b></td>
-											<td>${nodeTypeRelationshipInstance.childCardinality}</td>
-										</tr>
-								</table>
-			
+							
+							<table border="0" cellspacing=5>
+								<tr>
+									
+									<td><b>Parent:</b></td>
+									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.parent.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
+									<td><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></td>
+									<td><b>Cardinality:</b></td>
+									<td><g:if test="${nodeTypeRelationshipInstance.parentCardinality==999999999}">MANY</g:if><g:elseif test="${nodeTypeRelationshipInstance.parentCardinality}">${nodeTypeRelationshipInstance.parentCardinality.encodeAsHTML()}</g:elseif><g:else>0</g:else></td>
+								</tr>
+								<tr>
+									
+									<td><b>Child:</b></td>
+									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.child.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
+									<td><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.child?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.child?.encodeAsHTML()}</g:link></td>
+									<td><b>Cardinality:</b></td>
+									<td><g:if test="${nodeTypeRelationshipInstance.childCardinality==999999999}">MANY</g:if><g:elseif test="${nodeTypeRelationshipInstance.childCardinality}">${nodeTypeRelationshipInstance.childCardinality.encodeAsHTML()}</g:elseif><g:else>0</g:else></td>
+								</tr>
+							</table>
+
 							</td>
 						</tr>
 						<tr>

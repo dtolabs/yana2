@@ -28,7 +28,7 @@
 							<span class="image-title"><g:fieldValue bean="${nodeTypeInstance}" field="name"/></span>
 							<g:if test="${nodeTypeInstance?.description}"><div class="image-description"><g:fieldValue bean="${nodeTypeInstance}" field="description"/></div></g:if>
 							</td>
-						<tr>
+						</tr>
 						</g:if>
 						<tr>
 							<td>
