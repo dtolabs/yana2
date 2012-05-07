@@ -38,7 +38,7 @@
 					
 					var cell1 = document.createElement("td");
 					cell1.id='att'+atts[i].tid+'_cell1';
-					cell1.width='100px';
+					cell1.width='95px';
 
 					var delButton = document.createElement('input');
 					delButton.type='button';
@@ -52,7 +52,8 @@
 
 					var cell2 = document.createElement("td");
 					cell2.id='att'+atts[i].tid+'_cell2';
-
+					cell2.style.float="left";
+					
 					var span1=document.createElement('span');
 					span1.className="styled-select";
 					
@@ -81,7 +82,7 @@
 				
 				var cell1 = document.createElement("td");
 				cell1.id='att'+atts[i].tid+'_cell1';
-				cell1.width='100px';
+				cell1.width='95px';
 				
 				var addButton = document.createElement('input');
 				addButton.type='button';

@@ -84,7 +84,7 @@ class ImportController {
 				xml.nodetypes.children().each{ nodetype ->
 					NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 					if(!ntype){
-						println("nodetype class name:"+nodetype.getClass())
+						//println("nodetype class name:"+nodetype.getClass())
 
 						ntype = new NodeType()
 						ntype.name = nodetype.@id
@@ -153,11 +153,9 @@ class ImportController {
 					if(!childnodetype){
 						childnodetype  = new NodeTypeRelationship()
 						childnodetype.roleName = nodetypechild.@rolename.toString()
-						def parentC = (nodetypechild.@parentCardinality.toString())?nodetypechild.@parentCardinality.toInteger():'999999999'.toInteger()
-						println("parentC:"+parentC)
+
 						childnodetype.parentCardinality = (nodetypechild.@parentCardinality.toString())?nodetypechild.@parentCardinality.toInteger():'999999999'.toInteger()
-						def childC = (nodetypechild.@childCardinality.toString())?nodetypechild.@childCardinality.toInteger():'999999999'.toInteger()
-						println("childC:"+childC)
+
 						childnodetype.childCardinality = (nodetypechild.@childCardinality.toString())?nodetypechild.@childCardinality.toInteger():'999999999'.toInteger()
 						childnodetype.child = child
 						childnodetype.parent = parent
