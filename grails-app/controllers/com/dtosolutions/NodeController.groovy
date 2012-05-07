@@ -355,7 +355,6 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 		Node.withTransaction{ status ->
 	        def nodeInstance = Node.get(params.id)
 	        if (!nodeInstance) {
-				println("delete: nodeinstance found")
 				flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
 	            redirect(action: "list")
 	            return

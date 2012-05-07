@@ -53,7 +53,6 @@ class TemplateAttributeController {
     }
 
     def save() {
-		println(params)
         def templateAttributeInstance = new TemplateAttribute(params)
         if (!saveTemplateAttribute()) {
             render(view: "create", model: [templateAttributeInstance: templateAttributeInstance])
@@ -65,7 +64,6 @@ class TemplateAttributeController {
     }
 
 	def saveTemplateAttribute(){
-		println(params)
         def temp = new TemplateAttribute()
 		temp.template=NodeType.get(params.template.toLong())
 		temp.attribute = Attribute.get(params.attribute.toLong())
@@ -131,7 +129,6 @@ class TemplateAttributeController {
 	
 
     def delete() {
-		println("delete:"+params)
         def templateAttributeInstance = TemplateAttribute.get(params.id)
         if (!templateAttributeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
@@ -149,7 +146,6 @@ class TemplateAttributeController {
     }
 	
 	def deleteTemplateAttribute(){
-		println(params)
 		def templateAttributeInstance = TemplateAttribute.get(params.id)
         try {
             templateAttributeInstance.delete(flush: true)
