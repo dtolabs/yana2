@@ -374,9 +374,18 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
     }
 	
 	def getNodeParents = {
+		Node nodeInstance = Node.get(params.id)
 		def response = []
 		if(params?.id.trim()){
-			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${params.id.toLong()} and (NTP.childCardinality<=(select count(*) from NodeType where id=NTP.parent.id) or NTP.childCardinality is null)")
+			def pquery = """
+select new map(N.id as id,N.name as name,NTP.parentCardinality as size) 
+from Node as N 
+left join N.nodetype as NT 
+left join NT.parents as NTP 
+where NTP.child=${nodeInstance.nodetype.id} 
+and (NTP.parentCardinality>=${nodeInstance.parents.size()} or NTP.parentCardinality is null)
+"""
+			List atts = Node.executeQuery(pquery)
 			atts.each(){
 				response += [id:it.id,name:it.name];
 			}
@@ -386,9 +395,18 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 	
 
 	def getNodeChildren = {
+		Node nodeInstance = Node.get(params.id)
 		def response = []
 		if(params?.id.trim()){
-			List atts = Node.executeQuery("select new map(N.id as id,N.name as name) from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${params.id.toLong()} and (NTP.parentCardinality<=(select count(*) from NodeType where id=NTP.child.id) or NTP.parentCardinality is null)")
+			def cquery = """
+select new map(N.id as id,N.name as name) 
+from Node as N 
+left join N.nodetype as NT 
+left join NT.children as NTP 
+where NTP.parent=${nodeInstance.nodetype.id} 
+and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinality is null)
+"""
+			List atts = Node.executeQuery(cquery)
 			atts.each(){
 				response += [id:it.id,name:it.name];
 			}
