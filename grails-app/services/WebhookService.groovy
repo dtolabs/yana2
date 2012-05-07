@@ -7,8 +7,8 @@ class WebhookService {
     static transactional = false
     static scope = "prototype"
     
-    def postToURL(String service, String postData) { 
-		def hooks = Webhook.findByService(service)
+    def postToURL(String service, String data) { 
+		def hooks = Webhook.findAll("from Webhook where service=${service} and attempts<5")
 
 		hooks.each(){ hook ->
 			
@@ -16,12 +16,12 @@ class WebhookService {
 			
 			switch(hook.format.toLowerCase()=='xml'){
 				case 'xml':
-					def xml = xmlService.formatNodes(nodes)
+					def xml = xmlService.formatNodes(data)
 					queryString = "${xml.toString()}"
 					break;
 				case 'json':
 				default:
-					queryString = "${postData.encodeAsJSON()}"
+					queryString = "${data.encodeAsJSON()}"
 			}
 			def url = new URL(hookurl)
 			def connection = url.openConnection()

@@ -71,6 +71,7 @@ class ChildNodeControllerTests {
 
     }
 
+	/*
     void testShow() {
         controller.show()
 
@@ -88,6 +89,7 @@ class ChildNodeControllerTests {
 
         assert model.childNodeInstance == childNode
     }
+    */
 
     void testEdit() {
         controller.edit()
