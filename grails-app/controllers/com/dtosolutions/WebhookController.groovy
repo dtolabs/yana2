@@ -3,9 +3,11 @@ package com.dtosolutions
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
 
-@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_SUPERUSER'])
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class WebhookController {
 
+	def springSecurityService
+	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
    
     def index() {
@@ -13,8 +15,17 @@ class WebhookController {
     }
 
     def list() {
+		def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
+		boolean superuser = 0
+		def roleNames = principal.authorities*.authority
+		roleNames.each(){
+			if(it=='ROLE_YANA_SUPERUSER'){
+				superuser==1
+			}
+		}
+		def webhookList = (superuser==1)?Webhook.list(params):Webhook.findAllByUser(user)
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [webhookInstanceList: Webhook.list(params), webhookInstanceTotal: Webhook.count()]
+        [webhookInstanceList: webhookList, webhookInstanceTotal: webhookList.size()]
     }
 
     def create() {

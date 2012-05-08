@@ -44,6 +44,7 @@
 								<li class="current"><g:link controller="childNode" action="create">Create Node Relationship</g:link></li>
 							</ul>
 						</li>
+						<li><g:link controller="node" action="createWebhook">Create Webhook</g:link></li>
 					</ul>
 					
 				</li>
