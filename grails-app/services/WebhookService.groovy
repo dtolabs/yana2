@@ -33,6 +33,7 @@ class WebhookService {
 			writer.flush()
 			writer.close()
 			connection.connect()
+			log.info "WEBHOOK POSTED : ${hook.name} > ${hook.url}"
 		}
 	}
 }
