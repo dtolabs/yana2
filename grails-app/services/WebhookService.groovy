@@ -7,8 +7,8 @@ class WebhookService {
     static transactional = false
     static scope = "prototype"
     
-    def postToURL(String service, String data) { 
-		def hooks = Webhook.findAll("from Webhook where service=${service} and attempts<5")
+    def postToURL(String service, ArrayList data) { 
+		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
 
 		hooks.each(){ hook ->
 			

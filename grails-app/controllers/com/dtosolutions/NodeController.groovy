@@ -41,7 +41,6 @@ class NodeController {
 	def webhook(){
 		switch(request.method){
 			case "POST":
-				println("webhook hit")
 			   	def json = request.JSON
 				params.service = params.controller
 				Webhook webhookInstance = Webhook.findByUrlAndService(params.url,params.controller)
