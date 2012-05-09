@@ -21,6 +21,7 @@
 			</ul>
 			</g:hasErrors>
 			<g:form controller="node" action="webhook" >
+				<g:hiddenField name="service" value="node" />
 				<div class="fieldcontain ${hasErrors(bean: webhookInstance, field: 'url', 'error')} ">
 					<label for="url">
 						<g:message code="webhook.url.label" default="Url" />

@@ -21,7 +21,7 @@
 						<g:sortableColumn property="url" title="${message(code: 'webhook.url.label', default: 'Url')}" />
 						<g:sortableColumn property="attempts" title="${message(code: 'webhook.attempts.label', default: 'Attempts')}" />
 						<g:sortableColumn property="format" title="${message(code: 'webhook.format.label', default: 'Format')}" />
-					
+						<g:sortableColumn property="service" title="${message(code: 'webhook.service.label', default: 'Service')}" />
 					</tr>
 				</thead>
 				<tbody>
@@ -31,7 +31,7 @@
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "url")}</g:link></td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "attempts")}</g:link></td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "format")}</g:link></td>
-					
+						<td>${webhookInstance.service}</td>
 					</tr>
 				</g:each>
 				</tbody>

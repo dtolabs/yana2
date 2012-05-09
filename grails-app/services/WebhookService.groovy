@@ -6,34 +6,33 @@ class WebhookService {
 	
     static transactional = false
     static scope = "prototype"
-    
+
     def postToURL(String service, ArrayList data) { 
+
 		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
 
-		hooks.each(){ hook ->
+		hooks.each { hook ->
+
+			//println("HOOK >> "+hook.url)
+			def url="${hook.url}"
 			
-			def queryString
-			
-			switch(hook.format.toLowerCase()=='xml'){
-				case 'xml':
-					def xml = xmlService.formatNodes(data)
-					queryString = "${xml.toString()}"
-					break;
-				case 'json':
-				default:
-					queryString = "${data.encodeAsJSON()}"
-			}
-			def url = new URL(hookurl)
-			def connection = url.openConnection()
-			connection.setRequestMethod("POST")
-			connection.doOutput = true
+			//def conn = new URL(url).openConnection()
+			def conn = hook.url.toURL().openConnection()
+			conn.setRequestMethod("POST")
+			conn.doOutput = true
 	
-			def writer = new OutputStreamWriter(connection.outputStream)
+			def queryString = "data=yana"
+			def writer = new OutputStreamWriter(conn.outputStream)
 			writer.write(queryString)
 			writer.flush()
 			writer.close()
-			connection.connect()
-			log.info "[YANA] WebhookService.postToUrl: ${hook.name} , ${hook.url}"
+			conn.connect()
+			println conn.content.text
+			
+			//def resp = conn.content.text
+			//log.info(resp)
+			//conn.disconnect()
 		}
 	}
+
 }

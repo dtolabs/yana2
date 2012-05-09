@@ -74,7 +74,7 @@ class NodeController {
 
     def list() {
 		String path = iconService.getSmallIconPath()
-		Node[] nodes = Node.list(params)
+		def nodes = Node.list(params)
 		if(params.format){
 			switch(params.format){
 				case 'xml':
@@ -82,6 +82,9 @@ class NodeController {
 					def xml = xmlService.formatNodes(nodes)
 					render(text: xml, contentType: "text/xml")
 					break;
+				case 'json':
+				case 'JSON':
+				render nodes as JSON
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
@@ -136,7 +139,7 @@ class NodeController {
 			Long[] kinder = Eval.me("${params.children}")
 			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:children]) }
 		}
-		
+
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
 			params.nodetype = NodeType.get(params.nodetype.toLong())
 			Node nodeInstance  = new Node(params)
@@ -153,34 +156,37 @@ class NodeController {
 					   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
 					}
 				}
+							
 				
 				if(parents){
 					parents.each{ parent ->
 						ChildNode parentNode = ChildNode.findByParentAndChild(parent,nodeInstance)
 						if(!parentNode){
 							parentNode = new ChildNode()
+							parentNode.relationshipName = "${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]"
 							parentNode.parent = parent
 							parentNode.child = nodeInstance
 							parentNode.save(flush: true)
 						}
 					}
 				}
-				
+
 				if(children){
 					children.each{ child ->
 						ChildNode childNode = ChildNode.findByParentAndChild(nodeInstance,child)
 						if(!childNode){
 							childNode = new ChildNode()
+							childNode.relationshipName = "${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]"
 							childNode.parent = nodeInstance
 							childNode.child = child
 							childNode.save(flush: true)
 						}
 					}
 				}
-				
+
 				ArrayList nodes = [nodeInstance]
-				//def xml = xmlService.formatNodes(nodes)
-				webhookService.postToURL( params.controller, nodes)
+				
+				webhookService.postToURL('node', nodes)
 				
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
@@ -195,10 +201,10 @@ class NodeController {
     def show() {
 		String path = iconService.getLargeIconPath()
 		NodeType nodeTypeInstance = NodeType.get(params.id)
-		
+
         Node nodeInstance = Node.get(params.id)
 		List tagList=[]
-		
+
 		if(params.format){
 			switch(params.format){
 				case 'xml':

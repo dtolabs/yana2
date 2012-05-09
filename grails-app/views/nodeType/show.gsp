@@ -41,8 +41,8 @@
 										<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
 										
 										<tr>
-											<td><b>${attributeInstance.name[0]} <g:if test="${t.required}">*</g:if></b></td>
-											<td>${attributeInstance.filter.dataType[0]}</td>
+											<td><g:link controller="attribute" action="show" id="${attributeInstance.id[0]}"><b>${attributeInstance.name[0]} <g:if test="${t.required}">*</g:if></b></g:link></td>
+											<td><g:link controller="filter" action="show" id="${attributeInstance.filter.id[0]}">${attributeInstance.filter.dataType[0]}</g:link></td>
 										</tr>
 										</g:each>
 									</g:if>

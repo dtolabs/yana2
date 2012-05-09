@@ -19,7 +19,7 @@
 				<td valign=top>
 					<div style="clear: left;">
 
-					<table class="scaffold" width="600" border="0" cellspacing=5>
+					<table class="scaffold" width="100%" border="0" cellspacing=5>
 						<tr>
 							<td>
 								<table width="375" cellpadding=5 style="border: 1px solid #0431f7;">

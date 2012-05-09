@@ -33,9 +33,10 @@ class WebhookController {
     }
 
     def save() {
+		println(params)
 		def webhookInstance = Webhook.findByUrl(params.url)
 		if(!webhookInstance){
-			params.service='node'
+			if(!params.service){params.service='node'}
 			webhookInstance = new Webhook(params)
 		}
 		

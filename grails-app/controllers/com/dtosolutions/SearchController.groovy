@@ -2,6 +2,7 @@ package com.dtosolutions
 
 import org.compass.core.engine.SearchEngineQueryParseException
 import grails.plugins.springsecurity.Secured
+import grails.converters.JSON
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class SearchController {
@@ -19,13 +20,25 @@ class SearchController {
         }
         try {
 			if(params.format){
+				
+				
 				def results = searchableService.search(params.q, params)
 				ArrayList nodes = []
 				results.results.each{ val1 ->
 					nodes.putAt(nodes.size(), Node.get(val1.id.toLong()))
 				}
-				def xml = xmlService.formatNodes(nodes)
-				render(text: xml, contentType: "text/xml")
+				
+				
+				switch(params.format){
+					case 'xml':
+					case 'XML':
+						def xml = xmlService.formatNodes(nodes)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+					case 'JSON':
+					render nodes as JSON
+				}
 			}else{
             	return [searchResult: searchableService.search(params.q, params)]
 			}

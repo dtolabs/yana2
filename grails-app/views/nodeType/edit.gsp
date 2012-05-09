@@ -76,12 +76,13 @@
 					row.appendChild(cell2);
 					table.appendChild(row);
 				}
-				
+
+				var i = atts.length
 				var row = document.createElement("tr");
-				row.id='att'+atts[i].tid+'_row';
+				row.id='att'+i+'_row';
 				
 				var cell1 = document.createElement("td");
-				cell1.id='att'+atts[i].tid+'_cell1';
+				cell1.id='att'+i+'_cell1';
 				cell1.width='95px';
 				
 				var addButton = document.createElement('input');
@@ -94,7 +95,7 @@
 				row.appendChild(cell1);
 
 				var cell2 = document.createElement("td");
-				cell2.id='att'+atts[i].tid+'_cell2';
+				cell2.id='att'+i+'_cell2';
 
 				var span1=document.createElement('span');
 				span1.className="styled-select";

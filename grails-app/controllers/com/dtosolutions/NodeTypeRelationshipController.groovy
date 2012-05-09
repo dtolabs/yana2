@@ -26,8 +26,8 @@ class NodeTypeRelationshipController {
 
     def save() {
 		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
-		def parent = NodeType.get(params.parent.toLong())
-		def child = NodeType.get(params.child.toLong())
+		def parent = NodeType.get(params.parent.id.toLong())
+		def child = NodeType.get(params.child.id.toLong())
 		def exists= NodeTypeRelationship.findByParentAndChild(parent,child)
 		
 		if(!exists){

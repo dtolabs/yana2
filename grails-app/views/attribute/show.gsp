@@ -21,17 +21,13 @@
 				<td valign=top>
 					<div style="clear: left;">
 
-					<table class="scaffold" width="600" border="0" cellspacing=5>
+					<table class="scaffold" width="100%" border="0" cellspacing=5>
 						<tr>
 							<td>
 								<table width="375" cellpadding=5 style="border: 1px solid #0431f7;">
 									<tr>
 										<td><span id="name-label" class="property-label"><g:message code="attribute.name.label" default="Name" /></span></td>
 										<td><span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${attributeInstance}" field="name"/></span></td>
-									</tr>
-									<tr>
-										<td><span id="filter-label" class="property-label"><g:message code="attribute.filter.label" default="Filter" /></span></td>
-										<td><span class="property-value" aria-labelledby="filter-label"><g:link controller="filter" action="show" id="${attributeInstance?.filter?.id}">${attributeInstance?.filter?.encodeAsHTML()}</g:link></span></td>
 									</tr>
 									<tr>
 										<td><span id="filter-label" class="property-label"><g:message code="attribute.filter.label" default="Filter" /></span></td>

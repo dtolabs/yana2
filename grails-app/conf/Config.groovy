@@ -14,7 +14,20 @@ if(System.properties["${appName}.config.location"]) {
 
 */
 
+
 grails.config.locations = ["file:${userHome}/.yana/config.properties"]
+
+/*
+def deps = [
+	"httpcore-ab-4.2.jar"
+]
+grails.war.dependencies = {
+	fileset(dir: "libs") {
+		deps.each { pattern -> include(name: pattern) }
+	}
+}
+*/
+
 
 //grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
@@ -181,4 +194,4 @@ grails.plugins.springsecurity.secureChannel.definition = [
 	'/securityInfo/**':			'REQUIRES_SECURE_CHANNEL',
  ]
 
-
+grails.rest.injectInto = ["Controller", "Service", "Routes"]

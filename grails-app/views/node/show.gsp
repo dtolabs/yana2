@@ -1,5 +1,7 @@
 
 <%@ page import="com.dtosolutions.Node" %>
+<%@ page import="com.dtosolutions.NodeTypeRelationship" %>
+
 <!doctype html>
 <html>
 	<head>
@@ -93,8 +95,8 @@
 							<td><h3 style="padding:0;margin:0;">Parents</h3>
 								<ul>
 								<g:if test="${parents}">
-								<g:each in="${parents}" status="i" var="parent">
-									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${parent?.parent?.id}">${parent?.parent?.name?.encodeAsHTML()} [${com.dtosolutions.NodeTypeRelationship.findByParentAndChild(parent?.parent?.nodetype,parent?.child?.nodetype).roleName}]</g:link></span></li>
+								<g:each in="${parents}" status="i" var="it">
+									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${it?.parent?.id}">${it?.parent?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent?.nodetype,it?.child?.nodetype).roleName}</g:link></span></li>
 								</g:each>
 								</g:if>
 								</ul>
@@ -104,8 +106,8 @@
 							<td><h3 style="padding:0;margin:0;">Children</h3>
 								<ul>
 								<g:if test="${children}">
-								<g:each in="${children}" status="i" var="child">
-									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${child?.child?.id}">${child?.child?.name?.encodeAsHTML()} [${com.dtosolutions.NodeTypeRelationship.findByParentAndChild(child?.parent?.nodetype,child?.child?.nodetype).roleName}]</g:link></span></li>
+								<g:each in="${children}" status="i" var="it">
+									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${it?.child?.id}">${it?.child?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent.nodetype,it.child.nodetype).roleName}</g:link></span></li>
 								</g:each>
 								</g:if>
 								</ul>
