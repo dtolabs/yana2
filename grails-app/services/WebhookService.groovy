@@ -12,27 +12,30 @@ class WebhookService {
 		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
 
 		hooks.each { hook ->
-
-			//println("HOOK >> "+hook.url)
-			def url="${hook.url}"
-			
-			//def conn = new URL(url).openConnection()
 			def conn = hook.url.toURL().openConnection()
 			conn.setRequestMethod("POST")
 			conn.doOutput = true
-	
-			def queryString = "data=yana"
+			def queryString = "data=${formatWebhook(hook.format,data)}"
 			def writer = new OutputStreamWriter(conn.outputStream)
 			writer.write(queryString)
 			writer.flush()
 			writer.close()
 			conn.connect()
 			println conn.content.text
-			
-			//def resp = conn.content.text
-			//log.info(resp)
-			//conn.disconnect()
 		}
+	}
+	
+	String formatWebhook(String format, ArrayList data){
+		String response
+		switch(format.toLowerCase()=='xml'){
+			case 'xml':
+				response = xmlService.formatNodes(data).toString()
+				break;
+			case 'json':
+			default:
+				response = data.encodeAsJSON()
+		}
+		return response
 	}
 
 }
