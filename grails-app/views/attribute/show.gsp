@@ -32,7 +32,7 @@
 								<table width=375 align=left>
 									<thead>
 										<tr>
-											<td width=150><span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${attributeInstance}" field="name"/></span></td>
+											<td width=150><span class="property-value" aria-labelledby="name-label"><b>Filter</b></td>
 											<td align=left><span class="property-value" aria-labelledby="filter-label"><g:link controller="filter" action="show" id="${attributeInstance?.filter?.id}">${attributeInstance?.filter?.encodeAsHTML()}</g:link></span></td>
 										</tr>
 									</thead>
