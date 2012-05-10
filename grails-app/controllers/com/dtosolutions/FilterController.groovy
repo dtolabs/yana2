@@ -7,6 +7,7 @@ import grails.plugins.springsecurity.Secured
 class FilterController {
 
 	def springSecurityService
+	def iconService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -35,6 +36,7 @@ class FilterController {
     }
 
     def show() {
+		String path = iconService.getLargeIconPath()
         def filterInstance = Filter.get(params.id)
         if (!filterInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'filter.label', default: 'Filter'), params.id])
@@ -42,7 +44,7 @@ class FilterController {
             return
         }
 
-        [filterInstance: filterInstance]
+        [filterInstance: filterInstance,path:path]
     }
 
     def edit() {

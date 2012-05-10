@@ -7,6 +7,7 @@ import grails.plugins.springsecurity.Secured
 class AttributeController {
 
 	def springSecurityService
+	def iconService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -35,6 +36,7 @@ class AttributeController {
     }
 
     def show() {
+		String path = iconService.getLargeIconPath()
         def attributeInstance = Attribute.get(params.id)
         if (!attributeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'attribute.label', default: 'Attribute'), params.id])
@@ -42,7 +44,7 @@ class AttributeController {
             return
         }
 
-        [attributeInstance: attributeInstance]
+        [attributeInstance: attributeInstance,path:path]
     }
 
     def edit() {

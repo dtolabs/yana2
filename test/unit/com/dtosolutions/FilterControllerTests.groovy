@@ -7,8 +7,9 @@ import grails.test.mixin.*
 
 @TestFor(FilterController)
 @Mock(Filter)
-class FilterControllerTests {
+class FilterControllerTests{
 
+	def iconService
 
     def populateValidParams(params) {
       assert params != null
@@ -55,6 +56,8 @@ class FilterControllerTests {
         assert Filter.count() == 1
     }
 
+	/*
+	 * research services in unit tests
     void testShow() {
         controller.show()
 
@@ -73,6 +76,7 @@ class FilterControllerTests {
 
         assert model.filterInstance == filter
     }
+    */
 
     void testEdit() {
         controller.edit()

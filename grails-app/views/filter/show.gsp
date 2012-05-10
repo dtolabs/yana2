@@ -19,21 +19,26 @@
 				<td valign=top>
 					<div style="clear: left;">
 
-					<table class="scaffold" width="100%" border="0" cellspacing=5>
+					<table class="scaffold" width="600" border="0" cellspacing=5>
+						<tr style="background-color:#021faf;">
+							<td style="padding:10px;">
+							<img src="${resource(dir:'images/icons/64',file:'Filter.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
+							<span class="image-title">${filterInstance.dataType}</span>
+							</td>
+						</tr>
 						<tr>
 							<td>
-								<table width="375" cellpadding=5 style="border: 1px solid #0431f7;">
-									<tr>
-										<td><span id="dataType-label" class="property-label"><g:message code="filter.dataType.label" default="Data Type" /></span></td>
-										<td><span class="property-value" aria-labelledby="dataType-label"><g:fieldValue bean="${filterInstance}" field="dataType"/></span></td>
-									</tr>
-									<tr>
-										<td><span id="regex-label" class="property-label"><g:message code="filter.regex.label" default="Regex" /></span></td>
-										<td><span class="property-value" aria-labelledby="regex-label"><g:fieldValue bean="${filterInstance}" field="regex"/></span></td>
-									</tr>
+								<table width=375 align=left>
+									<thead>
+										<tr>
+											<td width=150><span id="regex-label" class="property-label"><g:message code="filter.regex.label" default="Regex" /></span></td>
+											<td align=left><span class="property-value" aria-labelledby="regex-label"><g:fieldValue bean="${filterInstance}" field="regex"/></span></td>
+										</tr>
+									</thead>
 								</table>
 							</td>
 						</tr>
+
 						<tr>
 							<td>
 								<g:form>
@@ -48,6 +53,7 @@
 					</table>
 					</div>
 				</td>
+				<td valign=top width=225>&nbsp;</td>
 			</tr>
 		</table>
 
