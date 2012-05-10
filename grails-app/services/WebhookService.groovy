@@ -1,5 +1,7 @@
 package com.dtosolutions
 
+import grails.converters.JSON
+
 class WebhookService {
 
 	def xmlService

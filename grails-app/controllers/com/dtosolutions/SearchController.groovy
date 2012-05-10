@@ -29,15 +29,15 @@ class SearchController {
 				}
 				
 				
-				switch(params.format){
-					case 'xml':
-					case 'XML':
-						def xml = xmlService.formatNodes(nodes)
-						render(text: xml, contentType: "text/xml")
-						break;
-					case 'json':
-					case 'JSON':
-					render nodes as JSON
+				switch(params.format.toLowerCase()){
+						case 'xml':
+							def xml = xmlService.formatNodes(nodes)
+							render(text: xml, contentType: "text/xml")
+							break;
+						case 'json':
+							def json = jsonService.formatNodes(nodes)
+							render(text:json, contentType: "text/json")
+							break;
 				}
 			}else{
             	return [searchResult: searchableService.search(params.q, params)]

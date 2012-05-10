@@ -10,6 +10,7 @@ class NodeController {
 	def iconService
 	def springSecurityService
 	def xmlService
+	def jsonService
 	def webhookService
 	
     static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
@@ -76,15 +77,15 @@ class NodeController {
 		String path = iconService.getSmallIconPath()
 		def nodes = Node.list(params)
 		if(params.format){
-			switch(params.format){
+			switch(params.format.toLowerCase()){
 				case 'xml':
-				case 'XML':
 					def xml = xmlService.formatNodes(nodes)
 					render(text: xml, contentType: "text/xml")
 					break;
 				case 'json':
-				case 'JSON':
-				render nodes as JSON
+					def json = jsonService.formatNodes(nodes)
+					render(text:json, contentType: "text/json")
+					break;
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
@@ -208,12 +209,15 @@ class NodeController {
 		List tagList=[]
 
 		if(params.format){
-			switch(params.format){
+			ArrayList nodes = [nodeInstance]
+			switch(params.format.toLowerCase()){
 				case 'xml':
-				case 'XML':
-					ArrayList nodes = [nodeInstance]
 					def xml = xmlService.formatNodes(nodes)
 					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatNodes(nodes)
+					render(text:json, contentType: "text/json")
 					break;
 			}
 		}else{
