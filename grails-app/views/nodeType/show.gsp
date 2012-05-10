@@ -10,7 +10,18 @@
 	<body>
 
 	<div id="show-nodeType" class="content scaffold-show" role="main">
-		<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+		<table width="100%" border="0" cellspacing=0 cellpadding=0 valign=top>
+			<tr>
+				<td valign=top><h1><g:message code="default.show.label" args="[entityName]" /></h1></td>
+				<td>
+					<g:form controller="node" action="create">
+							<g:hiddenField name="nodetype" value="${nodeTypeInstance?.id}" />
+							<g:submitButton name="create" value="Create Node" />
+					</g:form>
+				</td>
+			</tr>
+		</table>
+				
 		<g:if test="${flash.message}">
 		<div class="message" role="status">${flash.message}</div>
 		</g:if>

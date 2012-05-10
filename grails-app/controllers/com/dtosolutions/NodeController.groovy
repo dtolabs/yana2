@@ -93,7 +93,8 @@ class NodeController {
     }
 
     def create() {
-        [nodeList: Node.list(),nodeInstance: new Node(params)]
+
+        [nodeList: Node.list(),params:params]
     }
 
 	def clone(){
@@ -200,6 +201,7 @@ class NodeController {
 
     def show() {
 		String path = iconService.getLargeIconPath()
+		String medpath = iconService.getMedIconPath()
 		NodeType nodeTypeInstance = NodeType.get(params.id)
 
         Node nodeInstance = Node.get(params.id)
@@ -235,7 +237,7 @@ class NodeController {
 	            return
 	        }
 
-			[children:children,parents:parents,nodeInstance: nodeInstance,path:path,taglist:tagList]
+			[children:children,parents:parents,nodeInstance: nodeInstance,path:path,medpath:medpath,taglist:tagList]
 		}
     }
 

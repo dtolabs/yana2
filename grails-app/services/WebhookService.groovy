@@ -12,7 +12,6 @@ class WebhookService {
 		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
 
 		hooks.each { hook ->
-
 			def conn = hook.url.toURL().openConnection()
 			conn.setRequestMethod("POST")
 			conn.doOutput = true

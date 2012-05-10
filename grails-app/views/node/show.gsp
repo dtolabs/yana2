@@ -93,24 +93,28 @@
 					<table width="225" cellspacing=5 style="border: 1px solid #0431f7;">
 						<tr>
 							<td><h3 style="padding:0;margin:0;">Parents</h3>
-								<ul>
+
 								<g:if test="${parents}">
 								<g:each in="${parents}" status="i" var="it">
-									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${it?.parent?.id}">${it?.parent?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent?.nodetype,it?.child?.nodetype).roleName}</g:link></span></li>
+									<span class="property-value" aria-labelledby="filter-label">
+									<img src="${resource(dir:medpath,file:it.parent.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
+									<g:link controller="node" action="show" id="${it?.parent?.id}">${it?.parent?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent?.nodetype,it?.child?.nodetype).roleName}</g:link></span>
 								</g:each>
 								</g:if>
-								</ul>
+
 							</td>
 						</tr>
 						<tr>
 							<td><h3 style="padding:0;margin:0;">Children</h3>
-								<ul>
+
 								<g:if test="${children}">
 								<g:each in="${children}" status="i" var="it">
-									<li class="fieldcontain"><span class="property-value" aria-labelledby="filter-label"><g:link controller="node" action="show" id="${it?.child?.id}">${it?.child?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent.nodetype,it.child.nodetype).roleName}</g:link></span></li>
+									<span class="property-value" aria-labelledby="filter-label">
+									<img src="${resource(dir:medpath,file:it.child.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
+									<g:link controller="node" action="show" id="${it?.child?.id}">${it?.child?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent.nodetype,it.child.nodetype).roleName}</g:link></span>
 								</g:each>
 								</g:if>
-								</ul>
+
 							</td>
 					</table>
 				</td>
@@ -120,7 +124,7 @@
 					<g:form>
 						<fieldset class="form_footer">
 							<g:hiddenField name="id" value="${nodeInstance?.id}" />
-							<span class="fake_button"><g:link action="clone" id="${nodeInstance?.id}"><g:message code="default.button.clone.label" default="Clone" /></g:link></span>
+							<span class="fake_button" style="float:right;"><g:link action="clone" id="${nodeInstance?.id}"><g:message code="default.button.clone.label" default="Clone" /></g:link></span>
 							<span class="fake_button"><g:link action="edit" id="${nodeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
 							<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 						</fieldset>
