@@ -88,9 +88,9 @@
 					</table>
 					</div>
 				</td>
-				<td valign=top >
+				<td valign=top width="275">
 					<h3 style="padding:0;margin:0;">Relationships</h3>
-					<table width="225" cellspacing=5 style="border: 1px solid #0431f7;">
+					<table width="275" cellspacing=5 style="border: 1px solid #0431f7;">
 						<tr>
 							<td><h3 style="padding:0;margin:0;">Parents</h3>
 								<ul style="list-style-type:none;padding:0;margin:0;float:left;">
@@ -124,6 +124,7 @@
 					<g:form>
 						<fieldset class="form_footer">
 							<g:hiddenField name="id" value="${nodeInstance?.id}" />
+							<span class="fake_button"><g:link action="show" id="${nodeInstance?.id}"><g:message code="default.button.clone.label" default="Cancel" /></g:link></span>
 							<span class="fake_button" style="float:right;"><g:link action="clone" id="${nodeInstance?.id}"><g:message code="default.button.clone.label" default="Clone" /></g:link></span>
 							<span class="fake_button"><g:link action="edit" id="${nodeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
 							<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
