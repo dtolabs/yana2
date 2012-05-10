@@ -201,7 +201,7 @@ class NodeController {
 
     def show() {
 		String path = iconService.getLargeIconPath()
-		String medpath = iconService.getMedIconPath()
+		String smallpath = iconService.getSmallIconPath()
 		NodeType nodeTypeInstance = NodeType.get(params.id)
 
         Node nodeInstance = Node.get(params.id)
