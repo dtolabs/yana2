@@ -237,7 +237,7 @@ class NodeController {
 	            return
 	        }
 
-			[children:children,parents:parents,nodeInstance: nodeInstance,path:path,medpath:medpath,taglist:tagList]
+			[children:children,parents:parents,nodeInstance: nodeInstance,path:path,smallpath:smallpath,taglist:tagList]
 		}
     }
 
