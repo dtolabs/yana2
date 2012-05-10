@@ -9,6 +9,7 @@ class SearchController {
 	
 	def springSecurityService
     def searchableService
+	def jsonService
 	def xmlService
 
     /**
