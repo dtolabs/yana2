@@ -97,8 +97,8 @@
 								<g:if test="${parents}">
 								<g:each in="${parents}" status="i" var="it">
 									<li style="padding:0;margin:0;float:left;position:relative;left:-5px;">
-									<img src="${resource(dir:smallpath,file:it.parent.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
-									<g:link controller="node" action="show" id="${it?.parent?.id}">${it?.parent?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent?.nodetype,it?.child?.nodetype).roleName}</g:link></li>
+									<img src="${resource(dir:smallpath,file:it.parent.nodetype.image)}" alt="" style="padding: 0px 10px 0px 7px;vertical-align:middle;" align="left" />
+<g:link controller="node" action="show" id="${it?.parent?.id}">${it?.parent?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent?.nodetype,it?.child?.nodetype).roleName}</g:link></li>
 								</g:each>
 								</g:if>
 								</ul>
@@ -110,7 +110,7 @@
 								<g:if test="${children}">
 								<g:each in="${children}" status="i" var="it">
 									<li style="padding:0;margin:0;float:left;position:relative;left:-5px;"><span class="property-value" aria-labelledby="filter-label">
-									<img src="${resource(dir:smallpath,file:it.child.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
+									<img src="${resource(dir:smallpath,file:it.child.nodetype.image)}" alt="" style="padding: 0px 10px 0px 7px;vertical-align:middle;" align="left" />
 									<g:link controller="node" action="show" id="${it?.child?.id}">${it?.child?.name?.encodeAsHTML()} ${NodeTypeRelationship.findAllByParentAndChild(it.parent.nodetype,it.child.nodetype).roleName}</g:link></li>
 								</g:each>
 								</g:if>
