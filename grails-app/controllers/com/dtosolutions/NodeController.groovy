@@ -13,7 +13,7 @@ class NodeController {
 	def jsonService
 	def webhookService
 	
-    static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
+    //static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
    
 	/*
 	 * Restful function to handle routing
@@ -28,15 +28,19 @@ class NodeController {
 				this.save()
 				break
 			case "GET":
+				def json = request.JSON
 				this.show()
 				break
 			case "PUT":
+				def json = request.JSON
 				this.update()
 				break
 			case "DELETE":
+				def json = request.JSON
 				this.delete()
 				break
 		  }
+		return
 	}
 	
 	def webhook(){
@@ -241,7 +245,7 @@ class NodeController {
 	            return
 	        }
 
-			[children:children,parents:parents,nodeInstance: nodeInstance,path:path,smallpath:smallpath,taglist:tagList]
+			render(view:"show",model:[children:children,parents:parents,nodeInstance: nodeInstance,path:path,smallpath:smallpath,taglist:tagList])
 		}
     }
 
