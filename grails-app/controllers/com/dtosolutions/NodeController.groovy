@@ -80,7 +80,7 @@ class NodeController {
     def list() {
 		String path = iconService.getSmallIconPath()
 		def nodes = Node.list(params)
-		if(params.format){
+		if(params.format && params.format!='none'){
 			switch(params.format.toLowerCase()){
 				case 'xml':
 					def xml = xmlService.formatNodes(nodes)
@@ -212,7 +212,7 @@ class NodeController {
         Node nodeInstance = Node.get(params.id)
 		List tagList=[]
 
-		if(params.format){
+		if(params.format && params.format!='none'){
 			ArrayList nodes = [nodeInstance]
 			switch(params.format.toLowerCase()){
 				case 'xml':
