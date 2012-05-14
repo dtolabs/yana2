@@ -10,6 +10,7 @@ class WebhookService {
     static scope = "prototype"
 
     def postToURL(String service, ArrayList data, String state) { 
+		// set attempts number in config.properties so we can override
 		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
 		hooks.each { hook ->
 			try{
@@ -27,7 +28,7 @@ class WebhookService {
 				conn.setRequestMethod("POST")
 				conn.doOutput = true
 				def queryString = []
-				queryString << "state=${state}&data=[${hookData}]"
+				queryString << "state=${state}&data=${hookData}"
 				def writer = new OutputStreamWriter(conn.outputStream)
 				writer.write(queryString)
 				writer.flush()
@@ -42,7 +43,6 @@ class WebhookService {
 				hook.save(flush: true)
 				log.info("[YANA] WebhookService: No Url > ${hook.url} :"+e)
 			}
-
 		}
 	}
 	

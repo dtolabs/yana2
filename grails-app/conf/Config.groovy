@@ -195,3 +195,5 @@ grails.plugins.springsecurity.secureChannel.definition = [
  ]
 
 grails.rest.injectInto = ["Controller", "Service", "Routes"]
+
+webhook.services = ["node"]

@@ -19,7 +19,7 @@
 					<tr>
 						<g:sortableColumn property="url" title="${message(code: 'webhook.user.label', default: 'User')}" />
 						<g:sortableColumn property="url" title="${message(code: 'webhook.url.label', default: 'Url')}" />
-						<g:sortableColumn property="attempts" title="${message(code: 'webhook.attempts.label', default: 'Attempts')}" />
+						<g:sortableColumn property="attempts" title="${message(code: 'webhook.attempts.label', default: 'Fails')}" />
 						<g:sortableColumn property="format" title="${message(code: 'webhook.format.label', default: 'Format')}" />
 						<g:sortableColumn property="service" title="${message(code: 'webhook.service.label', default: 'Service')}" />
 					</tr>

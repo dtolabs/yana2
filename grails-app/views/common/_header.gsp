@@ -74,6 +74,13 @@
 					</ul>
 				</li>
 				<li class="spacer"><img src="<g:createLinkTo dir='images' file='pix.png'/>" width='10' height='24'/></li>
+				<li><g:link controller="webhook" action="list">Webhooks</g:link>
+					<ul>
+						<li><g:link controller="webhook" action="list">List</g:link></li>
+						<li><g:link controller="webhook" action="create">Create</g:link></li>
+					</ul>
+				</li>
+				<li class="spacer"><img src="<g:createLinkTo dir='images' file='pix.png'/>" width='10' height='24'/></li>
 				<li><a href="${grailsApplication.config.grails.serverURL}/import">Admin</a>
 					<ul>
 						<li><g:link controller="import" action="importxml">Import Resources</g:link></li>
