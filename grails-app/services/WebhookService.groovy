@@ -27,7 +27,7 @@ class WebhookService {
 				writer.flush()
 				writer.close()
 				conn.connect()
-				if(conn.content.text=='connected'){
+				if(conn.content.text!='connected'){
 					hook.attempts+=1
 					hook.save(flush: true)
 				}
