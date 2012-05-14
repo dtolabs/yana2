@@ -43,40 +43,6 @@ class NodeController {
 		return
 	}
 	
-	def webhook(){
-		switch(request.method){
-			case "POST":
-			   	def json = request.JSON
-				params.service = params.controller
-				Webhook webhookInstance = Webhook.findByUrlAndService(params.url,params.controller)
-				def protocol = webhookService.checkProtocol(params.url)
-				if(!webhookInstance){
-					if(protocol){
-						def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
-						params.user=user
-						params.service='node'
-						webhookInstance = new Webhook(params)
-					}else{
-			        	println("BAD PROTOCOL: URL MUST BE FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN.")
-						return
-					}
-				}else{
-			        println("URL EXISTS: PLEASE CHECK YOUR REGISTERED WEBHOOKS TO MAKE SURE THIS IS NOT A DUPLICATE.")
-			        return
-				}
-			    if (!webhookInstance.save(flush: true)) {
-			        println("INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
-			        return
-			    }
-				flash.message = message(code: 'default.created.message', args: [message(code: 'webhook.label', default: 'Webhook'), webhookInstance.id])
-		        redirect(controller:"webhook",action:"show", id: webhookInstance.id)
-				break
-			default:
-				println("INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN.")
-				break;
-	   }
-   }
-	
     def index() {
         redirect(action: "list", params: params)
     }
