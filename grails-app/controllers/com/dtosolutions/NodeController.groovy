@@ -394,7 +394,7 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 
     def delete() {
 		Node.withTransaction{ status ->
-	        def nodeInstance = Node.get(params.id)
+	        Node nodeInstance = Node.get(params.id)
 	        if (!nodeInstance) {
 				flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
 	            redirect(action: "list")

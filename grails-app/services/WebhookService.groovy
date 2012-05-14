@@ -13,15 +13,21 @@ class WebhookService {
 		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
 		hooks.each { hook ->
 			try{
+				String hookData
+				switch(hook.format.toLowerCase()){
+					case 'xml':
+						hookData = xmlService.formatNodes(data).toString()
+						break
+					case 'json':
+					default:
+						hookData = data.encodeAsJSON()
+						break
+				}
 				def conn = hook.url.toURL().openConnection()
 				conn.setRequestMethod("POST")
 				conn.doOutput = true
 				def queryString = []
-				if(hook.format.toLowerCase()=='xml'){
-					queryString << "state=${state}&data=[${xmlService.formatNodes(data).toString()}]"
-				}else if(hook.format.toLowerCase()=='json'){
-					queryString << "state=${state}&data=[${data.encodeAsJSON()}]"
-				}
+				queryString << "state=${state}&data=[${hookData}]"
 				def writer = new OutputStreamWriter(conn.outputStream)
 				writer.write(queryString)
 				writer.flush()
