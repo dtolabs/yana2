@@ -61,12 +61,12 @@
 										<thead>
 											<tr>
 												<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="attribute.dateCreated.label" default="Date Created" />: </td>
-												<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${attributeInstance?.dateCreated}" /></td>
+												<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${webhookInstance?.dateCreated}" /></td>
 											</tr>
 										
 											<tr>
 												<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="attribute.dateModified.label" default="Date Modified" />: </td>
-												<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${attributeInstance?.dateModified}" /></td>
+												<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${webhookInstance?.dateModified}" /></td>
 											</tr>
 										</thead>
 									</table>
@@ -76,8 +76,7 @@
 								<td>
 									<g:form>
 										<fieldset class="form_footer">
-											<g:hiddenField name="id" value="${attributeInstance?.id}" />
-											<span class="fake_button"><g:link action="edit" id="${attributeInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link></span>
+											<g:hiddenField name="id" value="${webhookInstance?.id}" />
 											<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 										</fieldset>
 									</g:form>
