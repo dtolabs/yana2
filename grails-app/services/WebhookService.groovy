@@ -5,6 +5,7 @@ import grails.converters.JSON
 class WebhookService {
 
 	def xmlService
+	def jsonService
 	
     static transactional = false
     static scope = "prototype"
@@ -21,7 +22,7 @@ class WebhookService {
 						break
 					case 'json':
 					default:
-						hookData = data.encodeAsJSON()
+						hookData = jsonService.formatNodes(data)
 						break
 				}
 				def conn = hook.url.toURL().openConnection()
