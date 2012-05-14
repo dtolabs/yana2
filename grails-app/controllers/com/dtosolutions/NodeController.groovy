@@ -205,7 +205,7 @@ class NodeController {
 				}
 
 				ArrayList nodes = [nodeInstance]
-				webhookService.postToURL('node', nodes)
+				webhookService.postToURL('node', nodes,'create')
 				
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
@@ -383,7 +383,7 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 	        }
 			
 			ArrayList nodes = [nodeInstance]
-			webhookService.postToURL('node', nodes)
+			webhookService.postToURL('node', nodes,'edit')
 			
 			render(view: "edit", model: [nodeList: Node.list(),nodeInstance: nodeInstance])
 		}else{
@@ -412,7 +412,7 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 	        }
 
 			ArrayList nodes = [nodeInstance]
-			webhookService.postToURL('node', nodes)
+			webhookService.postToURL('node', nodes,'delete')
 		}
     }
 	

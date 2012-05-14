@@ -9,7 +9,7 @@ class WebhookService {
     static transactional = false
     static scope = "prototype"
 
-    def postToURL(String service, ArrayList data) { 
+    def postToURL(String service, ArrayList data, String state) { 
 		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
 		hooks.each { hook ->
 			try{
@@ -18,16 +18,19 @@ class WebhookService {
 				conn.doOutput = true
 				def queryString = []
 				if(hook.format.toLowerCase()=='xml'){
-					queryString << "data=[${xmlService.formatNodes(data).toString()}]"
+					queryString << "state=${state}&data=[${xmlService.formatNodes(data).toString()}]"
 				}else if(hook.format.toLowerCase()=='json'){
-					queryString << "data=[${data.encodeAsJSON()}]"
+					queryString << "state=${state}&data=[${data.encodeAsJSON()}]"
 				}
 				def writer = new OutputStreamWriter(conn.outputStream)
 				writer.write(queryString)
 				writer.flush()
 				writer.close()
 				conn.connect()
-				println conn.content.text
+				if(conn.content.text=='connected'){
+					hook.attempts+=1
+					hook.save(flush: true)
+				}
 			}catch(Exception e){
 				hook.attempts+=1
 				hook.save(flush: true)
