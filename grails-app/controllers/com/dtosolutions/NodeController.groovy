@@ -410,6 +410,9 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'node.label', default: 'Node'), params.id])
 	            redirect(action: "show", id: params.id)
 	        }
+
+			ArrayList nodes = [nodeInstance]
+			webhookService.postToURL('node', nodes)
 		}
     }
 	
