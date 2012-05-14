@@ -48,4 +48,15 @@ class WebhookService {
 		return response
 	}
 
+	boolean checkProtocol(String url){
+		if(url.size()>=4){
+			if(url[0..3]=='http'){
+				return true
+			}else{
+				return false
+			}
+		}else{
+			return false
+		}
+	}
 }

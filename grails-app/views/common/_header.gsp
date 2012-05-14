@@ -87,11 +87,6 @@
 								<li><g:link controller="role" action="create">Create Role</g:link></li>
 							</ul>
 						</li>
-						<li><g:link controller="webhook" action="list">Webhooks</g:link>
-							<ul>
-								<li><g:link controller="webhook" action="create">Create Webhook</g:link></li>
-							</ul>
-						</li>
 					</ul>
 				</li>
 			</ul>

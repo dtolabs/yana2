@@ -7,6 +7,7 @@ import grails.plugins.springsecurity.Secured
 class WebhookController {
 
 	def springSecurityService
+	def webhookService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
    
@@ -33,8 +34,9 @@ class WebhookController {
     }
 
     def save() {
-		println(params)
 		def webhookInstance = Webhook.findByUrl(params.url)
+		webhookService.checkProtocol(params.url)
+
 		if(!webhookInstance){
 			if(!params.service){params.service='node'}
 			webhookInstance = new Webhook(params)

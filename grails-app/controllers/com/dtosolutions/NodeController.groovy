@@ -49,17 +49,29 @@ class NodeController {
 			   	def json = request.JSON
 				params.service = params.controller
 				Webhook webhookInstance = Webhook.findByUrlAndService(params.url,params.controller)
+				def protocol = webhookService.checkProtocol(params.url)
 				if(!webhookInstance){
-					def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
-					params.user=user
-					params.service='node'
-					webhookInstance = new Webhook(params)
+					if(protocol){
+						def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
+						params.user=user
+						params.service='node'
+						webhookInstance = new Webhook(params)
+					}else{
+			        	println("BAD PROTOCOL: URL MUST BE FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN.")
+						flash.message = "BAD PROTOCOL: URL MUST BE FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN."
+						redirect(action:"createWebhook")
+						return
+					}
 				}else{
 			        println("URL EXISTS: PLEASE CHECK YOUR REGISTERED WEBHOOKS TO MAKE SURE THIS IS NOT A DUPLICATE.")
+					flash.message = "URL EXISTS: PLEASE CHECK YOUR REGISTERED WEBHOOKS TO MAKE SURE THIS IS NOT A DUPLICATE."
+					redirect(action:"createWebhook")
 			        return
 				}
 			    if (!webhookInstance.save(flush: true)) {
 			        println("INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
+					flash.message = "INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN."
+					redirect(action:"createWebhook")
 			        return
 			    }
 				flash.message = message(code: 'default.created.message', args: [message(code: 'webhook.label', default: 'Webhook'), webhookInstance.id])
@@ -67,6 +79,8 @@ class NodeController {
 				break
 			default:
 				println("INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN.")
+				flash.message = "INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN."
+				redirect(action:"createWebhook")
 				break;
 	   }
    }
@@ -191,7 +205,6 @@ class NodeController {
 				}
 
 				ArrayList nodes = [nodeInstance]
-				
 				webhookService.postToURL('node', nodes)
 				
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
@@ -286,6 +299,8 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 
     def update() {
 		Node[] parents
+		Node nodeInstance = Node.get(params.id)
+		
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
 			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:adults]) }
@@ -298,7 +313,6 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 		}
 		
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
-	        def nodeInstance = Node.get(params.id)
 			Date now = new Date()
 	        if (!nodeInstance) {
 	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
@@ -367,9 +381,12 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
 	        }
+			
+			ArrayList nodes = [nodeInstance]
+			webhookService.postToURL('node', nodes)
+			
 			render(view: "edit", model: [nodeList: Node.list(),nodeInstance: nodeInstance])
 		}else{
-			def nodeInstance = Node.get(params.id)
 			flash.message = 'Required fields not filled out. Please try again'
 			render(view: "edit", model: [parents:parents,children:children,nodeInstance: nodeInstance,params: params])
 		}
