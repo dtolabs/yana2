@@ -58,20 +58,14 @@ class NodeController {
 						webhookInstance = new Webhook(params)
 					}else{
 			        	println("BAD PROTOCOL: URL MUST BE FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN.")
-						flash.message = "BAD PROTOCOL: URL MUST BE FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN."
-						redirect(action:"createWebhook")
 						return
 					}
 				}else{
 			        println("URL EXISTS: PLEASE CHECK YOUR REGISTERED WEBHOOKS TO MAKE SURE THIS IS NOT A DUPLICATE.")
-					flash.message = "URL EXISTS: PLEASE CHECK YOUR REGISTERED WEBHOOKS TO MAKE SURE THIS IS NOT A DUPLICATE."
-					redirect(action:"createWebhook")
 			        return
 				}
 			    if (!webhookInstance.save(flush: true)) {
 			        println("INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN.")
-					flash.message = "INVALID/MALFORMED DATA: PLEASE SEE DOCS FOR 'JSON' FORMED STRING AND PLEASE TRY AGAIN."
-					redirect(action:"createWebhook")
 			        return
 			    }
 				flash.message = message(code: 'default.created.message', args: [message(code: 'webhook.label', default: 'Webhook'), webhookInstance.id])
@@ -79,13 +73,9 @@ class NodeController {
 				break
 			default:
 				println("INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN.")
-				flash.message = "INCORRECT REQUEST METHOD: EXPECTING POST METHOD. PLEASE TRY AGAIN."
-				redirect(action:"createWebhook")
 				break;
 	   }
    }
-	
-	def createWebhook(){}
 	
     def index() {
         redirect(action: "list", params: params)
