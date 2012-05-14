@@ -10,9 +10,7 @@ class WebhookService {
     static scope = "prototype"
 
     def postToURL(String service, ArrayList data) { 
-
 		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
-
 		hooks.each { hook ->
 			try{
 				def conn = hook.url.toURL().openConnection()
@@ -31,6 +29,8 @@ class WebhookService {
 				conn.connect()
 				println conn.content.text
 			}catch(Exception e){
+				hook.attempts+=1
+				hook.save(flush: true)
 				log.info("[YANA] WebhookService: No Url > ${hook.url} :"+e)
 			}
 
