@@ -45,8 +45,6 @@ class WebhookController {
 				params.user=user
 				params.dateCreated= new Date()
 				webhookInstance = new Webhook(params)
-				println(params)
-				println(webhookInstance)
 			}else{
 				flash.message = "BAD PROTOCOL: URL MUST BE FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN."
 				render(view:"create",model:[params:params])
