@@ -8,6 +8,8 @@ import java.util.Date;
 class WebhookController {
 
 	def springSecurityService
+	def xmlService
+	def jsonService
 	def webhookService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -41,20 +43,32 @@ class WebhookController {
     }
 
     def list() {
-		def webhookList = [:]
-		if (springSecurityService.isLoggedIn()) {
-			def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
-			boolean superuser = 0
-			def roleNames = springSecurityService.principal.authorities*.authority
-			roleNames.each(){
-				if(it=='ROLE_YANA_SUPERUSER' || it=='ROLE_YANA_ADMIN'){
-					superuser==1
-				}
+
+		def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
+		boolean superuser = 0
+		def roleNames = springSecurityService.principal.authorities*.authority
+		roleNames.each(){
+			if(it=='ROLE_YANA_SUPERUSER' || it=='ROLE_YANA_ADMIN'){
+				superuser==1
 			}
-			webhookList = (superuser==1)?Webhook.list(params):Webhook.findAllByUser(user)
-	        params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		}
-        [webhookInstanceList: webhookList, webhookInstanceTotal: webhookList.size()]
+		def webhookList = (superuser==1)?Webhook.list(params):Webhook.findAllByUser(user)
+
+		if(params.format && params.format!='none'){
+			switch(params.format.toLowerCase()){
+				case 'xml':
+					def xml = xmlService.formatHooks(webhookList)
+					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatHooks(webhookList)
+					render(text:json, contentType: "text/json")
+					break;
+			}
+		}
+		
+		[webhookInstanceList: webhookList, webhookInstanceTotal: webhookList.size()]
+        
     }
 
     def create() {

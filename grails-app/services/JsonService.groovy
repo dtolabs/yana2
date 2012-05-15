@@ -38,4 +38,13 @@ class JsonService {
 
 		return result as JSON
 	}
+	
+	String formatHooks(ArrayList data){
+		ArrayList result = [:]
+		data.each(){ val1 ->
+			result += 	[hook:[id:val1.id,name:val1.name,url:val1.url,format:val1.format,service:val1.service,fails:val1.attempts],user:val1.user.username]
+		}
+		return result as JSON
+	}
+	
 }

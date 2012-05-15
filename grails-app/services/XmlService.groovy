@@ -41,4 +41,18 @@ class XmlService {
 		}
 		return writer.toString()
 	}
+	
+	String formatHooks(ArrayList hooks){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.hooks() {
+			hooks.each(){ val1 ->
+				hook(id:val1.id,name:val1.name,url:val1.url,format:val1.format,service:val1.service,fails:val1.attempts){
+					user(val1.user.username)
+				}
+			}
+		}
+		return writer.toString()
+	}
 }
