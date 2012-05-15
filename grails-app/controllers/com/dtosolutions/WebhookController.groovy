@@ -41,16 +41,19 @@ class WebhookController {
     }
 
     def list() {
-		def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
-		boolean superuser = 0
-		def roleNames = principal.authorities*.authority
-		roleNames.each(){
-			if(it=='ROLE_YANA_SUPERUSER' || it=='ROLE_YANA_ADMIN'){
-				superuser==1
+		def webhookList = [:]
+		if (springSecurityService.isLoggedIn()) {
+			def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
+			boolean superuser = 0
+			def roleNames = springSecurityService.principal.authorities*.authority
+			roleNames.each(){
+				if(it=='ROLE_YANA_SUPERUSER' || it=='ROLE_YANA_ADMIN'){
+					superuser==1
+				}
 			}
+			webhookList = (superuser==1)?Webhook.list(params):Webhook.findAllByUser(user)
+	        params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		}
-		def webhookList = (superuser==1)?Webhook.list(params):Webhook.findAllByUser(user)
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [webhookInstanceList: webhookList, webhookInstanceTotal: webhookList.size()]
     }
 

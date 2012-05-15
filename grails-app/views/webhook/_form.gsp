@@ -22,7 +22,7 @@
 		<g:message code="webhook.service.label" default="Service" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select name="service" from="${service}" value="${webhookInstance?.service}"/>
+	<span class="styled-select"><g:select name="service" from="${service}" value="${webhookInstance?.service}"/></span>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: webhookInstance, field: 'format', 'error')} required">
@@ -30,5 +30,5 @@
 		<g:message code="webhook.format.label" default="Format" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select name="format" from="${format}" value="${webhookInstance?.format}"/>
+	<span class="styled-select"><g:select name="format" from="${format}" value="${webhookInstance?.format}"/></span>
 </div>
