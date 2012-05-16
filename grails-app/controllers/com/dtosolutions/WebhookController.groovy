@@ -108,13 +108,29 @@ class WebhookController {
 
     def show() {
         def webhookInstance = Webhook.get(params.id)
+		
         if (!webhookInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'webhook.label', default: 'Webhook'), params.id])
             redirect(action: "list")
             return
-        }
-
-        [webhookInstance: webhookInstance]
+        }else{
+			if(params.format && params.format!='none'){
+				ArrayList hooks = [webhookInstance]
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatHooks(hooks)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatHooks(hooks)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			}else{
+				render(view:"show",model:[webhookInstance: webhookInstance])
+				return
+			}
+		}
     }
 
     def delete() {

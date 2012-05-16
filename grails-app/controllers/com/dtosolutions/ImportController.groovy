@@ -15,6 +15,7 @@ import org.xml.sax.SAXException
 class ImportController {
 
 	def springSecurityService
+	def webhookService
 	
 	/*
 	 * Restful function to handle routing
@@ -108,10 +109,10 @@ class ImportController {
 						}
 					}
 				}
-				
+				Node nd
 				// parse nodes and attributevalues
 				xml.nodes.children().each{ node ->
-					Node nd = Node.findByName(node.@id.toString())
+					nd = Node.findByName(node.@id.toString())
 					NodeType nodetype = NodeType.findByName(node.@nodetype.toString())
 					if(!nd){
 						nd = new Node()
@@ -184,6 +185,9 @@ class ImportController {
 						//throw new SAXException( "Nodechild relationship not within bounds as described by nodetypechild." )
 					}
 				}
+				
+				ArrayList nodes = [nd]
+				webhookService.postToURL('node', nodes,'create')
 				
 	        } catch (SAXException e) {
 		        flash.message = "Error in xml schema: " + e.message
