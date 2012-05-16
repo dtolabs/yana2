@@ -43,16 +43,15 @@ class WebhookController {
     }
 
     def list() {
-
 		def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
 		boolean superuser = 0
 		def roleNames = springSecurityService.principal.authorities*.authority
 		roleNames.each(){
 			if(it=='ROLE_YANA_SUPERUSER' || it=='ROLE_YANA_ADMIN'){
-				superuser==1
+				superuser=1
 			}
-		}
-		def webhookList = (superuser==1)?Webhook.list(params):Webhook.findAllByUser(user)
+		} 
+		def webhookList = (superuser)?Webhook.list(params):Webhook.findAllByUser(user)
 
 		if(params.format && params.format!='none'){
 			switch(params.format.toLowerCase()){
@@ -112,10 +111,10 @@ class WebhookController {
 		def roleNames = springSecurityService.principal.authorities*.authority
 		roleNames.each(){
 			if(it=='ROLE_YANA_SUPERUSER' || it=='ROLE_YANA_ADMIN'){
-				superuser==1
+				superuser=1
 			}
 		}
-		def webhookInstance = (superuser==1)?Webhook.findById(params.id.toLong()):Webhook.findByUserAndId(user,params.id.toLong())
+		def webhookInstance = (superuser)?Webhook.findById(params.id.toLong()):Webhook.findByUserAndId(user,params.id.toLong())
 		
         if (!webhookInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'webhook.label', default: 'Webhook'), params.id])
@@ -148,10 +147,10 @@ class WebhookController {
 		def roleNames = springSecurityService.principal.authorities*.authority
 		roleNames.each(){
 			if(it=='ROLE_YANA_SUPERUSER' || it=='ROLE_YANA_ADMIN'){
-				superuser==1
+				superuser=1
 			}
 		}
-		def webhookInstance = (superuser==1)?Webhook.findById(params.id.toLong()):Webhook.findByUserAndId(user,params.id.toLong())
+		def webhookInstance = (superuser)?Webhook.findById(params.id.toLong()):Webhook.findByUserAndId(user,params.id.toLong())
 		println(webhookInstance)
         if (!webhookInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'webhook.label', default: 'Webhook'), params.id])
