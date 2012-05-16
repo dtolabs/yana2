@@ -27,7 +27,7 @@
 				<g:each in="${webhookInstanceList}" status="i" var="webhookInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 						<td>${webhookInstance.user.username}</td>
-						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "url")}</td>
+						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "url")}</g:link></td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "attempts")}</g:link></td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "format")}</g:link></td>
 						<td>${webhookInstance.service}</td>
