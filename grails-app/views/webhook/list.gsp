@@ -8,7 +8,6 @@
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 	</head>
 	<body>
-
 		<div id="list-webhook" class="list" role="main">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
@@ -27,7 +26,7 @@
 				<tbody>
 				<g:each in="${webhookInstanceList}" status="i" var="webhookInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-						<td>${webhookInstance.user.username}</g:link></td>
+						<td>${webhookInstance.user.username}</td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "url")}</td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "attempts")}</g:link></td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "format")}</g:link></td>
