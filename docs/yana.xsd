@@ -7,8 +7,8 @@
                     <xs:element ref="attributes"  maxOccurs="1"/>
                     <xs:element ref="nodetypes" maxOccurs="1"/>
                     <xs:element ref="nodes"  maxOccurs="1"/>
-                    <xs:element ref="nodetyperelationships"  maxOccurs="1"/>
-                    <xs:element ref="noderelationships"  maxOccurs="1"/>
+                    <xs:element ref="nodetyperelationships" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="noderelationships" minOccurs="0" maxOccurs="1"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:element>
