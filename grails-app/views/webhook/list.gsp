@@ -16,6 +16,7 @@
 			<table>
 				<thead>
 					<tr>
+						<g:sortableColumn property="id" title="${message(code: 'webhook.id.label', default: 'Id')}" />
 						<g:sortableColumn property="url" title="${message(code: 'webhook.user.label', default: 'User')}" />
 						<g:sortableColumn property="url" title="${message(code: 'webhook.url.label', default: 'Url')}" />
 						<g:sortableColumn property="attempts" title="${message(code: 'webhook.attempts.label', default: 'Fails')}" />
@@ -26,6 +27,7 @@
 				<tbody>
 				<g:each in="${webhookInstanceList}" status="i" var="webhookInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "id")}</g:link></td>
 						<td>${webhookInstance.user.username}</td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "url")}</g:link></td>
 						<td><g:link action="show" id="${webhookInstance.id}">${fieldValue(bean: webhookInstance, field: "attempts")}</g:link></td>

@@ -42,6 +42,18 @@ class XmlService {
 		return writer.toString()
 	}
 	
+	String formatNodeTypes(ArrayList nodetypes){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.nodetypes() {
+			nodetypes.each(){ val1 ->
+				nodetype(id:val1.id,name:val1.name,description:val1.description,image:val1.image)
+			}
+		}
+		return writer.toString()
+	}
+	
 	String formatHooks(ArrayList hooks){
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)

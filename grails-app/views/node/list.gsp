@@ -21,8 +21,8 @@
 				<g:each in="${nodeInstanceList}" status="i" var="nodeInstance">
 					<tr>
 						<td width=16 valign=top><img src="${resource(dir:path,file:nodeInstance.nodetype.image)}" alt="" style="vertical-align:middle;"/></td>
-						<td style="padding-left:5px;" width=175 valign=top><g:link controller="node" action="show" id="${nodeInstance.id}" style="padding:0;">${fieldValue(bean: nodeInstance, field: "name")}</g:link> [<g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}" style="padding:0;">${nodeInstance.nodetype.name}</g:link>]
-						<td style="padding-left:5px;" valign=top width=350><g:if test="${nodeInstance.description?.size()>50}">${nodeInstance.description[0..50]}...</g:if><g:else>${nodeInstance.description}</g:else></td>					
+						<td style="padding-left:5px;" width=200 valign=top>${nodeInstance.id} : <g:link controller="node" action="show" id="${nodeInstance.id}" style="padding:0;">${fieldValue(bean: nodeInstance, field: "name")}</g:link> [<g:link controller="nodeType" action="show" id="${nodeInstance.nodetype.id}" style="padding:0;">${nodeInstance.nodetype.name}</g:link>]
+						<td style="padding-left:5px;" valign=top width=325><g:if test="${nodeInstance.description?.size()>50}">${nodeInstance.description[0..50]}...</g:if><g:else>${nodeInstance.description}</g:else></td>					
 						<td style="padding-left:5px;" valign=top>
 						<g:if test="${nodeInstance.tags}">
 						<g:each in="${nodeInstance.tags.split(',')}" status="b" var="tag">

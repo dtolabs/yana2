@@ -10,17 +10,91 @@ class NodeTypeController {
 
 	def iconService;
 	def springSecurityService
+	def xmlService
+	def jsonService
+	def webhookService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+	/*
+	 * Restful function to handle routing
+	 * URLMapping wants to route everything to node or take over routing for node; needed to build
+	 * routing function to handle REST handling to do custom routing for anything that doesn't 
+	 * look like it is handled by controller
+	 */
+	def api(){
+		switch(request.method){
+			case "POST":
+				def json = request.JSON
+				this.save()
+				break
+			case "GET":
+				def json = request.JSON
+				this.show()
+				break
+			case "PUT":
+				def json = request.JSON
+				this.update()
+				break
+			case "DELETE":
+				def json = request.JSON
+				if(params.id){
+			        def nodetype = NodeType.get(params.id)
+			        if(nodetype){
+			          nodetype.delete()
+					  response.status = 200
+					  render "Successfully Deleted."
+			        }else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+			        }
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
+				break
+		  }
+		return
+	}
+	
+	/*
+	* Restful function to handle routing
+	* URLMapping wants to route everything to node or take over routing for node; needed to build
+	* routing function to handle REST handling to do custom routing for anything that doesn't
+	* look like it is handled by controller
+	*/
+   def listapi(){
+	   switch(request.method){
+		   case "POST":
+			   def json = request.JSON
+			   this.list()
+			   break
+		 }
+	   return
+   }
+   
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
 		def path = iconService.getSmallIconPath()
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [nodeTypeInstanceList: NodeType.list(params), nodeTypeInstanceTotal: NodeType.count(),path:path]
+		if(params.format && params.format!='none'){
+			def nodetypes = NodeType.list()
+			switch(params.format.toLowerCase()){
+				case 'xml':
+					def xml = xmlService.formatNodeTypes(nodetypes)
+					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatNodeTypes(nodetypes)
+					render(text:json, contentType: "text/json")
+					break;
+			}
+		}else{
+			params.max = Math.min(params.max ? params.int('max') : 10, 100)
+			[nodeTypeInstanceList: NodeType.list(params), nodeTypeInstanceTotal: NodeType.count(),path:path]
+		}
     }
 
     def create() {
@@ -37,6 +111,9 @@ class NodeTypeController {
             return
         }
 
+		ArrayList nodetypes = [nodeTypeInstance]
+		webhookService.postToURL('nodetype', nodetypes,'create')
+		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'nodeType.label', default: 'NodeType'), nodeTypeInstance.id])
         redirect(action: "show", id: nodeTypeInstance.id)
     }
@@ -59,9 +136,23 @@ class NodeTypeController {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
             return
+        }else{
+			if(params.format && params.format!='none'){
+				ArrayList nodetypes = [nodeTypeInstance]
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatNodeTypes(nodetypes)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatNodeTypes(nodetypes)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			}else{
+				[children:children,parents:parents,nodeTypeInstance: nodeTypeInstance,path:path]
+			}
         }
-
-        [children:children,parents:parents,nodeTypeInstance: nodeTypeInstance,path:path]
     }
 
     def edit() {
@@ -104,6 +195,9 @@ class NodeTypeController {
             return
         }
 
+		ArrayList nodetypes = [nodeTypeInstance]
+		webhookService.postToURL('nodetype', nodetypes,'edit')
+		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeType.label', default: 'NodeType'), nodeTypeInstance.id])
         redirect(action: "show", id: nodeTypeInstance.id)
     }
@@ -118,10 +212,13 @@ class NodeTypeController {
 
         try {
             nodeTypeInstance.delete(flush: true)
+			
+			ArrayList nodetypes = [nodeTypeInstance]
+			webhookService.postToURL('nodetype', nodetypes,'delete')
+			
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
+        }catch (DataIntegrityViolationException e) {
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "show", id: params.id)
         }

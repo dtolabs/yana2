@@ -43,13 +43,41 @@ class NodeController {
 		return
 	}
 	
+	/*
+	* Restful function to handle routing
+	* URLMapping wants to route everything to node or take over routing for node; needed to build
+	* routing function to handle REST handling to do custom routing for anything that doesn't
+	* look like it is handled by controller
+	*/
+   def listapi(){
+	   switch(request.method){
+		   case "POST":
+			   def json = request.JSON
+			   this.list()
+			   break
+		 }
+	   return
+   }
+   
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
 		String path = iconService.getSmallIconPath()
-		def nodes = Node.list(params)
+		ArrayList nodes = []
+		if(params.nodetype){
+			List nodetypes = []
+			params.nodetype.each{
+				nodetypes += it.toLong()
+			}
+			def criteria = Node.createCriteria()
+			nodes = criteria.list{
+						not{'in'("nodetype.id",nodetypes)}
+			}
+		}else{
+			nodes = Node.list(params)
+		}
 		if(params.format && params.format!='none'){
 			switch(params.format.toLowerCase()){
 				case 'xml':
@@ -359,6 +387,10 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 	
 	        try {
 	            nodeInstance.delete(flush: true)
+				
+				ArrayList nodes = [nodeInstance]
+				webhookService.postToURL('node', nodes,'delete')
+			
 				flash.message = message(code: 'default.deleted.message', args: [message(code: 'node.label', default: 'Node'), params.id])
 				redirect(action: "list")
 	        }catch (Exception e) {
@@ -366,9 +398,6 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'node.label', default: 'Node'), params.id])
 	            redirect(action: "show", id: params.id)
 	        }
-
-			ArrayList nodes = [nodeInstance]
-			webhookService.postToURL('node', nodes,'delete')
 		}
     }
 	

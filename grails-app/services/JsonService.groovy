@@ -1,5 +1,7 @@
 package com.dtosolutions
 
+import java.util.ArrayList;
+
 import grails.converters.JSON
 
 class JsonService {
@@ -36,6 +38,14 @@ class JsonService {
 
 			}
 
+		return result as JSON
+	}
+	
+	String formatNodeTypes(ArrayList data){
+		ArrayList result = [:]
+		data.each(){ val1 ->
+			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image]]
+		}
 		return result as JSON
 	}
 	

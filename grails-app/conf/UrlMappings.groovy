@@ -10,6 +10,7 @@ class UrlMappings {
 		
 		"/api/$controller/$format"(action:"api", parseRequest: true)
 		"/api/$controller/$format/$id"(action:"api", parseRequest: true)
+		"/api/$controller/list/$format"(action:"listapi", parseRequest: true)
 
 		"/api/webhook/$format/$id"(controller:"webhook",action:"api", parseRequest: true)
 		"/api/webhook/$format"(controller:"webhook",action:"api", parseRequest: true)
