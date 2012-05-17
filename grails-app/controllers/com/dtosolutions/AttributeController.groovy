@@ -17,7 +17,7 @@ class AttributeController {
 
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [attributeInstanceList: Attribute.list(params), attributeInstanceTotal: Attribute.count()]
+        [attributeInstanceList: Attribute.list(max:params.max,offset:params.offset,sort:"name",order:"asc"), attributeInstanceTotal: Attribute.count()]
     }
 
     def create() {

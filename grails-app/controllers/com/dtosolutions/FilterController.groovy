@@ -17,7 +17,7 @@ class FilterController {
 
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [filterInstanceList: Filter.list(params), filterInstanceTotal: Filter.count()]
+        [filterInstanceList: Filter.list(max:params.max,offset:params.offset,sort:"dataType",order:"asc"), filterInstanceTotal: Filter.count()]
     }
 
     def create() {
