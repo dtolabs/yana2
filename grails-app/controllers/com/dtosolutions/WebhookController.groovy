@@ -32,7 +32,20 @@ class WebhookController {
 				break
 			case "DELETE":
 				def json = request.JSON
-				this.delete()
+				if(params.id){
+			        def hook = Webhook.get(params.id)
+			        if(hook){
+			          hook.delete()
+					  response.status = 200
+					  render "Successfully Deleted."
+			        }else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+			        }
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
 				break
 		  }
 		return
@@ -117,8 +130,13 @@ class WebhookController {
 		def webhookInstance = (superuser)?Webhook.findById(params.id.toLong()):Webhook.findByUserAndId(user,params.id.toLong())
 		
         if (!webhookInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'webhook.label', default: 'Webhook'), params.id])
-            redirect(action: "list")
+			if(params.format && params.format!='none'){
+				response.status = 404 //Not Found
+				render "Webhook with id [${params.id}] not found."
+			}else{
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'webhook.label', default: 'Webhook'), params.id])
+				redirect(action: "list")
+			}
             return
         }else{
 			if(params.format && params.format!='none'){
@@ -141,7 +159,6 @@ class WebhookController {
     }
 
     def delete() {
-		println(params)
 		def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
 		boolean superuser = 0
 		def roleNames = springSecurityService.principal.authorities*.authority
@@ -151,10 +168,15 @@ class WebhookController {
 			}
 		}
 		def webhookInstance = (superuser)?Webhook.findById(params.id.toLong()):Webhook.findByUserAndId(user,params.id.toLong())
-		println(webhookInstance)
+
         if (!webhookInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'webhook.label', default: 'Webhook'), params.id])
-            redirect(action: "list")
+			if(params.format && params.format!='none'){
+				response.status = 404 //Not Found
+				render "Webhook with id [${params.id}] not found."
+			}else{
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'webhook.label', default: 'Webhook'), params.id])
+	            redirect(action: "list")
+			}
             return
         }
 
