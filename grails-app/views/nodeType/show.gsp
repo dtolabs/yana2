@@ -36,7 +36,7 @@
 						<tr style="background-color:#021faf;">
 							<td style="padding:10px;">
 							<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
-							<span class="image-title">[ID:${nodeTypeInstance.id}] <g:fieldValue bean="${nodeTypeInstance}" field="name"/></span>
+							<span class="image-title"><g:fieldValue bean="${nodeTypeInstance}" field="name"/></span>
 							<g:if test="${nodeTypeInstance?.description}"><div class="image-description"><g:fieldValue bean="${nodeTypeInstance}" field="description"/></div></g:if>
 							</td>
 						</tr>
@@ -46,8 +46,13 @@
 			
 								<table width=250>
 									<tbody>
+									<tr>
+										<td>ID</td>
+										<td>${nodeTypeInstance.id}</td>
+									</tr>
+									
 									<g:if test="${nodeTypeInstance?.attributes}">
-										
+									<tr>
 										<g:each in="${com.dtosolutions.TemplateAttribute.findAllByTemplate(com.dtosolutions.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
 										<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
 										

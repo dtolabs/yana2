@@ -6,9 +6,12 @@ import org.junit.*
 import grails.test.mixin.*
 
 @TestFor(NodeTypeController)
-@Mock(NodeType)
-class NodeTypeControllerTests {
+//@Mock(NodeType)
+@Mock([NodeType,Webhook,WebhookService,IconService])
+class NodeTypeControllerTests{
 
+	def iconService;
+	def webhookService
 
     def populateValidParams(params) {
       assert params != null
@@ -35,7 +38,7 @@ class NodeTypeControllerTests {
     }
     */
 
-    void testSave() {
+    void testSave () {
         controller.save()
 
         assert model.nodeTypeInstance != null
@@ -45,10 +48,10 @@ class NodeTypeControllerTests {
 
         populateValidParams(params)
         //controller.save()
-
+		
         //assert response.redirectedUrl == '/nodeType/show/1'
-        //assert controller.flash.message != null
-        //assert NodeType.count() == 1
+       // assert controller.flash.message != null
+       // assert NodeType.count() == 1
     }
 
     void testEdit() {

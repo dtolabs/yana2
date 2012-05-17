@@ -22,7 +22,7 @@
 					<tr>
 						<td style="padding-left:5px;">
 						<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" style="vertical-align:middle;"/></td>
-						<td style="padding-left:5px;">${nodeTypeInstance.id} : <g:link action="show" id="${nodeTypeInstance.id}">${fieldValue(bean: nodeTypeInstance, field: "name")}</g:link></td>
+						<td style="padding-left:5px;"><g:link action="show" id="${nodeTypeInstance.id}">${fieldValue(bean: nodeTypeInstance, field: "name")}</g:link></td>
 						<g:if test="${nodeTypeInstance.description?.size()>50}">
 						<td style="padding-left:5px;">${nodeTypeInstance.description[0..50]}...</td>
 						</g:if>
