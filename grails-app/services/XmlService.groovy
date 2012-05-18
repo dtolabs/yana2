@@ -26,18 +26,42 @@ class XmlService {
 					}
 					
 					parents(){
-						def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
+						def rents = ChildNode.findAllByChild(Node.get(val1.id.toLong()));
 						rents.each{ parent ->
 							node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags)
 						}
 					}
 					children(){
-						def kinder = ChildNode.findByParent(Node.get(val1.id.toLong()));
+						def kinder = ChildNode.findAllByParent(Node.get(val1.id.toLong()));
 						kinder.each{ child ->
 							node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags)
 						}
 					}
 				}
+			}
+		}
+		return writer.toString()
+	}
+	
+	String formatFilters(ArrayList filters){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.filters() {
+			filters.each(){ val1 ->
+				filter(id:val1.id,dataType:val1.dataType,regex:val1.regex)
+			}
+		}
+		return writer.toString()
+	}
+	
+	String formatAttributes(ArrayList attributes){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.attributes() {
+			attributes.each(){ val1 ->
+				attribute(id:val1.id,name:val1.name,description:val1.description,filter:val1.filter.id)
 			}
 		}
 		return writer.toString()

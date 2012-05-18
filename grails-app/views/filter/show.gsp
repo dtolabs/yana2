@@ -24,14 +24,15 @@
 							<td style="padding:10px;">
 							<img src="${resource(dir:'images/icons/64',file:'Filter.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
 							<span class="image-title">${filterInstance.dataType}</span>
+							<div class="image-description"><div style="padding-top:5px;"><label for="id"><b>ID:</b></label><g:fieldValue bean="${filterInstance}" field="id"/></div></div>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<table width=375 align=left>
+								<table width=375 align=left valign=top>
 									<thead>
 										<tr>
-											<td width=150><span id="regex-label" class="property-label"><g:message code="filter.regex.label" default="Regex" /></span></td>
+											<td width=150 valign=top><span id="regex-label" class="property-label"><g:message code="filter.regex.label" default="Regex" /></span></td>
 											<td align=left><span class="property-value" aria-labelledby="regex-label"><g:fieldValue bean="${filterInstance}" field="regex"/></span></td>
 										</tr>
 									</thead>

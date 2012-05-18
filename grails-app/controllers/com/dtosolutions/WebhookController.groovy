@@ -14,12 +14,6 @@ class WebhookController {
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
    
-	/*
-	 * Restful function to handle routing
-	 * URLMapping wants to route everything to node or take over routing for node; needed to build
-	 * routing function to handle REST handling to do custom routing for anything that doesn't 
-	 * look like it is handled by controller
-	 */
 	def api(){
 		switch(request.method){
 			case "POST":

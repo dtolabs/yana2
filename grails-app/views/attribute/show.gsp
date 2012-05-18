@@ -25,6 +25,7 @@
 							<td style="padding:10px;">
 							<img src="${resource(dir:'images/icons/64',file:'Attribute.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
 							<span class="image-title">${attributeInstance.name}</span>
+							<div class="image-description"><div style="padding-top:5px;"><label for="id"><b>ID:</b></label><g:fieldValue bean="${attributeInstance}" field="id"/></div></div>
 							</td>
 						</tr>
 						<tr>

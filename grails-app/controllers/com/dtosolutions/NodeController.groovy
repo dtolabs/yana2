@@ -15,12 +15,6 @@ class NodeController {
 	
     //static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
    
-	/*
-	 * Restful function to handle routing
-	 * URLMapping wants to route everything to node or take over routing for node; needed to build
-	 * routing function to handle REST handling to do custom routing for anything that doesn't 
-	 * look like it is handled by controller
-	 */
 	def api(){
 		switch(request.method){
 			case "POST":
@@ -37,18 +31,25 @@ class NodeController {
 				break
 			case "DELETE":
 				def json = request.JSON
-				this.delete()
+				if(params.id){
+			        def node = Node.get(params.id)
+			        if(node){
+			          node.delete()
+					  response.status = 200
+					  render "Successfully Deleted."
+			        }else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+			        }
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
 				break
 		  }
 		return
 	}
 	
-	/*
-	* Restful function to handle routing
-	* URLMapping wants to route everything to node or take over routing for node; needed to build
-	* routing function to handle REST handling to do custom routing for anything that doesn't
-	* look like it is handled by controller
-	*/
    def listapi(){
 	   switch(request.method){
 		   case "POST":
@@ -132,6 +133,7 @@ class NodeController {
 	}
 	
     def save() {
+		println(params)
 		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")

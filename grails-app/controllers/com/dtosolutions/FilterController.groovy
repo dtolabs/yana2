@@ -8,16 +8,87 @@ class FilterController {
 
 	def springSecurityService
 	def iconService
+	def xmlService
+	def jsonService
+	def webhookService
 	
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+	def api(){
+		switch(request.method){
+			case "POST":
+				def json = request.JSON
+				this.save()
+				break
+			case "GET":
+				def json = request.JSON
+				this.show()
+				break
+			case "PUT":
+				def json = request.JSON
+				this.update()
+				break
+			case "DELETE":
+				def json = request.JSON
+				if(params.id){
+			        Filter filter = Filter.get(params.id)
+			        if(filter){
+						try{
+							filter.delete(flush:true)
+							response.status = 200
+							render "Successfully Deleted."
+						}catch(org.springframework.dao.DataIntegrityViolationException e) {
+					        Filter.withSession { session ->
+					            session.clear()
+					        }
+
+							response.status = 400 //Bad Request
+							render "Referential Integrity Violation: Please remove/reassign all Attribute relationships first."
+						}
+			        }else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+			        }
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
+				break
+		  }
+		return
+	}
+
+   def listapi(){
+	   switch(request.method){
+		   case "POST":
+			   def json = request.JSON
+			   this.list()
+			   break
+	   }
+	   return
+   }
+   
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [filterInstanceList: Filter.list(max:params.max,offset:params.offset,sort:"dataType",order:"asc"), filterInstanceTotal: Filter.count()]
+		if(params.format && params.format!='none'){
+			def filters = Filter.list()
+			switch(params.format.toLowerCase()){
+				case 'xml':
+					def xml = xmlService.formatFilters(filters)
+					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatFilters(filters)
+					render(text:json, contentType: "text/json")
+					break;
+			}
+		}else{
+	        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+	        [filterInstanceList: Filter.list(max:params.max,offset:params.offset,sort:"dataType",order:"asc"), filterInstanceTotal: Filter.count()]
+		}
     }
 
     def create() {
@@ -31,6 +102,9 @@ class FilterController {
             return
         }
 
+		ArrayList filters = [filterInstance]
+		webhookService.postToURL('filter', filters,'create')
+		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'filter.label', default: 'Filter'), filterInstance.id])
         redirect(action: "show", id: filterInstance.id)
     }
@@ -42,9 +116,23 @@ class FilterController {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'filter.label', default: 'Filter'), params.id])
             redirect(action: "list")
             return
+        }else{
+			if(params.format && params.format!='none'){
+				ArrayList filters = [filterInstance]
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatFilters(filters)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatFilters(filters)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			}else{
+				[filterInstance: filterInstance,path:path]
+			}
         }
-
-        [filterInstance: filterInstance,path:path]
     }
 
     def edit() {
@@ -84,6 +172,9 @@ class FilterController {
             return
         }
 
+		ArrayList filters = [filterInstance]
+		webhookService.postToURL('filter', filters,'edit')
+		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'filter.label', default: 'Filter'), filterInstance.id])
         redirect(action: "show", id: filterInstance.id)
     }

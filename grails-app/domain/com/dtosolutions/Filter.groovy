@@ -4,7 +4,7 @@ import java.util.Date;
 
 class Filter {
 	
-	static belongsTo = [ Attribute ]
+	//static belongsTo = [ Attribute ]
 	
     String dataType
     String regex

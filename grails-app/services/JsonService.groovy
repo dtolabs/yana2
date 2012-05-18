@@ -41,6 +41,22 @@ class JsonService {
 		return result as JSON
 	}
 	
+	String formatFilters(ArrayList data){
+		ArrayList result = [:]
+		data.each(){ val1 ->
+			result += 	[attribute:[id:val1.id,dataType:val1.dataType,regex:val1.regex]]
+		}
+		return result as JSON
+	}
+	
+	String formatAttributes(ArrayList data){
+		ArrayList result = [:]
+		data.each(){ val1 ->
+			result += 	[attribute:[id:val1.id,name:val1.name,description:val1.description,filter:val1.filter.id]]
+		}
+		return result as JSON
+	}
+	
 	String formatNodeTypes(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->

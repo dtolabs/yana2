@@ -8,16 +8,87 @@ class AttributeController {
 
 	def springSecurityService
 	def iconService
+	def xmlService
+	def jsonService
+	def webhookService
 	
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+	def api(){
+		switch(request.method){
+			case "POST":
+				def json = request.JSON
+				this.save()
+				break
+			case "GET":
+				def json = request.JSON
+				this.show()
+				break
+			case "PUT":
+				def json = request.JSON
+				this.update()
+				break
+			case "DELETE":
+				def json = request.JSON
+				if(params.id){
+			        Attribute attribute = Attribute.get(params.id)
+			        if(attribute){
+						try{
+							attribute.delete(flush:true)
+							response.status = 200
+							render "Successfully Deleted."
+						}catch(org.springframework.dao.DataIntegrityViolationException e) {
+					        Attribute.withSession { session ->
+					            session.clear()
+					        }
+
+							response.status = 400 //Bad Request
+							render "Referential Integrity Violation: Please remove/reassign all Filter/Nodetype relationships first."
+						}
+			        }else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+			        }
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
+				break
+		  }
+		return
+	}
+	
+   def listapi(){
+	   switch(request.method){
+		   case "POST":
+			   def json = request.JSON
+			   this.list()
+			   break
+		 }
+	   return
+   }
+	
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [attributeInstanceList: Attribute.list(max:params.max,offset:params.offset,sort:"name",order:"asc"), attributeInstanceTotal: Attribute.count()]
+		if(params.format && params.format!='none'){
+			ArrayList atts = Attribute.list()
+			switch(params.format.toLowerCase()){
+				case 'xml':
+					def xml = xmlService.formatAttributes(atts)
+					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatAttributes(atts)
+					render(text:json, contentType: "text/json")
+					break;
+			}
+		}else{
+        	params.max = Math.min(params.max ? params.int('max') : 10, 100)
+			[attributeInstanceList: Attribute.list(max:params.max,offset:params.offset,sort:"name",order:"asc"), attributeInstanceTotal: Attribute.count()]
+		}
     }
 
     def create() {
@@ -31,6 +102,9 @@ class AttributeController {
             return
         }
 
+		ArrayList attributes = [attributeInstance]
+		webhookService.postToURL('attribute', attributes,'create')
+		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'attribute.label', default: 'Attribute'), attributeInstance.id])
         redirect(action: "show", id: attributeInstance.id)
     }
@@ -42,9 +116,23 @@ class AttributeController {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'attribute.label', default: 'Attribute'), params.id])
             redirect(action: "list")
             return
+        }else{
+			if(params.format && params.format!='none'){
+				ArrayList atts = [attributeInstance]
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatAttributes(atts)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatAttributes(atts)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			}else{
+				[attributeInstance: attributeInstance,path:path]
+			}
         }
-
-        [attributeInstance: attributeInstance,path:path]
     }
 
     def edit() {
@@ -84,6 +172,9 @@ class AttributeController {
             return
         }
 
+		ArrayList attributes = [attributeInstance]
+		webhookService.postToURL('attribute', attributes,'edit')
+		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'attribute.label', default: 'Attribute'), attributeInstance.id])
         redirect(action: "show", id: attributeInstance.id)
     }
