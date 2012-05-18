@@ -32,7 +32,8 @@ class XmlService {
 						}
 					}
 					children(){
-						val1.children.each{ child ->
+						def kinder = ChildNode.findByParent(Node.get(val1.id.toLong()));
+						kinder.each{ child ->
 							node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags)
 						}
 					}
