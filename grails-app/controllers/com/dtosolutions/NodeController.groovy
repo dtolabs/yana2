@@ -35,6 +35,10 @@ class NodeController {
 			        def node = Node.get(params.id)
 			        if(node){
 			          node.delete()
+					  
+					  ArrayList nodes = [node]
+					  webhookService.postToURL('node', nodes,'delete')
+					  
 					  response.status = 200
 					  render "Successfully Deleted."
 			        }else{
@@ -133,7 +137,6 @@ class NodeController {
 	}
 	
     def save() {
-		println(params)
 		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")

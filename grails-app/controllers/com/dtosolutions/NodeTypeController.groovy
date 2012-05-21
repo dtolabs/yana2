@@ -36,6 +36,10 @@ class NodeTypeController {
 			        def nodetype = NodeType.get(params.id)
 			        if(nodetype){
 			          nodetype.delete()
+					  
+					  ArrayList nodetypes = [nodetype]
+					  webhookService.postToURL('nodetype', nodetypes,'delete')
+					  
 					  response.status = 200
 					  render "Successfully Deleted."
 			        }else{

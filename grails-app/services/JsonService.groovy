@@ -41,19 +41,15 @@ class JsonService {
 		return result as JSON
 	}
 	
-	/*
+
 	String formatTemplateValues(ArrayList data){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.filters() {
-			tvals.each(){ val1 ->
-				filter(id:val1.id,dataType:val1.dataType,regex:val1.regex)
-			}
+		ArrayList result = [:]
+		data.each(){ val1 ->
+			result += 	[templateValue:[id:val1.id,nodeId:val1.node.id,templateAttributeId:val1.templateattribute.id,value:val1.value]]
 		}
-		return writer.toString()
+		return result as JSON
 	}
-	*/
+
 	
 	String formatTemplateAttributes(ArrayList data){
 		ArrayList result = [:]

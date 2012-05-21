@@ -44,19 +44,18 @@ class XmlService {
 		return writer.toString()
 	}
 	
-	/*
+
 	String formatTemplateValues(ArrayList tvals){
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)
 			
-		xml.filters() {
+		xml.templateValues() {
 			tvals.each(){ val1 ->
-				filter(id:val1.id,dataType:val1.dataType,regex:val1.regex)
+				templateValue(id:val1.id,nodeId:val1.node.id,templateAttributeId:val1.templateattribute.id,value:val1.value)
 			}
 		}
 		return writer.toString()
 	}
-	*/
 	
 	String formatTemplateAttributes(ArrayList tatts){
 		def writer = new StringWriter()

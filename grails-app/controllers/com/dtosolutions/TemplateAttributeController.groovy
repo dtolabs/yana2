@@ -12,7 +12,7 @@ class TemplateAttributeController {
 	def jsonService
 	def webhookService
 	
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
 	def api(){
 		switch(request.method){
@@ -32,7 +32,6 @@ class TemplateAttributeController {
 				break
 			case "PUT":
 				def json = request.JSON
-
 				def tatt = TemplateAttribute.findById(params.id)
 				tatt.template = NodeType.get(params.template.toLong())
 				tatt.attribute = Attribute.get(params.attribute.toLong())
@@ -49,9 +48,13 @@ class TemplateAttributeController {
 				if(params.id){
 			        def tatt = TemplateAttribute.get(params.id)
 			        if(tatt){
-			          tatt.delete()
-					  response.status = 200
-					  render "Successfully Deleted."
+						tatt.delete()
+					  
+						ArrayList templateAttributes = [ttatt]
+						webhookService.postToURL('templateAttribute', templateAttributes,'delete')
+					  
+						response.status = 200
+						render "Successfully Deleted."
 			        }else{
 			          response.status = 404 //Not Found
 			          render "${params.id} not found."
