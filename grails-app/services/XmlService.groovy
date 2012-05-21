@@ -28,13 +28,13 @@ class XmlService {
 					parents(){
 						def rents = ChildNode.findAllByChild(Node.get(val1.id.toLong()));
 						rents.each{ parent ->
-							node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags)
+							node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags,relationshipName:parent.relationshipName,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).roleName)
 						}
 					}
 					children(){
 						def kinder = ChildNode.findAllByParent(Node.get(val1.id.toLong()));
 						kinder.each{ child ->
-							node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags)
+							node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags,relationshipName:child.relationshipName,,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).roleName)
 						}
 					}
 				}
