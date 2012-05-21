@@ -8,44 +8,78 @@ import grails.converters.JSON
 class TemplateAttributeController {
 
 	def springSecurityService
+	def xmlService
+	def jsonService
+	def webhookService
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-	/*
-	 * Restful function to handle routing
-	 * URLMapping wants to route everything to node or take over routing for node; needed to build
-	 * routing function to handle REST handling to do custom routing for anything that doesn't 
-	 * look like it is handled by controller
-	 */
 	def api(){
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				this.saveTemplateAttribute()
-				return
+				this.save()
 				break
 			case "GET":
+				def json = request.JSON
 				this.show()
-				return
 				break
 			case "PUT":
+				def json = request.JSON
 				this.update()
-				return
 				break
 			case "DELETE":
-				this.deleteTemplateAttribute()
-
+				def json = request.JSON
+				if(params.id){
+			        def nodetype = NodeType.get(params.id)
+			        if(nodetype){
+			          nodetype.delete()
+					  response.status = 200
+					  render "Successfully Deleted."
+			        }else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+			        }
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
 				break
 		  }
+		return
 	}
+	
+   def listapi(){
+	   switch(request.method){
+		   case "POST":
+			   def json = request.JSON
+			   this.list()
+			   break
+		 }
+	   return
+   }
 	
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [templateAttributeInstanceList: TemplateAttribute.list(params), templateAttributeInstanceTotal: TemplateAttribute.count()]
+		if(params.format && params.format!='none'){
+			def tattributes = TemplateAttribute.list()
+			switch(params.format.toLowerCase()){
+				case 'xml':
+					def xml = xmlService.formatTemplateAttribute(tattributes)
+					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatTemplateAttribute(tattributes)
+					render(text:json, contentType: "text/json")
+					break;
+			}
+		}else{
+        	params.max = Math.min(params.max ? params.int('max') : 10, 100)
+			[templateAttributeInstanceList: TemplateAttribute.list(params), templateAttributeInstanceTotal: TemplateAttribute.count()]
+		}
     }
 
     def create() {
@@ -59,6 +93,9 @@ class TemplateAttributeController {
             return
         }
 
+		ArrayList templateAttributes = [templateAttributeInstance]
+		webhookService.postToURL('templateAttribute', templateAttributes,'create')
+		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
         redirect(action: "show", id: templateAttributeInstance.id)
     }
@@ -81,9 +118,23 @@ class TemplateAttributeController {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
             redirect(action: "list")
             return
+        }else{
+			if(params.format && params.format!='none'){
+				ArrayList templateAttributes = [templateAttributeInstance]
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatTemplateAttribute(templateAttributes)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatTemplateAttribute(templateAttributes)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			}else{
+	        	[templateAttributeInstance: templateAttributeInstance]
+			}
         }
-
-        [templateAttributeInstance: templateAttributeInstance]
     }
 
     def edit() {
@@ -123,6 +174,9 @@ class TemplateAttributeController {
             return
         }
 
+		ArrayList templateAttributes = [templateAttributeInstance]
+		webhookService.postToURL('templateAttribute', templateAttributes,'edit')
+		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
         redirect(action: "show", id: templateAttributeInstance.id)
     }
@@ -149,6 +203,10 @@ class TemplateAttributeController {
 		def templateAttributeInstance = TemplateAttribute.get(params.id)
         try {
             templateAttributeInstance.delete(flush: true)
+			
+			ArrayList templateAttributes = [templateAttributeInstance]
+			webhookService.postToURL('templateAttribute', templateAttributes,'delete')
+			
 			render "1"
         }
         catch (DataIntegrityViolationException e) {

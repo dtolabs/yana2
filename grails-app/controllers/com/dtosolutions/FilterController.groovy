@@ -189,6 +189,10 @@ class FilterController {
 
         try {
             filterInstance.delete(flush: true)
+			
+			ArrayList filters = [filterInstance]
+			webhookService.postToURL('filter', filters,'delete')
+			
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'filter.label', default: 'Filter'), params.id])
             redirect(action: "list")
         }
