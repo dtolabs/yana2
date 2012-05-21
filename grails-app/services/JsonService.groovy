@@ -12,24 +12,24 @@ class JsonService {
 	String formatNodes(ArrayList data){
 			ArrayList result = [:]
 			data.each(){ val1 ->
-				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
+				def attributequery = "select new map(TV.value as value,A.name as attribute,A.id as id,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
 				def values = TemplateValue.executeQuery(attributequery);
 				
 				def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
 				ArrayList rent = [:]
 				rents.each{ parent ->
-					rent += [node:[id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags]]
+					rent += [node:[id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags]]
 				}
 				ArrayList kinder = [:]
 				val1.children.each{ child ->
-					kinder += [node:[id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags]]
+					kinder += [node:[id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags]]
 				}
 				
-				result += [node:[id:val1.id,name:val1.name,type:val1.nodetype.name,tags:val1.tags],
+				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags],
 					description:val1.description,
 					attributes:
 						values.each{ val2 ->
-							attribute:[name:val2.attribute,value:val2.value,required:val2.required]
+							attribute:[id:val2.id,name:val2.attribute,value:val2.value,required:val2.required]
 						}
 					,
 					parents:rent,
@@ -38,6 +38,28 @@ class JsonService {
 
 			}
 
+		return result as JSON
+	}
+	
+	/*
+	String formatTemplateValues(ArrayList data){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.filters() {
+			tvals.each(){ val1 ->
+				filter(id:val1.id,dataType:val1.dataType,regex:val1.regex)
+			}
+		}
+		return writer.toString()
+	}
+	*/
+	
+	String formatTemplateAttributes(ArrayList data){
+		ArrayList result = [:]
+		data.each(){ val1 ->
+			result += 	[templateAttribute:[id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required]]
+		}
 		return result as JSON
 	}
 	
@@ -52,7 +74,7 @@ class JsonService {
 	String formatAttributes(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
-			result += 	[attribute:[id:val1.id,name:val1.name,description:val1.description,filter:val1.filter.id]]
+			result += 	[attribute:[id:val1.id,name:val1.name,description:val1.description,filterId:val1.filter.id]]
 		}
 		return result as JSON
 	}

@@ -18,7 +18,13 @@ class TemplateAttributeController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				this.save()
+				if(!saveTemplateAttribute()){
+					response.status = 201 //Internal Server Error
+					render "TemplateAttribute created successfully\n"
+				}else{
+					response.status = 500 //Internal Server Error
+					render "Could not create new templateAttribute due to errors:\n ${templateAttribute.errors}"
+				}
 				break
 			case "GET":
 				def json = request.JSON
@@ -26,14 +32,24 @@ class TemplateAttributeController {
 				break
 			case "PUT":
 				def json = request.JSON
-				this.update()
+
+				def tatt = TemplateAttribute.findById(params.id)
+				tatt.template = NodeType.get(params.template.toLong())
+				tatt.attribute = Attribute.get(params.attribute.toLong())
+				if(tatt.save()){
+					response.status = 200 // OK
+			        render "Successfully updated"
+				}else{
+			        response.status = 500 //Internal Server Error
+			        render "Could not update TemplateAttribute due to errors:\n ${tatt.errors}"
+				}
 				break
 			case "DELETE":
 				def json = request.JSON
 				if(params.id){
-			        def nodetype = NodeType.get(params.id)
-			        if(nodetype){
-			          nodetype.delete()
+			        def tatt = TemplateAttribute.get(params.id)
+			        if(tatt){
+			          tatt.delete()
 					  response.status = 200
 					  render "Successfully Deleted."
 			        }else{
@@ -68,11 +84,11 @@ class TemplateAttributeController {
 			def tattributes = TemplateAttribute.list()
 			switch(params.format.toLowerCase()){
 				case 'xml':
-					def xml = xmlService.formatTemplateAttribute(tattributes)
+					def xml = xmlService.formatTemplateAttributes(tattributes)
 					render(text: xml, contentType: "text/xml")
 					break;
 				case 'json':
-					def json = jsonService.formatTemplateAttribute(tattributes)
+					def json = jsonService.formatTemplateAttributes(tattributes)
 					render(text:json, contentType: "text/json")
 					break;
 			}
@@ -92,7 +108,7 @@ class TemplateAttributeController {
             render(view: "create", model: [templateAttributeInstance: templateAttributeInstance])
             return
         }
-
+		
 		ArrayList templateAttributes = [templateAttributeInstance]
 		webhookService.postToURL('templateAttribute', templateAttributes,'create')
 		
@@ -100,6 +116,9 @@ class TemplateAttributeController {
         redirect(action: "show", id: templateAttributeInstance.id)
     }
 
+	/*
+	 * AJAX method
+	 */
 	def saveTemplateAttribute(){
         def temp = new TemplateAttribute()
 		temp.template=NodeType.get(params.template.toLong())
@@ -123,11 +142,11 @@ class TemplateAttributeController {
 				ArrayList templateAttributes = [templateAttributeInstance]
 				switch(params.format.toLowerCase()){
 					case 'xml':
-						def xml = xmlService.formatTemplateAttribute(templateAttributes)
+						def xml = xmlService.formatTemplateAttributes(templateAttributes)
 						render(text: xml, contentType: "text/xml")
 						break;
 					case 'json':
-						def json = jsonService.formatTemplateAttribute(templateAttributes)
+						def json = jsonService.formatTemplateAttributes(templateAttributes)
 						render(text:json, contentType: "text/json")
 						break;
 				}
@@ -199,6 +218,9 @@ class TemplateAttributeController {
         }
     }
 	
+	/*
+	 * AJAX method
+	 */
 	def deleteTemplateAttribute(){
 		def templateAttributeInstance = TemplateAttribute.get(params.id)
         try {

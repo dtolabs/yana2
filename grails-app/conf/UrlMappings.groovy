@@ -15,6 +15,8 @@ class UrlMappings {
 		"/api/webhook/$format/$id"(controller:"webhook",action:"api", parseRequest: true)
 		"/api/webhook/$format"(controller:"webhook",action:"api", parseRequest: true)
 		
+		
+		
 		"/"(controller:"node",action:"list")
         "500"(view:'/error')
     }

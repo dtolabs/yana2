@@ -14,30 +14,57 @@ class XmlService {
 			
 		xml.nodes() {
 			nodes.each(){ val1 ->
-				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
+				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required,A.id as id) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
 				def values = TemplateValue.executeQuery(attributequery);
 				
-				node(id:val1.id,name:val1.name,type:val1.nodetype.name,tags:val1.tags){
+				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags){
 					description(val1.description)
 					attributes(){
 						values.each{ val2 ->
-							attribute(name:val2.attribute,value:val2.value,required:val2.required)
+							attribute(id:val2.id,name:val2.attribute,value:val2.value,required:val2.required)
 						}
 					}
-					
+
 					parents(){
 						def rents = ChildNode.findAllByChild(Node.get(val1.id.toLong()));
 						rents.each{ parent ->
-							node(id:parent.parent.id,name:parent.parent.name,type:parent.parent.nodetype.name,tags:parent.parent.tags,relationshipName:parent.relationshipName,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).roleName)
+							node(id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags,relationshipName:parent.relationshipName,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).roleName)
 						}
 					}
+
 					children(){
 						def kinder = ChildNode.findAllByParent(Node.get(val1.id.toLong()));
 						kinder.each{ child ->
-							node(id:child.child.id,name:child.child.name,type:child.child.nodetype.name,tags:child.child.tags,relationshipName:child.relationshipName,,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).roleName)
+							node(id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags,relationshipName:child.relationshipName,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).roleName)
 						}
 					}
 				}
+			}
+		}
+		return writer.toString()
+	}
+	
+	/*
+	String formatTemplateValues(ArrayList tvals){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.filters() {
+			tvals.each(){ val1 ->
+				filter(id:val1.id,dataType:val1.dataType,regex:val1.regex)
+			}
+		}
+		return writer.toString()
+	}
+	*/
+	
+	String formatTemplateAttributes(ArrayList tatts){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.templateAttributes() {
+			tatts.each(){ val1 ->
+				templateAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required)
 			}
 		}
 		return writer.toString()
@@ -61,7 +88,7 @@ class XmlService {
 			
 		xml.attributes() {
 			attributes.each(){ val1 ->
-				attribute(id:val1.id,name:val1.name,description:val1.description,filter:val1.filter.id)
+				attribute(id:val1.id,name:val1.name,description:val1.description,filterId:val1.filter.id)
 			}
 		}
 		return writer.toString()
