@@ -78,7 +78,13 @@ class JsonService {
 	String formatNodeTypes(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
-			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image]]
+			def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
+			
+			ArrayList attributes = [:]
+			tatts.each(){ val2 ->
+				attributes += [attribute:[id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.template.id,required:val2.required]]
+			}
+			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,templateAttributes:attributes]]
 		}
 		return result as JSON
 	}

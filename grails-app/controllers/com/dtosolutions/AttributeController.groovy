@@ -18,7 +18,24 @@ class AttributeController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				this.save()
+				def attribute = new Attribute(params)
+				println(params)
+				println(attribute)
+				if(attribute){
+					if (!attribute.save(flush: true)) {
+						response.status = 400 //Bad Request
+						render "Attribute Creation Failed"
+					}else{
+						ArrayList attributes = [attribute]
+						webhookService.postToURL('attribute', attributes,'create')
+						
+						response.status = 200
+						render "Successfully Created."
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+				}
 				break
 			case "GET":
 				def json = request.JSON
