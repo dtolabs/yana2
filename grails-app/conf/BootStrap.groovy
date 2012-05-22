@@ -1,4 +1,5 @@
 import com.dtosolutions.*
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 class BootStrap {
 
@@ -11,9 +12,22 @@ class BootStrap {
 		Role archRole = Role.findByAuthority('ROLE_YANA_ARCHITECT')?: new Role(authority:'ROLE_YANA_ARCHITECT').save(faileOnError:true)
 		Role rootRole = Role.findByAuthority('ROLE_YANA_SUPERUSER')?: new Role(authority:'ROLE_YANA_SUPERUSER').save(faileOnError:true)
 		
-		User rootUser = User.findByUsername('admin')?: new User(username:'admin',password:'admin',enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
-		if(!rootUser?.authorities?.contains(rootRole)){
-			UserRole.create rootUser,rootRole
+
+		def rootUsers = UserRole.findAllByRole(rootRole)
+		rootUsers.each(){
+			User user = User.get(it.user.id)
+			it.delete(flush:true)
+			user.delete(flush:true)
+		}
+		//	it.delete()
+		//}
+		//User rootUser = User.findByUsername('admin')
+		//if(rootUser){
+		//	rootUser.delete()
+		//}
+		User newRootUser = new User(username:"${CH.config.root.login}",password:"${CH.config.root.password}",enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
+		if(!newRootUser?.authorities?.contains(rootRole)){
+			UserRole.create newRootUser,rootRole
 		}
 
 		Filter fStr = Filter.findByDataType('String') ?: new Filter(dataType:'String',regex:'^.*\$',dateCreated:now).save(failOnError:true)

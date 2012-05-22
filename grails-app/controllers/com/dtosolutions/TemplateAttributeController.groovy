@@ -50,7 +50,7 @@ class TemplateAttributeController {
 			        if(tatt){
 						tatt.delete()
 					  
-						ArrayList templateAttributes = [ttatt]
+						ArrayList templateAttributes = [tatt]
 						webhookService.postToURL('templateAttribute', templateAttributes,'delete')
 					  
 						response.status = 200

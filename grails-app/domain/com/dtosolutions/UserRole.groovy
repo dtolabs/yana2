@@ -1,5 +1,7 @@
 package com.dtosolutions
 
+import java.util.Set;
+
 import org.apache.commons.lang.builder.HashCodeBuilder
 
 class UserRole implements Serializable {
@@ -22,7 +24,7 @@ class UserRole implements Serializable {
 		if (role) builder.append(role.id)
 		builder.toHashCode()
 	}
-
+	
 	static UserRole get(long userId, long roleId) {
 		find 'from UserRole where user.id=:userId and role.id=:roleId',
 			[userId: userId, roleId: roleId]
