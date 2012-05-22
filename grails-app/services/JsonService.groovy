@@ -80,11 +80,30 @@ class JsonService {
 		data.each(){ val1 ->
 			def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
 			
+			def criteria = NodeTypeRelationship.createCriteria()
+			def parents = criteria.list{
+				eq("child", NodeType.get(val1.id?.toLong()))
+			}
+			
+			def criteria2 = NodeTypeRelationship.createCriteria()
+			def children = criteria2.list{
+				eq ("parent", NodeType.get(val1.id?.toLong()))
+			}
+			
 			ArrayList attributes = [:]
 			tatts.each(){ val2 ->
 				attributes += [attribute:[id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.template.id,required:val2.required]]
 			}
-			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,templateAttributes:attributes]]
+			ArrayList ntr = [:]
+			parents.each(){ val3 ->
+				ntr += [nodetypeRelationship:[id:val3.id,parentNodeId:val3.parent.id,parentName:val3.parent.name,childNodeId:val3.child.id,childName:val3.child.name,roleName:val3.roleName]]
+			}
+			children.each(){ val4 ->
+				ntr += [nodetypeRelationship:[id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.roleName]]
+			}
+
+			
+			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,templateAttributes:attributes,nodetypeRelationships:ntr]]
 		}
 		return result as JSON
 	}
