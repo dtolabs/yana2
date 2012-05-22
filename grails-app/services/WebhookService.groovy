@@ -51,12 +51,10 @@ class WebhookService {
 		String response
 		switch(format.toLowerCase()=='xml'){
 			case 'xml':
-				println("xml")
 				response = [xmlService.formatNodes(data).toString()]
 				break;
 			case 'json':
 			default:
-				println("json")
 				response = data.encodeAsJSON()
 		}
 		return response

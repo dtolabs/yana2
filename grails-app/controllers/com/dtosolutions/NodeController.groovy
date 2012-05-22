@@ -137,6 +137,7 @@ class NodeController {
 	}
 	
     def save() {
+		println(params)
 		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
@@ -166,7 +167,6 @@ class NodeController {
 					}
 				}
 							
-				
 				if(parents){
 					parents.each{ parent ->
 						ChildNode parentNode = ChildNode.findByParentAndChild(parent,nodeInstance)

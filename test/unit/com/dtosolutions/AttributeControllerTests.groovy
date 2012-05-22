@@ -4,7 +4,7 @@ import org.junit.*
 import grails.test.mixin.*
 
 @TestFor(AttributeController)
-@Mock(Attribute)
+@Mock([Attribute,WebhookService])
 class AttributeControllerTests {
 	
     def populateValidParams(params) {
@@ -36,7 +36,6 @@ class AttributeControllerTests {
 
     void testCreate() {
        def model = controller.create()
-
        assert model.attributeInstance != null
     }
 
@@ -50,10 +49,10 @@ class AttributeControllerTests {
 
         populateValidParams(params)
         //controller.save()
-
-        //assert response.redirectedUrl == '/attribute/show/1'
-        //assert controller.flash.message != null
-        //assert Attribute.count() == 1
+			
+	    //assert response.redirectedUrl == '/attribute/show/1'
+	    //assert controller.flash.message != null
+	    //assert Attribute.count() == 1
     }
 
 	/*
