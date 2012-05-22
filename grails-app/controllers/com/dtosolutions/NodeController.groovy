@@ -174,9 +174,12 @@ class NodeController {
 		Node[] children
 		if(params.children){
 			Long[] kinder = Eval.me("${params.children}")
-			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:children]) }
+			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:kinder]) }
 		}
-
+		
+		params.parents = null
+		params.parents = null
+		
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
 			params.nodetype = NodeType.get(params.nodetype.toLong())
 			Node nodeInstance  = new Node(params)
@@ -198,16 +201,30 @@ class NodeController {
 					   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
 					}
 				}
-							
+				
+				def parentList = getNodeParentsByCardinality(nodeInstance) 	
 				if(parents){
 					parents.each{ parent ->
-						addNodeParent("${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]",parent,nodeInstance)
+						boolean goodParent = false
+						parentList?.each() { pit ->
+							if(pit.contains(parent)){ goodParent = true }
+						}
+						if(goodParent){
+							addNodeParent("${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]",parent,nodeInstance)
+						}
 					}
 				}
 
+				def childList = getNodeChildrenByCardinality(nodeInstance)
 				if(children){
 					children.each{ child ->
-						addNodeChild("${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]",nodeInstance,child)
+						boolean goodChild = false
+						childList?.each() { cit ->
+							if(cit.contains(child)){ goodChild = true }
+						}
+						if(goodChild){
+							addNodeChild("${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]",nodeInstance,child)
+						}
 					}
 				}
 
@@ -434,10 +451,17 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 		}
     }
 	
+	def getNodeParentsByCardinality(Node node) {
+		def cardinality = (node.parents?.size())?node.parents?.size():0
+		def parents = Node.findAll("from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${node.nodetype.id} and (NTP.parentCardinality>=${cardinality} or NTP.parentCardinality is null)")
+		return parents
+	}
+		
 	def getNodeParents = {
 		Node nodeInstance = Node.get(params.id)
 		def response = []
 		if(params?.id.trim()){
+			
 			def pquery = """
 select new map(N.id as id,N.name as name,NTP.parentCardinality as size) 
 from Node as N 
@@ -454,7 +478,12 @@ and (NTP.parentCardinality>=${nodeInstance.parents.size()} or NTP.parentCardinal
 		}
 	}
 	
-
+	def getNodeChildrenByCardinality(Node node){
+		def cardinality = (node.children?.size())?node.children?.size():0
+		Node children = Node.findAll("from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${node.nodetype.id} and (NTP.childCardinality>=${cardinality} or NTP.childCardinality is null)")
+		return children
+	}
+	
 	def getNodeChildren = {
 		Node nodeInstance = Node.get(params.id)
 		def response = []
