@@ -136,8 +136,35 @@ class NodeController {
         }
 	}
 	
+	boolean addNodeParent(String name,Node parent,Node nodeInstance){
+		ChildNode parentNode = ChildNode.findByParentAndChild(parent,nodeInstance)
+		if(!parentNode){
+			parentNode = new ChildNode()
+			parentNode.relationshipName = name
+			parentNode.parent = parent
+			parentNode.child = nodeInstance
+			parentNode.save(flush: true)
+			return true
+		}else{
+			return false
+		}
+	}
+	
+	boolean addNodeChild(String name,Node nodeInstance,Node child){
+		ChildNode childNode = ChildNode.findByParentAndChild(nodeInstance,child)
+		if(!childNode){
+			childNode = new ChildNode()
+			childNode.relationshipName = name
+			childNode.parent = nodeInstance
+			childNode.child = child
+			childNode.save(flush: true)
+			return true
+		}else{
+			return false
+		}
+	}
+	
     def save() {
-		println(params)
 		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
@@ -156,8 +183,13 @@ class NodeController {
 			nodeInstance.dateCreated = new Date()
 						
 	        if (!nodeInstance.save(flush: true)) {
-	            render(view: "create", model: [nodeInstance: nodeInstance])
-	            return
+				if(params.action=='api'){
+					response.status = 400 //Bad Request
+					render "Node Creation Failed"
+				}else{
+		            render(view: "create", model: [nodeInstance: nodeInstance])
+		            return
+				}
 	        }else{
 				Date now = new Date()
 				params.each{ key, val ->
@@ -169,40 +201,36 @@ class NodeController {
 							
 				if(parents){
 					parents.each{ parent ->
-						ChildNode parentNode = ChildNode.findByParentAndChild(parent,nodeInstance)
-						if(!parentNode){
-							parentNode = new ChildNode()
-							parentNode.relationshipName = "${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]"
-							parentNode.parent = parent
-							parentNode.child = nodeInstance
-							parentNode.save(flush: true)
-						}
+						addNodeParent("${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]",parent,nodeInstance)
 					}
 				}
 
 				if(children){
 					children.each{ child ->
-						ChildNode childNode = ChildNode.findByParentAndChild(nodeInstance,child)
-						if(!childNode){
-							childNode = new ChildNode()
-							childNode.relationshipName = "${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]"
-							childNode.parent = nodeInstance
-							childNode.child = child
-							childNode.save(flush: true)
-						}
+						addNodeChild("${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]",nodeInstance,child)
 					}
 				}
 
 				ArrayList nodes = [nodeInstance]
 				webhookService.postToURL('node', nodes,'create')
 				
-				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
-		        redirect(action: "show", id: nodeInstance.id)
+				if(params.action=='api'){
+					response.status = 200
+					render "Successfully Created."
+				}else{
+					flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
+					redirect(action: "show", id: nodeInstance.id)
+				}
 	        }
 		}else{
-			Node nodeInstance  = new Node()
-			flash.message = 'Required fields not filled out. Please try again'
-			render(view: "create", model: [nodeInstance: nodeInstance,parents:parents,children:children,params: params])
+			if(params.action=='api'){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			}else{
+				Node nodeInstance  = new Node()
+				flash.message = 'Required fields not filled out. Please try again'
+				render(view: "create", model: [nodeInstance: nodeInstance,parents:parents,children:children,params: params])
+			}
 		}
     }
 

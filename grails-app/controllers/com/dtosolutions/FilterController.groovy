@@ -18,7 +18,22 @@ class FilterController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				this.save()
+				def filter = new Filter(params)
+				if(filter){
+					if (!filter.save(flush: true)) {
+						response.status = 400 //Bad Request
+						render "Filter Creation Failed"
+					}else{
+						ArrayList filters = [filter]
+						webhookService.postToURL('filter', filters,'create')
+						
+						response.status = 200
+						render "Successfully Created."
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+				}
 				break
 			case "GET":
 				def json = request.JSON

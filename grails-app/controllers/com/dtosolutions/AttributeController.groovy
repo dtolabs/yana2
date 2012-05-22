@@ -19,8 +19,6 @@ class AttributeController {
 			case "POST":
 				def json = request.JSON
 				def attribute = new Attribute(params)
-				println(params)
-				println(attribute)
 				if(attribute){
 					if (!attribute.save(flush: true)) {
 						response.status = 400 //Bad Request

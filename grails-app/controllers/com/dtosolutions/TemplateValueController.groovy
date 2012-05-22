@@ -18,7 +18,22 @@ class TemplateValueController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				this.save()
+				def templateValue = new TemplateValue(params)
+				if(templateValue){
+					if (!templateValue.save(flush: true)) {
+						response.status = 400 //Bad Request
+						render "TemplateValue Creation Failed"
+					}else{
+						ArrayList templateValues = [templateValue]
+						webhookService.postToURL('templateValue', templateValues,'create')
+						
+						response.status = 200
+						render "Successfully Created."
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+				}
 				break
 			case "GET":
 				def json = request.JSON

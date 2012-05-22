@@ -20,7 +20,22 @@ class NodeTypeController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				this.save()
+				def nodeType = new NodeType(params)
+				if(nodeType){
+					if (!nodeType.save(flush: true)) {
+						response.status = 400 //Bad Request
+						render "NodeType Creation Failed"
+					}else{
+						ArrayList nodeTypes = [nodeType]
+						webhookService.postToURL('nodetype', nodeTypes,'create')
+						
+						response.status = 200
+						render "Successfully Created."
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+				}
 				break
 			case "GET":
 				def json = request.JSON
