@@ -37,7 +37,15 @@
 							<td style="padding:10px;">
 							<img src="${resource(dir:path,file:nodeTypeInstance.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
 							<span class="image-title"><g:fieldValue bean="${nodeTypeInstance}" field="name"/></span>
-							<g:if test="${nodeTypeInstance?.description}"><div class="image-description"><g:fieldValue bean="${nodeTypeInstance}" field="description"/></div></g:if>
+							<g:if test="${nodeTypeInstance?.description}"><div class="image-description"><g:fieldValue bean="${nodeTypeInstance}" field="description"/></div></g:if><br clear=left>
+							
+<div style="padding-top:5px;">
+	<label for="id">
+		<b>ID:</b>
+	</label>
+	<g:fieldValue bean="${nodeTypeInstance}" field="id"/>
+</div>
+							
 							</td>
 						</tr>
 						</g:if>
@@ -46,10 +54,6 @@
 			
 								<table width=250>
 									<tbody>
-									<tr>
-										<td>ID</td>
-										<td>${nodeTypeInstance.id}</td>
-									</tr>
 									
 									<g:if test="${nodeTypeInstance?.attributes}">
 									<tr>

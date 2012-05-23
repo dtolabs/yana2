@@ -12,13 +12,7 @@ class BootStrap {
 		Role archRole = Role.findByAuthority('ROLE_YANA_ARCHITECT')?: new Role(authority:'ROLE_YANA_ARCHITECT').save(faileOnError:true)
 		Role rootRole = Role.findByAuthority('ROLE_YANA_SUPERUSER')?: new Role(authority:'ROLE_YANA_SUPERUSER').save(faileOnError:true)
 		
-
-		def rootUsers = UserRole.findByRole(rootRole)
-		User user
-		rootUsers.each(){
-			user = User.get(it.user.id)
-		}
-
+		User user = User.get(1)
 		if(user?.id){
 			user.username="${CH.config.root.login}"
 			user.password="${CH.config.root.password}"
