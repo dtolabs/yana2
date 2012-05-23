@@ -13,21 +13,22 @@ class BootStrap {
 		Role rootRole = Role.findByAuthority('ROLE_YANA_SUPERUSER')?: new Role(authority:'ROLE_YANA_SUPERUSER').save(faileOnError:true)
 		
 
-		def rootUsers = UserRole.findAllByRole(rootRole)
+		def rootUsers = UserRole.findByRole(rootRole)
+		User user
 		rootUsers.each(){
-			User user = User.get(it.user.id)
-			it.delete(flush:true)
-			user.delete(flush:true)
+			user = User.get(it.user.id)
 		}
-		//	it.delete()
-		//}
-		//User rootUser = User.findByUsername('admin')
-		//if(rootUser){
-		//	rootUser.delete()
-		//}
-		User newRootUser = new User(username:"${CH.config.root.login}",password:"${CH.config.root.password}",enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
-		if(!newRootUser?.authorities?.contains(rootRole)){
-			UserRole.create newRootUser,rootRole
+
+		if(user?.id){
+			user.username="${CH.config.root.login}"
+			user.password="${CH.config.root.password}"
+			user.save(faileOnError:true)
+		}else{
+			user = new User(username:"${CH.config.root.login}",password:"${CH.config.root.password}",enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
+		}
+			
+		if(!user?.authorities?.contains(rootRole)){
+			UserRole.create user,rootRole
 		}
 
 		Filter fStr = Filter.findByDataType('String') ?: new Filter(dataType:'String',regex:'^.*\$',dateCreated:now).save(failOnError:true)
