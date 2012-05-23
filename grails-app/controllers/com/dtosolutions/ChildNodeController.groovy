@@ -127,12 +127,26 @@ class ChildNodeController {
 					}
 		        }else{
 					if(params.action=='api'){
-						response.status = 400
-						render "All required params not sent."
-						return
+						if(params.format && params.format!='none'){
+							ArrayList cnodes = [childNodeInstance]
+							switch(params.format.toLowerCase()){
+								case 'xml':
+									def xml = xmlService.formatChildNodes(cnodes)
+									render(text: xml, contentType: "text/xml")
+									break;
+								case 'json':
+									def json = jsonService.formatChildNodes(cnodes)
+									render(text:json, contentType: "text/json")
+									break;
+							}
+						}else{
+							response.status = 200
+							render "Successfully created."
+							return
+						}
 					}else{
-						flash.message = "All required params not sent"
-						render(view: "create", model: [childNodeInstance: childNodeInstance])
+						flash.message = message(code: 'default.created.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
+						redirect(action: "show", id: childNodeInstance.id)
 					}
 		        }
 			}else{
