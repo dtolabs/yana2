@@ -116,6 +116,9 @@ class TemplateAttributeController {
 	 * AJAX method
 	 */
 	def saveTemplateAttribute(){
+		def json = request.JSON
+		params.template=(json.template)?json.template:params.template
+		params.attribute=(json.attribute)?json.attribute:params.attribute
         def temp = new TemplateAttribute()
 		temp.template=NodeType.get(params.template.toLong())
 		temp.attribute = Attribute.get(params.attribute.toLong())
@@ -215,13 +218,13 @@ class TemplateAttributeController {
 	 * AJAX method
 	 */
 	def deleteTemplateAttribute(){
+		def json = request.JSON
+		params.id=(json.id)?json.id:params.id
 		def templateAttributeInstance = TemplateAttribute.get(params.id)
         try {
             templateAttributeInstance.delete(flush: true)
-			
 			render "1"
-        }
-        catch (DataIntegrityViolationException e) {
+        }catch (DataIntegrityViolationException e) {
             render "0"
         }
 	}

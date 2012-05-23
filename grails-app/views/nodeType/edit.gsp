@@ -133,7 +133,7 @@
             type: "POST",
             dataType: "json",
             data: jsonData,
-            url: "${request.contextPath}/api/templateAttribute/1",
+            url: "${request.contextPath}/templateAttribute/saveTemplateAttribute/",
             success: function(data){
                alert("Attribute added successfully!")
                getAttributes();
@@ -146,15 +146,16 @@
   	    params.id = templateAtt;
   	    var jsonData = window.JSON.stringify(params);
         $.ajax({ 
-            type: "DELETE",
+            type: "POST",
             dataType: "json",
             data: jsonData,
-            url: "${request.contextPath}/api/templateAttribute/1",
+            url: "${request.contextPath}/templateAttribute/deleteTemplateAttribute/",
             success: function(data){  
             	alert("Attribute deleted successfully!")      
                getAttributes();
             }
         });
+
   	}
 	</script>
 		

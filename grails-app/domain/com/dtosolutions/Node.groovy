@@ -5,9 +5,6 @@ class Node {
     static searchable = {
         nodetype component:true
     }
-	//static embedded = 'nodetype'
-
-	
 	
 	static mappedBy = [children: 'child', parents: 'parent']
 	static hasMany = [templateValues:TemplateValue,children:ChildNode,parents:ChildNode]
