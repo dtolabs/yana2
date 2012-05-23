@@ -50,7 +50,7 @@ class XmlService {
 			
 		xml.childNodes() {
 			cnodes.each(){ val1 ->
-				node(id:val1.id,parentNodeId:val1.parent.id,parentName:val1.parent.name,parentNodeType:val1.parent.nodetype.name,childNodeId:val1.child.id,childName:val1.child.name,childNodeType:val1.child.nodetype.name,relationshipName:val1.relationshipName)
+				childNode(id:val1.id,parentNodeId:val1.parent.id,parentName:val1.parent.name,parentNodeType:val1.parent.nodetype.name,childNodeId:val1.child.id,childName:val1.child.name,childNodeType:val1.child.nodetype.name,relationshipName:val1.relationshipName)
 			}
 		}
 		return writer.toString()
