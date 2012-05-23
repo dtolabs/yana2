@@ -164,6 +164,11 @@ class NodeController {
 		}
 	}
 	
+	String getRelationshipName(Node parent,Node child){
+		String name = (NodeTypeRelationship.findRoleNameByParent(node.nodetype))?"${parent.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]":"${parent.name}_${child.name}"
+		return name			
+	}
+	
     def save() {
 		Node[] parents
 		if(params.parents){
@@ -210,7 +215,9 @@ class NodeController {
 							if(pit.contains(parent)){ goodParent = true }
 						}
 						if(goodParent){
-							addNodeParent("${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]",parent,nodeInstance)
+							//String name = (NodeTypeRelationship.findRoleNameByParent(parent.nodetype))?"${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]":"${parent.name}_${nodeInstance.name}"
+							String name = getRelationshipName(parent,nodeInstance)
+							addNodeParent(name,parent,nodeInstance)
 						}
 					}
 				}
@@ -223,7 +230,9 @@ class NodeController {
 							if(cit.contains(child)){ goodChild = true }
 						}
 						if(goodChild){
-							addNodeChild("${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]",nodeInstance,child)
+							//String name = (NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype))?"${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]":"${nodeInstance.name}_${child.name}"
+							String name = getRelationshipName(nodeInstance,child)
+							addNodeChild(name,nodeInstance,child)
 						}
 					}
 				}
@@ -393,8 +402,9 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				}
 
 				parents.each{
+					String pname = getRelationshipName(it,nodeInstance)
 					def chnode = new ChildNode()
-					chnode.relationshipName = "${it.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(it.nodetype)}]"
+					chnode.relationshipName = pname
 					chnode.parent=it
 					chnode.child=nodeInstance
 					chnode.save(flush: true)
@@ -405,8 +415,9 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 					it.delete()
 				}
 				children.each{
+					String cname = getRelationshipName(nodeInstance,it)
 					def chnode = new ChildNode()
-					chnode.relationshipName = "${nodeInstance.name}_${it.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]"
+					chnode.relationshipName = cname
 					chnode.parent=nodeInstance
 					chnode.child=it
 					chnode.save(flush: true)
