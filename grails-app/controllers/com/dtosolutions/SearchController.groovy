@@ -13,7 +13,7 @@ class SearchController {
 	def xmlService
 
     /**
-     * Index page with search form and results
+     * Search Nodes only
      */
     def index = {
         if (!params.q?.trim()) {
@@ -23,12 +23,8 @@ class SearchController {
 			if(params.format){
 				
 				
-				def results = searchableService.search(params.q, params)
-				ArrayList nodes = []
-				results.results.each{ val1 ->
-					nodes.putAt(nodes.size(), Node.get(val1.id.toLong()))
-				}
-				
+				def results = Node.search(params.q, params)
+				ArrayList nodes = results.results
 				
 				switch(params.format.toLowerCase()){
 						case 'xml':
@@ -41,7 +37,7 @@ class SearchController {
 							break;
 				}
 			}else{
-            	return [searchResult: searchableService.search(params.q, params)]
+                return [searchResult: Node.search(params.q, params)]
 			}
         } catch (SearchEngineQueryParseException ex) {
             return [parseException: true]
