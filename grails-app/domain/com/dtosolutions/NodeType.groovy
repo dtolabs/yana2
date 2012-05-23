@@ -4,10 +4,13 @@ import java.util.Date;
 
 class NodeType{
 	
-    static searchable = { 
-        // don't add id and version to index
-        except = ['id', 'version','description','image']
-        name boost: 2.0
+    static searchable = {
+        // only index name and description, and rename as nodetype and typedesc
+        // NodeType will be added as a searchable component to the Node class, which will
+        // effectively import these properties into the Node's search index
+        only = ['name','description']
+        name boost: 2.0, name: 'nodetype'
+        description name: 'typedesc'
     }
 	
 	static mappedBy = [children: 'child', parents: 'parent']

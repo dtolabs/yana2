@@ -2,7 +2,9 @@ package com.dtosolutions
 
 class Node {
 
-    static searchable = true
+    static searchable = {
+        nodetype component:true
+    }
 	//static embedded = 'nodetype'
 
 	
