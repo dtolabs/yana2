@@ -26,6 +26,15 @@
 							<td style="padding:10px;">
 							<img src="${resource(dir:'images/icons/64',file:'NodeTypeRelationship.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
 							<span class="image-title">${nodeTypeRelationshipInstance.roleName}</span>
+							<br clear=left>
+
+<div style="padding-top:5px;">
+	<label for="id">
+		<b>ID:</b>
+	</label>
+	<g:fieldValue bean="${nodeTypeRelationshipInstance}" field="id"/>
+</div>
+							
 							</td>
 						</tr>
 						<tr>
