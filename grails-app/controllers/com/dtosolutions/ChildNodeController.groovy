@@ -96,32 +96,55 @@ class ChildNodeController {
     }
 	
     def save() {
-		Node parent = Node.get(params.parent.toLong())
-		Node child = Node.get(params.child.toLong())
+
+		Node parent = Node.get(params.parent.id.toLong())
+		Node child = Node.get(params.child.id.toLong())
+		
+		def ntparents = NodeTypeRelationship.findByChild(child.nodetype)
+		def nparents = []
+		ntparents.each{ntp ->
+			nparents += ntp.parent
+		}
+		def ntchildren = NodeTypeRelationship.findByParent(parent.nodetype)
+		def nchildren = []
+		ntchildren.each{ntc ->
+			nchildren += ntc.child
+		}
 		
 		def exists = ChildNode.findByParentAndChild(parent,child)
 		def childNodeInstance
 		if(!exists){
-	        childNodeInstance= new ChildNode(relationshipName:"${params.relationshipName}",parent:parent,child:child)
-	        if (!childNodeInstance.save(flush: true)) {
-				if(params.action=='api'){
-					response.status = 400 //Bad Request
-					render "ChildNode Creation Failed"
-					return
-				}else{
-	            	render(view: "create", model: [childNodeInstance: childNodeInstance])
-					return
-				}
-	        }else{
-				if(params.action=='api'){
-					response.status = 200
-					render "Successfully Created."
-					return
-				}else{
-					flash.message = message(code: 'default.created.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
-					redirect(action: "show", id: childNodeInstance.id)
-				}
-	        }
+			if(nparents.contains(parent.nodetype) && nchildren.contains(child.nodetype)){
+		        childNodeInstance= new ChildNode(relationshipName:"${params.relationshipName}",parent:parent,child:child)
+		        if (!childNodeInstance.save(flush: true)) {
+					if(params.action=='api'){
+						response.status = 400 //Bad Request
+						render "ChildNode Creation Failed"
+						return
+					}else{
+		            	render(view: "create", model: [childNodeInstance: childNodeInstance])
+						return
+					}
+		        }else{
+					if(params.action=='api'){
+						response.status = 400
+						render "All required params not sent."
+						return
+					}else{
+						flash.message = "All required params not sent"
+						render(view: "create", model: [childNodeInstance: childNodeInstance])
+					}
+		        }
+			}else{
+					if(params.action=='api'){
+						response.status = 400
+						render "Parent/Child relationship is not available. Please Create in NodeTypeRelationship."
+						return
+					}else{
+						flash.message = "Parent/Child relationship is not available. Please Create in NodeTypeRelationship"
+						render(view: "create", model: [childNodeInstance: childNodeInstance])
+					}
+			}
 		}else{
 			if(params.action=='api'){
 				response.status = 404 //Not Found
