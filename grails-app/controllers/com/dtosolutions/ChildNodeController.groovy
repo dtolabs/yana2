@@ -18,7 +18,6 @@ class ChildNodeController {
 			case "POST":
 				def json = request.JSON
 				this.save()
-				return
 				break
 			case "GET":
 				def json = request.JSON
@@ -96,9 +95,9 @@ class ChildNodeController {
     }
 	
     def save() {
-
-		Node parent = Node.get(params.parent.id.toLong())
-		Node child = Node.get(params.child.id.toLong())
+		println(params)
+		Node parent = Node.get(params.parent)
+		Node child = Node.get(params.child)
 		
 		def ntparents = NodeTypeRelationship.findByChild(child.nodetype)
 		def nparents = []
