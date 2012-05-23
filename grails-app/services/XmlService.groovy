@@ -44,7 +44,18 @@ class XmlService {
 		return writer.toString()
 	}
 	
-
+	String formatChildNodes(ArrayList cnodes){
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+			
+		xml.childNodes() {
+			cnodes.each(){ val1 ->
+				node(id:val1.id,parentNodeId:val1.parent.id,parentName:val1.parent.name,childNodeId:val1.child.id,childName:val1.child.name,relationshipName:val1.relationshipName)
+			}
+		}
+		return writer.toString()
+	}
+	
 	String formatTemplateValues(ArrayList tvals){
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)

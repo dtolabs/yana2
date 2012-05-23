@@ -48,11 +48,11 @@ class AttributeControllerTests {
         response.reset()
 
         populateValidParams(params)
-        //controller.save()
+        controller.save()
 			
-	    //assert response.redirectedUrl == '/attribute/show/1'
-	    //assert controller.flash.message != null
-	    //assert Attribute.count() == 1
+	    assert response.redirectedUrl == '/attribute/show/1'
+	    assert controller.flash.message != null
+	    assert Attribute.count() == 1
     }
 
 	/*
@@ -113,10 +113,10 @@ class AttributeControllerTests {
 			assert attribute.save(flush:true) != null
 			
 			//FIX
-			//controller.update()
-			//params.id = attribute.id
-			//assert response.redirectedUrl == "/attribute/show/${attribute.id}"
-			//assert flash.message != null
+			controller.update()
+			params.id = attribute.id
+			assert response.redirectedUrl == "/attribute/show/${attribute.id}"
+			assert flash.message != null
 		}else{
 			// test invalid parameters in update
 			//TODO: add invalid values to params object
@@ -136,12 +136,12 @@ class AttributeControllerTests {
         populateValidParams(params)
         params.id = attribute.id
         params.version = -1
-        //controller.update()
+        controller.update()
 
-        //assert view == "/attribute/edit"
-        //assert model.attributeInstance != null
-        //assert model.attributeInstance.errors.getFieldError('version')
-        //assert flash.message != null
+        assert view == "/attribute/edit"
+        assert model.attributeInstance != null
+        assert model.attributeInstance.errors.getFieldError('version')
+        assert flash.message != null
     }
 
     void testDelete() {
@@ -159,10 +159,10 @@ class AttributeControllerTests {
 
         params.id = attribute.id
 
-        //controller.delete()
+        controller.delete()
 
-        //assert Attribute.count() == 0
-        //assert Attribute.get(attribute.id) == null
-        //assert response.redirectedUrl == '/attribute/list'
+        assert Attribute.count() == 0
+        assert Attribute.get(attribute.id) == null
+        assert response.redirectedUrl == '/attribute/list'
     }
 }

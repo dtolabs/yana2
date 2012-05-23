@@ -41,7 +41,14 @@ class JsonService {
 		return result as JSON
 	}
 	
-
+	String formatChildNodes(ArrayList data){
+		ArrayList result = [:]
+		data.each(){ val1 ->
+			result += 	[node:[id:val1.id,parentNodeId:val1.parent.id,parentName:val1.parent.name,childNodeId:val1.child.id,childName:val1.child.name,relationshipName:val1.relationshipName]]
+		}
+		return result as JSON
+	}
+	
 	String formatTemplateValues(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->

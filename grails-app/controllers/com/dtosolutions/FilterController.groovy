@@ -10,7 +10,6 @@ class FilterController {
 	def iconService
 	def xmlService
 	def jsonService
-	def webhookService
 	
     //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -24,8 +23,6 @@ class FilterController {
 						response.status = 400 //Bad Request
 						render "Filter Creation Failed"
 					}else{
-						ArrayList filters = [filter]
-						webhookService.postToURL('filter', filters,'create')
 						
 						response.status = 200
 						render "Successfully Created."
@@ -116,9 +113,6 @@ class FilterController {
             render(view: "create", model: [filterInstance: filterInstance])
             return
         }
-
-		ArrayList filters = [filterInstance]
-		webhookService.postToURL('filter', filters,'create')
 		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'filter.label', default: 'Filter'), filterInstance.id])
         redirect(action: "show", id: filterInstance.id)
@@ -186,9 +180,6 @@ class FilterController {
             render(view: "edit", model: [filterInstance: filterInstance])
             return
         }
-
-		ArrayList filters = [filterInstance]
-		webhookService.postToURL('filter', filters,'edit')
 		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'filter.label', default: 'Filter'), filterInstance.id])
         redirect(action: "show", id: filterInstance.id)
@@ -204,9 +195,6 @@ class FilterController {
 
         try {
             filterInstance.delete(flush: true)
-			
-			ArrayList filters = [filterInstance]
-			webhookService.postToURL('filter', filters,'delete')
 			
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'filter.label', default: 'Filter'), params.id])
             redirect(action: "list")

@@ -18,5 +18,12 @@ class YanaFilters {
 				params.childCardinality=(params.childCardinality=='*')?'999999999':params.childCardinality
 			}
 		}
+		
+		childnodeFilter(controller:'childNode',action:'edit'){
+			before = {
+				params.parent=Node.get(params.parent.toLong())
+				params.child=Node.get(params.child.toLong())
+			}
+		}
 	}
 }

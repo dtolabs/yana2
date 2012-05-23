@@ -7,39 +7,131 @@ import grails.plugins.springsecurity.Secured
 class ChildNodeController {
 
 	def iconService
-	
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	def xmlService
+	def jsonService
 
+	
+    //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+
+	def api(){
+		switch(request.method){
+			case "POST":
+				def json = request.JSON
+				this.save()
+				return
+				break
+			case "GET":
+				def json = request.JSON
+				this.show()
+				break
+			case "PUT":
+				def json = request.JSON
+				this.update()
+				break
+			case "DELETE":
+				def json = request.JSON
+				if(params.id){
+			        def cnode = ChildNode.get(params.id)
+			        if(cnode){
+						try{
+							cnode.delete(flush:true)
+							response.status = 200
+							render "Successfully Deleted."
+						}catch(org.springframework.dao.DataIntegrityViolationException e) {
+					        ChildNode.withSession { session ->
+					            session.clear()
+					        }
+
+							response.status = 400 //Bad Request
+							render "Referential Integrity Violation: Please remove/reassign all Node relationships first."
+						}
+			        }else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
+			        }
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
+				break
+		  }
+		return
+	}
+	
+   def listapi(){
+	   switch(request.method){
+		   case "POST":
+			   def json = request.JSON
+			   this.list()
+			   break
+		 }
+	   return
+   }
+	
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [childNodeInstanceList: ChildNode.list(params), childNodeInstanceTotal: ChildNode.count()]
+		if(params.format && params.format!='none'){
+			ArrayList cnodes = ChildNode.list()
+			switch(params.format.toLowerCase()){
+				case 'xml':
+					def xml = xmlService.formatChildNodes(cnodes)
+					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatChildNodes(cnodes)
+					render(text:json, contentType: "text/json")
+					break;
+			}
+		}else{
+        	params.max = Math.min(params.max ? params.int('max') : 10, 100)
+			[childNodeInstanceList: ChildNode.list(params), childNodeInstanceTotal: ChildNode.count()]
+		}
     }
 
     def create() {
         [childNodeInstance: new ChildNode(params)]
     }
-
+	
     def save() {
 		Node parent = Node.get(params.parent.toLong())
 		Node child = Node.get(params.child.toLong())
+		
 		def exists = ChildNode.findByParentAndChild(parent,child)
+		def childNodeInstance
 		if(!exists){
-	        def childNodeInstance = new ChildNode(params)
+	        childNodeInstance= new ChildNode(relationshipName:"${params.relationshipName}",parent:parent,child:child)
 	        if (!childNodeInstance.save(flush: true)) {
-	            render(view: "create", model: [childNodeInstance: childNodeInstance])
-	            return
+				if(params.action=='api'){
+					response.status = 400 //Bad Request
+					render "ChildNode Creation Failed"
+					return
+				}else{
+	            	render(view: "create", model: [childNodeInstance: childNodeInstance])
+					return
+				}
+	        }else{
+				if(params.action=='api'){
+					response.status = 200
+					render "Successfully Created."
+					return
+				}else{
+					flash.message = message(code: 'default.created.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
+					redirect(action: "show", id: childNodeInstance.id)
+				}
 	        }
-	
-			flash.message = message(code: 'default.created.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
-	        redirect(action: "show", id: childNodeInstance.id)
 		}else{
-			flash.message = message("Existing relationship for that Parent and child node already exists. Please try again.")
-	        render(view: "create", model: [childNodeInstance: childNodeInstance])
-			return
+			if(params.action=='api'){
+				response.status = 404 //Not Found
+				render "Existing relationship for that Parent and child node already exists. Please try again."
+				return
+			}else{
+				flash.message = "Existing relationship for that Parent and child node already exists. Please try again."
+		        render(view: "create", model: [childNodeInstance: childNodeInstance])
+				return
+			}
 		}
     }
 
@@ -50,9 +142,23 @@ class ChildNodeController {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'childNode.label', default: 'ChildNode'), params.id])
             redirect(action: "list")
             return
+        }else{
+			if(params.format && params.format!='none'){
+				ArrayList cnodes = [childNodeInstance]
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatChildNodes(cnodes)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatChildNodes(cnodes)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			}else{
+	        	[childNodeInstance: childNodeInstance,path:path]
+			}
         }
-
-        [childNodeInstance: childNodeInstance,path:path]
     }
 
     def edit() {
@@ -108,8 +214,7 @@ class ChildNodeController {
             childNodeInstance.delete(flush: true)
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'childNode.label', default: 'ChildNode'), params.id])
             redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
+        }catch (DataIntegrityViolationException e) {
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'childNode.label', default: 'ChildNode'), params.id])
             redirect(action: "show", id: params.id)
         }

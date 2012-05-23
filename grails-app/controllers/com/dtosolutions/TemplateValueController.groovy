@@ -10,7 +10,6 @@ class TemplateValueController {
 	def springSecurityService
 	def xmlService
 	def jsonService
-	def webhookService
 	
     //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -24,9 +23,7 @@ class TemplateValueController {
 						response.status = 400 //Bad Request
 						render "TemplateValue Creation Failed"
 					}else{
-						ArrayList templateValues = [templateValue]
-						webhookService.postToURL('templateValue', templateValues,'create')
-						
+
 						response.status = 200
 						render "Successfully Created."
 					}
@@ -49,10 +46,7 @@ class TemplateValueController {
 			        def tval = TemplateValue.get(params.id)
 			        if(tval){
 			          tval.delete()
-					  
-					  ArrayList templateValues = [tval]
-					  webhookService.postToURL('templateValue', templateValues,'delete')
-					  
+
 					  response.status = 200
 					  render "Successfully Deleted."
 			        }else{
@@ -112,9 +106,6 @@ class TemplateValueController {
             return
         }
 
-		ArrayList templateValues = [templateValueInstance]
-		webhookService.postToURL('templateValue', templateValues,'create')
-		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), templateValueInstance.id])
         redirect(action: "show", id: templateValueInstance.id)
     }
@@ -181,9 +172,6 @@ class TemplateValueController {
             return
         }
 
-		ArrayList templateValues = [templateValueInstance]
-		webhookService.postToURL('templateValue', templateValues,'edit')
-		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), templateValueInstance.id])
         redirect(action: "show", id: templateValueInstance.id)
     }
@@ -198,9 +186,6 @@ class TemplateValueController {
 
         try {
             templateValueInstance.delete(flush: true)
-			
-			ArrayList templateValues = [templateValueInstance]
-			webhookService.postToURL('templateValue', templateValues,'delete')
 			
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
             redirect(action: "list")

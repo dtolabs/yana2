@@ -10,7 +10,6 @@ class TemplateAttributeController {
 	def springSecurityService
 	def xmlService
 	def jsonService
-	def webhookService
 	
     //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -49,9 +48,6 @@ class TemplateAttributeController {
 			        def tatt = TemplateAttribute.get(params.id)
 			        if(tatt){
 						tatt.delete()
-					  
-						ArrayList templateAttributes = [tatt]
-						webhookService.postToURL('templateAttribute', templateAttributes,'delete')
 					  
 						response.status = 200
 						render "Successfully Deleted."
@@ -111,9 +107,6 @@ class TemplateAttributeController {
             render(view: "create", model: [templateAttributeInstance: templateAttributeInstance])
             return
         }
-		
-		ArrayList templateAttributes = [templateAttributeInstance]
-		webhookService.postToURL('templateAttribute', templateAttributes,'create')
 		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
         redirect(action: "show", id: templateAttributeInstance.id)
@@ -196,9 +189,6 @@ class TemplateAttributeController {
             return
         }
 
-		ArrayList templateAttributes = [templateAttributeInstance]
-		webhookService.postToURL('templateAttribute', templateAttributes,'edit')
-		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
         redirect(action: "show", id: templateAttributeInstance.id)
     }
@@ -228,9 +218,6 @@ class TemplateAttributeController {
 		def templateAttributeInstance = TemplateAttribute.get(params.id)
         try {
             templateAttributeInstance.delete(flush: true)
-			
-			ArrayList templateAttributes = [templateAttributeInstance]
-			webhookService.postToURL('templateAttribute', templateAttributes,'delete')
 			
 			render "1"
         }

@@ -62,11 +62,11 @@ class TemplateValueControllerTests {
         response.reset()
 
         populateValidParams(params)
-        //controller.save()
+        controller.save()
 
-        //assert response.redirectedUrl == '/templateValue/show/1'
-        //assert controller.flash.message != null
-        //assert TemplateValue.count() == 1
+        assert response.redirectedUrl == '/templateValue/show/1'
+        assert controller.flash.message != null
+        assert TemplateValue.count() == 1
     }
 
     void testShow() {
@@ -133,10 +133,10 @@ class TemplateValueControllerTests {
         templateValue.clearErrors()
 
         populateValidParams(params)
-        //controller.update()
+        controller.update()
 
-        //assert response.redirectedUrl == "/templateValue/show/$templateValue.id"
-        //assert flash.message != null
+        assert response.redirectedUrl == "/templateValue/show/$templateValue.id"
+        assert flash.message != null
 
         //test outdated version number
         response.reset()
@@ -145,12 +145,12 @@ class TemplateValueControllerTests {
         populateValidParams(params)
         params.id = templateValue.id
         params.version = -1
-        //controller.update()
+        controller.update()
 
-        //assert view == "/templateValue/edit"
-        //assert model.templateValueInstance != null
-        //assert model.templateValueInstance.errors.getFieldError('version')
-       // assert flash.message != null
+        assert view == "/templateValue/edit"
+        assert model.templateValueInstance != null
+        assert model.templateValueInstance.errors.getFieldError('version')
+        assert flash.message != null
     }
 
     void testDelete() {
@@ -168,10 +168,10 @@ class TemplateValueControllerTests {
 
         params.id = templateValue.id
 
-        //controller.delete()
+        controller.delete()
 
-        //assert TemplateValue.count() == 0
-        //assert TemplateValue.get(templateValue.id) == null
-        //assert response.redirectedUrl == '/templateValue/list'
+        assert TemplateValue.count() == 0
+        assert TemplateValue.get(templateValue.id) == null
+        assert response.redirectedUrl == '/templateValue/list'
     }
 }

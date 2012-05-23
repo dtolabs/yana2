@@ -10,7 +10,6 @@ class AttributeController {
 	def iconService
 	def xmlService
 	def jsonService
-	def webhookService
 	
     //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -24,8 +23,6 @@ class AttributeController {
 						response.status = 400 //Bad Request
 						render "Attribute Creation Failed"
 					}else{
-						ArrayList attributes = [attribute]
-						webhookService.postToURL('attribute', attributes,'create')
 						
 						response.status = 200
 						render "Successfully Created."
@@ -116,9 +113,6 @@ class AttributeController {
             render(view: "create", model: [attributeInstance: attributeInstance])
             return
         }
-
-		ArrayList attributes = [attributeInstance]
-		webhookService.postToURL('attribute', attributes,'create')
 		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'attribute.label', default: 'Attribute'), attributeInstance.id])
         redirect(action: "show", id: attributeInstance.id)
@@ -186,9 +180,6 @@ class AttributeController {
             render(view: "edit", model: [attributeInstance: attributeInstance])
             return
         }
-
-		ArrayList attributes = [attributeInstance]
-		webhookService.postToURL('attribute', attributes,'edit')
 		
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'attribute.label', default: 'Attribute'), attributeInstance.id])
         redirect(action: "show", id: attributeInstance.id)
@@ -204,9 +195,6 @@ class AttributeController {
 
         try {
             attributeInstance.delete(flush: true)
-			
-			ArrayList attributes = [attributeInstance]
-			webhookService.postToURL('attribute', attributes,'delete')
 			
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'attribute.label', default: 'Attribute'), params.id])
             redirect(action: "list")
