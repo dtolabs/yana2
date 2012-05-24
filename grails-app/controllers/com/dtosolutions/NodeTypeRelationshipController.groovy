@@ -73,32 +73,37 @@ class NodeTypeRelationshipController {
 		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
 		
         def nodeTypeRelationshipInstance = NodeTypeRelationship.get(params.id)
-        if (!nodeTypeRelationshipInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), params.id])
-            redirect(action: "list")
-            return
-        }
-
-        if (params.version) {
-            def version = params.version.toLong()
-            if (nodeTypeRelationshipInstance.version > version) {
-                nodeTypeRelationshipInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship')] as Object[],
-                          "Another user has updated this NodeTypeRelationship while you were editing")
-                render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
-                return
-            }
-        }
-
-        nodeTypeRelationshipInstance.properties = params
-
-        if (!nodeTypeRelationshipInstance.save(flush: true)) {
-            render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance])
-            return
-        }
-
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), nodeTypeRelationshipInstance.id])
-        redirect(action: "show", id: nodeTypeRelationshipInstance.id)
+		if(!params.rolename){
+			flash.message = "Rolename is a required field"
+			render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
+		}else{
+	        if (!nodeTypeRelationshipInstance) {
+	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), params.id])
+	            redirect(action: "list")
+	            return
+	        }
+	
+	        if (params.version) {
+	            def version = params.version.toLong()
+	            if (nodeTypeRelationshipInstance.version > version) {
+	                nodeTypeRelationshipInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+	                          [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship')] as Object[],
+	                          "Another user has updated this NodeTypeRelationship while you were editing")
+	                render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
+	                return
+	            }
+	        }
+	
+	        nodeTypeRelationshipInstance.properties = params
+	
+	        if (!nodeTypeRelationshipInstance.save(flush: true)) {
+	            render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance])
+	            return
+	        }
+	
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), nodeTypeRelationshipInstance.id])
+	        redirect(action: "show", id: nodeTypeRelationshipInstance.id)
+		}
     }
 
     def delete() {
