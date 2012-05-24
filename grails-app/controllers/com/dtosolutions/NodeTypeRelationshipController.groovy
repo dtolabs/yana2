@@ -73,7 +73,7 @@ class NodeTypeRelationshipController {
 		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
 		
         def nodeTypeRelationshipInstance = NodeTypeRelationship.get(params.id)
-		if(!params.rolename){
+		if(!params.roleName){
 			flash.message = "Rolename is a required field"
 			render(view: "edit", model: [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality])
 		}else{
