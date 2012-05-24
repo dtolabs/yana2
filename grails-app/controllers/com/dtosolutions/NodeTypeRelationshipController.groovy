@@ -65,13 +65,14 @@ class NodeTypeRelationshipController {
             redirect(action: "list")
             return
         }
-		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
+		def cardinality = ['0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','10':'10','999999999':'*']
+		println("${nodeTypeRelationshipInstance.parentCardinality}/${nodeTypeRelationshipInstance.childCardinality}")
         [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,cardinality:cardinality]
     }
 
     def update() {
-		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
-		
+		println(params)
+		def cardinality = ['0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','10':'10','999999999':'*']
         def nodeTypeRelationshipInstance = NodeTypeRelationship.get(params.id)
 		if(!params.roleName){
 			flash.message = "Rolename is a required field"
