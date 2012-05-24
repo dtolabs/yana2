@@ -95,7 +95,6 @@ class ChildNodeController {
     }
 	
     def save() {
-		println(params)
 		Node parent = Node.get(params.parent)
 		Node child = Node.get(params.child)
 		

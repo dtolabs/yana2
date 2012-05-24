@@ -423,7 +423,7 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 					chnode.save(flush: true)
 				}
 
-				flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
+				flash.message = message(code: 'default.updated.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
 	        }
 			
