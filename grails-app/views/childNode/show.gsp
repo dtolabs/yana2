@@ -15,7 +15,6 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			
-			
 		<table width="100%" border="0" cellspacing=0 cellpadding=0 valign=top>
 			<tr>
 				<td valign=top>
@@ -33,13 +32,11 @@
 							
 							<table border="0" cellspacing=5>
 								<tr>
-									
 									<td><b>Parent:</b></td>
 									<td><img src="${resource(dir:path,file:childNodeInstance?.parent?.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
 									<td><g:link controller="node" action="show" id="${childNodeInstance?.parent?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.parent?.encodeAsHTML()}</g:link></td>
 								</tr>
 								<tr>
-									
 									<td><b>Child:</b></td>
 									<td><img src="${resource(dir:path,file:childNodeInstance?.child?.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
 									<td><g:link controller="node" action="show" id="${childNodeInstance?.child?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.child?.encodeAsHTML()}</g:link></td>
@@ -65,6 +62,7 @@
 				<td valign=top width=225>&nbsp;</td>
 			</tr>
 		</table>
+		
 		</div>
 	</body>
 </html>

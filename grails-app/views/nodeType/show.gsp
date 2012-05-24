@@ -13,11 +13,14 @@
 		<table width="100%" border="0" cellspacing=0 cellpadding=0 valign=top>
 			<tr>
 				<td valign=top><h1><g:message code="default.show.label" args="[entityName]" /></h1></td>
-				<td>
+				<td width=75>
 					<g:form controller="node" action="create">
 							<g:hiddenField name="nodetype" value="${nodeTypeInstance?.id}" />
 							<g:submitButton name="create" value="Create Node" />
 					</g:form>
+				</td>
+				<td width=175>
+					&nbsp;<span class="fake_button"><a href="/search/index?q=nodetype:${nodeTypeInstance.name}">Find Nodes</a></span>
 				</td>
 			</tr>
 		</table>
