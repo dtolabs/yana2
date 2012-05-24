@@ -21,8 +21,8 @@ class YanaFilters {
 		
 		childnodeFilter(controller:'childNode',action:'edit'){
 			before = {
-				params.parent=Node.get(params.parent.toLong())
-				params.child=Node.get(params.child.toLong())
+				if(params.parent){ params.parent=Node.get(params.parent.toLong()) }
+				if(params.child){ params.child=Node.get(params.child.toLong()) }
 			}
 		}
 	}
