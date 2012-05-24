@@ -165,10 +165,12 @@ class NodeController {
 	}
 	
 	String getRelationshipName(Node parent,Node child){
-		String name = (NodeTypeRelationship.findRoleNameByParent(node.nodetype))?"${parent.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]":"${parent.name}_${child.name}"
-		return name			
+		String rolename = NodeTypeRelationship.findByParent(parent.nodetype).roleName
+		//String name = (rolename)?"${parent.name}_${child.name} [$rolename]":"${parent.name}_${child.name}"
+		String name = (rolename)?"${parent.name} [$rolename]":"${parent.name}"
+		return name
 	}
-	
+
     def save() {
 		Node[] parents
 		if(params.parents){

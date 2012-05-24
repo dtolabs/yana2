@@ -2,7 +2,7 @@
 
 
 
-<div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'roleName', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'roleName', 'error')} required">
 	<label for="roleName">
 		<g:message code="nodeTypeRelationship.roleName.label" default="Role Name" />
 		
