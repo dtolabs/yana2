@@ -2,10 +2,10 @@
 
 
 
-<div class="fieldcontain ${hasErrors(bean: childNodeInstance, field: 'relationshipName', 'error')} ">
+<div class="fieldcontain ${hasErrors(bean: childNodeInstance, field: 'relationshipName', 'error')}  required">
 	<label for="relationshipName">
 		<g:message code="childNode.relationshipName.label" default="Relationship Name" />
-		
+		<span class="required-indicator">*</span>
 	</label>
 	<g:textField name="relationshipName" value="${childNodeInstance?.relationshipName}"/>
 </div>

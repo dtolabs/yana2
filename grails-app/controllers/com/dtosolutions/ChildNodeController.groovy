@@ -208,33 +208,38 @@ class ChildNodeController {
     }
 
     def update() {
-        def childNodeInstance = ChildNode.get(params.id)
-        if (!childNodeInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'childNode.label', default: 'ChildNode'), params.id])
-            redirect(action: "list")
-            return
-        }
-
-        if (params.version) {
-            def version = params.version.toLong()
-            if (childNodeInstance.version > version) {
-                childNodeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'childNode.label', default: 'ChildNode')] as Object[],
-                          "Another user has updated this ChildNode while you were editing")
-                render(view: "edit", model: [childNodeInstance: childNodeInstance])
-                return
-            }
-        }
-
-        childNodeInstance.properties = params
-
-        if (!childNodeInstance.save(flush: true)) {
-            render(view: "edit", model: [childNodeInstance: childNodeInstance])
-            return
-        }
-
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
-        redirect(action: "show", id: childNodeInstance.id)
+		def childNodeInstance = ChildNode.get(params.id)
+		if(!params.relationshipName){
+			flash.message = "Relationshipname is a required field"
+			render(view: "edit", model: [childNodeInstance: childNodeInstance])
+		}else{
+	        if (!childNodeInstance) {
+	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'childNode.label', default: 'ChildNode'), params.id])
+	            redirect(action: "list")
+	            return
+	        }
+	
+	        if (params.version) {
+	            def version = params.version.toLong()
+	            if (childNodeInstance.version > version) {
+	                childNodeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+	                          [message(code: 'childNode.label', default: 'ChildNode')] as Object[],
+	                          "Another user has updated this ChildNode while you were editing")
+	                render(view: "edit", model: [childNodeInstance: childNodeInstance])
+	                return
+	            }
+	        }
+	
+	        childNodeInstance.properties = params
+	
+	        if (!childNodeInstance.save(flush: true)) {
+	            render(view: "edit", model: [childNodeInstance: childNodeInstance])
+	            return
+	        }
+	
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
+	        redirect(action: "show", id: childNodeInstance.id)
+		}
     }
 
     def delete() {
