@@ -114,7 +114,7 @@ class ChildNodeControllerTests {
         controller.update()
 
         assert flash.message != null
-        assert response.redirectedUrl == '/childNode/list'
+        //assert response.redirectedUrl == '/childNode/list'
 
         response.reset()
 

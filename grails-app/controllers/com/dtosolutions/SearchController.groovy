@@ -7,6 +7,7 @@ import grails.converters.JSON
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class SearchController {
 	
+	def iconService
 	def springSecurityService
     def searchableService
 	def jsonService
@@ -16,12 +17,12 @@ class SearchController {
      * Search Nodes only
      */
     def index = {
+		String path = iconService.getSmallIconPath()
         if (!params.q?.trim()) {
             return [:]
         }
         try {
 			if(params.format){
-				
 				
 				def results = Node.search(params.q, params)
 				ArrayList nodes = results.results
@@ -37,7 +38,7 @@ class SearchController {
 							break;
 				}
 			}else{
-                return [searchResult: Node.search(params.q, params)]
+                return [searchResult: Node.search(params.q, params),path:path]
 			}
         } catch (SearchEngineQueryParseException ex) {
             return [parseException: true]
