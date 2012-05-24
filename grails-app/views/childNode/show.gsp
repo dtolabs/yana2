@@ -25,6 +25,15 @@
 							<td style="padding:10px;">
 							<img src="${resource(dir:'images/icons/64',file:'Node.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
 							<span class="image-title">${childNodeInstance.relationshipName}</span>
+							<br clear=left>
+							
+<div style="padding-top:5px;">
+	<label for="id">
+		<b>ID:</b>
+	</label>
+	<g:fieldValue bean="${childNodeInstance}" field="id"/>
+</div>
+							
 							</td>
 						</tr>
 						<tr>
@@ -34,12 +43,12 @@
 								<tr>
 									<td><b>Parent:</b></td>
 									<td><img src="${resource(dir:path,file:childNodeInstance?.parent?.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
-									<td><g:link controller="node" action="show" id="${childNodeInstance?.parent?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.parent?.encodeAsHTML()}</g:link></td>
+									<td><g:link controller="node" action="show" id="${childNodeInstance?.parent?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.parent?.encodeAsHTML()}</g:link> [<g:link controller="nodeType" action="show" id="${childNodeInstance?.parent?.nodetype.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.parent?.nodetype.name.encodeAsHTML()}</g:link>]</td>
 								</tr>
 								<tr>
 									<td><b>Child:</b></td>
 									<td><img src="${resource(dir:path,file:childNodeInstance?.child?.nodetype.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
-									<td><g:link controller="node" action="show" id="${childNodeInstance?.child?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.child?.encodeAsHTML()}</g:link></td>
+									<td><g:link controller="node" action="show" id="${childNodeInstance?.child?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.child?.encodeAsHTML()}</g:link> [<g:link controller="nodeType" action="show" id="${childNodeInstance?.child?.nodetype.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${childNodeInstance?.child?.nodetype.name.encodeAsHTML()}</g:link>]</td>
 								</tr>
 							</table>
 
