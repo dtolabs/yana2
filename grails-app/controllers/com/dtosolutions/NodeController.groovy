@@ -398,31 +398,47 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				}
 				
 				// delete all from childnode where node is child and reassign
-				def childNodes = ChildNode.findByChild(nodeInstance)
-				childNodes.each{
-					it.delete()
-				}
+				//def parentNodes = ChildNode.findByChild(nodeInstance)
+				//parentNodes.each{
+				//	it.delete()
+				//}
 
 				parents.each{
-					String pname = getRelationshipName(it,nodeInstance)
-					def chnode = new ChildNode()
-					chnode.relationshipName = pname
-					chnode.parent=it
-					chnode.child=nodeInstance
-					chnode.save(flush: true)
+					def pNode = ChildNode.findByChildAndParent(nodeInstance,it)
+					if(pNode){
+						pNode.parent=it
+						pNode.child=nodeInstance
+						pNode.save(flush: true)
+					}else{
+						String pname = getRelationshipName(it,nodeInstance)
+						pNode = new ChildNode()
+						pNode.relationshipName = pname
+						pNode.parent=it
+						pNode.child=nodeInstance
+						pNode.save(flush: true)
+					}
 				}
+				
 				// delete all from childnode where node is parent and reasign
-				def parentNodes = ChildNode.findByParent(nodeInstance)
-				parentNodes.each{
-					it.delete()
-				}
+				//def childNodes = ChildNode.findByParent(nodeInstance)
+				//childNodes.each{
+				//	it.delete()
+				//}
+				
 				children.each{
-					String cname = getRelationshipName(nodeInstance,it)
-					def chnode = new ChildNode()
-					chnode.relationshipName = cname
-					chnode.parent=nodeInstance
-					chnode.child=it
-					chnode.save(flush: true)
+					def cNode = ChildNode.findByParentAndChild(nodeInstance,it)
+					if(cNode){
+						cNode.parent=nodeInstance
+						cNode.child=it
+						cNode.save(flush: true)
+					}else{
+						String cname = getRelationshipName(nodeInstance,it)
+						cNode = new ChildNode()
+						cNode.relationshipName = cname
+						cNode.parent=nodeInstance
+						cNode.child=it
+						cNode.save(flush: true)
+					}
 				}
 
 				flash.message = message(code: 'default.updated.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
