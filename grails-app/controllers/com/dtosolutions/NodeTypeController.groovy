@@ -30,7 +30,22 @@ class NodeTypeController {
 						webhookService.postToURL('nodetype', nodeTypes,'create')
 						
 						response.status = 200
-						render "Successfully Created."
+						if(params.format && params.format!='none'){
+							ArrayList nodetypes = [nodeTypeInstance]
+							switch(params.format.toLowerCase()){
+								case 'xml':
+									def xml = xmlService.formatNodeTypes(nodetypes)
+									render(text: xml, contentType: "text/xml")
+									break;
+								case 'json':
+									def jsn = jsonService.formatNodeTypes(nodetypes)
+									render(text:jsn, contentType: "text/json")
+									break;
+							}
+						}else{
+							render "Successfully Created."
+						}
+						
 					}
 				}else{
 			          response.status = 404 //Not Found

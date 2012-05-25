@@ -171,7 +171,6 @@ class NodeController {
 	}
 
     def save() {
-		System.out.println(params)
 		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
@@ -244,7 +243,20 @@ class NodeController {
 				
 				if(params.action=='api'){
 					response.status = 200
-					render "Successfully Created."
+					if(params.format && params.format!='none'){
+						switch(params.format.toLowerCase()){
+							case 'xml':
+								def xml = xmlService.formatNodes(nodes)
+								render(text: xml, contentType: "text/xml")
+								break;
+							case 'json':
+								def jsn = jsonService.formatNodes(nodes)
+								render(text:jsn, contentType: "text/json")
+								break;
+						}
+					}else{
+						render "Successfully Created."
+					}
 				}else{
 					flash.message = message(code: 'default.created.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 					redirect(action: "show", id: nodeInstance.id)
