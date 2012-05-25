@@ -450,12 +450,12 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 					}
 				}
 
+				ArrayList nodes = [nodeInstance]
+				webhookService.postToURL('node', nodes,'edit')
+				
 				flash.message = message(code: 'default.updated.message', args: [message(code: 'node.label', default: 'Node'), nodeInstance.id])
 		        redirect(action: "show", id: nodeInstance.id)
 	        }
-			
-			ArrayList nodes = [nodeInstance]
-			webhookService.postToURL('node', nodes,'edit')
 			
 			render(view: "edit", model: [nodeList: Node.list(),nodeInstance: nodeInstance])
 		}else{

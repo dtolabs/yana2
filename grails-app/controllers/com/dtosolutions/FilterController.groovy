@@ -190,9 +190,13 @@ class FilterController {
             render(view: "edit", model: [filterInstance: filterInstance])
             return
         }
-		
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'filter.label', default: 'Filter'), filterInstance.id])
-        redirect(action: "show", id: filterInstance.id)
+		if(params.format){
+			response.status = 200 //Not Found
+			render "Successfully edited."
+		}else{
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'filter.label', default: 'Filter'), filterInstance.id])
+			redirect(action: "show", id: filterInstance.id)
+		}
     }
 
     def delete() {

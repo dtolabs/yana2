@@ -191,8 +191,13 @@ class AttributeController {
             return
         }
 		
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'attribute.label', default: 'Attribute'), attributeInstance.id])
-        redirect(action: "show", id: attributeInstance.id)
+		if(params.format){
+			response.status = 200 //Not Found
+			render "Successfully edited."
+		}else{
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'attribute.label', default: 'Attribute'), attributeInstance.id])
+			redirect(action: "show", id: attributeInstance.id)
+		}
     }
 
     def delete() {

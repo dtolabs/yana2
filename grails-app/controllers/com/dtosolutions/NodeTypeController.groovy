@@ -225,8 +225,13 @@ class NodeTypeController {
 		ArrayList nodetypes = [nodeTypeInstance]
 		webhookService.postToURL('nodetype', nodetypes,'edit')
 		
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeType.label', default: 'NodeType'), nodeTypeInstance.id])
-        redirect(action: "show", id: nodeTypeInstance.id)
+		if(params.format){
+			response.status = 200 //Not Found
+			render "Successfully edited."
+		}else{
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeType.label', default: 'NodeType'), nodeTypeInstance.id])
+			redirect(action: "show", id: nodeTypeInstance.id)
+		}
     }
 
     def delete() {

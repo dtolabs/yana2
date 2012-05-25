@@ -201,9 +201,13 @@ class TemplateAttributeController {
             render(view: "edit", model: [templateAttributeInstance: templateAttributeInstance])
             return
         }
-
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
-        redirect(action: "show", id: templateAttributeInstance.id)
+		if(params.format){
+			response.status = 200 //Not Found
+			render "Successfully edited."
+		}else{
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
+			redirect(action: "show", id: templateAttributeInstance.id)
+		}
     }
 	
 

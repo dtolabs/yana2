@@ -178,12 +178,21 @@ class TemplateValueController {
         templateValueInstance.properties = params
 
         if (!templateValueInstance.save(flush: true)) {
-            render(view: "edit", model: [templateValueInstance: templateValueInstance])
-            return
+			if(params.format){
+				response.status = 400 //Not Found
+				render "Could not save templateValue."
+			}else{
+            	render(view: "edit", model: [templateValueInstance: templateValueInstance])
+				return
+			}
         }
-
-		flash.message = message(code: 'default.updated.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), templateValueInstance.id])
-        redirect(action: "show", id: templateValueInstance.id)
+		if(params.format){
+			response.status = 200 //Not Found
+			render "Successfully edited."
+		}else{
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), templateValueInstance.id])
+			redirect(action: "show", id: templateValueInstance.id)
+		}
     }
 
     def delete() {

@@ -246,9 +246,13 @@ class ChildNodeController {
 	            render(view: "edit", model: [childNodeInstance: childNodeInstance])
 	            return
 	        }
-	
-			flash.message = message(code: 'default.updated.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
-	        redirect(action: "show", id: childNodeInstance.id)
+			if(params.format){
+				response.status = 200 //Not Found
+				render "Successfully edited."
+			}else{
+				flash.message = message(code: 'default.updated.message', args: [message(code: 'childNode.label', default: 'ChildNode'), childNodeInstance.id])
+				redirect(action: "show", id: childNodeInstance.id)
+			}
 		}
     }
 
