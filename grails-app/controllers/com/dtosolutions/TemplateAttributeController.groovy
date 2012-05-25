@@ -133,9 +133,14 @@ class TemplateAttributeController {
     def show() {
         def templateAttributeInstance = TemplateAttribute.get(params.id)
         if (!templateAttributeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
-            redirect(action: "list")
-            return
+			if(params.format){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			}else{
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
+	            redirect(action: "list")
+	            return
+			}
         }else{
 			if(params.format && params.format!='none'){
 				ArrayList templateAttributes = [templateAttributeInstance]

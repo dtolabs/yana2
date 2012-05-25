@@ -50,13 +50,22 @@ class NodeTypeController {
 				if(params.id){
 			        def nodetype = NodeType.get(params.id)
 			        if(nodetype){
-			          nodetype.delete()
-					  
-					  ArrayList nodetypes = [nodetype]
-					  webhookService.postToURL('nodetype', nodetypes,'delete')
-					  
-					  response.status = 200
-					  render "Successfully Deleted."
+						try{
+							nodetype.delete(flush:true)
+							
+							ArrayList nodetypes = [nodetype]
+							webhookService.postToURL('nodetype', nodetypes,'delete')
+							
+							response.status = 200
+							render "Successfully Deleted."
+						}catch(org.springframework.dao.DataIntegrityViolationException e) {
+					        NodeType.withSession { session ->
+					            session.clear()
+					        }
+	
+							response.status = 403 //Bad Request
+							render "Referential Integrity Violation: Please remove/reassign all Nodes/TemplateAttributes first."
+						}
 			        }else{
 			          response.status = 404 //Not Found
 			          render "${params.id} not found."
@@ -140,9 +149,14 @@ class NodeTypeController {
 		}
 		
         if (!nodeTypeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
-            redirect(action: "list")
-            return
+			if(params.format){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			}else{
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
+	            redirect(action: "list")
+	            return
+			}
         }else{
 			if(params.format && params.format!='none'){
 				ArrayList nodetypes = [nodeTypeInstance]
@@ -156,6 +170,7 @@ class NodeTypeController {
 						render(text:json, contentType: "text/json")
 						break;
 				}
+
 			}else{
 				[children:children,parents:parents,nodeTypeInstance: nodeTypeInstance,path:path]
 			}

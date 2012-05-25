@@ -128,15 +128,20 @@ class AttributeController {
         }else{
 			if(params.format && params.format!='none'){
 				ArrayList atts = [attributeInstance]
-				switch(params.format.toLowerCase()){
-					case 'xml':
-						def xml = xmlService.formatAttributes(atts)
-						render(text: xml, contentType: "text/xml")
-						break;
-					case 'json':
-						def json = jsonService.formatAttributes(atts)
-						render(text:json, contentType: "text/json")
-						break;
+				if(attributeInstance){
+					switch(params.format.toLowerCase()){
+						case 'xml':
+							def xml = xmlService.formatAttributes(atts)
+							render(text: xml, contentType: "text/xml")
+							break;
+						case 'json':
+							def json = jsonService.formatAttributes(atts)
+							render(text:json, contentType: "text/json")
+							break;
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
 				}
 			}else{
 				[attributeInstance: attributeInstance,path:path]

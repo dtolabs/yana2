@@ -180,15 +180,20 @@ class ChildNodeController {
         }else{
 			if(params.format && params.format!='none'){
 				ArrayList cnodes = [childNodeInstance]
-				switch(params.format.toLowerCase()){
-					case 'xml':
-						def xml = xmlService.formatChildNodes(cnodes)
-						render(text: xml, contentType: "text/xml")
-						break;
-					case 'json':
-						def json = jsonService.formatChildNodes(cnodes)
-						render(text:json, contentType: "text/json")
-						break;
+				if(childNodeInstance){
+					switch(params.format.toLowerCase()){
+						case 'xml':
+							def xml = xmlService.formatChildNodes(cnodes)
+							render(text: xml, contentType: "text/xml")
+							break;
+						case 'json':
+							def json = jsonService.formatChildNodes(cnodes)
+							render(text:json, contentType: "text/json")
+							break;
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
 				}
 			}else{
 	        	[childNodeInstance: childNodeInstance,path:path]

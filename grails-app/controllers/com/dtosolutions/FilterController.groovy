@@ -128,15 +128,20 @@ class FilterController {
         }else{
 			if(params.format && params.format!='none'){
 				ArrayList filters = [filterInstance]
-				switch(params.format.toLowerCase()){
-					case 'xml':
-						def xml = xmlService.formatFilters(filters)
-						render(text: xml, contentType: "text/xml")
-						break;
-					case 'json':
-						def json = jsonService.formatFilters(filters)
-						render(text:json, contentType: "text/json")
-						break;
+				if(filterInstance){
+					switch(params.format.toLowerCase()){
+						case 'xml':
+							def xml = xmlService.formatFilters(filters)
+							render(text: xml, contentType: "text/xml")
+							break;
+						case 'json':
+							def json = jsonService.formatFilters(filters)
+							render(text:json, contentType: "text/json")
+							break;
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
 				}
 			}else{
 				[filterInstance: filterInstance,path:path]

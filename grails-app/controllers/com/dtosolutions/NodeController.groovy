@@ -271,15 +271,20 @@ class NodeController {
 
 		if(params.format && params.format!='none'){
 			ArrayList nodes = [nodeInstance]
-			switch(params.format.toLowerCase()){
-				case 'xml':
-					def xml = xmlService.formatNodes(nodes)
-					render(text: xml, contentType: "text/xml")
-					break;
-				case 'json':
-					def json = jsonService.formatNodes(nodes)
-					render(text:json, contentType: "text/json")
-					break;
+			if(nodeInstance){
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatNodes(nodes)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatNodes(nodes)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			}else{
+				response.status = 404 //Not Found
+				render "${params.id} not found."
 			}
 		}else{
 			def criteria = ChildNode.createCriteria()

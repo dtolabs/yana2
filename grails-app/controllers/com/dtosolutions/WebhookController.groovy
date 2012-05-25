@@ -135,15 +135,20 @@ class WebhookController {
         }else{
 			if(params.format && params.format!='none'){
 				ArrayList hooks = [webhookInstance]
-				switch(params.format.toLowerCase()){
-					case 'xml':
-						def xml = xmlService.formatHooks(hooks)
-						render(text: xml, contentType: "text/xml")
-						break;
-					case 'json':
-						def json = jsonService.formatHooks(hooks)
-						render(text:json, contentType: "text/json")
-						break;
+				if(webhookInstance){
+					switch(params.format.toLowerCase()){
+						case 'xml':
+							def xml = xmlService.formatHooks(hooks)
+							render(text: xml, contentType: "text/xml")
+							break;
+						case 'json':
+							def json = jsonService.formatHooks(hooks)
+							render(text:json, contentType: "text/json")
+							break;
+					}
+				}else{
+			          response.status = 404 //Not Found
+			          render "${params.id} not found."
 				}
 			}else{
 				render(view:"show",model:[webhookInstance: webhookInstance])
