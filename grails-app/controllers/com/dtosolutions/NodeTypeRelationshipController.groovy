@@ -20,12 +20,12 @@ class NodeTypeRelationshipController {
     }
 
     def create() {
-		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
+		def cardinality = ['0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','10':'10','999999999':'*']
         [nodeTypeRelationshipInstance: new NodeTypeRelationship(params),cardinality:cardinality]
     }
 
     def save() {
-		def cardinality = ['0','1','2','3','4','5','6','7','8','9','10','*']
+		def cardinality = ['0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','10':'10','999999999':'*']
 		def parent = NodeType.get(params.parent.id.toLong())
 		def child = NodeType.get(params.child.id.toLong())
 		def exists= NodeTypeRelationship.findByParentAndChild(parent,child)
