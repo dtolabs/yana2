@@ -49,7 +49,7 @@
 		<b><g:message code="node.tags.label" default="Tags" />:</b>
 	</label>
 	<g:each in="${taglist}" status="i" var="t">
-		<g:link controller="search" action="index" params="[q:t]" style="padding:0;">${t}</g:link><g:if test="${i+1<taglist.size()}">,</g:if>
+		<a href="/search/index?q=tags:${t}" style="padding:0;">${t}</a><g:if test="${i+1<taglist.size()}">,</g:if>
 	</g:each>
 </div>
 							</td>

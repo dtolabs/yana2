@@ -105,7 +105,7 @@
 						<td style="padding-left:5px;" valign=top>
 						<g:if test="${nodeInstance.tags}">
 						<g:each in="${nodeInstance.tags.split(',')}" status="b" var="tag">
-							<g:link controller="search" action="index" params="[q:tag]" style="padding:0;">${tag}</g:link><g:if test="${b+1<nodeInstance.tags.split(',').size()}">,</g:if>
+							<a href="/search/index?q=tags:${tag}" style="padding:0;">${tag}</a><g:if test="${b+1<nodeInstance.tags.split(',').size()}">,</g:if>
 						</g:each>
 						</g:if>
 						</td>
