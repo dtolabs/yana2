@@ -25,6 +25,15 @@
 								<td style="padding:10px;">
 								<img src="${resource(dir:'images/icons/64',file:'Webhook.png')}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" />
 								<span class="image-title">[ID:${webhookInstance.id}] ${webhookInstance.name}</span>
+							<br clear=left>
+
+<div style="padding-top:5px;">
+	<label for="id">
+		<b>ID:</b>
+	</label>
+	<g:fieldValue bean="${webhookInstance}" field="id"/>
+</div>
+								
 								</td>
 							</tr>
 							<tr>
