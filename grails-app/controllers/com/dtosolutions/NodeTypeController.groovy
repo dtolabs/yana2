@@ -194,9 +194,14 @@ class NodeTypeController {
     def update() {
         def nodeTypeInstance = NodeType.get(params.id)
         if (!nodeTypeInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
-            redirect(action: "list")
-            return
+			if(params.format){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			}else{
+	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
+	            redirect(action: "list")
+	            return
+			}
         }
 
         if (params.version) {

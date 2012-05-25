@@ -215,8 +215,13 @@ class ChildNodeController {
     def update() {
 		def childNodeInstance = ChildNode.get(params.id)
 		if(!params.relationshipName){
-			flash.message = "Relationshipname is a required field"
-			render(view: "edit", model: [childNodeInstance: childNodeInstance])
+			if(params.format){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			}else{
+				flash.message = "Relationshipname is a required field"
+				render(view: "edit", model: [childNodeInstance: childNodeInstance])
+			}
 		}else{
 	        if (!childNodeInstance) {
 	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'childNode.label', default: 'ChildNode'), params.id])

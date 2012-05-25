@@ -163,9 +163,14 @@ class FilterController {
     def update() {
         def filterInstance = Filter.get(params.id)
         if (!filterInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'filter.label', default: 'Filter'), params.id])
-            redirect(action: "list")
-            return
+			if(params.format){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			}else{
+            	flash.message = message(code: 'default.not.found.message', args: [message(code: 'filter.label', default: 'Filter'), params.id])
+				redirect(action: "list")
+				return
+			}
         }
 
         if (params.version) {

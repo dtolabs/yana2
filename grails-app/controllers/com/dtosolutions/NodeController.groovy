@@ -364,9 +364,14 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
 			Date now = new Date()
 	        if (!nodeInstance) {
-	            flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
-	            redirect(action: "list")
-	            return
+				if(params.format){
+					response.status = 404 //Not Found
+					render "${params.id} not found."
+				}else{
+	            	flash.message = message(code: 'default.not.found.message', args: [message(code: 'node.label', default: 'Node'), params.id])
+					redirect(action: "list")
+					return
+				}
 	        }
 	
 	        if (params.version) {

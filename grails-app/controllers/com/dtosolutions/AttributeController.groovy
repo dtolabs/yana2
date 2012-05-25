@@ -163,9 +163,14 @@ class AttributeController {
     def update() {
         def attributeInstance = Attribute.get(params.id)
         if (!attributeInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'attribute.label', default: 'Attribute'), params.id])
-            redirect(action: "list")
-            return
+			if(params.format){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			}else{
+            	flash.message = message(code: 'default.not.found.message', args: [message(code: 'attribute.label', default: 'Attribute'), params.id])
+				redirect(action: "list")
+				return
+			}
         }
 
         if (params.version) {
