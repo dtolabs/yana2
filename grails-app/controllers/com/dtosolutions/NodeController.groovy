@@ -171,6 +171,7 @@ class NodeController {
 	}
 
     def save() {
+		System.out.println(params)
 		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
@@ -207,7 +208,7 @@ class NodeController {
 					   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
 					}
 				}
-				
+
 				def parentList = getNodeParentsByCardinality(nodeInstance) 	
 				if(parents){
 					parents.each{ parent ->
@@ -518,7 +519,7 @@ and (NTP.parentCardinality>=${nodeInstance.parents.size()} or NTP.parentCardinal
 	
 	def getNodeChildrenByCardinality(Node node){
 		def cardinality = (node.children?.size())?node.children?.size():0
-		Node children = Node.findAll("from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${node.nodetype.id} and (NTP.childCardinality>=${cardinality} or NTP.childCardinality is null)")
+		def children = Node.findAll("from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${node.nodetype.id} and (NTP.childCardinality>=${cardinality} or NTP.childCardinality is null)")
 		return children
 	}
 	
