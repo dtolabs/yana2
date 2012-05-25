@@ -110,6 +110,7 @@ class XmlService {
 			
 		xml.nodetypes() {
 			nodetypes.each(){ val1 ->
+				def nodecount = Node.findAllByNodetype(val1).size()
 				def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
 				
 				def criteria = NodeTypeRelationship.createCriteria()
@@ -122,7 +123,7 @@ class XmlService {
 					eq ("parent", NodeType.get(val1.id?.toLong()))
 				}
 				
-				nodetype(id:val1.id,name:val1.name,description:val1.description,image:val1.image){
+				nodetype(id:val1.id,name:val1.name,description:val1.description,image:val1.image,nodeCount:nodecount){
 					templateAttributes() {
 						tatts.each(){ val2 ->
 							templateAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.template.id,required:val2.required)

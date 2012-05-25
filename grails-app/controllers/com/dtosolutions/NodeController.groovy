@@ -166,7 +166,6 @@ class NodeController {
 	
 	String getRelationshipName(Node parent,Node child){
 		String rolename = NodeTypeRelationship.findByParent(parent.nodetype).roleName
-		//String name = (rolename)?"${parent.name}_${child.name} [$rolename]":"${parent.name}_${child.name}"
 		String name = (rolename)?"${parent.name} [$rolename]":"${parent.name}"
 		return name
 	}

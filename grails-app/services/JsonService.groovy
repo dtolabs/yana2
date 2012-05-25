@@ -85,6 +85,7 @@ class JsonService {
 	String formatNodeTypes(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
+			def nodecount = Node.findAllByNodetype(val1).size()
 			def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
 			
 			def criteria = NodeTypeRelationship.createCriteria()
@@ -109,7 +110,7 @@ class JsonService {
 				ntr += [nodetypeRelationship:[id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.roleName]]
 			}
 
-			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,templateAttributes:attributes,nodetypeRelationships:ntr]]
+			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,templateAttributes:attributes,nodetypeRelationships:ntr,nodeCount:nodecount]]
 		}
 		return result as JSON
 	}
