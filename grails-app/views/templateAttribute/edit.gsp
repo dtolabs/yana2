@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.TemplateAttribute" %>
+<%@ page import="com.dtolabs.TemplateAttribute" %>
 <!doctype html>
 <html>
 	<head>

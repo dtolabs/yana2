@@ -8,6 +8,13 @@ import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
+import com.dtolabs.Attribute
+import com.dtolabs.ChildNode
+import com.dtolabs.Filter
+import com.dtolabs.NodeType
+import com.dtolabs.NodeTypeRelationship
+import com.dtolabs.TemplateAttribute
+import com.dtolabs.TemplateValue
 import grails.plugins.springsecurity.Secured
 import org.xml.sax.SAXException
 

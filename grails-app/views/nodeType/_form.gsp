@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.NodeType" %>
+<%@ page import="com.dtolabs.NodeType" %>
 
 
 
@@ -34,7 +34,7 @@
 <ul class="one-to-many">
 
 <g:each in="${nodeTypeInstance?.attributes?}" var="a">
-	<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.get(a.attribute.id)}"/>
+	<g:set var="attributeInstance" value="${com.dtolabs.Attribute.get(a.attribute.id)}"/>
     <li><g:link controller="TemplateAttribute" action="show" id="${a.id}">${attributeInstance.name} [${attributeInstance.filter.dataType}]</g:link></li>
 </g:each>
 </ul>

@@ -1,5 +1,5 @@
 
-<%@ page import="com.dtosolutions.TemplateValue" %>
+<%@ page import="com.dtolabs.TemplateValue" %>
 <!doctype html>
 <html>
 	<head>

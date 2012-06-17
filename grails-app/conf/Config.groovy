@@ -173,11 +173,11 @@ grails.resources.modules = {
 }
 
 // Added by the Spring Security Core plugin:
-grails.plugins.springsecurity.userLookup.userDomainClassName = "com.dtosolutions.User"
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = "com.dtosolutions.UserRole"
-grails.plugins.springsecurity.authority.className = "com.dtosolutions.Role"
+grails.plugins.springsecurity.userLookup.userDomainClassName = "com.dtolabs.User"
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = "com.dtolabs.UserRole"
+grails.plugins.springsecurity.authority.className = "com.dtolabs.Role"
 grails.plugins.springsecurity.rememberMe.persistent = true
-grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = "com.dtosolutions.PersistentLogin"
+grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = "com.dtolabs.PersistentLogin"
 
 
 grails.plugins.springsecurity.secureChannel.definition = [

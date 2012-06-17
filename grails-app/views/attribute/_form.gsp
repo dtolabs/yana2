@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.Attribute" %>
+<%@ page import="com.dtolabs.Attribute" %>
 
 
 
@@ -15,6 +15,6 @@
 		<g:message code="attribute.filter.label" default="Filter" />
 		<span class="required-indicator">*</span>
 	</label>
-	<span class="styled-select"><g:select id="filter" name="filter.id" from="${com.dtosolutions.Filter.list()}" optionKey="id" required="" value="${attributeInstance?.filter?.id}" class="many-to-one"/></span>
+	<span class="styled-select"><g:select id="filter" name="filter.id" from="${com.dtolabs.Filter.list()}" optionKey="id" required="" value="${attributeInstance?.filter?.id}" class="many-to-one"/></span>
 </div>
 

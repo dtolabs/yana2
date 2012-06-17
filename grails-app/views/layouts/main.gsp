@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+www<!DOCTYPE html>
 <html>
   <head>
     <title>YANA <g:layoutTitle default="Welcome" /></title>

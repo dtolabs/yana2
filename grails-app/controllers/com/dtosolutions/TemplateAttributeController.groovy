@@ -1,6 +1,7 @@
 package com.dtosolutions
 
 import org.springframework.dao.DataIntegrityViolationException
+import com.dtolabs.TemplateAttribute
 import grails.plugins.springsecurity.Secured
 import grails.converters.JSON
 

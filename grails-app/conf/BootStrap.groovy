@@ -1,3 +1,7 @@
+import com.dtolabs.Filter
+import com.dtolabs.Role
+import com.dtolabs.User
+import com.dtolabs.UserRole
 import com.dtosolutions.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 

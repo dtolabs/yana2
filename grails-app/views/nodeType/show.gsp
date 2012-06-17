@@ -1,5 +1,5 @@
 
-<%@ page import="com.dtosolutions.NodeType" %>
+<%@ page import="com.dtolabs.NodeType" %>
 <!doctype html>
 <html>
 	<head>
@@ -60,8 +60,8 @@
 									
 									<g:if test="${nodeTypeInstance?.attributes}">
 									<tr>
-										<g:each in="${com.dtosolutions.TemplateAttribute.findAllByTemplate(com.dtosolutions.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
-										<g:set var="attributeInstance" value="${com.dtosolutions.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
+										<g:each in="${com.dtolabs.TemplateAttribute.findAllByTemplate(com.dtolabs.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
+										<g:set var="attributeInstance" value="${com.dtolabs.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
 										
 										<tr>
 											<td><g:link controller="attribute" action="show" id="${attributeInstance.id[0]}"><b>${attributeInstance.name[0]} <g:if test="${t.required}">*</g:if></b></g:link></td>

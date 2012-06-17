@@ -1,6 +1,6 @@
 
-<%@ page import="com.dtosolutions.Node" %>
-<%@ page import="com.dtosolutions.NodeTypeRelationship" %>
+<%@ page import="com.dtolabs.Node" %>
+<%@ page import="com.dtolabs.NodeTypeRelationship" %>
 
 <!doctype html>
 <html>
@@ -61,8 +61,8 @@
 								<table width=100%>
 									<g:if test="${nodeInstance?.templateValues}">
 		
-										<g:each in="${com.dtosolutions.TemplateValue.findAllByNode(com.dtosolutions.Node.get(nodeInstance?.id), [sort:'templateattribute.attribute.name',order:'asc'])}" status="i" var="t">
-										<g:set var="attribute" value="${com.dtosolutions.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
+										<g:each in="${com.dtolabs.TemplateValue.findAllByNode(com.dtolabs.Node.get(nodeInstance?.id), [sort:'templateattribute.attribute.name',order:'asc'])}" status="i" var="t">
+										<g:set var="attribute" value="${com.dtolabs.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
 												
 										<tr>
 											<td>${attribute.name[0]}</td>

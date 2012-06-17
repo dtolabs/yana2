@@ -1,5 +1,5 @@
-<%@ page import="com.dtosolutions.NodeType" %>
-<%@ page import="com.dtosolutions.Attribute" %>
+<%@ page import="com.dtolabs.NodeType" %>
+<%@ page import="com.dtolabs.Attribute" %>
 <!doctype html>
 <html>
 	<head>

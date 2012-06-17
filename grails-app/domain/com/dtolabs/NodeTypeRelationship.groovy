@@ -1,4 +1,4 @@
-package com.dtosolutions
+package com.dtolabs
 
 class NodeTypeRelationship {
 	static belongsTo = [ NodeType ]

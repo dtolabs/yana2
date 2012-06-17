@@ -3,6 +3,7 @@ package com.dtosolutions
 import org.compass.core.engine.SearchEngineQueryParseException
 import grails.plugins.springsecurity.Secured
 import grails.converters.JSON
+import com.dtolabs.Node
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class SearchController {

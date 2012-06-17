@@ -1,5 +1,8 @@
 package com.dtosolutions
 
+import com.dtolabs.ChildNode
+import com.dtolabs.Node
+import com.dtolabs.NodeTypeRelationship
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
 

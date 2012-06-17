@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.Node" %>
+<%@ page import="com.dtolabs.Node" %>
 <!doctype html>
 <html>
 	<head>
@@ -142,7 +142,7 @@
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
 					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><span class="styled-select"><g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${((params?.status)?params.status:nodeInstance?.status?.name())}" noSelection="['null': 'Select One']"/></span></td>
+					<td><span class="styled-select"><g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${((params?.status)?params.status:nodeInstance?.status?.name())}" noSelection="['null': 'Select One']"/></span></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">

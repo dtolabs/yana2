@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.TemplateValue" %>
+<%@ page import="com.dtolabs.TemplateValue" %>
 
 
 
@@ -7,7 +7,7 @@
 		<g:message code="templateValue.node.label" default="Node" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="node" name="node.id" from="${com.dtosolutions.Node.list()}" optionKey="id" required="" value="${templateValueInstance?.node?.id}" class="many-to-one"/>
+	<g:select id="node" name="node.id" from="${com.dtolabs.Node.list()}" optionKey="id" required="" value="${templateValueInstance?.node?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: templateValueInstance, field: 'templateattribute', 'error')} required">
@@ -15,7 +15,7 @@
 		<g:message code="templateValue.templateattribute.label" default="Templateattribute" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="templateattribute" name="templateattribute.id" from="${com.dtosolutions.TemplateAttribute.list()}" optionKey="id" required="" value="${templateValueInstance?.templateattribute?.id}" class="many-to-one"/>
+	<g:select id="templateattribute" name="templateattribute.id" from="${com.dtolabs.TemplateAttribute.list()}" optionKey="id" required="" value="${templateValueInstance?.templateattribute?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: templateValueInstance, field: 'value', 'error')} ">

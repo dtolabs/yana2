@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.NodeTypeRelationship" %>
+<%@ page import="com.dtolabs.NodeTypeRelationship" %>
 <!doctype html>
 <html>
 	<head>

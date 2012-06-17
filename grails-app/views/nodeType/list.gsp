@@ -1,5 +1,5 @@
 
-<%@ page import="com.dtosolutions.NodeType" %>
+<%@ page import="com.dtolabs.NodeType" %>
 <!doctype html>
 <html>
 	<head>
@@ -29,7 +29,7 @@
 						<g:else>
 						<td style="padding-left:5px;">${nodeTypeInstance.description}</td>
 						</g:else>
-						<td style="padding-left:5px;">(<a href="/search/index?q=nodetype:${nodeTypeInstance.name}">${com.dtosolutions.Node.countByNodetype(nodeTypeInstance)}</a>)</td>
+						<td style="padding-left:5px;">(<a href="/search/index?q=nodetype:${nodeTypeInstance.name}">${com.dtolabs.Node.countByNodetype(nodeTypeInstance)}</a>)</td>
 					</tr>
 				</g:each>
 				</tbody>

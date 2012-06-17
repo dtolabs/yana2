@@ -1,5 +1,5 @@
 
-<%@ page import="com.dtosolutions.Node" %>
+<%@ page import="com.dtolabs.Node" %>
 <!doctype html>
 <html>
 	<head>

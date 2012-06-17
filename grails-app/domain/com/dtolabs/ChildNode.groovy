@@ -1,4 +1,4 @@
-package com.dtosolutions
+package com.dtolabs
 
 class ChildNode {
 	static belongsTo = [ Node ]

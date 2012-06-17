@@ -1,5 +1,5 @@
 
-<%@ page import="com.dtosolutions.Webhook" %>
+<%@ page import="com.dtolabs.Webhook" %>
 <!doctype html>
 <html>
 	<head>

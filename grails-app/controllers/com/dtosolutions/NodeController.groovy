@@ -1,7 +1,12 @@
 package com.dtosolutions
 
+import com.dtolabs.ChildNode
+import com.dtolabs.NodeType
+import com.dtolabs.Node
+import com.dtolabs.TemplateAttribute
+import com.dtolabs.TemplateValue
 import grails.converters.JSON
-import java.util.Date;
+import java.util.Date
 import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
@@ -88,11 +93,11 @@ class NodeController {
 				case 'xml':
 					def xml = xmlService.formatNodes(nodes)
 					render(text: xml, contentType: "text/xml")
-					break;
+					break
 				case 'json':
 					def json = jsonService.formatNodes(nodes)
 					render(text:json, contentType: "text/json")
-					break;
+					break
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
@@ -248,11 +253,11 @@ class NodeController {
 							case 'xml':
 								def xml = xmlService.formatNodes(nodes)
 								render(text: xml, contentType: "text/xml")
-								break;
+								break
 							case 'json':
 								def jsn = jsonService.formatNodes(nodes)
 								render(text:jsn, contentType: "text/json")
-								break;
+								break
 						}
 					}else{
 						render "Successfully Created."
@@ -289,11 +294,11 @@ class NodeController {
 					case 'xml':
 						def xml = xmlService.formatNodes(nodes)
 						render(text: xml, contentType: "text/xml")
-						break;
+						break
 					case 'json':
 						def json = jsonService.formatNodes(nodes)
 						render(text:json, contentType: "text/json")
-						break;
+						break
 				}
 			}else{
 				response.status = 404 //Not Found
@@ -523,7 +528,7 @@ and (NTP.parentCardinality>=${nodeInstance.parents.size()} or NTP.parentCardinal
 """
 			List atts = Node.executeQuery(pquery)
 			atts.each(){
-				response += [id:it.id,name:it.name];
+				response += [id:it.id,name:it.name]
 			}
 			render response as JSON
 		}
@@ -549,7 +554,7 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 """
 			List atts = Node.executeQuery(cquery)
 			atts.each(){
-				response += [id:it.id,name:it.name];
+				response += [id:it.id,name:it.name]
 			}
 			render response as JSON
 		}
@@ -563,12 +568,12 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				println("")
 				List atts = []
 				if(params.node){
-					atts = TemplateValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}");
+					atts = TemplateValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}")
 				}else{
-					atts = TemplateAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}");
+					atts = TemplateAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}")
 				}
 				atts.each(){
-					response += [tid:it.tid,id:it.id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter];
+					response += [tid:it.tid,id:it.id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter]
 				}
 			}
 

@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.Node" %>
+<%@ page import="com.dtolabs.Node" %>
 
 
 
@@ -31,7 +31,7 @@
 		<g:message code="node.status.label" default="Status" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select name="status" from="${com.dtosolutions.Status?.values()}" keys="${com.dtosolutions.Status.values()*.name()}" required="" value="${nodeInstance?.status?.name()}"/>
+	<g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${nodeInstance?.status?.name()}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
@@ -47,7 +47,7 @@
 		<g:message code="node.nodetype.label" default="Nodetype" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="nodetype" name="nodetype.id" from="${com.dtosolutions.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one"/>
+	<g:select id="nodetype" name="nodetype.id" from="${com.dtolabs.NodeType.list()}" optionKey="id" required="" value="${nodeInstance?.nodetype?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'parent', 'error')} ">
@@ -55,7 +55,7 @@
 		<g:message code="node.parent.label" default="Parent" />
 		
 	</label>
-	<g:select id="parent" name="parent.id" from="${com.dtosolutions.Node.list()}" optionKey="id" value="${nodeInstance?.parent?.id}" class="many-to-one" noSelection="['null': '']"/>
+	<g:select id="parent" name="parent.id" from="${com.dtolabs.Node.list()}" optionKey="id" value="${nodeInstance?.parent?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'dateModified', 'error')} required">

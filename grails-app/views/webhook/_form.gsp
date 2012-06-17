@@ -1,4 +1,4 @@
-<%@ page import="com.dtosolutions.Webhook" %>
+<%@ page import="com.dtolabs.Webhook" %>
 
 
 
