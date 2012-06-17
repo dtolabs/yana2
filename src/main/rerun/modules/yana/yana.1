@@ -1,0 +1,111 @@
+.TH yana 1 "Thu May 17 22:29:38 PDT 2012" "Version 1" "Rerun User Manual" 
+.SH NAME
+yana \- "Client interface to Yana"
+.PP
+.SH SYNOPSIS
+.PP
+\f[CR] 
+rerun [ARGS] yana: [ attributes | children | create | delete | list | parents ] [OPTIONS]
+\f[]
+.SH COMMANDS
+.SH yana:attributes \f[]-id <> -url <>
+"get attributes"
+.PP
+\f[I]OPTIONS\f[]
+.TP
+.B \-id \f[]"node ID"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.TP
+.B \-url \f[]"server url"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.SH yana:children \f[]-id <> -url <>
+"get children"
+.PP
+\f[I]OPTIONS\f[]
+.TP
+.B \-id \f[]"node ID"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.TP
+.B \-url \f[]"server url"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.SH yana:create \f[]-file <> -url <>
+"create a new node"
+.PP
+\f[I]OPTIONS\f[]
+.TP
+.B \-file \f[]"filename"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.TP
+.B \-url \f[]"server url"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.SH yana:delete \f[]-id <> -url <>
+"delete a node"
+.PP
+\f[I]OPTIONS\f[]
+.TP
+.B \-id \f[]"node ID"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.TP
+.B \-url \f[]"server url"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.SH yana:list \f[]-type <> -url <>
+"list nodes"
+.PP
+\f[I]OPTIONS\f[]
+.TP
+.B \-type \f[]"node type name"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.TP
+.B \-url \f[]"yana server"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.SH yana:parents \f[]-id <> -url <>
+"get parents"
+.PP
+\f[I]OPTIONS\f[]
+.TP
+.B \-id \f[]"node ID"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.TP
+.B \-url \f[]"server url"\f[]
+required: \f[I]true\f[]
+arguments: \f[I]true\f[]
+.RS
+.RE
+.SH RETURN VALUES
+.PP
+Successful completion: 0
+.SH AUTHORS
+alexh
