@@ -1,4 +1,4 @@
-package com.dtosolutions
+package com.dtolabs
 
 import grails.converters.JSON
 import com.dtolabs.Node

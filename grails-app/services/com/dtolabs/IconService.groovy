@@ -1,4 +1,4 @@
-package com.dtosolutions
+package com.dtolabs
 
 import java.util.List;
 import static groovy.io.FileType.FILES
