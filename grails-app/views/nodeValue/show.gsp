@@ -36,7 +36,7 @@
 				<li class="fieldcontain">
 					<span id="templateattribute-label" class="property-label"><g:message code="templateValue.templateattribute.label" default="Templateattribute" /></span>
 					
-						<span class="property-value" aria-labelledby="templateattribute-label"><g:link controller="templateAttribute" action="show" id="${templateValueInstance?.templateattribute?.id}">${templateValueInstance?.templateattribute?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="templateattribute-label"><g:link controller="nodeAttribute" action="show" id="${templateValueInstance?.templateattribute?.id}">${templateValueInstance?.templateattribute?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

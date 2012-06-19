@@ -39,7 +39,7 @@
 </g:each>
 </ul>
 
-<g:link controller="templateAttribute" action="create" params="['template.id': templateInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute')])}</g:link>
+<g:link controller="nodeAttribute" action="create" params="['template.id': templateInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute')])}</g:link>
 
 </div>
 

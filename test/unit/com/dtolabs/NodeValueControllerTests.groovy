@@ -5,8 +5,8 @@ import com.dtosolutions.TemplateValueController;
 
 
 @TestFor(TemplateValueController)
-@Mock(TemplateValue)
-class TemplateValueControllerTests {
+@Mock(NodeValue)
+class NodeValueControllerTests {
 
 
     def populateValidParams(params) {
@@ -21,8 +21,8 @@ class TemplateValueControllerTests {
 	  Attribute att = Attribute.get(1)
 	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
 	  NodeType server = NodeType.get(1)
-	  mockDomain(TemplateAttribute, [new TemplateAttribute(id:1,version:1,attribute:att,template:server,required:'false',dateCreated:now)])
-	  TemplateAttribute tatt = TemplateAttribute.get(1)
+	  mockDomain(NodeAttribute, [new NodeAttribute(id:1,version:1,attribute:att,template:server,required:'false',dateCreated:now)])
+	  NodeAttribute tatt = NodeAttribute.get(1)
 	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',status:com.dtosolutions.Status.DEV,tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
 	  Node serverNode = Node.get(1)
 	  
@@ -65,7 +65,7 @@ class TemplateValueControllerTests {
 
         assert response.redirectedUrl == '/templateValue/show/1'
         assert controller.flash.message != null
-        assert TemplateValue.count() == 1
+        assert NodeValue.count() == 1
     }
 
     void testShow() {
@@ -76,7 +76,7 @@ class TemplateValueControllerTests {
 
 
         populateValidParams(params)
-        def templateValue = new TemplateValue(params)
+        def templateValue = new NodeValue(params)
 
         assert templateValue.save() != null
 
@@ -95,7 +95,7 @@ class TemplateValueControllerTests {
 
 
         populateValidParams(params)
-        def templateValue = new TemplateValue(params)
+        def templateValue = new NodeValue(params)
 
         assert templateValue.save() != null
 
@@ -116,7 +116,7 @@ class TemplateValueControllerTests {
 
 
         populateValidParams(params)
-        def templateValue = new TemplateValue(params)
+        def templateValue = new NodeValue(params)
 
         assert templateValue.save() != null
 
@@ -160,17 +160,17 @@ class TemplateValueControllerTests {
         response.reset()
 
         populateValidParams(params)
-        def templateValue = new TemplateValue(params)
+        def templateValue = new NodeValue(params)
 
         assert templateValue.save() != null
-        assert TemplateValue.count() == 1
+        assert NodeValue.count() == 1
 
         params.id = templateValue.id
 
         controller.delete()
 
-        assert TemplateValue.count() == 0
-        assert TemplateValue.get(templateValue.id) == null
+        assert NodeValue.count() == 0
+        assert NodeValue.get(templateValue.id) == null
         assert response.redirectedUrl == '/templateValue/list'
     }
 }

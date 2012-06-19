@@ -61,7 +61,7 @@
 								<table width=100%>
 									<g:if test="${nodeInstance?.templateValues}">
 		
-										<g:each in="${com.dtolabs.TemplateValue.findAllByNode(com.dtolabs.Node.get(nodeInstance?.id), [sort:'templateattribute.attribute.name',order:'asc'])}" status="i" var="t">
+										<g:each in="${com.dtolabs.NodeValue.findAllByNode(com.dtolabs.Node.get(nodeInstance?.id), [sort:'templateattribute.attribute.name',order:'asc'])}" status="i" var="t">
 										<g:set var="attribute" value="${com.dtolabs.Attribute.findAllById(t?.templateattribute?.attribute?.id, [sort:'name',order:'asc'])}" />
 												
 										<tr>

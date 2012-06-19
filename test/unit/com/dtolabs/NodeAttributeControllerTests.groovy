@@ -5,8 +5,8 @@ import com.dtosolutions.TemplateAttributeController;
 
 
 @TestFor(TemplateAttributeController)
-@Mock(TemplateAttribute)
-class TemplateAttributeControllerTests {
+@Mock(NodeAttribute)
+class NodeAttributeControllerTests {
 
     def populateValidParams(params) {
       assert params != null
@@ -52,7 +52,7 @@ class TemplateAttributeControllerTests {
 
 
         populateValidParams(params)
-        def templateAttribute = new TemplateAttribute(params)
+        def templateAttribute = new NodeAttribute(params)
 
         assert templateAttribute.save() != null
 
@@ -71,7 +71,7 @@ class TemplateAttributeControllerTests {
 
 
         populateValidParams(params)
-        def templateAttribute = new TemplateAttribute(params)
+        def templateAttribute = new NodeAttribute(params)
 
         assert templateAttribute.save() != null
 
@@ -92,7 +92,7 @@ class TemplateAttributeControllerTests {
 
 
         populateValidParams(params)
-        def templateAttribute = new TemplateAttribute(params)
+        def templateAttribute = new NodeAttribute(params)
 
 		
 		if(templateAttribute.save()){
@@ -138,16 +138,16 @@ class TemplateAttributeControllerTests {
         response.reset()
 
         populateValidParams(params)
-        def templateAttribute = new TemplateAttribute(params)
+        def templateAttribute = new NodeAttribute(params)
 
         assert templateAttribute.save() != null
-        assert TemplateAttribute.count() == 1
+        assert NodeAttribute.count() == 1
 
         params.id = templateAttribute.id
 
         controller.delete()
 
-        assert TemplateAttribute.count() == 0
-        assert TemplateAttribute.get(templateAttribute.id) == null
+        assert NodeAttribute.count() == 0
+        assert NodeAttribute.get(templateAttribute.id) == null
     }
 }

@@ -3,8 +3,8 @@ package com.dtolabs
 import com.dtolabs.ChildNode
 import com.dtolabs.NodeType
 import com.dtolabs.Node
-import com.dtolabs.TemplateAttribute
-import com.dtolabs.TemplateValue
+import com.dtolabs.NodeAttribute
+import com.dtolabs.NodeValue
 import grails.converters.JSON
 import java.util.Date
 import grails.plugins.springsecurity.Secured
@@ -128,7 +128,7 @@ class NodeController {
             redirect(action: "show", id: nodeInstance.id)
         }else{
 			nodeInstance.templateValues.each(){
-				def tv = new TemplateValue()
+				def tv = new NodeValue()
 				tv.node = node
 				tv.templateattribute = it.templateattribute
 				tv.value = it.value
@@ -208,8 +208,8 @@ class NodeController {
 				Date now = new Date()
 				params.each{ key, val ->
 					if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
-						TemplateAttribute att = TemplateAttribute.get(key[3..-1].toInteger())
-					   new TemplateValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
+						NodeAttribute att = NodeAttribute.get(key[3..-1].toInteger())
+					   new NodeValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
 					}
 				}
 
@@ -416,7 +416,7 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 	        }else{
 				params.each{ key, val ->
 					if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
-						TemplateValue tval = TemplateValue.get(key[3..-1].toInteger())
+						NodeValue tval = NodeValue.get(key[3..-1].toInteger())
 						tval.value = val
 						tval.dateCreated = now
 						tval.dateModified = now
@@ -568,9 +568,9 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				println("")
 				List atts = []
 				if(params.node){
-					atts = TemplateValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}")
+					atts = NodeValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}")
 				}else{
-					atts = TemplateAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}")
+					atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}")
 				}
 				atts.each(){
 					response += [tid:it.tid,id:it.id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter]

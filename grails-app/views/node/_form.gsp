@@ -107,10 +107,10 @@
 	
 <ul class="one-to-many">
 <g:each in="${nodeInstance?.templateValues?}" var="t">
-    <li><g:link controller="templateValue" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></li>
+    <li><g:link controller="nodeValue" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></li>
 </g:each>
 <li class="add">
-<g:link controller="templateValue" action="create" params="['node.id': nodeInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateValue.label', default: 'TemplateValue')])}</g:link>
+<g:link controller="nodeValue" action="create" params="['node.id': nodeInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateValue.label', default: 'TemplateValue')])}</g:link>
 </li>
 </ul>
 

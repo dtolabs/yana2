@@ -13,7 +13,7 @@ class JsonService {
 			ArrayList result = [:]
 			data.each(){ val1 ->
 				def attributequery = "select new map(TV.value as value,A.name as attribute,A.id as id,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
-				def values = TemplateValue.executeQuery(attributequery);
+				def values = NodeValue.executeQuery(attributequery);
 				
 				def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
 				ArrayList rent = [:]
@@ -86,7 +86,7 @@ class JsonService {
 		ArrayList result = [:]
 		data.each(){ val1 ->
 			def nodecount = Node.findAllByNodetype(val1).size()
-			def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
+			def tatts = NodeAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
 			
 			def criteria = NodeTypeRelationship.createCriteria()
 			def parents = criteria.list{

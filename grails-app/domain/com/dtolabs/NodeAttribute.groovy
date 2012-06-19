@@ -1,8 +1,8 @@
 package com.dtolabs
 
-class TemplateAttribute{
+class NodeAttribute{
 
-	static hasMany = [values:TemplateValue]
+	static hasMany = [values:NodeValue]
 
 	Attribute attribute
 	NodeType template

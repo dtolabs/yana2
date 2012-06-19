@@ -15,8 +15,8 @@ import com.dtolabs.NodeType
 import com.dtolabs.Node
 import com.dtolabs.Status
 import com.dtolabs.NodeTypeRelationship
-import com.dtolabs.TemplateAttribute
-import com.dtolabs.TemplateValue
+import com.dtolabs.NodeAttribute
+import com.dtolabs.NodeValue
 import grails.plugins.springsecurity.Secured
 import org.xml.sax.SAXException
 
@@ -101,9 +101,9 @@ class ImportController {
 					def order = 1
 					nodetype.templateAttributes.children().each{ templateAttribute ->
 						Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
-						TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
+						NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(ntype,attribute)
 						if(!ta){
-							ta = new TemplateAttribute()
+							ta = new NodeAttribute()
 							ta.template = ntype
 							ta.attribute = attribute
 							//ta.order = order
@@ -128,16 +128,16 @@ class ImportController {
 						nd.dateModified = new Date()
 						nd.save(flush: true,failOnError:true)
 					}else{
-						TemplateValue.executeUpdate("delete TemplateValue TV where TV.node = ?", [nd])
+						NodeValue.executeUpdate("delete TemplateValue TV where TV.node = ?", [nd])
 					}
 	
 					node.values.children().each{ templateValue ->
 						def templateAttribute = templateValue.@templateAttribute.toString()
 						def att = xml.nodetypes.nodetype.templateAttributes.templateAttribute.findAll { it.@id.text()==templateAttribute }
 						Attribute attribute = Attribute.findByName(att.@attribute.toString())
-						TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(nodetype,attribute)
+						NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(nodetype,attribute)
 	
-						TemplateValue tv = new TemplateValue()
+						NodeValue tv = new NodeValue()
 						tv.node = nd
 						tv.templateattribute = ta
 						tv.value = templateValue.toString()

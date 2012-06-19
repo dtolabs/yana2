@@ -1,12 +1,12 @@
 package com.dtolabs
 
 import org.springframework.dao.DataIntegrityViolationException
-import com.dtolabs.TemplateValue
+import com.dtolabs.NodeValue
 import grails.plugins.springsecurity.Secured
 import grails.converters.JSON
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
-class TemplateValueController {
+class NodeValueController {
 
 	def springSecurityService
 	def xmlService
@@ -18,7 +18,7 @@ class TemplateValueController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				def templateValue = new TemplateValue(params)
+				def templateValue = new NodeValue(params)
 				if(templateValue){
 					if (!templateValue.save(flush: true)) {
 						response.status = 400 //Bad Request
@@ -44,7 +44,7 @@ class TemplateValueController {
 			case "DELETE":
 				def json = request.JSON
 				if(params.id){
-			        def tval = TemplateValue.get(params.id)
+			        def tval = NodeValue.get(params.id)
 			        if(tval){
 			          tval.delete()
 
@@ -79,7 +79,7 @@ class TemplateValueController {
 
     def list() {
 		if(params.format && params.format!='none'){
-			def tvals = TemplateValue.list()
+			def tvals = NodeValue.list()
 			switch(params.format.toLowerCase()){
 				case 'xml':
 					def xml = xmlService.formatTemplateValues(tvals)
@@ -92,16 +92,16 @@ class TemplateValueController {
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[templateValueInstanceList: TemplateValue.list(params), templateValueInstanceTotal: TemplateValue.count()]
+			[templateValueInstanceList: NodeValue.list(params), templateValueInstanceTotal: NodeValue.count()]
 		}
     }
 
     def create() {
-        [templateValueInstance: new TemplateValue(params)]
+        [templateValueInstance: new NodeValue(params)]
     }
 
     def save() {
-        def templateValueInstance = new TemplateValue(params)
+        def templateValueInstance = new NodeValue(params)
         if (!templateValueInstance.save(flush: true)) {
             render(view: "create", model: [templateValueInstance: templateValueInstance])
             return
@@ -112,7 +112,7 @@ class TemplateValueController {
     }
 
     def show() {
-        def templateValueInstance = TemplateValue.get(params.id)
+        def templateValueInstance = NodeValue.get(params.id)
         if (!templateValueInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
@@ -142,7 +142,7 @@ class TemplateValueController {
     }
 
     def edit() {
-        def templateValueInstance = TemplateValue.get(params.id)
+        def templateValueInstance = NodeValue.get(params.id)
         if (!templateValueInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
             redirect(action: "list")
@@ -153,7 +153,7 @@ class TemplateValueController {
     }
 
     def update() {
-        def templateValueInstance = TemplateValue.get(params.id)
+        def templateValueInstance = NodeValue.get(params.id)
         if (!templateValueInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
@@ -197,7 +197,7 @@ class TemplateValueController {
     }
 
     def delete() {
-        def templateValueInstance = TemplateValue.get(params.id)
+        def templateValueInstance = NodeValue.get(params.id)
         if (!templateValueInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
             redirect(action: "list")

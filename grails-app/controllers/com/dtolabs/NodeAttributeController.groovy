@@ -1,12 +1,12 @@
 package com.dtolabs
 
 import org.springframework.dao.DataIntegrityViolationException
-import com.dtolabs.TemplateAttribute
+import com.dtolabs.NodeAttribute
 import grails.plugins.springsecurity.Secured
 import grails.converters.JSON
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
-class TemplateAttributeController {
+class NodeAttributeController {
 
 	def springSecurityService
 	def xmlService
@@ -32,7 +32,7 @@ class TemplateAttributeController {
 				break
 			case "PUT":
 				def json = request.JSON
-				def tatt = TemplateAttribute.findById(params.id)
+				def tatt = NodeAttribute.findById(params.id)
 				tatt.template = NodeType.get(params.template.toLong())
 				tatt.attribute = Attribute.get(params.attribute.toLong())
 				if(tatt.save()){
@@ -46,7 +46,7 @@ class TemplateAttributeController {
 			case "DELETE":
 				def json = request.JSON
 				if(params.id){
-			        def tatt = TemplateAttribute.get(params.id)
+			        def tatt = NodeAttribute.get(params.id)
 			        if(tatt){
 						tatt.delete()
 					  
@@ -81,7 +81,7 @@ class TemplateAttributeController {
 
     def list() {
 		if(params.format && params.format!='none'){
-			def tattributes = TemplateAttribute.list()
+			def tattributes = NodeAttribute.list()
 			switch(params.format.toLowerCase()){
 				case 'xml':
 					def xml = xmlService.formatTemplateAttributes(tattributes)
@@ -94,16 +94,16 @@ class TemplateAttributeController {
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[templateAttributeInstanceList: TemplateAttribute.list(params), templateAttributeInstanceTotal: TemplateAttribute.count()]
+			[templateAttributeInstanceList: NodeAttribute.list(params), templateAttributeInstanceTotal: NodeAttribute.count()]
 		}
     }
 
     def create() {
-        [templateAttributeInstance: new TemplateAttribute(params)]
+        [templateAttributeInstance: new NodeAttribute(params)]
     }
 
     def save() {
-        def templateAttributeInstance = new TemplateAttribute(params)
+        def templateAttributeInstance = new NodeAttribute(params)
         if (!saveTemplateAttribute()) {
             render(view: "create", model: [templateAttributeInstance: templateAttributeInstance])
             return
@@ -120,7 +120,7 @@ class TemplateAttributeController {
 		def json = request.JSON
 		params.template=(json.template)?json.template:params.template
 		params.attribute=(json.attribute)?json.attribute:params.attribute
-        def temp = new TemplateAttribute()
+        def temp = new NodeAttribute()
 		temp.template=NodeType.get(params.template.toLong())
 		temp.attribute = Attribute.get(params.attribute.toLong())
         if (!temp.save(flush: true,failOnError:true)) {
@@ -132,7 +132,7 @@ class TemplateAttributeController {
 	}
 	
     def show() {
-        def templateAttributeInstance = TemplateAttribute.get(params.id)
+        def templateAttributeInstance = NodeAttribute.get(params.id)
         if (!templateAttributeInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
@@ -162,7 +162,7 @@ class TemplateAttributeController {
     }
 
     def edit() {
-        def templateAttributeInstance = TemplateAttribute.get(params.id)
+        def templateAttributeInstance = NodeAttribute.get(params.id)
         if (!templateAttributeInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
             redirect(action: "list")
@@ -173,7 +173,7 @@ class TemplateAttributeController {
     }
 
     def update() {
-        def templateAttributeInstance = TemplateAttribute.get(params.id)
+        def templateAttributeInstance = NodeAttribute.get(params.id)
         if (!templateAttributeInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
@@ -213,7 +213,7 @@ class TemplateAttributeController {
 	
 
     def delete() {
-        def templateAttributeInstance = TemplateAttribute.get(params.id)
+        def templateAttributeInstance = NodeAttribute.get(params.id)
         if (!templateAttributeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
 			redirect(action: "list")
@@ -235,7 +235,7 @@ class TemplateAttributeController {
 	def deleteTemplateAttribute(){
 		def json = request.JSON
 		params.id=(json.id)?json.id:params.id
-		def templateAttributeInstance = TemplateAttribute.get(params.id)
+		def templateAttributeInstance = NodeAttribute.get(params.id)
         try {
             templateAttributeInstance.delete(flush: true)
 			render "1"

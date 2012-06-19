@@ -15,7 +15,7 @@ class XmlService {
 		xml.nodes() {
 			nodes.each(){ val1 ->
 				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required,A.id as id) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
-				def values = TemplateValue.executeQuery(attributequery);
+				def values = NodeValue.executeQuery(attributequery);
 				
 				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags){
 					description(val1.description)
@@ -111,7 +111,7 @@ class XmlService {
 		xml.nodetypes() {
 			nodetypes.each(){ val1 ->
 				def nodecount = Node.findAllByNodetype(val1).size()
-				def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
+				def tatts = NodeAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
 				
 				def criteria = NodeTypeRelationship.createCriteria()
 				def parents = criteria.list{

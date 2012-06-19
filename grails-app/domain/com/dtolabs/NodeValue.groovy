@@ -2,11 +2,11 @@ package com.dtolabs
 
 import java.util.Date;
 
-class TemplateValue{
-    static belongsTo = [Node,TemplateAttribute]
+class NodeValue{
+    static belongsTo = [Node,NodeAttribute]
 
 	Node node
-	TemplateAttribute templateattribute
+	NodeAttribute templateattribute
 	String value
 	Date dateCreated
 	Date dateModified = new Date()
