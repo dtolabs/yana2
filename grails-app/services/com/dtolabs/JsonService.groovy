@@ -12,8 +12,8 @@ class JsonService {
 	String formatNodes(ArrayList data){
 			ArrayList result = [:]
 			data.each(){ val1 ->
-				def attributequery = "select new map(TV.value as value,A.name as attribute,A.id as id,TA.required as required) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
-				def values = TemplateValue.executeQuery(attributequery);
+				def attributequery = "select new map(TV.value as value,A.name as attribute,A.id as id,TA.required as required) from NodeValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
+				def values = NodeValue.executeQuery(attributequery);
 				
 				def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
 				ArrayList rent = [:]
@@ -49,19 +49,19 @@ class JsonService {
 		return result as JSON
 	}
 	
-	String formatTemplateValues(ArrayList data){
+	String formatNodeValues(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
-			result += 	[templateValue:[id:val1.id,nodeId:val1.node.id,templateAttributeId:val1.templateattribute.id,value:val1.value]]
+			result += 	[nodeValue:[id:val1.id,nodeId:val1.node.id,nodeAttributeId:val1.templateattribute.id,value:val1.value]]
 		}
 		return result as JSON
 	}
 
 	
-	String formatTemplateAttributes(ArrayList data){
+	String formatNodeAttributes(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
-			result += 	[templateAttribute:[id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required]]
+			result += 	[nodeAttribute:[id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required]]
 		}
 		return result as JSON
 	}
@@ -86,7 +86,7 @@ class JsonService {
 		ArrayList result = [:]
 		data.each(){ val1 ->
 			def nodecount = Node.findAllByNodetype(val1).size()
-			def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
+			def tatts = NodeAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
 			
 			def criteria = NodeTypeRelationship.createCriteria()
 			def parents = criteria.list{
@@ -110,7 +110,7 @@ class JsonService {
 				ntr += [nodetypeRelationship:[id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.roleName]]
 			}
 
-			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,templateAttributes:attributes,nodetypeRelationships:ntr,nodeCount:nodecount]]
+			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,nodeAttributes:attributes,nodetypeRelationships:ntr,nodeCount:nodecount]]
 		}
 		return result as JSON
 	}

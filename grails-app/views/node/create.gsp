@@ -74,7 +74,7 @@
   		var template = $("#nodetype").val();
   	  	if(template!=null){
 			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getTemplateAttributes",{templateid:template,ajax:'true'},function(json){
+			$.getJSON("${request.contextPath}/node/getNodeAttributes",{templateid:template,ajax:'true'},function(json){
 				if(json){
 					var div = document.getElementById("attributes");
 					div.innerHTML = '';

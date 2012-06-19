@@ -60,7 +60,7 @@
 									
 									<g:if test="${nodeTypeInstance?.attributes}">
 									<tr>
-										<g:each in="${com.dtolabs.TemplateAttribute.findAllByTemplate(com.dtolabs.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
+										<g:each in="${com.dtolabs.NodeAttribute.findAllByTemplate(com.dtolabs.NodeType.get(nodeTypeInstance?.id), [sort:'attribute.name',order:'asc'])}" status="i" var="t">
 										<g:set var="attributeInstance" value="${com.dtolabs.Attribute.findAllById(t?.attribute?.id, [sort:'name',order:'asc'])}" />
 										
 										<tr>

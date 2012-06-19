@@ -14,8 +14,8 @@ class XmlService {
 			
 		xml.nodes() {
 			nodes.each(){ val1 ->
-				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required,A.id as id) from TemplateValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
-				def values = TemplateValue.executeQuery(attributequery);
+				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required,A.id as id) from NodeValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
+				def values = NodeValue.executeQuery(attributequery);
 				
 				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags){
 					description(val1.description)
@@ -56,25 +56,25 @@ class XmlService {
 		return writer.toString()
 	}
 	
-	String formatTemplateValues(ArrayList tvals){
+	String formatNodeValues(ArrayList tvals){
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)
 			
-		xml.templateValues() {
+		xml.nodeValues() {
 			tvals.each(){ val1 ->
-				templateValue(id:val1.id,nodeId:val1.node.id,templateAttributeId:val1.templateattribute.id,value:val1.value)
+				nodeValue(id:val1.id,nodeId:val1.node.id,nodeAttributeId:val1.templateattribute.id,value:val1.value)
 			}
 		}
 		return writer.toString()
 	}
 	
-	String formatTemplateAttributes(ArrayList tatts){
+	String formatNodeAttributes(ArrayList tatts){
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)
 			
-		xml.templateAttributes() {
+		xml.nodeAttributes() {
 			tatts.each(){ val1 ->
-				templateAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required)
+				nodeAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required)
 			}
 		}
 		return writer.toString()
@@ -111,7 +111,7 @@ class XmlService {
 		xml.nodetypes() {
 			nodetypes.each(){ val1 ->
 				def nodecount = Node.findAllByNodetype(val1).size()
-				def tatts = TemplateAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
+				def tatts = NodeAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
 				
 				def criteria = NodeTypeRelationship.createCriteria()
 				def parents = criteria.list{
@@ -124,9 +124,9 @@ class XmlService {
 				}
 				
 				nodetype(id:val1.id,name:val1.name,description:val1.description,image:val1.image,nodeCount:nodecount){
-					templateAttributes() {
+					nodeAttributes() {
 						tatts.each(){ val2 ->
-							templateAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.template.id,required:val2.required)
+							nodeAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.template.id,required:val2.required)
 						}
 					}
 					nodetypeRelationships() {

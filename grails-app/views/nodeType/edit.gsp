@@ -22,7 +22,7 @@
   	function getAttributes(){
   	  	var nodetype = "${nodeTypeInstance?.id}"
 		$.ajaxSetup({contentType:"application/json"});
-		$.getJSON("${request.contextPath}/nodeType/getTemplateAttributes",{templateid:nodetype,ajax:'true'},function(json){
+		$.getJSON("${request.contextPath}/nodeType/getNodeAttributes",{templateid:nodetype,ajax:'true'},function(json){
 			if(json){
 				var div = document.getElementById("attributes");
 				div.innerHTML = '';
@@ -46,7 +46,7 @@
 					delButton.value = '-';
 					delButton.style.position='relative';
 					delButton.style.left='52px';
-					delButton.onclick =  function () {deleteTemplateAttribute(this.id)};
+					delButton.onclick =  function () {deleteNodeAttribute(this.id)};
 					cell1.appendChild(delButton);
 					row.appendChild(cell1);
 
@@ -90,7 +90,7 @@
 				addButton.value = '+';
 				addButton.style.position='relative';
 				addButton.style.left='52px';
-				addButton.onclick =  function () {addTemplateAttribute(nodetype,document.getElementById("new_attribute").value)};
+				addButton.onclick =  function () {addNodeAttribute(nodetype,document.getElementById("new_attribute").value)};
 				cell1.appendChild(addButton);
 				row.appendChild(cell1);
 
@@ -124,7 +124,7 @@
 		});
   	}
 
-  	function addTemplateAttribute(nodetype,attId){
+  	function addNodeAttribute(nodetype,attId){
   	    var params = {};
   	    params.template = nodetype;
   	    params.attribute = attId;
@@ -133,7 +133,7 @@
             type: "POST",
             dataType: "json",
             data: jsonData,
-            url: "${request.contextPath}/templateAttribute/saveTemplateAttribute/",
+            url: "${request.contextPath}/nodeAttribute/saveNodeAttribute/",
             success: function(data){
                alert("Attribute added successfully!")
                getAttributes();
@@ -141,7 +141,7 @@
         });
   	}
 
-  	function deleteTemplateAttribute(templateAtt){
+  	function deleteNodeAttribute(templateAtt){
   	    var params = {};
   	    params.id = templateAtt;
   	    var jsonData = window.JSON.stringify(params);
@@ -149,7 +149,7 @@
             type: "POST",
             dataType: "json",
             data: jsonData,
-            url: "${request.contextPath}/templateAttribute/deleteTemplateAttribute/",
+            url: "${request.contextPath}/nodeAttribute/deleteNodeAttribute/",
             success: function(data){  
             	alert("Attribute deleted successfully!")      
                getAttributes();

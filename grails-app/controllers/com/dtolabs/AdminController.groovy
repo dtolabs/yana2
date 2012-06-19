@@ -13,8 +13,8 @@ import com.dtolabs.ChildNode
 import com.dtolabs.Filter
 import com.dtolabs.NodeType
 import com.dtolabs.NodeTypeRelationship
-import com.dtolabs.TemplateAttribute
-import com.dtolabs.TemplateValue
+import com.dtolabs.NodeAttribute
+import com.dtolabs.NodeValue
 import grails.plugins.springsecurity.Secured
 import org.xml.sax.SAXException
 
@@ -91,11 +91,11 @@ class AdminController {
 					ntype.save(flush: true,failOnError:true)
 				}
 				def order = 1
-				nodetype.children().each{ templateAttribute ->
-					Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
-					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(ntype,attribute)
+				nodetype.children().each{ nodeAttribute ->
+					Attribute attribute = Attribute.findByName(nodeAttribute.@attribute.toString())
+					NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(ntype,attribute)
 					if(!ta){
-						ta = new TemplateAttribute()
+						ta = new NodeAttribute()
 						ta.template = ntype
 						ta.attribute = attribute
 						//ta.order = order
@@ -120,19 +120,19 @@ class AdminController {
 					nd.dateModified = new Date()
 					nd.save(flush: true,failOnError:true)
 				}else{
-					TemplateValue.executeUpdate("delete TemplateValue TV where TV.node = ?", [nd])
+					NodeValue.executeUpdate("delete NodeValue TV where TV.node = ?", [nd])
 				}
 
-				node.values.children().each{ templateValue ->
-					def templateAttribute = templateValue.@templateAttribute.toString()
-					def att = xml.nodetypes.nodetype.templateAttribute.findAll { it.@id.text()==templateAttribute }
+				node.values.children().each{ nodeValue ->
+					def nodeAttribute = nodeValue.@nodeAttribute.toString()
+					def att = xml.nodetypes.nodetype.nodeAttribute.findAll { it.@id.text()==nodeAttribute }
 					Attribute attribute = Attribute.findByName(att.@attribute.toString())
-					TemplateAttribute ta = TemplateAttribute.findByTemplateAndAttribute(nodetype,attribute)
+					NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(nodetype,attribute)
 
-					TemplateValue tv = new TemplateValue()
+					NodeValue tv = new NodeValue()
 					tv.node = nd
 					tv.templateattribute = ta
-					tv.value = templateValue.toString()
+					tv.value = nodeValue.toString()
 					tv.dateCreated = new Date()
 					tv.dateModified = new Date()
 					tv.save(flush: true,failOnError:true)

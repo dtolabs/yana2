@@ -99,18 +99,18 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'templateValues', 'error')} ">
-	<label for="templateValues">
-		<g:message code="node.templateValues.label" default="Template Values" />
+<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'nodeValues', 'error')} ">
+	<label for="nodeValues">
+		<g:message code="node.nodeValues.label" default="Template Values" />
 		
 	</label>
 	
 <ul class="one-to-many">
-<g:each in="${nodeInstance?.templateValues?}" var="t">
-    <li><g:link controller="templateValue" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></li>
+<g:each in="${nodeInstance?.nodeValues?}" var="t">
+    <li><g:link controller="nodeValue" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></li>
 </g:each>
 <li class="add">
-<g:link controller="templateValue" action="create" params="['node.id': nodeInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateValue.label', default: 'TemplateValue')])}</g:link>
+<g:link controller="nodeValue" action="create" params="['node.id': nodeInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'nodeValue.label', default: 'NodeValue')])}</g:link>
 </li>
 </ul>
 

@@ -61,7 +61,7 @@
 			<xs:complexType>
 				<xs:simpleContent>
 					<xs:extension base="xs:string">
-						<xs:attribute name='templateAttribute' type='xs:IDREF' use='required'/>
+						<xs:attribute name='nodeAttribute' type='xs:IDREF' use='required'/>
 					</xs:extension>
 				</xs:simpleContent>
 			</xs:complexType>
@@ -115,21 +115,21 @@
                 <xs:sequence maxOccurs="unbounded">
                 	<xs:element name='description' minOccurs="0" maxOccurs="1"/>
                 	<xs:element name='image' minOccurs="0" maxOccurs="1"/>
-                    <xs:element ref='templateAttributes'/>
+                    <xs:element ref='nodeAttributes'/>
                 </xs:sequence>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='templateAttributes'>
+        <xs:element name='nodeAttributes'>
             <xs:complexType>
                 <xs:sequence maxOccurs="unbounded">
-                    <xs:element ref='templateAttribute' maxOccurs="unbounded"/>
+                    <xs:element ref='nodeAttribute' maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='templateAttribute'>
+        <xs:element name='nodeAttribute'>
             <xs:complexType>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
                 <xs:attribute name='attribute' type='xs:IDREF' use='required'/>

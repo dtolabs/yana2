@@ -82,7 +82,7 @@ class NodeTypeController {
 					        }
 	
 							response.status = 403 //Bad Request
-							render "Referential Integrity Violation: Please remove/reassign all Nodes/TemplateAttributes first."
+							render "Referential Integrity Violation: Please remove/reassign all Nodes/NodeAttributes first."
 						}
 			        }else{
 			          response.status = 404 //Not Found
@@ -286,13 +286,13 @@ class NodeTypeController {
 		render response as JSON
 	}
 	
-	def getTemplateAttributes = {
+	def getNodeAttributes = {
 			def response = []
 			def attrs = []
 			if(params.templateid){
 				println("")
 				List attributes = Attribute.executeQuery("select new map(A.id as id,A.name as name) from Attribute as A order by A.name asc")
-				List atts = TemplateAttribute.executeQuery("select new map(TA.id as tid,A.id as id,A.name as attributename,F.dataType as datatype) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} order by A.name asc");
+				List atts = NodeAttribute.executeQuery("select new map(TA.id as tid,A.id as id,A.name as attributename,F.dataType as datatype) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} order by A.name asc");
 				atts.each(){
 					attrs += [tid:it.tid,id:it.id,key:it.templatevalue,val:it.attributename,datatype:it.datatype];
 				}

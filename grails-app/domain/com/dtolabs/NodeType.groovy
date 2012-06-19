@@ -14,7 +14,7 @@ class NodeType{
     }
 	
 	static mappedBy = [children: 'child', parents: 'parent']
-	static hasMany = [nodes:Node,attributes:TemplateAttribute,children:NodeTypeRelationship,parents:NodeTypeRelationship]
+	static hasMany = [nodes:Node,attributes:NodeAttribute,children:NodeTypeRelationship,parents:NodeTypeRelationship]
 
 	String name
 	String description

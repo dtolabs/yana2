@@ -3,7 +3,7 @@ package com.dtolabs
 import java.util.Date;
 
 class Attribute{
-    static hasMany = [ TemplateAttribute ]
+    static hasMany = [ NodeAttribute ]
 
 	String name
 	Filter filter

@@ -35,11 +35,11 @@
 
 <g:each in="${nodeTypeInstance?.attributes?}" var="a">
 	<g:set var="attributeInstance" value="${com.dtolabs.Attribute.get(a.attribute.id)}"/>
-    <li><g:link controller="TemplateAttribute" action="show" id="${a.id}">${attributeInstance.name} [${attributeInstance.filter.dataType}]</g:link></li>
+    <li><g:link controller="NodeAttribute" action="show" id="${a.id}">${attributeInstance.name} [${attributeInstance.filter.dataType}]</g:link></li>
 </g:each>
 </ul>
 
-<g:link controller="templateAttribute" action="create" params="['template.id': templateInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute')])}</g:link>
+<g:link controller="nodeAttribute" action="create" params="['template.id': templateInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute')])}</g:link>
 
 </div>
 

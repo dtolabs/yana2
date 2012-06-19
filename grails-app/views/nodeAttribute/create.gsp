@@ -1,14 +1,14 @@
-<%@ page import="com.dtolabs.TemplateAttribute" %>
+<%@ page import="com.dtolabs.NodeAttribute" %>
 <!doctype html>
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'templateAttribute.label', default: 'TemplateAttribute')}" />
+		<g:set var="entityName" value="${message(code: 'nodeAttribute.label', default: 'NodeAttribute')}" />
 		<title><g:message code="default.create.label" args="[entityName]" /></title>
 	</head>
 	<body>
 
-		<div id="create-templateAttribute" class="content scaffold-create" role="main">
+		<div id="create-nodeAttribute" class="content scaffold-create" role="main">
 			<h1><g:message code="default.create.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
