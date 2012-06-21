@@ -18,12 +18,12 @@ class NodeAttributeController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				if(!saveTemplateAttribute()){
+				if(!saveNodeAttribute()){
 					response.status = 201 //Internal Server Error
-					render "TemplateAttribute created successfully\n"
+					render "NodeAttribute created successfully\n"
 				}else{
 					response.status = 500 //Internal Server Error
-					render "Could not create new templateAttribute due to errors:\n ${templateAttribute.errors}"
+					render "Could not create new nodeAttribute due to errors:\n ${nodeAttribute.errors}"
 				}
 				break
 			case "GET":
@@ -40,7 +40,7 @@ class NodeAttributeController {
 			        render "Successfully updated"
 				}else{
 			        response.status = 500 //Internal Server Error
-			        render "Could not update TemplateAttribute due to errors:\n ${tatt.errors}"
+			        render "Could not update NodeAttribute due to errors:\n ${tatt.errors}"
 				}
 				break
 			case "DELETE":
@@ -84,39 +84,39 @@ class NodeAttributeController {
 			def tattributes = NodeAttribute.list()
 			switch(params.format.toLowerCase()){
 				case 'xml':
-					def xml = xmlService.formatTemplateAttributes(tattributes)
+					def xml = xmlService.formatNodeAttributes(tattributes)
 					render(text: xml, contentType: "text/xml")
 					break;
 				case 'json':
-					def json = jsonService.formatTemplateAttributes(tattributes)
+					def json = jsonService.formatNodeAttributes(tattributes)
 					render(text:json, contentType: "text/json")
 					break;
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[templateAttributeInstanceList: NodeAttribute.list(params), templateAttributeInstanceTotal: NodeAttribute.count()]
+			[nodeAttributeInstanceList: NodeAttribute.list(params), nodeAttributeInstanceTotal: NodeAttribute.count()]
 		}
     }
 
     def create() {
-        [templateAttributeInstance: new NodeAttribute(params)]
+        [nodeAttributeInstance: new NodeAttribute(params)]
     }
 
     def save() {
-        def templateAttributeInstance = new NodeAttribute(params)
-        if (!saveTemplateAttribute()) {
-            render(view: "create", model: [templateAttributeInstance: templateAttributeInstance])
+        def nodeAttributeInstance = new NodeAttribute(params)
+        if (!saveNodeAttribute()) {
+            render(view: "create", model: [nodeAttributeInstance: nodeAttributeInstance])
             return
         }
 		
-		flash.message = message(code: 'default.created.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
-        redirect(action: "show", id: templateAttributeInstance.id)
+		flash.message = message(code: 'default.created.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), nodeAttributeInstance.id])
+        redirect(action: "show", id: nodeAttributeInstance.id)
     }
 
 	/*
 	 * AJAX method
 	 */
-	def saveTemplateAttribute(){
+	def saveNodeAttribute(){
 		def json = request.JSON
 		params.template=(json.template)?json.template:params.template
 		params.attribute=(json.attribute)?json.attribute:params.attribute
@@ -132,54 +132,54 @@ class NodeAttributeController {
 	}
 	
     def show() {
-        def templateAttributeInstance = NodeAttribute.get(params.id)
-        if (!templateAttributeInstance) {
+        def nodeAttributeInstance = NodeAttribute.get(params.id)
+        if (!nodeAttributeInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
 				render "${params.id} not found."
 			}else{
-				flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), params.id])
 	            redirect(action: "list")
 	            return
 			}
         }else{
 			if(params.format && params.format!='none'){
-				ArrayList templateAttributes = [templateAttributeInstance]
+				ArrayList nodeAttributes = [nodeAttributeInstance]
 				switch(params.format.toLowerCase()){
 					case 'xml':
-						def xml = xmlService.formatTemplateAttributes(templateAttributes)
+						def xml = xmlService.formatNodeAttributes(nodeAttributes)
 						render(text: xml, contentType: "text/xml")
 						break;
 					case 'json':
-						def json = jsonService.formatTemplateAttributes(templateAttributes)
+						def json = jsonService.formatNodeAttributes(nodeAttributes)
 						render(text:json, contentType: "text/json")
 						break;
 				}
 			}else{
-	        	[templateAttributeInstance: templateAttributeInstance]
+	        	[nodeAttributeInstance: nodeAttributeInstance]
 			}
         }
     }
 
     def edit() {
-        def templateAttributeInstance = NodeAttribute.get(params.id)
-        if (!templateAttributeInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
+        def nodeAttributeInstance = NodeAttribute.get(params.id)
+        if (!nodeAttributeInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), params.id])
             redirect(action: "list")
             return
         }
 
-        [templateAttributeInstance: templateAttributeInstance]
+        [nodeAttributeInstance: nodeAttributeInstance]
     }
 
     def update() {
-        def templateAttributeInstance = NodeAttribute.get(params.id)
-        if (!templateAttributeInstance) {
+        def nodeAttributeInstance = NodeAttribute.get(params.id)
+        if (!nodeAttributeInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
 				render "${params.id} not found."
 			}else{
-            	flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
+            	flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), params.id])
 				redirect(action: "list")
 				return
 			}
@@ -187,44 +187,44 @@ class NodeAttributeController {
 
         if (params.version) {
             def version = params.version.toLong()
-            if (templateAttributeInstance.version > version) {
-                templateAttributeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'templateAttribute.label', default: 'TemplateAttribute')] as Object[],
-                          "Another user has updated this TemplateAttribute while you were editing")
-                render(view: "edit", model: [templateAttributeInstance: templateAttributeInstance])
+            if (nodeAttributeInstance.version > version) {
+                nodeAttributeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+                          [message(code: 'nodeAttribute.label', default: 'NodeAttribute')] as Object[],
+                          "Another user has updated this NodeAttribute while you were editing")
+                render(view: "edit", model: [nodeAttributeInstance: nodeAttributeInstance])
                 return
             }
         }
 
-        templateAttributeInstance.properties = params
+        nodeAttributeInstance.properties = params
 
-        if (!templateAttributeInstance.save(flush: true)) {
-            render(view: "edit", model: [templateAttributeInstance: templateAttributeInstance])
+        if (!nodeAttributeInstance.save(flush: true)) {
+            render(view: "edit", model: [nodeAttributeInstance: nodeAttributeInstance])
             return
         }
 		if(params.format){
 			response.status = 200 //Not Found
 			render "Successfully edited."
 		}else{
-			flash.message = message(code: 'default.updated.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), templateAttributeInstance.id])
-			redirect(action: "show", id: templateAttributeInstance.id)
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), nodeAttributeInstance.id])
+			redirect(action: "show", id: nodeAttributeInstance.id)
 		}
     }
 	
 
     def delete() {
-        def templateAttributeInstance = NodeAttribute.get(params.id)
-        if (!templateAttributeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
+        def nodeAttributeInstance = NodeAttribute.get(params.id)
+        if (!nodeAttributeInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), params.id])
 			redirect(action: "list")
 			return
         }
 
-        if(deleteTemplateAttribute()){
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
+        if(deleteNodeAttribute()){
+			flash.message = message(code: 'default.deleted.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), params.id])
 			redirect(action: "list")
 		}else{
-			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'templateAttribute.label', default: 'TemplateAttribute'), params.id])
+			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'nodeAttribute.label', default: 'NodeAttribute'), params.id])
 			redirect(action: "show", id: params.id)
         }
     }
@@ -232,12 +232,12 @@ class NodeAttributeController {
 	/*
 	 * AJAX method
 	 */
-	def deleteTemplateAttribute(){
+	def deleteNodeAttribute(){
 		def json = request.JSON
 		params.id=(json.id)?json.id:params.id
-		def templateAttributeInstance = NodeAttribute.get(params.id)
+		def nodeAttributeInstance = NodeAttribute.get(params.id)
         try {
-            templateAttributeInstance.delete(flush: true)
+            nodeAttributeInstance.delete(flush: true)
 			render "1"
         }catch (DataIntegrityViolationException e) {
             render "0"

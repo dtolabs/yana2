@@ -37,21 +37,21 @@ fi
 curl --silent --fail \
     --request POST \
     --header "Content-Type: application/json" \
-    ${URL}/api/templateAttribute/list/XML \
+    ${URL}/api/nodeAttribute/list/XML \
     --cookie ${cookie} -o ${response}
 # Validate the response
 xmlstarlet val --well-formed \
     --quiet ${response} 2>/dev/null || rerun_die "Server response failed XML validation"
 # Collect the IDs 
-templateAttributeIDs=$(xmlstarlet sel -t \
-    -m /templateAttributes/templateAttribute[@nodetypeId=\'$ID\'] \
+nodeAttributeIDs=$(xmlstarlet sel -t \
+    -m /nodeAttributes/nodeAttribute[@nodetypeId=\'$ID\'] \
     -v @id -i 'not(position()=last())' -o "," $response)
-if [ -n "$templateAttributeIDs" ]
+if [ -n "$nodeAttributeIDs" ]
 then
 curl --silent --fail \
     --request DELETE \
-    "${URL}/api/templateAttribute/none/{$templateAttributeIDs}" \
-    --cookie $cookie -o $response || rerun_die "Error deleting associated TemplateAttributes"
+    "${URL}/api/nodeAttribute/none/{$nodeAttributeIDs}" \
+    --cookie $cookie -o $response || rerun_die "Error deleting associated NodeAttributes"
 fi
 #
 # Send the delete request 

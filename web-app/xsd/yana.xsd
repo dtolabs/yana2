@@ -139,23 +139,23 @@
         <xs:element name='template'>
             <xs:complexType>
                 <xs:sequence maxOccurs="unbounded">
-                    <xs:element ref='templateAttributes' maxOccurs="unbounded"/>
-                    <xs:element ref='templateValues' maxOccurs="unbounded"/>
+                    <xs:element ref='nodeAttributes' maxOccurs="unbounded"/>
+                    <xs:element ref='nodeValues' maxOccurs="unbounded"/>
                 </xs:sequence>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
                 <xs:attribute name='nodetype' type='xs:IDREF' use='required'/>
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='templateAttributes'>
+        <xs:element name='nodeAttributes'>
             <xs:complexType>
                 <xs:sequence maxOccurs="unbounded">
-                    <xs:element ref='templateAttribute' maxOccurs="unbounded"/>
+                    <xs:element ref='nodeAttribute' maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='templateAttribute'>
+        <xs:element name='nodeAttribute'>
             <xs:complexType>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
                 <xs:attribute name='template' type='xs:IDREF' use='required'/>
@@ -164,19 +164,19 @@
             </xs:complexType>
         </xs:element>
         
-        <xs:element name='templateValues'>
+        <xs:element name='nodeValues'>
             <xs:complexType>
                 <xs:sequence>
-                    <xs:element ref='templateValue' maxOccurs="unbounded"/>
+                    <xs:element ref='nodeValue' maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:element>
     
-        <xs:element name='templateValue'>
+        <xs:element name='nodeValue'>
             <xs:complexType>
                 <xs:attribute name='id' type='xs:ID' use='required'/>
                 <xs:attribute name='node' type='xs:IDREF' use='required'/>
-                <xs:attribute name='templateAttribute' type='xs:IDREF' use='required'/>
+                <xs:attribute name='nodeAttribute' type='xs:IDREF' use='required'/>
                 <xs:attribute name='value' type='xs:string' use='required'/>
             </xs:complexType>
         </xs:element>

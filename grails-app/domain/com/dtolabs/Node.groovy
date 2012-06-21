@@ -7,7 +7,7 @@ class Node {
     }
 	
 	static mappedBy = [children: 'child', parents: 'parent']
-	static hasMany = [templateValues:NodeValue,children:ChildNode,parents:ChildNode]
+	static hasMany = [nodeValues:NodeValue,children:ChildNode,parents:ChildNode]
 	
     String name
     String description

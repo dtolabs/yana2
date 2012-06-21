@@ -32,7 +32,7 @@ TYPE=$(xmlstarlet sel -t -m /nodetypes/nodetype -v @name $response)
 # eg attrName:att#id
 declare -a attributeKeys
 attributeKeys=( $(xmlstarlet sel -t \
-    -m /nodetypes/nodetype/templateAttributes/templateAttribute \
+    -m /nodetypes/nodetype/nodeAttributes/nodeAttribute \
     -v @attributeName -o ":" -o "att" -v @id  -o " " $response) )
 
 declare -a attributeData

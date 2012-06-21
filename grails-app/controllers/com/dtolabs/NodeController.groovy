@@ -127,7 +127,7 @@ class NodeController {
 			flash.message = message(code: 'Failed to clone node ${nodeInstance.id}')
             redirect(action: "show", id: nodeInstance.id)
         }else{
-			nodeInstance.templateValues.each(){
+			nodeInstance.nodeValues.each(){
 				def tv = new NodeValue()
 				tv.node = node
 				tv.templateattribute = it.templateattribute
@@ -560,7 +560,7 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 		}
 	}
 	
-	def getTemplateAttributes = {
+	def getNodeAttributes = {
 
 			def response = []
 
@@ -568,9 +568,9 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				println("")
 				List atts = []
 				if(params.node){
-					atts = NodeValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from TemplateValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}")
+					atts = NodeValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from NodeValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}")
 				}else{
-					atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from TemplateAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}")
+					atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}")
 				}
 				atts.each(){
 					response += [tid:it.tid,id:it.id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter]

@@ -1,10 +1,10 @@
 package com.dtolabs
 
 
-import com.dtosolutions.TemplateAttributeController;
+import com.dtosolutions.NodeAttributeController;
 
 
-@TestFor(TemplateAttributeController)
+@TestFor(NodeAttributeController)
 @Mock(NodeAttribute)
 class NodeAttributeControllerTests {
 
@@ -27,127 +27,127 @@ class NodeAttributeControllerTests {
 
     void testIndex() {
         controller.index()
-        assert "/templateAttribute/list" == response.redirectedUrl
+        assert "/nodeAttribute/list" == response.redirectedUrl
     }
 
     void testList() {
 
         def model = controller.list()
 
-        assert model.templateAttributeInstanceList.size() == 0
-        assert model.templateAttributeInstanceTotal == 0
+        assert model.nodeAttributeInstanceList.size() == 0
+        assert model.nodeAttributeInstanceTotal == 0
     }
 
     void testCreate() {
        def model = controller.create()
 
-       assert model.templateAttributeInstance != null
+       assert model.nodeAttributeInstance != null
     }
 
     void testShow() {
         controller.show()
 
         assert flash.message != null
-        assert response.redirectedUrl == '/templateAttribute/list'
+        assert response.redirectedUrl == '/nodeAttribute/list'
 
 
         populateValidParams(params)
-        def templateAttribute = new NodeAttribute(params)
+        def nodeAttribute = new NodeAttribute(params)
 
-        assert templateAttribute.save() != null
+        assert nodeAttribute.save() != null
 
-        params.id = templateAttribute.id
+        params.id = nodeAttribute.id
 
         def model = controller.show()
 
-        assert model.templateAttributeInstance == templateAttribute
+        assert model.nodeAttributeInstance == nodeAttribute
     }
 
     void testEdit() {
         controller.edit()
 
         assert flash.message != null
-        assert response.redirectedUrl == '/templateAttribute/list'
+        assert response.redirectedUrl == '/nodeAttribute/list'
 
 
         populateValidParams(params)
-        def templateAttribute = new NodeAttribute(params)
+        def nodeAttribute = new NodeAttribute(params)
 
-        assert templateAttribute.save() != null
+        assert nodeAttribute.save() != null
 
-        params.id = templateAttribute.id
+        params.id = nodeAttribute.id
 
         def model = controller.edit()
 
-        assert model.templateAttributeInstance == templateAttribute
+        assert model.nodeAttributeInstance == nodeAttribute
     }
 
     void testUpdate() {
         controller.update()
 
         assert flash.message != null
-        assert response.redirectedUrl == '/templateAttribute/list'
+        assert response.redirectedUrl == '/nodeAttribute/list'
 
         response.reset()
 
 
         populateValidParams(params)
-        def templateAttribute = new NodeAttribute(params)
+        def nodeAttribute = new NodeAttribute(params)
 
 		
-		if(templateAttribute.save()){
+		if(nodeAttribute.save()){
 			
-			assert templateAttribute.save(flush:true) != null
+			assert nodeAttribute.save(flush:true) != null
 			
 			//FIX
 			controller.update()
-			params.id = templateAttribute.id
-			assert response.redirectedUrl == "/templateAttribute/show/$templateAttribute.id"
+			params.id = nodeAttribute.id
+			assert response.redirectedUrl == "/nodeAttribute/show/$nodeAttribute.id"
 			assert flash.message != null
 		}else{
 			// test invalid parameters in update
 			//TODO: add invalid values to params object
-			assert view == "/templateAttribute/edit"
+			assert view == "/nodeAttribute/edit"
 			
 		}
 
 		//controller.update()
-		//templateAttribute.clearErrors()
+		//nodeAttribute.clearErrors()
 		//populateValidParams(params)
 		
         //test outdated version number
         response.reset()
-        templateAttribute.clearErrors()
+        nodeAttribute.clearErrors()
 
         populateValidParams(params)
-        params.id = templateAttribute.id
+        params.id = nodeAttribute.id
         params.version = -1
         controller.update()
 
-        assert view == "/templateAttribute/edit"
-        assert model.templateAttributeInstance != null
-        assert model.templateAttributeInstance.errors.getFieldError('version')
+        assert view == "/nodeAttribute/edit"
+        assert model.nodeAttributeInstance != null
+        assert model.nodeAttributeInstance.errors.getFieldError('version')
         assert flash.message != null
     }
 
     void testDelete() {
         controller.delete()
         assert flash.message != null
-        assert response.redirectedUrl == '/templateAttribute/list'
+        assert response.redirectedUrl == '/nodeAttribute/list'
 
         response.reset()
 
         populateValidParams(params)
-        def templateAttribute = new NodeAttribute(params)
+        def nodeAttribute = new NodeAttribute(params)
 
-        assert templateAttribute.save() != null
+        assert nodeAttribute.save() != null
         assert NodeAttribute.count() == 1
 
-        params.id = templateAttribute.id
+        params.id = nodeAttribute.id
 
         controller.delete()
 
         assert NodeAttribute.count() == 0
-        assert NodeAttribute.get(templateAttribute.id) == null
+        assert NodeAttribute.get(nodeAttribute.id) == null
     }
 }

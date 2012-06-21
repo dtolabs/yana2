@@ -1,0 +1,183 @@
+<yana>
+  <attributes>
+
+    <attribute id="controller" filter="String"/>
+
+    <!-- Package -->
+    <attribute id="arch" filter="String"/>
+    <attribute id="base" filter="String"/>
+    <attribute id="buildtime" filter="String"/>
+    <attribute id="filename" filter="String"/>
+    <attribute id="filetype" filter="String"/>
+    <attribute id="installroot" filter="String"/>
+    <attribute id="installrank" filter="String"/>
+    <attribute id="release" filter="String"/>
+    <attribute id="releasetag" filter="String"/>
+    <attribute id="repoUrl" filter="URL"/>
+    <attribute id="vendor" filter="String"/>
+    <attribute id="version" filter="String"/>
+
+    <!-- Node -->
+    <attribute id="hostname" filter="String"/>
+    <attribute id="osFamily" filter="String"/>
+    <attribute id="osName" filter="String"/>
+    <attribute id="osVersion" filter="String"/> 
+    <attribute id="osArch" filter="String"/>
+    <attribute id="username" filter="String"/> 
+    <attribute id="appname" filter="String"/> 
+    <attribute id="environment" filter="String"/> 
+    <attribute id="service" filter="String"/> 
+
+    <!-- Service -->
+    <attribute id="basedir" filter="String"/>
+    <attribute id="startuprank" filter="String"/>
+    <attribute id="port" filter="String"/>
+  </attributes>
+
+  <nodetypes>
+
+    <nodetype id="Node">
+      <description>An application host</description>
+      <image>Node.png</image>
+      <nodeAttributes>
+
+	<nodeAttribute id="node.hostname" attribute="hostname" required="false"/>
+	<nodeAttribute id="node.osArch" attribute="arch" required="false"/>
+	<nodeAttribute id="node.osFamily" attribute="osFamily" required="false"/>
+	<nodeAttribute id="node.osName" attribute="osName" required="false"/>
+	<nodeAttribute id="node.osVersion" attribute="osVersion" required="false"/>
+	<nodeAttribute id="node.username" attribute="username" required="false"/>
+	<nodeAttribute id="node.port" attribute="port" required="false"/>
+	<nodeAttribute id="node.basedir" attribute="basedir" required="false"/>
+	<nodeAttribute id="node.appname" attribute="appname" required="false"/>
+	<nodeAttribute id="node.service" attribute="service" required="false"/>
+	<nodeAttribute id="node.environment" attribute="environment" required="false"/>
+      </nodeAttributes>
+
+    </nodetype>
+
+    <nodetype id="Package">
+      <description>A software package</description>
+      <image>Package.png</image>
+      <nodeAttributes>
+	<nodeAttribute id="package.arch" attribute="arch" required="false"/>
+	<nodeAttribute id="package.base" attribute="base" required="false"/>
+	<nodeAttribute id="package.buildtime" attribute="buildtime" required="false"/>
+	<nodeAttribute id="package.filename" attribute="filename" required="false"/>
+	<nodeAttribute id="package.filetype" attribute="filetype" required="false"/>
+	<nodeAttribute id="package.installroot" attribute="installroot" required="false"/>
+	<nodeAttribute id="package.installrank" attribute="installrank" required="false"/>
+	<nodeAttribute id="package.release" attribute="release" required="false"/>
+	<nodeAttribute id="package.releasetag" attribute="releasetag" required="false"/>
+	<nodeAttribute id="package.repoUrl" attribute="repoUrl" required="false"/>
+	<nodeAttribute id="package.vendor" attribute="vendor" required="false"/>
+	<nodeAttribute id="package.version" attribute="version" required="false"/>
+	<nodeAttribute id="package.controller" attribute="controller" required="false"/>
+      </nodeAttributes>
+    </nodetype>
+
+    <nodetype id="Service">
+      <description>A software service</description>
+      <image>Service.png</image>
+      <nodeAttributes>
+	<nodeAttribute id="service.basedir" attribute="basedir" required="false"/>
+	<nodeAttribute id="service.startuprank" attribute="startuprank" required="false"/>
+	<nodeAttribute id="service.controller" attribute="controller" required="false"/>
+	<nodeAttribute id="service.port" attribute="port" required="false"/>
+      </nodeAttributes>
+    </nodetype> 
+
+    <nodetype id="Site">
+      <description>A service site</description>
+      <image>Site.png</image>
+      <nodeAttributes>
+	<nodeAttribute id="site.startuprank" attribute="startuprank" required="false"/>
+      </nodeAttributes>
+    </nodetype> 
+
+  </nodetypes>
+  <!--
+      Node Instances 
+  -->
+  <nodes>
+    <node id="ubuntu" nodetype="Node" tags="tomcat,simpleapp,qa">
+      <description>The ubuntu server</description>
+      <values>
+	<attributeValue nodeAttribute="node.hostname">ubuntu</attributeValue>            
+	<attributeValue nodeAttribute="node.osArch">i386</attributeValue>              
+	<attributeValue nodeAttribute="node.osFamily">unix</attributeValue>              
+	<attributeValue nodeAttribute="node.osName">Linux</attributeValue>             
+	<attributeValue nodeAttribute="node.osVersion">2.6.32-28-generic</attributeValue>              
+	<attributeValue nodeAttribute="node.username">alexh</attributeValue>              
+	<attributeValue nodeAttribute="node.port">18080</attributeValue>              
+	<attributeValue nodeAttribute="node.basedir">/tmp/demo/tomcat</attributeValue>              
+	<attributeValue nodeAttribute="node.appname">simpleapp</attributeValue>              
+	<attributeValue nodeAttribute="node.service">tomcat</attributeValue>              
+	<attributeValue nodeAttribute="node.environment">qa</attributeValue>              
+      </values>
+    </node>
+
+    <node id="tomcat" nodetype="Service" tags="QA">
+      <description>The tomcat service</description>
+      <values>
+	<attributeValue nodeAttribute="service.basedir">/tmp/demo/tomcat</attributeValue>              
+	<attributeValue nodeAttribute="service.startuprank">1</attributeValue>              
+	<attributeValue nodeAttribute="service.controller">tomcat</attributeValue>              
+	<attributeValue nodeAttribute="service.port">18080</attributeValue>              
+      </values>
+    </node>
+
+    <node id="qa" nodetype="Site" tags="QA">
+      <description>The QA site</description>
+      <values>
+	<attributeValue nodeAttribute="site.startuprank">1</attributeValue>              
+      </values>
+    </node>
+
+   <node id="apache-tomcat-5.5.31" nodetype="Package" tags="tomcat">
+      <description>the tomcat container</description>
+      <values>
+	<attributeValue nodeAttribute="package.arch">no-arch</attributeValue>  
+	<attributeValue nodeAttribute="package.base">apache-tomcat-5.5.31</attributeValue>  
+	<attributeValue nodeAttribute="package.filename">apache-tomcat-5.5.31.zip</attributeValue>  
+	<attributeValue nodeAttribute="package.filetype">zip</attributeValue>  
+	<attributeValue nodeAttribute="package.installroot">/tmp/demo/tomcat</attributeValue>  
+	<attributeValue nodeAttribute="package.installrank">1</attributeValue>  
+	<attributeValue nodeAttribute="package.repoUrl">http://localhost/simpleapp/apache-tomcat-5.5.31.zip</attributeValue>  
+	<attributeValue nodeAttribute="package.version">5.5.31</attributeValue>  
+	<attributeValue nodeAttribute="package.controller">zip</attributeValue>  
+      </values>
+    </node>        
+
+
+   <node id="simple-1.0.0.war" nodetype="Package" tags="tomcat">
+      <description>the simple webapp</description>
+      <values>
+	<attributeValue nodeAttribute="package.arch">no-arch</attributeValue>  
+	<attributeValue nodeAttribute="package.base">simple</attributeValue>  
+	<attributeValue nodeAttribute="package.filename">simple-1.0.0.war</attributeValue>  
+	<attributeValue nodeAttribute="package.filetype">war</attributeValue>  
+	<attributeValue nodeAttribute="package.installroot">/tmp/demo/tomcat/webapps</attributeValue>  
+	<attributeValue nodeAttribute="package.installrank">1</attributeValue>  
+	<attributeValue nodeAttribute="package.repoUrl">http://localhost/simpleapp/simple-1.0.0.war</attributeValue>  
+	<attributeValue nodeAttribute="package.version">1.0.0</attributeValue> 
+	<attributeValue nodeAttribute="package.controller">war</attributeValue>   
+      </values>
+    </node>        
+  </nodes>
+
+  <nodetyperelationships>
+    <nodetyperelationship rolename="environment" parent="Site" child="Node"/>
+    <nodetyperelationship rolename="service" parent="Node" child="Service"/>
+    <nodetyperelationship rolename="package" parent="Service" child="Package"/>
+  </nodetyperelationships>
+
+
+  <noderelationships>
+    <noderelationship relationshipname="QA" parent="qa" child="ubuntu"/>
+    <noderelationship relationshipname="server" parent="ubuntu" child="tomcat"/>
+    <noderelationship relationshipname="zip" parent="tomcat" child="apache-tomcat-5.5.31"/>
+    <noderelationship relationshipname="war" parent="tomcat" child="simple-1.0.0.war"/>
+  </noderelationships>
+
+</yana>

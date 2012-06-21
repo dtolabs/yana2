@@ -18,11 +18,11 @@ class NodeValueController {
 		switch(request.method){
 			case "POST":
 				def json = request.JSON
-				def templateValue = new NodeValue(params)
-				if(templateValue){
-					if (!templateValue.save(flush: true)) {
+				def nodeValue = new NodeValue(params)
+				if(nodeValue){
+					if (!nodeValue.save(flush: true)) {
 						response.status = 400 //Bad Request
-						render "TemplateValue Creation Failed"
+						render "NodeValue Creation Failed"
 					}else{
 
 						response.status = 200
@@ -82,84 +82,84 @@ class NodeValueController {
 			def tvals = NodeValue.list()
 			switch(params.format.toLowerCase()){
 				case 'xml':
-					def xml = xmlService.formatTemplateValues(tvals)
+					def xml = xmlService.formatNodeValues(tvals)
 					render(text: xml, contentType: "text/xml")
 					break;
 				case 'json':
-					def json = jsonService.formatTemplateValues(tvals)
+					def json = jsonService.formatNodeValues(tvals)
 					render(text:json, contentType: "text/json")
 					break;
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[templateValueInstanceList: NodeValue.list(params), templateValueInstanceTotal: NodeValue.count()]
+			[nodeValueInstanceList: NodeValue.list(params), nodeValueInstanceTotal: NodeValue.count()]
 		}
     }
 
     def create() {
-        [templateValueInstance: new NodeValue(params)]
+        [nodeValueInstance: new NodeValue(params)]
     }
 
     def save() {
-        def templateValueInstance = new NodeValue(params)
-        if (!templateValueInstance.save(flush: true)) {
-            render(view: "create", model: [templateValueInstance: templateValueInstance])
+        def nodeValueInstance = new NodeValue(params)
+        if (!nodeValueInstance.save(flush: true)) {
+            render(view: "create", model: [nodeValueInstance: nodeValueInstance])
             return
         }
 
-		flash.message = message(code: 'default.created.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), templateValueInstance.id])
-        redirect(action: "show", id: templateValueInstance.id)
+		flash.message = message(code: 'default.created.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), nodeValueInstance.id])
+        redirect(action: "show", id: nodeValueInstance.id)
     }
 
     def show() {
-        def templateValueInstance = NodeValue.get(params.id)
-        if (!templateValueInstance) {
+        def nodeValueInstance = NodeValue.get(params.id)
+        if (!nodeValueInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
 				render "${params.id} not found."
 			}else{
-				flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), params.id])
 	            redirect(action: "list")
 	            return
 			}
         }else{
 			if(params.format && params.format!='none'){
-				ArrayList tvals = [templateValueInstance]
+				ArrayList tvals = [nodeValueInstance]
 				switch(params.format.toLowerCase()){
 					case 'xml':
-						def xml = xmlService.formatTemplateValues(tvals)
+						def xml = xmlService.formatNodeValues(tvals)
 						render(text: xml, contentType: "text/xml")
 						break;
 					case 'json':
-						def json = jsonService.formatTemplateValues(tvals)
+						def json = jsonService.formatNodeValues(tvals)
 						render(text:json, contentType: "text/json")
 						break;
 				}
 			}else{
-	        	[templateValueInstance: templateValueInstance]
+	        	[nodeValueInstance: nodeValueInstance]
 			}
         }
     }
 
     def edit() {
-        def templateValueInstance = NodeValue.get(params.id)
-        if (!templateValueInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
+        def nodeValueInstance = NodeValue.get(params.id)
+        if (!nodeValueInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), params.id])
             redirect(action: "list")
             return
         }
 
-        [templateValueInstance: templateValueInstance]
+        [nodeValueInstance: nodeValueInstance]
     }
 
     def update() {
-        def templateValueInstance = NodeValue.get(params.id)
-        if (!templateValueInstance) {
+        def nodeValueInstance = NodeValue.get(params.id)
+        if (!nodeValueInstance) {
 			if(params.format){
 				response.status = 404 //Not Found
 				render "${params.id} not found."
 			}else{
-            	flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
+            	flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), params.id])
 				redirect(action: "list")
 				return
 			}
@@ -167,23 +167,23 @@ class NodeValueController {
 
         if (params.version) {
             def version = params.version.toLong()
-            if (templateValueInstance.version > version) {
-                templateValueInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'templateValue.label', default: 'TemplateValue')] as Object[],
-                          "Another user has updated this TemplateValue while you were editing")
-                render(view: "edit", model: [templateValueInstance: templateValueInstance])
+            if (nodeValueInstance.version > version) {
+                nodeValueInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
+                          [message(code: 'nodeValue.label', default: 'NodeValue')] as Object[],
+                          "Another user has updated this NodeValue while you were editing")
+                render(view: "edit", model: [nodeValueInstance: nodeValueInstance])
                 return
             }
         }
 
-        templateValueInstance.properties = params
+        nodeValueInstance.properties = params
 
-        if (!templateValueInstance.save(flush: true)) {
+        if (!nodeValueInstance.save(flush: true)) {
 			if(params.format){
 				response.status = 400 //Not Found
-				render "Could not save templateValue."
+				render "Could not save nodeValue."
 			}else{
-            	render(view: "edit", model: [templateValueInstance: templateValueInstance])
+            	render(view: "edit", model: [nodeValueInstance: nodeValueInstance])
 				return
 			}
         }
@@ -191,27 +191,27 @@ class NodeValueController {
 			response.status = 200 //Not Found
 			render "Successfully edited."
 		}else{
-			flash.message = message(code: 'default.updated.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), templateValueInstance.id])
-			redirect(action: "show", id: templateValueInstance.id)
+			flash.message = message(code: 'default.updated.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), nodeValueInstance.id])
+			redirect(action: "show", id: nodeValueInstance.id)
 		}
     }
 
     def delete() {
-        def templateValueInstance = NodeValue.get(params.id)
-        if (!templateValueInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
+        def nodeValueInstance = NodeValue.get(params.id)
+        if (!nodeValueInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), params.id])
             redirect(action: "list")
             return
         }
 
         try {
-            templateValueInstance.delete(flush: true)
+            nodeValueInstance.delete(flush: true)
 			
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
+			flash.message = message(code: 'default.deleted.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), params.id])
             redirect(action: "list")
         }
         catch (DataIntegrityViolationException e) {
-			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'templateValue.label', default: 'TemplateValue'), params.id])
+			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'nodeValue.label', default: 'NodeValue'), params.id])
             redirect(action: "show", id: params.id)
         }
     }

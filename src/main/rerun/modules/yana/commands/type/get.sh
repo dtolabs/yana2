@@ -51,7 +51,7 @@ xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] \
     -o "description:" -v @description -n \
     -o "id:" -v @id  $response
 printf "%s" "attributes:"
-xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/templateAttributes/templateAttribute \
+xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodeAttributes/nodeAttribute \
     -v @attributeName -i 'not(position()=last())' -o "," \
     $response
 printf "%s" "relationships:"

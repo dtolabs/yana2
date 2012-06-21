@@ -1,10 +1,10 @@
 package com.dtolabs
 
 
-import com.dtosolutions.TemplateValueController;
+import com.dtosolutions.NodeValueController;
 
 
-@TestFor(TemplateValueController)
+@TestFor(NodeValueController)
 @Mock(NodeValue)
 class NodeValueControllerTests {
 
@@ -35,35 +35,35 @@ class NodeValueControllerTests {
 
     void testIndex() {
         controller.index()
-        assert "/templateValue/list" == response.redirectedUrl
+        assert "/nodeValue/list" == response.redirectedUrl
     }
 
     void testList() {
 
         def model = controller.list()
 
-        assert model.templateValueInstanceList.size() == 0
-        assert model.templateValueInstanceTotal == 0
+        assert model.nodeValueInstanceList.size() == 0
+        assert model.nodeValueInstanceTotal == 0
     }
 
     void testCreate() {
        def model = controller.create()
 
-       assert model.templateValueInstance != null
+       assert model.nodeValueInstance != null
     }
 
     void testSave() {
         controller.save()
 
-        assert model.templateValueInstance != null
-        assert view == '/templateValue/create'
+        assert model.nodeValueInstance != null
+        assert view == '/nodeValue/create'
 
         response.reset()
 
         populateValidParams(params)
         controller.save()
 
-        assert response.redirectedUrl == '/templateValue/show/1'
+        assert response.redirectedUrl == '/nodeValue/show/1'
         assert controller.flash.message != null
         assert NodeValue.count() == 1
     }
@@ -72,105 +72,105 @@ class NodeValueControllerTests {
         controller.show()
 
         assert flash.message != null
-        assert response.redirectedUrl == '/templateValue/list'
+        assert response.redirectedUrl == '/nodeValue/list'
 
 
         populateValidParams(params)
-        def templateValue = new NodeValue(params)
+        def nodeValue = new NodeValue(params)
 
-        assert templateValue.save() != null
+        assert nodeValue.save() != null
 
-        params.id = templateValue.id
+        params.id = nodeValue.id
 
         def model = controller.show()
 
-        assert model.templateValueInstance == templateValue
+        assert model.nodeValueInstance == nodeValue
     }
 
     void testEdit() {
         controller.edit()
 
         assert flash.message != null
-        assert response.redirectedUrl == '/templateValue/list'
+        assert response.redirectedUrl == '/nodeValue/list'
 
 
         populateValidParams(params)
-        def templateValue = new NodeValue(params)
+        def nodeValue = new NodeValue(params)
 
-        assert templateValue.save() != null
+        assert nodeValue.save() != null
 
-        params.id = templateValue.id
+        params.id = nodeValue.id
 
         def model = controller.edit()
 
-        assert model.templateValueInstance == templateValue
+        assert model.nodeValueInstance == nodeValue
     }
 
     void testUpdate() {
         controller.update()
 
         assert flash.message != null
-        assert response.redirectedUrl == '/templateValue/list'
+        assert response.redirectedUrl == '/nodeValue/list'
 
         response.reset()
 
 
         populateValidParams(params)
-        def templateValue = new NodeValue(params)
+        def nodeValue = new NodeValue(params)
 
-        assert templateValue.save() != null
+        assert nodeValue.save() != null
 
         // test invalid parameters in update
-        params.id = templateValue.id
+        params.id = nodeValue.id
         //TODO: add invalid values to params object
 
         //controller.update()
 
-        //assert view == "/templateValue/edit"
-        //assert model.templateValueInstance != null
+        //assert view == "/nodeValue/edit"
+        //assert model.nodeValueInstance != null
 
-        templateValue.clearErrors()
+        nodeValue.clearErrors()
 
         populateValidParams(params)
         controller.update()
 
-        assert response.redirectedUrl == "/templateValue/show/$templateValue.id"
+        assert response.redirectedUrl == "/nodeValue/show/$nodeValue.id"
         assert flash.message != null
 
         //test outdated version number
         response.reset()
-        templateValue.clearErrors()
+        nodeValue.clearErrors()
 
         populateValidParams(params)
-        params.id = templateValue.id
+        params.id = nodeValue.id
         params.version = -1
         controller.update()
 
-        assert view == "/templateValue/edit"
-        assert model.templateValueInstance != null
-        assert model.templateValueInstance.errors.getFieldError('version')
+        assert view == "/nodeValue/edit"
+        assert model.nodeValueInstance != null
+        assert model.nodeValueInstance.errors.getFieldError('version')
         assert flash.message != null
     }
 
     void testDelete() {
         controller.delete()
         assert flash.message != null
-        assert response.redirectedUrl == '/templateValue/list'
+        assert response.redirectedUrl == '/nodeValue/list'
 
         response.reset()
 
         populateValidParams(params)
-        def templateValue = new NodeValue(params)
+        def nodeValue = new NodeValue(params)
 
-        assert templateValue.save() != null
+        assert nodeValue.save() != null
         assert NodeValue.count() == 1
 
-        params.id = templateValue.id
+        params.id = nodeValue.id
 
         controller.delete()
 
         assert NodeValue.count() == 0
-        assert NodeValue.get(templateValue.id) == null
-        assert response.redirectedUrl == '/templateValue/list'
+        assert NodeValue.get(nodeValue.id) == null
+        assert response.redirectedUrl == '/nodeValue/list'
     }
 }

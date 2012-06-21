@@ -99,8 +99,8 @@ class ImportController {
 						ntype.save(flush: true,failOnError:true)
 					}
 					def order = 1
-					nodetype.templateAttributes.children().each{ templateAttribute ->
-						Attribute attribute = Attribute.findByName(templateAttribute.@attribute.toString())
+					nodetype.nodeAttributes.children().each{ nodeAttribute ->
+						Attribute attribute = Attribute.findByName(nodeAttribute.@attribute.toString())
 						NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(ntype,attribute)
 						if(!ta){
 							ta = new NodeAttribute()
@@ -128,19 +128,19 @@ class ImportController {
 						nd.dateModified = new Date()
 						nd.save(flush: true,failOnError:true)
 					}else{
-						NodeValue.executeUpdate("delete TemplateValue TV where TV.node = ?", [nd])
+						NodeValue.executeUpdate("delete NodeValue TV where TV.node = ?", [nd])
 					}
 	
-					node.values.children().each{ templateValue ->
-						def templateAttribute = templateValue.@templateAttribute.toString()
-						def att = xml.nodetypes.nodetype.templateAttributes.templateAttribute.findAll { it.@id.text()==templateAttribute }
+					node.values.children().each{ nodeValue ->
+						def nodeAttribute = nodeValue.@nodeAttribute.toString()
+						def att = xml.nodetypes.nodetype.nodeAttributes.nodeAttribute.findAll { it.@id.text()==nodeAttribute }
 						Attribute attribute = Attribute.findByName(att.@attribute.toString())
 						NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(nodetype,attribute)
 	
 						NodeValue tv = new NodeValue()
 						tv.node = nd
 						tv.templateattribute = ta
-						tv.value = templateValue.toString()
+						tv.value = nodeValue.toString()
 						tv.dateCreated = new Date()
 						tv.dateModified = new Date()
 						tv.save(flush: true,failOnError:true)
