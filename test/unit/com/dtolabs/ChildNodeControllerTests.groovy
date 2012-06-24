@@ -1,18 +1,9 @@
 package com.dtolabs
 
 
-import com.dtolabs.ChildNode
-import com.dtolabs.NodeType
-import com.dtolabs.Node
-import com.dtosolutions.ChildNodeController;
-
-import java.util.Date
-
-
 @TestFor(ChildNodeController)
 @Mock(ChildNode)
 class ChildNodeControllerTests {
-
 
     def populateValidParams(params) {
       assert params != null

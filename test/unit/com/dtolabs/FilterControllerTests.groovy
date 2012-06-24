@@ -1,10 +1,6 @@
 package com.dtolabs
 
 
-import com.dtolabs.Filter
-import com.dtosolutions.FilterController;
-
-
 @TestFor(FilterController)
 @Mock(Filter)
 class FilterControllerTests{

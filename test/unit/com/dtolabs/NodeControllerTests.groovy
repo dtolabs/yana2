@@ -1,10 +1,6 @@
 package com.dtolabs
 
 
-import com.dtolabs.NodeType
-import com.dtosolutions.NodeController;
-
-
 @TestFor(NodeController)
 @Mock(Node)
 class NodeControllerTests {

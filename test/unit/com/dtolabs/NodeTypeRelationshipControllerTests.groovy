@@ -1,9 +1,6 @@
 package com.dtolabs
 
 
-import com.dtosolutions.NodeTypeRelationshipController;
-
-
 @TestFor(NodeTypeRelationshipController)
 @Mock(NodeTypeRelationship)
 class NodeTypeRelationshipControllerTests {

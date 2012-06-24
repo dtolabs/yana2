@@ -1,9 +1,6 @@
 package com.dtolabs
 
 
-import com.dtosolutions.NodeAttributeController;
-
-
 @TestFor(NodeAttributeController)
 @Mock(NodeAttribute)
 class NodeAttributeControllerTests {

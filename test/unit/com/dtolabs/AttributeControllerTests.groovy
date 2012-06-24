@@ -1,9 +1,6 @@
 package com.dtolabs
 
 
-import com.dtosolutions.AttributeController;
-
-
 @TestFor(AttributeController)
 @Mock([Attribute,WebhookService])
 class AttributeControllerTests {

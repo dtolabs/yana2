@@ -26,8 +26,8 @@
  package com.dtolabs
 
 
-import com.dtosolutions.SearchController;
-
+ import com.dtolabs.SearchController
+ 
 
 //@TestFor (SearchController)
 class SearchControllerTests extends GroovyTestCase{

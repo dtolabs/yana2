@@ -1,9 +1,6 @@
 package com.dtolabs
 
 
-import com.dtosolutions.NodeTypeController;
-
-
 @TestFor(NodeTypeController)
 //@Mock(NodeType)
 @Mock([NodeType,Webhook,WebhookService,IconService])

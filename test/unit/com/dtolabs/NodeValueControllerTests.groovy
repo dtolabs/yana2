@@ -1,9 +1,6 @@
 package com.dtolabs
 
 
-import com.dtosolutions.NodeValueController;
-
-
 @TestFor(NodeValueController)
 @Mock(NodeValue)
 class NodeValueControllerTests {
