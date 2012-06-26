@@ -20,7 +20,7 @@ class NodeValueControllerTests {
 	  NodeType server = NodeType.get(1)
 	  mockDomain(NodeAttribute, [new NodeAttribute(id:1,version:1,attribute:att,template:server,required:'false',dateCreated:now)])
 	  NodeAttribute tatt = NodeAttribute.get(1)
-	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',status:com.dtosolutions.Status.DEV,tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
+	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',status:com.dtolabs.Status.DEV,tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
 	  Node serverNode = Node.get(1)
 	  
 	  params["id"] = 1

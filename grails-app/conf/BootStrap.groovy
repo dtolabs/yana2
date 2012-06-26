@@ -2,7 +2,7 @@ import com.dtolabs.Filter
 import com.dtolabs.Role
 import com.dtolabs.User
 import com.dtolabs.UserRole
-import com.dtosolutions.*
+import com.dtolabs.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 class BootStrap {
