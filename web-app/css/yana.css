@@ -6,7 +6,7 @@ body {
    padding:0;
    height:100%;
    border:0;
-   background: url(/images/yana_bg.png) repeat;
+   background: url(../images/yana_bg.png) repeat;
    font-family: "Helvetica";
    font: 13px verdana, arial, helvetica, sans-serif;
    color:#ffffff;
@@ -85,7 +85,7 @@ html,body,#fullheightcontainer,#wrapper,* html #wrapper,#outer{height:100%;}
 	background-color:#010e66;
 }
 .logo{
-	background: url(/images/yana_logo2.png) no-repeat;
+	background: url(../images/yana_logo2.png) no-repeat;
 	height:25px;
 	width:81px;
 	border-bottom: 2px solid #0431f7;
@@ -243,7 +243,7 @@ input[type=button]{
 .header_login_corner{
 	padding:0px;
 	margin:0px;
-	background-image: url('/images/yana_uleft_corner.png');
+	background-image: url('../images/yana_uleft_corner.png');
 	background-repeat: no-repeat;
 	height:27px;
 	width:27px;
@@ -252,7 +252,7 @@ input[type=button]{
 .header_login_corner2{
 	padding:0px;
 	margin:0px;
-	background-image: url('/images/yana_uleft_corner.png');
+	background-image: url('../images/yana_uleft_corner.png');
 	background-repeat: no-repeat;
 	height:27px;
 	width:27px;
@@ -261,7 +261,7 @@ input[type=button]{
 .header_bottom_corner{
 	padding:0px;
 	margin:0px;
-	background: url('/images/yana_header_thumb.png');
+	background: url('../images/yana_header_thumb.png');
 	background-repeat: no-repeat;
 	position:relative;top:-4px;
 	height:27px;

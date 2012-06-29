@@ -1,8 +1,9 @@
-www<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>YANA <g:layoutTitle default="Welcome" /></title>
     <link rel="stylesheet" href="${resource(dir:'css',file:'yana.css')}" />
+    <g:render template="/common/css"/>
     <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}?v=2" />
     <g:javascript library="jquery" plugin="jquery"/>
    	<r:require module="jquery-ui"/>
@@ -39,7 +40,6 @@ www<!DOCTYPE html>
 
   </head>
   <body>
-  
 
 
 <div id="fullheightcontainer">
