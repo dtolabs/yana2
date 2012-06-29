@@ -30,10 +30,8 @@ response=/tmp/yana-import-response.txt
 #
 # Login and create a session
 #
-curl --fail --silent \
-    --data "j_username=admin&j_password=admin" \
-    ${URL}/springSecurityApp/j_spring_security_check \
-    --cookie-jar ${cookie} || rerun_die "login failed for admin"
+yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication failed"
+
 #
 # Import the file
 #

@@ -79,3 +79,28 @@ rerun_option_error() {
 rerun_option_check() {
     [ "$1" -lt 2 ] && return 2
 }
+
+#
+# Yana authentication function
+#
+
+yana_authenticate() {
+    local url=$1
+    local user=$2
+    local pass=$3
+    local cookie=$4
+    curl --fail --silent \
+	--data "j_username=${user}&j_password=${pass}" \
+	${url}/springSecurityApp/j_spring_security_check \
+	--cookie-jar ${cookie} || rerun_die "login failed for admin"
+}
+
+
+#
+# Check for a bundled xmlstarlet and alias to it accordingly
+#
+os_arch=$(printf "%s_%s" $(uname -s) $(uname -m))
+if [ -x $RERUN_MODULES/yana/lib/xmlstarlet/${os_arch} ] 
+then
+alias xmlstarlet=$RERUN_MODULES/yana/lib/xmlstarlet/${os_arch}
+fi
