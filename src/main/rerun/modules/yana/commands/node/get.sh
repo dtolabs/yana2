@@ -10,7 +10,7 @@
 
 # Retrieve the data from Yana
 #
-curl --fail --silent ${URL}/node/show/${ID}?format=xml \
+curl --fail --silent ${YANA_URL}/node/show/${ID}?format=xml \
     --cookie ${cookie} -o ${response} || rerun_die "failed obtaining Yana data"
 
 #
@@ -28,3 +28,11 @@ echo "type:$TYPE"
 printf "description:$DESC"
 
 xmlstarlet sel -t -m /nodes/node/attributes/attribute -v @name -o ":" -v @value -n $response|sort
+
+if [ -n "$CHILDREN" ]
+then
+    for id in $(xmlstarlet sel -t -m /nodes/node/children/node -v @id $response)
+    do
+	$RERUN yana:node --id $id
+    done
+fi

@@ -80,6 +80,7 @@ rerun_option_check() {
     [ "$1" -lt 2 ] && return 2
 }
 
+
 #
 # Yana authentication function
 #
@@ -95,12 +96,36 @@ yana_authenticate() {
 	--cookie-jar ${cookie} || rerun_die "login failed for admin"
 }
 
+#
+# Yana initialization function
+#
+
+yana_initialize() {
+    local cfg=$1
+
+    if [ -r $cfg ] 
+    then 
+	source $cfg
+    else
+	#echo "config file not found: $cfg"
+	YANA_URL=http://localhost:8080
+	YANA_USER=admin
+	YANA_PASSWORD=admin	
+    fi
+    [ -z "$YANA_URL" -o -z "$YANA_USER" -o -z "$YANA_PASSWORD" ] && {
+	echo "missing server connection info in $cfg"
+	return 1 
+    }
 
 #
 # Check for a bundled xmlstarlet and alias to it accordingly
 #
-os_arch=$(printf "%s_%s" $(uname -s) $(uname -m))
-if [ -x $RERUN_MODULES/yana/lib/xmlstarlet/${os_arch} ] 
-then
-alias xmlstarlet=$RERUN_MODULES/yana/lib/xmlstarlet/${os_arch}
-fi
+    os_arch=$(printf "%s_%s" $(uname -s) $(uname -m))
+    if [ -x $RERUN_MODULES/yana/lib/xmlstarlet/${os_arch} ] 
+    then
+	alias xmlstarlet=$RERUN_MODULES/yana/lib/xmlstarlet/${os_arch}
+    fi
+}
+
+
+

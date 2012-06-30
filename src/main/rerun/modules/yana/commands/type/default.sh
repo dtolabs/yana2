@@ -25,9 +25,14 @@ response=/tmp/yana-type-response.txt
 [ -f $response ] && rm $response
 
 #
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
+#
 # Login and create a session
 #
-yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication failed"
+yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
 
 #
 # Execute specified action

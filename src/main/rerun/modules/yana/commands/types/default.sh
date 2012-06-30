@@ -25,9 +25,14 @@ response=/tmp/yana-types-response.txt
 [ -f $response ] && rm $response
 
 #
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
+#
 # Login and create a session
 #
-yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication failed"
+yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
 
 #
 # Send the types request 
@@ -35,7 +40,7 @@ yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication f
 
 curl --silent --fail \
     --request POST --header "Content-Type: application/json" \
-    ${URL}/api/nodeType/list/xml --cookie ${cookie} -o ${response}
+    ${YANA_URL}/api/nodeType/list/xml --cookie ${cookie} -o ${response}
 
 #
 # Validate the response is well formed XML

@@ -18,7 +18,7 @@
 # Look up this type
 #
 http_code=$(curl -w "%{http_code}" --silent --fail --request GET \
-    ${URL}/api/nodeType/xml/$ID --cookie ${cookie} -o $response)
+    ${YANA_URL}/api/nodeType/xml/$ID --cookie ${cookie} -o $response)
 [ "${http_code}" -eq 404 ] && return 0
 
 # Validate the response
@@ -37,7 +37,7 @@ fi
 curl --silent --fail \
     --request POST \
     --header "Content-Type: application/json" \
-    ${URL}/api/nodeAttribute/list/XML \
+    ${YANA_URL}/api/nodeAttribute/list/XML \
     --cookie ${cookie} -o ${response}
 # Validate the response
 xmlstarlet val --well-formed \
@@ -50,14 +50,14 @@ if [ -n "$nodeAttributeIDs" ]
 then
 curl --silent --fail \
     --request DELETE \
-    "${URL}/api/nodeAttribute/none/{$nodeAttributeIDs}" \
+    "${YANA_URL}/api/nodeAttribute/none/{$nodeAttributeIDs}" \
     --cookie $cookie -o $response || rerun_die "Error deleting associated NodeAttributes"
 fi
 #
 # Send the delete request 
 #
 http_code=$(curl --silent --fail -w "%{http_code}" --request DELETE \
-    ${URL}/api/nodeType/none/${ID} \
+    ${YANA_URL}/api/nodeType/none/${ID} \
     --cookie ${cookie} -o $response) 
 case ${http_code} in
     20*|404|410)

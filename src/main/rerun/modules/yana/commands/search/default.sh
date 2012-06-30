@@ -24,11 +24,15 @@ cookie=/tmp/yana-search-cookiejar.txt
 response=/tmp/yana-search-response.txt
 [ -f $response ] && rm $response
 
+#
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
 
 #
 # Login and create a session
 #
-yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication failed"
+yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
 
 #
 # Define the query params
@@ -52,7 +56,7 @@ done
 #
 
 curl --fail --silent \
-    "${URL}/search/index?q=${qString}&format=xml" \
+    "${YANA_URL}/search/index?q=${qString}&format=xml" \
     --cookie ${cookie} -o ${response} || rerun_die "failed loading data to server"
 
 #

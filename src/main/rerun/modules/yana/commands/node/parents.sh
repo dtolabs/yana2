@@ -11,7 +11,7 @@
 #
 # Retrieve the data from Yana
 #
-curl --fail --silent ${URL}/node/show/${ID}?format=xml \
+curl --fail --silent ${YANA_URL}/node/show/${ID}?format=xml \
     --cookie ${cookie} -o ${response} || rerun_die "failed obtaining Yana data"
 
 

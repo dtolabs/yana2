@@ -27,14 +27,19 @@ response=/tmp/yana-nodes-response.txt
 [ -f $response ] && rm $response
 
 #
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
+#
 # Login and create a session
 #
-yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication failed"
+yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
 
 #
 # Retrieve the data from Yana
 #
-curl --fail --silent ${URL}/node/list?format=xml \
+curl --fail --silent ${YANA_URL}/node/list?format=xml \
     --cookie ${cookie} -o ${response} || rerun_die "failed obtaining Yana data"
 
 

@@ -13,13 +13,13 @@ rerun_option_check() {
     [ "$1" -lt 2 ] && rerun_option_error
 }
 
-# options: [file url]
+# options: [file cfg]
 while [ "$#" -gt 0 ]; do
     OPT="$1"
     case "$OPT" in
           -t|--type) rerun_option_check $# ; TYPE=$2 ; shift ;;
           -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
-  -u|--url) rerun_option_check $# ; URL=$2 ; shift ;;
+  -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
         # unknown option
         -?)
             rerun_option_error
@@ -32,8 +32,8 @@ while [ "$#" -gt 0 ]; do
 done
 
 # If defaultable options variables are unset, set them to their DEFAULT
-[ -z "$URL" ] && URL="http://localhost:8080"
+[ -z "$CFG" ] && CFG="$HOME/.yanarc"
 # Check required options are set
-[ -z "$URL" ] && { echo "missing required option: --url" ; return 2 ; }
+[ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
 #
 return 0

@@ -28,9 +28,14 @@ response=/tmp/yana-import-response.txt
 
 
 #
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
+#
 # Login and create a session
 #
-yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication failed"
+yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
 
 #
 # Import the file
@@ -38,7 +43,7 @@ yana_authenticate $URL admin admin ${cookie} || rerun_die "Yana authentication f
 
 curl --fail --silent \
     --form yanaimport=@${FILE} \
-    "${URL}/import/savexml" \
+    "${YANA_URL}/import/savexml" \
     --cookie ${cookie} -o ${response} || rerun_die "failed loading data to server"
 # ------------------------------
 
