@@ -54,17 +54,17 @@ class ImportController {
 	def savexml() {
 		if(!request.getFile("yanaimport").empty){
 			def xml = new XmlSlurper().parse(request.getFile("yanaimport").inputStream)
-	
-			SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-			Schema schema = factory.newSchema(new File("docs/yana.xsd"));
+            SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+            def xsdIn= servletContext.getResourceAsStream("/xsd/yana.xsd")
+            Schema schema = factory.newSchema(new StreamSource(xsdIn))
 			Validator validator = schema.newValidator()
 			
 			Date now = new Date()
-			
+
 			try{
 				// attempt to validate first
 				validator.validate(new StreamSource(request.getFile("yanaimport").inputStream))
-				
+
 				// parse attributes
 				xml.attributes.children().each{ attribute ->
 					Attribute att = Attribute.findByName(attribute.@id.toString())
@@ -83,7 +83,7 @@ class ImportController {
 						att.save(flush: true,failOnError:true)
 					}
 				}
-			
+
 				// parse nodetypes and templateattributes
 				xml.nodetypes.children().each{ nodetype ->
 					NodeType ntype = NodeType.findByName(nodetype.@id.toString())
@@ -146,7 +146,7 @@ class ImportController {
 						tv.save(flush: true,failOnError:true)
 					}
 				}
-				
+
 				// parse nodetype parent/child
 				xml.nodetyperelationships.children().each{ nodetypechild ->
 					// get dependencies
@@ -166,7 +166,7 @@ class ImportController {
 						childnodetype.save(flush: true,failOnError:true)
 					}
 				}
-				
+
 				// parse node parent/child
 				xml.noderelationships.children().each{ nodechild ->
 					// get dependencies
@@ -188,7 +188,7 @@ class ImportController {
 						//throw new SAXException( "Nodechild relationship not within bounds as described by nodetypechild." )
 					}
 				}
-				
+
 				ArrayList nodes = [nd]
 				webhookService.postToURL('node', nodes,'create')
 				
@@ -201,7 +201,7 @@ class ImportController {
 			redirect(action: "importxml")
 		}
 
-			
+
 
 
 	}
