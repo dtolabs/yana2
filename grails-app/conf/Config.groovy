@@ -16,7 +16,9 @@ if(System.properties["${appName}.config.location"]) {
 
 
 grails.config.locations = ["file:${userHome}/.yana/config.properties"]
-
+if (System.properties["${appName}.config.location"]) {
+    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+}
 /*
 def deps = [
 	"httpcore-ab-4.2.jar"
