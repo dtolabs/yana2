@@ -94,7 +94,7 @@ class AdminController {
 				def order = 1
 				nodetype.children().each{ nodeAttribute ->
 					Attribute attribute = Attribute.findByName(nodeAttribute.@attribute.toString())
-					NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(ntype,attribute)
+					NodeAttribute ta = NodeAttribute.findByNodetypeAndAttribute(ntype,attribute)
 					if(!ta){
 						ta = new NodeAttribute()
 						ta.template = ntype
@@ -128,7 +128,7 @@ class AdminController {
 					def nodeAttribute = nodeValue.@nodeAttribute.toString()
 					def att = xml.nodetypes.nodetype.nodeAttribute.findAll { it.@id.text()==nodeAttribute }
 					Attribute attribute = Attribute.findByName(att.@attribute.toString())
-					NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(nodetype,attribute)
+					NodeAttribute ta = NodeAttribute.findByNodetypeAndAttribute(nodetype,attribute)
 
 					NodeValue tv = new NodeValue()
 					tv.node = nd

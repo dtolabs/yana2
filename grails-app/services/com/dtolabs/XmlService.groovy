@@ -111,7 +111,7 @@ class XmlService {
 		xml.nodetypes() {
 			nodetypes.each(){ val1 ->
 				def nodecount = Node.findAllByNodetype(val1).size()
-				def tatts = NodeAttribute.findAllByTemplate(NodeType.get(val1.id.toLong()))
+				def tatts = NodeAttribute.findAllByNodetype(NodeType.get(val1.id.toLong()))
 				
 				def criteria = NodeTypeRelationship.createCriteria()
 				def parents = criteria.list{
