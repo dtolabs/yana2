@@ -130,7 +130,7 @@ class NodeController {
 			nodeInstance.nodeValues.each(){
 				def tv = new NodeValue()
 				tv.node = node
-				tv.templateattribute = it.templateattribute
+				tv.nodeattribute = it.nodeattribute
 				tv.value = it.value
 				tv.dateCreated = now
 				tv.save(flush: true)
@@ -209,7 +209,7 @@ class NodeController {
 				params.each{ key, val ->
 					if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
 						NodeAttribute att = NodeAttribute.get(key[3..-1].toInteger())
-					   new NodeValue(node:nodeInstance,templateattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
+					   new NodeValue(node:nodeInstance,nodeattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
 					}
 				}
 
@@ -568,12 +568,12 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				println("")
 				List atts = []
 				if(params.node){
-					atts = NodeValue.executeQuery("select new map(TV.id as tid,TV.value as templatevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from NodeValue as TV left join TV.templateattribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid} and TV.node.id=${params.node}")
+					atts = NodeValue.executeQuery("select new map(TV.id as tid,TV.value as nodevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from NodeValue as TV left join TV.nodeattribute as TA left join TA.attribute as A left join A.filter as F where TA.nodetype.id=${params.templateid} and TV.node.id=${params.node}")
 				}else{
-					atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.template.id=${params.templateid}")
+					atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.nodetype.id=${params.templateid}")
 				}
 				atts.each(){
-					response += [tid:it.tid,id:it.id,required:it.required,key:it.templatevalue,val:it.attributename,datatype:it.datatype,filter:it.filter]
+					response += [tid:it.tid,id:it.id,required:it.required,key:it.nodevalue,val:it.attributename,datatype:it.datatype,filter:it.filter]
 				}
 			}
 

@@ -10,12 +10,12 @@
 	<g:select id="node" name="node.id" from="${com.dtolabs.Node.list()}" optionKey="id" required="" value="${nodeValueInstance?.node?.id}" class="many-to-one"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeValueInstance, field: 'templateattribute', 'error')} required">
-	<label for="templateattribute">
-		<g:message code="nodeValue.templateattribute.label" default="Templateattribute" />
+<div class="fieldcontain ${hasErrors(bean: nodeValueInstance, field: 'nodeattribute', 'error')} required">
+	<label for="nodeattribute">
+		<g:message code="nodeValue.nodeattribute.label" default="Nodeattribute" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="templateattribute" name="templateattribute.id" from="${com.dtolabs.NodeAttribute.list()}" optionKey="id" required="" value="${nodeValueInstance?.templateattribute?.id}" class="many-to-one"/>
+	<g:select id="nodeattribute" name="nodeattribute.id" from="${com.dtolabs.NodeAttribute.list()}" optionKey="id" required="" value="${nodeValueInstance?.nodeattribute?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeValueInstance, field: 'value', 'error')} ">

@@ -12,7 +12,7 @@ class JsonService {
 	String formatNodes(ArrayList data){
 			ArrayList result = [:]
 			data.each(){ val1 ->
-				def attributequery = "select new map(TV.value as value,A.name as attribute,A.id as id,TA.required as required) from NodeValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
+				def attributequery = "select new map(TV.value as value,A.name as attribute,A.id as id,TA.required as required) from NodeValue as TV left join TV.node as N left join TV.nodeattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
 				def values = NodeValue.executeQuery(attributequery);
 				
 				def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
@@ -52,7 +52,7 @@ class JsonService {
 	String formatNodeValues(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
-			result += 	[nodeValue:[id:val1.id,nodeId:val1.node.id,nodeAttributeId:val1.templateattribute.id,value:val1.value]]
+			result += 	[nodeValue:[id:val1.id,nodeId:val1.node.id,nodeAttributeId:val1.nodeattribute.id,value:val1.value]]
 		}
 		return result as JSON
 	}

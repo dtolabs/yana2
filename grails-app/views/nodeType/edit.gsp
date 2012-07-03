@@ -141,9 +141,9 @@
         });
   	}
 
-  	function deleteNodeAttribute(templateAtt){
+  	function deleteNodeAttribute(nodeAtt){
   	    var params = {};
-  	    params.id = templateAtt;
+  	    params.id = nodeAtt;
   	    var jsonData = window.JSON.stringify(params);
         $.ajax({ 
             type: "POST",

@@ -57,13 +57,13 @@
         <action name='create' parent='list'>Create</action>
         <action name='list'>Templates</action>
     </controller>
-    <controller name='templateattribute'>
+    <controller name='nodeattribute'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
         <action name='list'>Template Attributes</action>
     </controller>
-    <controller name='templatevalue'>
+    <controller name='nodevalue'>
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>

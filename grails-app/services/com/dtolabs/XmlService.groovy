@@ -14,7 +14,7 @@ class XmlService {
 			
 		xml.nodes() {
 			nodes.each(){ val1 ->
-				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required,A.id as id) from NodeValue as TV left join TV.node as N left join TV.templateattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
+				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required,A.id as id) from NodeValue as TV left join TV.node as N left join TV.nodeattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
 				def values = NodeValue.executeQuery(attributequery);
 				
 				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags){
@@ -62,7 +62,7 @@ class XmlService {
 			
 		xml.nodeValues() {
 			tvals.each(){ val1 ->
-				nodeValue(id:val1.id,nodeId:val1.node.id,nodeAttributeId:val1.templateattribute.id,value:val1.value)
+				nodeValue(id:val1.id,nodeId:val1.node.id,nodeAttributeId:val1.nodeattribute.id,value:val1.value)
 			}
 		}
 		return writer.toString()

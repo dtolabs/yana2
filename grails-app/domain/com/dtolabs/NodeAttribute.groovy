@@ -5,13 +5,13 @@ class NodeAttribute{
 	static hasMany = [values:NodeValue]
 
 	Attribute attribute
-	NodeType template
+	NodeType nodetype
 	Boolean required = false
 	//Integer order
 	
     static constraints = {
 		attribute(nullable:false)
-        template(nullable:false)
+        nodetype(nullable:false)
 		required(nullable:false)
 		//order(nullable:false)
     }

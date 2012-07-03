@@ -32,11 +32,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${nodeValueInstance?.templateattribute}">
+				<g:if test="${nodeValueInstance?.nodeattribute}">
 				<li class="fieldcontain">
-					<span id="templateattribute-label" class="property-label"><g:message code="nodeValue.templateattribute.label" default="Templateattribute" /></span>
+					<span id="nodeattribute-label" class="property-label"><g:message code="nodeValue.nodeattribute.label" default="Nodeattribute" /></span>
 					
-						<span class="property-value" aria-labelledby="templateattribute-label"><g:link controller="nodeAttribute" action="show" id="${nodeValueInstance?.templateattribute?.id}">${nodeValueInstance?.templateattribute?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="nodeattribute-label"><g:link controller="nodeAttribute" action="show" id="${nodeValueInstance?.nodeattribute?.id}">${nodeValueInstance?.nodeattribute?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

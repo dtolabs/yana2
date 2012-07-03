@@ -6,14 +6,14 @@ class NodeValue{
     static belongsTo = [Node,NodeAttribute]
 
 	Node node
-	NodeAttribute templateattribute
+	NodeAttribute nodeattribute
 	String value
 	Date dateCreated
 	Date dateModified = new Date()
 	
     static constraints = {
         node(nullable:false)
-		templateattribute(nullable:false)
+		nodeattribute(nullable:false)
 		value(nullable:false)
     }
 }

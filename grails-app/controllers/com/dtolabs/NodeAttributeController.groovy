@@ -121,7 +121,7 @@ class NodeAttributeController {
 		params.template=(json.template)?json.template:params.template
 		params.attribute=(json.attribute)?json.attribute:params.attribute
         def temp = new NodeAttribute()
-		temp.template=NodeType.get(params.template.toLong())
+		temp.nodetype=NodeType.get(params.template.toLong())
 		temp.attribute = Attribute.get(params.attribute.toLong())
         if (!temp.save(flush: true,failOnError:true)) {
             render "0"

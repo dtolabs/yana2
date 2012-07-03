@@ -84,7 +84,7 @@ class ImportController {
 					}
 				}
 			
-				// parse nodetypes and templateattributes
+				// parse nodetypes and nodeattributes
 				xml.nodetypes.children().each{ nodetype ->
 					NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 					if(!ntype){
@@ -101,10 +101,10 @@ class ImportController {
 					def order = 1
 					nodetype.nodeAttributes.children().each{ nodeAttribute ->
 						Attribute attribute = Attribute.findByName(nodeAttribute.@attribute.toString())
-						NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(ntype,attribute)
+						NodeAttribute ta = NodeAttribute.findByNodetypeAndAttribute(ntype,attribute)
 						if(!ta){
 							ta = new NodeAttribute()
-							ta.template = ntype
+							ta.nodetype = ntype
 							ta.attribute = attribute
 							//ta.order = order
 							ta.save(flush: true,failOnError:true)
@@ -135,11 +135,11 @@ class ImportController {
 						def nodeAttribute = nodeValue.@nodeAttribute.toString()
 						def att = xml.nodetypes.nodetype.nodeAttributes.nodeAttribute.findAll { it.@id.text()==nodeAttribute }
 						Attribute attribute = Attribute.findByName(att.@attribute.toString())
-						NodeAttribute ta = NodeAttribute.findByTemplateAndAttribute(nodetype,attribute)
+						NodeAttribute ta = NodeAttribute.findByNodetypeAndAttribute(nodetype,attribute)
 	
 						NodeValue tv = new NodeValue()
 						tv.node = nd
-						tv.templateattribute = ta
+						tv.nodeattribute = ta
 						tv.value = nodeValue.toString()
 						tv.dateCreated = new Date()
 						tv.dateModified = new Date()

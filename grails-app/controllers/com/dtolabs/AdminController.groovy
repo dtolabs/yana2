@@ -80,7 +80,7 @@ class AdminController {
 				}
 			}
 		
-			// parse nodetypes and templateattributes
+			// parse nodetypes and nodeattributes
 			xml.nodetypes.children().each{ nodetype ->
 				NodeType ntype = NodeType.findByName(nodetype.@id.toString())
 				if(!ntype){
@@ -131,7 +131,7 @@ class AdminController {
 
 					NodeValue tv = new NodeValue()
 					tv.node = nd
-					tv.templateattribute = ta
+					tv.nodeattribute = ta
 					tv.value = nodeValue.toString()
 					tv.dateCreated = new Date()
 					tv.dateModified = new Date()

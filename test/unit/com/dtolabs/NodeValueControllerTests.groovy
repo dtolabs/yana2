@@ -26,7 +26,7 @@ class NodeValueControllerTests {
 	  params["id"] = 1
 	  params["version"] = 1
       params["node"] = serverNode
-	  params["templateattribute"] = tatt
+	  params["nodeattribute"] = tatt
 	  params["value"] = 'testamundo'
     }
 
