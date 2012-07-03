@@ -24,7 +24,7 @@ lookupAttrId() {
 #
 curl --fail --silent \
     --request GET \
-    ${URL}/api/nodeType/xml/${TYPEID} \
+    ${YANA_URL}/api/nodeType/xml/${TYPEID} \
     --cookie $cookie -o $response
 [ $? -eq 0 ] || { echo "Type not found" ; exit 1 ; }
 TYPE=$(xmlstarlet sel -t -m /nodetypes/nodetype -v @name $response)
@@ -63,7 +63,7 @@ data="$data, ${attributeData[@]}"
 #
 curl --fail --silent --request POST --header "Content-Type: application/json" \
     -d {"$data"}  \
-    ${URL}/api/node/xml \
+    ${YANA_URL}/api/node/xml \
     --cookie ${cookie} -o $response || rerun_die "failed posting Yana data"
 
 nodeId=$(xmlstarlet sel -t -m /nodes/node -v @id $response)

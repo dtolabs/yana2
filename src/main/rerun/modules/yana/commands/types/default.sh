@@ -25,12 +25,14 @@ response=/tmp/yana-types-response.txt
 [ -f $response ] && rm $response
 
 #
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
+#
 # Login and create a session
 #
-curl --silent --fail \
-    --data "j_username=admin&j_password=admin" \
-    ${URL}/springSecurityApp/j_spring_security_check \
-    --cookie-jar ${cookie} || rerun_die "login failed for admin"
+yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
 
 #
 # Send the types request 
@@ -38,7 +40,7 @@ curl --silent --fail \
 
 curl --silent --fail \
     --request POST --header "Content-Type: application/json" \
-    ${URL}/api/nodeType/list/xml --cookie ${cookie} -o ${response}
+    ${YANA_URL}/api/nodeType/list/xml --cookie ${cookie} -o ${response}
 
 #
 # Validate the response is well formed XML

@@ -13,20 +13,21 @@ rerun_option_check() {
     [ "$1" -lt 2 ] && rerun_option_error
 }
 
-# options: [action attributes description file id status tags typeid url]
+# options: [action attributes description file id status tags typeid cfg]
 while [ "$#" -gt 0 ]; do
     OPT="$1"
     case "$OPT" in
   -a|--action) rerun_option_check $# ; ACTION=$2 ; shift ;;
   -A|--attributes) rerun_option_check $# ; ATTRIBUTES=$2 ; shift ;;
   -d|--description) rerun_option_check $# ; DESCRIPTION=$2 ; shift ;;
+  -D|--depth) rerun_option_check $# ; DEPTH=$2 ; shift ;;
   -f|--file) rerun_option_check $# ; FILE=$2 ; shift ;;
   -i|--id) rerun_option_check $# ; ID=$2 ; shift ;;
   -S|--status) rerun_option_check $# ; STATUS=$2 ; shift ;;
   -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
   -T|--tags) rerun_option_check $# ; TAGS=$2 ; shift ;;
   -t|--typeid) rerun_option_check $# ; TYPEID=$2 ; shift ;;
-  -u|--url) rerun_option_check $# ; URL=$2 ; shift ;;
+  -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
         # unknown option
         -?)
             rerun_option_error
@@ -40,9 +41,10 @@ done
 
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$ACTION" ] && ACTION="get"
-[ -z "$URL" ] && URL="http://localhost:8080"
+[ -z "$CFG" ] && CFG="$HOME/.yanarc"
+[ -z "$DEPTH" ] && DEPTH=1
 # Check required options are set
 [ -z "$ACTION" ] && { echo "missing required option: --action" ; return 2 ; }
-[ -z "$URL" ] && { echo "missing required option: --url" ; return 2 ; }
+[ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
 #
 return 0

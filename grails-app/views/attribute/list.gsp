@@ -1,4 +1,4 @@
-www<%@ page import="com.dtolabs.Attribute" %>
+<%@ page import="com.dtolabs.Attribute" %>
 <!doctype html>
 <html>
 	<head>

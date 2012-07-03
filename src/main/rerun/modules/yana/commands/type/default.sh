@@ -25,12 +25,14 @@ response=/tmp/yana-type-response.txt
 [ -f $response ] && rm $response
 
 #
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
+#
 # Login and create a session
 #
-curl --silent --fail \
-    --data "j_username=admin&j_password=admin" \
-    "${URL}/springSecurityApp/j_spring_security_check" \
-    --cookie-jar ${cookie} || rerun_die "server login failed"
+yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
 
 #
 # Execute specified action

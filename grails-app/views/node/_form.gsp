@@ -23,7 +23,7 @@
 		<g:message code="node.template.label" default="Template" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="template" name="template.id" from="${com.dtosolutions.Template.list()}" optionKey="id" required="" value="${nodeInstance?.template?.id}" class="many-to-one"/>
+	<g:select id="template" name="template.id" from="${com.dtolabs.Template.list()}" optionKey="id" required="" value="${nodeInstance?.template?.id}" class="many-to-one"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">

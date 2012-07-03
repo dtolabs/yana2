@@ -14,7 +14,7 @@
 
 http_code=$(curl -w "%{http_code}" --silent --fail \
     --request DELETE \
-    ${URL}/api/node/xml/$ID --cookie ${cookie} -o $response)
+    ${YANA_URL}/api/node/xml/$ID --cookie ${cookie} -o $response)
 [  "${http_code}" -eq 200  -o "${http_code}" -eq 404 ] && return 0
 
 
