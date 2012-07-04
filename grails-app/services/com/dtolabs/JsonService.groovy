@@ -61,7 +61,7 @@ class JsonService {
 	String formatNodeAttributes(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
-			result += 	[nodeAttribute:[id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required]]
+			result += 	[nodeAttribute:[id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.nodetype.id,required:val1.required]]
 		}
 		return result as JSON
 	}
@@ -100,7 +100,7 @@ class JsonService {
 			
 			ArrayList attributes = [:]
 			tatts.each(){ val2 ->
-				attributes += [attribute:[id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.template.id,required:val2.required]]
+				attributes += [attribute:[id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.nodetype.id,required:val2.required]]
 			}
 			ArrayList ntr = [:]
 			parents.each(){ val3 ->

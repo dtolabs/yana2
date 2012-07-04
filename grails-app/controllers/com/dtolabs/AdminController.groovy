@@ -97,7 +97,7 @@ class AdminController {
 					NodeAttribute ta = NodeAttribute.findByNodetypeAndAttribute(ntype,attribute)
 					if(!ta){
 						ta = new NodeAttribute()
-						ta.template = ntype
+						ta.nodetype = ntype
 						ta.attribute = attribute
 						//ta.order = order
 						ta.save(flush: true,failOnError:true)

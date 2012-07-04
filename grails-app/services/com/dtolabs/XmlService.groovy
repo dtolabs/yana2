@@ -74,7 +74,7 @@ class XmlService {
 			
 		xml.nodeAttributes() {
 			tatts.each(){ val1 ->
-				nodeAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.template.id,required:val1.required)
+				nodeAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.nodetype.id,required:val1.required)
 			}
 		}
 		return writer.toString()
@@ -126,7 +126,7 @@ class XmlService {
 				nodetype(id:val1.id,name:val1.name,description:val1.description,image:val1.image,nodeCount:nodecount){
 					nodeAttributes() {
 						tatts.each(){ val2 ->
-							nodeAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.template.id,required:val2.required)
+							nodeAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.nodetype.id,required:val2.required)
 						}
 					}
 					nodetypeRelationships() {
