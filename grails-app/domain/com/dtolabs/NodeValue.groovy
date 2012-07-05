@@ -10,7 +10,11 @@ class NodeValue{
 	String value
 	Date dateCreated
 	Date dateModified = new Date()
-	
+
+    static mapping = {
+        value column: 'nodevalue'
+
+    }
     static constraints = {
         node(nullable:false)
 		nodeattribute(nullable:false)

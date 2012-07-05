@@ -6,6 +6,7 @@ class Role {
 
 	static mapping = {
 		//cache true
+        table 'yana_role'
 	}
 
 	static constraints = {

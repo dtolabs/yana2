@@ -17,7 +17,9 @@ class User {
 	}
 
 	static mapping = {
-		password column: '`password`'
+        table 'yana_user'
+		password column: 'user_password'
+
 	}
 
 	Set<Role> getAuthorities() {
