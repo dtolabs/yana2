@@ -41,18 +41,24 @@ yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Ya
 
 case $ACTION in
     create)
+	[ -z "$TYPEID" ] && { echo "missing required option: --typeid" ; exit 2 ; }
+	[ -z "$NAME" ] && { echo "missing required option: --name" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/node/create.sh
 	;;
     children)
+	[ -z "$ID" ] && { echo "missing required option: --id" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/node/children.sh
 	;;
     parents)
+	[ -z "$ID" ] && { echo "missing required option: --id" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/node/parents.sh
 	;;
     delete)
+	[ -z "$ID" ] && { echo "missing required option: --id" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/node/delete.sh
 	;;
     get)
+	[ -z "$ID" ] && { echo "missing required option: --id" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/node/get.sh
 	;;
     *)

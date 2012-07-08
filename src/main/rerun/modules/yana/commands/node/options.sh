@@ -43,6 +43,7 @@ done
 [ -z "$ACTION" ] && ACTION="get"
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
 [ -z "$DEPTH" ] && DEPTH=1
+[ -z "$STATUS" ] && STATUS=DEV
 # Check required options are set
 [ -z "$ACTION" ] && { echo "missing required option: --action" ; return 2 ; }
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }

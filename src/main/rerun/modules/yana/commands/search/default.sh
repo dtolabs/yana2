@@ -49,6 +49,7 @@ do
     i=$(( $i + 1 ))
 done
 
+[ -z "$qString" ] && { echo "specify --type or --name"  ; exit 1 ; }
 
 
 #
@@ -59,6 +60,8 @@ curl --fail --silent \
     "${YANA_URL}/search/index?q=${qString}&format=xml" \
     --cookie ${cookie} -o ${response} || rerun_die "failed loading data to server"
 
+grep -q 'Invalid search' ${response} && { echo 'invalid search criteria' ; exit 1 ; }
+
 #
 # Validate the response is well formed XML
 #
@@ -67,7 +70,7 @@ xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || rerun_die "Yana 
 #
 # Output the data
 #
-xmlstarlet sel -t -m /nodes/node -v @type -o ":" -v @name -o ":" -v @id  -n  $response
+xmlstarlet sel -t -m /nodes/node -v @type -o ":" -v @name -o ":" -v @id -n $response
 
 
 # ------------------------------

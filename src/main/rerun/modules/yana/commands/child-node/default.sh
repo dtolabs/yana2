@@ -37,50 +37,17 @@ yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Ya
 
 case $ACTION in
     create)
-	curl --silent --fail --request POST \
-	    --header "Content-Type: application/json" \
-	    -d "{relationshipName:'${NAME}',parent:'${ID}',child:'${CHILD}'}" \
-	    ${YANA_URL}/api/childNode/xml \
-	    -o $response --cookie $cookie || rerun_die "server request failed"
-	xmlstarlet val --well-formed \
-	    --quiet ${response} 2>/dev/null || rerun_die "Yana response failed XML validation"
-    	xmlstarlet sel -t -m /childNodes/childNode \
-	    -v @relationshipName -o ":" -v @id -o ":" \
-	    -v @parentName -o ":" -v @parentNodeId -o ":" \
-	    -v @childName  -o ":" -v @childNodeId \
-	    $response || rerun_die "failed parsing result"
+	[ -z "$CHILD" ] && { echo "missing required option: --child <id>" ; return 2 ; }
+	source $RERUN_MODULES/yana/commands/child-node/create.sh
 	;;
     get)
-	curl --silent --fail --request GET \
-	    ${YANA_URL}/api/childNode/xml/${ID} \
-	    -o $response --cookie $cookie
-	[ $? == 0 -a ! -f $response ] && rerun_die "ChildNode not found. (id: ${ID})"
-	xmlstarlet val --well-formed \
-	    --quiet ${response} 2>/dev/null || rerun_die "Yana response failed XML validation"
-	xmlstarlet sel -t -m /childNodes/childNode \
-	    -v @relationshipName -o ":" -v @id -o ":" \
-	    -v @parentName -o ":" -v @parentNodeId -o ":" \
-	    -v @childName  -o ":" -v @childNodeId \
-	    $response || rerun_die "failed parsing result"
+	source $RERUN_MODULES/yana/commands/child-node/get.sh
 	;;
     list)
-	curl --silent --fail --request POST \
-	    --header "Content-Type: application/json" \
-	    ${YANA_URL}/api/childNode/list/xml \
-	    -o $response --cookie $cookie 
-	xmlstarlet val --well-formed \
-	    --quiet ${response} 2>/dev/null || rerun_die "Yana response failed XML validation"
-	xmlstarlet sel -t -m /childNodes/childNode \
-	    -v @relationshipName -o ":" -v @id -o ":" \
-	    -v @parentName -o ":" -v @parentNodeId -o ":" \
-	    -v @childName  -o ":" -v @childNodeId \
-	    -n  $response || rerun_die "failed parsing result"
-
+	source $RERUN_MODULES/yana/commands/child-node/list.sh
 	;;
    delete)
-	curl --silent --fail --request DELETE \
-	    ${YANA_URL}/api/childNode/none/${ID} \
-	    -o ${response} --cookie ${cookie}
+	source $RERUN_MODULES/yana/commands/child-node/delete.sh
 	;;
     *)
 	echo actions: $RANGE

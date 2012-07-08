@@ -3,7 +3,7 @@
 NAME=id
 DESCRIPTION="node id"
 ARGUMENTS=true
-REQUIRED=false
+REQUIRED=true
 SHORT=i
 LONG=id
 DEFAULT=

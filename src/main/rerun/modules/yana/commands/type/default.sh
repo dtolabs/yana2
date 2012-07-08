@@ -39,6 +39,10 @@ yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Ya
 #
 
 case $ACTION in
+    create)
+	[ -z "$TYPE" ] && { echo "missing required option: --type" ; return 2 ; }
+	source $RERUN_MODULES/yana/commands/type/create.sh
+	;;
     delete)
 	source $RERUN_MODULES/yana/commands/type/delete.sh
 	;;

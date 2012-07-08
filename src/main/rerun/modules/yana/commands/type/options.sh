@@ -18,6 +18,7 @@ while [ "$#" -gt 0 ]; do
     OPT="$1"
     case "$OPT" in
           -a|--action) rerun_option_check $# ; ACTION=$2 ; shift ;;
+  -d|--description) rerun_option_check $# ; DESCRIPTION=$2 ; shift ;;
           -t|--type) rerun_option_check $# ; TYPE=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
   -i|--id) rerun_option_check $# ; ID=$2 ; shift ;;

@@ -37,7 +37,9 @@ done
 [ -z "$ACTION" ] && ACTION="create"
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
 # Check required options are set
+[ -z "$ID" ] && { echo "missing required option: --id" ; return 2 ; }
 [ -z "$ACTION" ] && { echo "missing required option: --action" ; return 2 ; }
-[ -z "$YANA_URL" ] && { echo "missing required option: --url" ; return 2 ; }
+[ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
+
 #
 return 0

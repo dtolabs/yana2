@@ -26,10 +26,14 @@ curl --fail --silent \
     --request GET \
     ${YANA_URL}/api/nodeType/xml/${TYPEID} \
     --cookie $cookie -o $response
-[ $? -eq 0 ] || { echo "Type not found" ; exit 1 ; }
+
+[ $? -eq 0 ] || { echo "Type not found with that id: $TYPEID" ; exit 1 ; }
 TYPE=$(xmlstarlet sel -t -m /nodetypes/nodetype -v @name $response)
+
+#
 # Map attribute names to formatted attribute ID keys
 # eg attrName:att#id
+#
 declare -a attributeKeys
 attributeKeys=( $(xmlstarlet sel -t \
     -m /nodetypes/nodetype/nodeAttributes/nodeAttribute \
@@ -53,6 +57,8 @@ data="$data $(printf "%s:'%s'," status "$STATUS")"
 data="$data $(printf "%s:'%s'" tags "$TAGS")"
 data="$data, ${attributeData[@]}"
 
+# 
+# Example data:
 #
 # "{name:'new node',description:'this is the description',nodetype:1,status:'DEV',tags:'this,is,a,test',att1:'value1',att2:'value2'}"
 #
