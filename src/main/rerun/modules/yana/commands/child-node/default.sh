@@ -41,12 +41,14 @@ case $ACTION in
 	source $RERUN_MODULES/yana/commands/child-node/create.sh
 	;;
     get)
+	[ -z "$ID" ] && { echo "missing required option: --id" ; return 2 ; }
 	source $RERUN_MODULES/yana/commands/child-node/get.sh
 	;;
     list)
 	source $RERUN_MODULES/yana/commands/child-node/list.sh
 	;;
    delete)
+	[ -z "$ID" ] && { echo "missing required option: --id" ; return 2 ; }
 	source $RERUN_MODULES/yana/commands/child-node/delete.sh
 	;;
     *)
