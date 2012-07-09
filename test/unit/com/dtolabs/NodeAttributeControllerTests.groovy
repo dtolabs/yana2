@@ -1,5 +1,8 @@
 package com.dtolabs
 
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+
 
 @TestFor(NodeAttributeController)
 @Mock(NodeAttribute)
@@ -11,15 +14,17 @@ class NodeAttributeControllerTests {
 	  Date now = new Date()
 	  mockDomain(Filter, [new Filter(id:1,version:1,dataType:'String',regex:'^.*\$',dateCreated:now)])
 	  Filter fStr = Filter.get(1)
+        assertNotNull fStr
 	  mockDomain(Attribute, [new Attribute(id:1,version:1,name:'Friendly_Name',filter:fStr,dateCreated:now)])
 	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
 	  NodeType server = NodeType.get(1)
+        assertNotNull server
 	  
 	  params["id"] = 1
 	  params["version"] = 1
       params["attribute"] = Attribute.get(1)
-	  params["template"] = NodeType.get(1)
-	  params["required"] = 'false'
+	  params["nodetype"] = NodeType.get(1)
+	  params["required"] = false
     }
 
     void testIndex() {

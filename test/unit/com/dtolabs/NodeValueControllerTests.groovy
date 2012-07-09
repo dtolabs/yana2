@@ -1,5 +1,8 @@
 package com.dtolabs
 
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+
 
 @TestFor(NodeValueController)
 @Mock(NodeValue)
@@ -10,24 +13,29 @@ class NodeValueControllerTests {
       assert params != null
       // TODO: Populate valid properties like...
       //params["name"] = 'someValidName'
-	  
-	  Date now = new Date()
-	  mockDomain(Filter, [new Filter(id:1,version:1,dataType:'String',regex:'^.*\$',dateCreated:now)])
-	  Filter fStr = Filter.get(1)
-	  mockDomain(Attribute, [new Attribute(id:1,version:1,name:'Friendly_Name',filter:fStr,dateCreated:now)])
-	  Attribute att = Attribute.get(1)
-	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
-	  NodeType server = NodeType.get(1)
-	  mockDomain(NodeAttribute, [new NodeAttribute(id:1,version:1,attribute:att,template:server,required:'false',dateCreated:now)])
-	  NodeAttribute tatt = NodeAttribute.get(1)
-	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',status:com.dtolabs.Status.DEV,tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
-	  Node serverNode = Node.get(1)
-	  
-	  params["id"] = 1
-	  params["version"] = 1
+
+      Date now = new Date()
+      mockDomain(Filter, [new Filter(id:1,version:1,dataType:'String',regex:'^.*\$',dateCreated:now)])
+      Filter fStr = Filter.get(1)
+        assertNotNull fStr
+      mockDomain(Attribute, [new Attribute(id:1,version:1,name:'Friendly_Name',filter:fStr,dateCreated:now)])
+      Attribute att = Attribute.get(1)
+        assertNotNull att
+      mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
+      NodeType server = NodeType.get(1)
+        assertNotNull server
+      mockDomain(NodeAttribute, [new NodeAttribute(id:1,version:1,attribute:att, nodetype:server,required:false,dateCreated:now)])
+      NodeAttribute tatt = NodeAttribute.get(1)
+      assertNotNull tatt
+      mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',status:com.dtolabs.Status.DEV,tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
+      Node serverNode = Node.get(1)
+        assertNotNull serverNode
+
+      params["id"] = 1
+      params["version"] = 1
       params["node"] = serverNode
-	  params["nodeattribute"] = tatt
-	  params["value"] = 'testamundo'
+      params["nodeattribute"] = tatt
+      params["value"] = 'testamundo'
     }
 
     void testIndex() {
