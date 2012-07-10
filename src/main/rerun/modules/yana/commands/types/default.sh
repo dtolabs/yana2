@@ -58,7 +58,7 @@ format() {
 	arr=( $line )
 	[ ${#arr[*]} -eq 3 ] || continue
 	IFS=$oIFS
-	yana_expand "$FORMAT" TYPE="${arr[0]}" DESCRIPTION="${arr[1]}" ID="${arr[2]}"
+	yana_expand "$FORMAT" TYPE="${arr[0]}" DESCRIPTION='${arr[1]}' ID="${arr[2]}"
 
     done 
 }
