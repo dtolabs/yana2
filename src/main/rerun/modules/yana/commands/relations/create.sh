@@ -38,7 +38,7 @@ case "$http_code" in
 	    $response | format )|| rerun_die "failed parsing result"
 	;;
     404)
-	rerun_die "child-node action not permitted for node id: $ID"
+	rerun_die "relations not permitted. (parent:$ID, child:$CHILD)"
 	;;
     500)
 	rerun_die "server request failed"
