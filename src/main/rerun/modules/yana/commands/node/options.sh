@@ -22,6 +22,7 @@ while [ "$#" -gt 0 ]; do
   -d|--description) rerun_option_check $# ; DESCRIPTION=$2 ; shift ;;
   -D|--depth) rerun_option_check $# ; DEPTH=$2 ; shift ;;
   -f|--file) rerun_option_check $# ; FILE=$2 ; shift ;;
+  -F|--format) rerun_option_check $# ; FORMAT=$2 ; shift ;;
   -i|--id) rerun_option_check $# ; ID=$2 ; shift ;;
   -S|--status) rerun_option_check $# ; STATUS=$2 ; shift ;;
   -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
@@ -44,6 +45,7 @@ done
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
 [ -z "$DEPTH" ] && DEPTH=1
 [ -z "$STATUS" ] && STATUS=DEV
+[ -z "$FORMAT" ] && FORMAT='${ATTRIBUTE}:${VALUE}'
 # Check required options are set
 [ -z "$ACTION" ] && { echo "missing required option: --action" ; return 2 ; }
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }

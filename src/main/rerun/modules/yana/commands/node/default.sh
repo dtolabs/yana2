@@ -45,14 +45,6 @@ case $ACTION in
 	[ -z "$NAME" ] && { echo "missing required option: --name" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/node/create.sh
 	;;
-    children)
-	[ -z "$ID" ] && { echo "missing required option: --id" ; exit 2 ; }
-	source $RERUN_MODULES/yana/commands/node/children.sh
-	;;
-    parents)
-	[ -z "$ID" ] && { echo "missing required option: --id" ; exit 2 ; }
-	source $RERUN_MODULES/yana/commands/node/parents.sh
-	;;
     delete)
 	[ -z "$ID" ] && { echo "missing required option: --id" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/node/delete.sh

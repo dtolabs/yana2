@@ -113,13 +113,13 @@ yana_initialize() {
 	YANA_PASSWORD=admin	
     fi
     [ -z "$YANA_URL" -o -z "$YANA_USER" -o -z "$YANA_PASSWORD" ] && {
-	echo "missing server connection info in $cfg"
+	echo "missing server connection info in file: $cfg"
 	return 1 
     }
 
-#
-# Check for a bundled xmlstarlet and alias to it accordingly
-#
+    #
+    # Check for a bundled xmlstarlet and alias to it accordingly
+    #
     os_arch=$(printf "%s_%s" $(uname -s) $(uname -m))
     if [ -x $RERUN_MODULES/yana/lib/xmlstarlet/${os_arch} ] 
     then
@@ -127,5 +127,21 @@ yana_initialize() {
     fi
 }
 
+#
+# Expand a line based on a format string and variable bindings
+#
+#  Example: yana_expand '${one}:${two}' one=1 two=2
+#         ==> 1:2
+#
+yana_expand() {
+    local fmtString=$1
+    shift
+    for kv in $@; do
+	local key=${kv%=*}
+	local val="${kv#*=}"
+	eval $key="$val" ; # sets the variable
+    done
+    eval echo ${fmtString} 
+}
 
 

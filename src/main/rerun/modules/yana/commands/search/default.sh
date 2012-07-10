@@ -67,10 +67,27 @@ grep -q 'Invalid search' ${response} && { echo 'invalid search criteria' ; exit 
 #
 xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || rerun_die "Yana response failed XML validation"
 
+
+#
+# Function to format the output
+# 
+format() {
+    oIFS=$IFS
+    while read line
+    do
+	IFS=:
+	arr=( $line )
+	[ ${#arr[*]} -eq 3 ] || continue
+	IFS=$oIFS
+	yana_expand "$FORMAT" TYPE=${arr[0]} NAME=${arr[1]} ID=${arr[2]}
+
+    done 
+}
+
 #
 # Output the data
 #
-xmlstarlet sel -t -m /nodes/node -v @type -o ":" -v @name -o ":" -v @id -n $response
+xmlstarlet sel -t -m /nodes/node -v @type -o ":" -v @name -o ":" -v @id -n $response | format
 
 
 # ------------------------------

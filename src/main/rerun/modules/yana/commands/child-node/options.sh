@@ -19,6 +19,7 @@ while [ "$#" -gt 0 ]; do
     case "$OPT" in
           -a|--action) rerun_option_check $# ; ACTION=$2 ; shift ;;
   -c|--child) rerun_option_check $# ; CHILD=$2 ; shift ;;
+  -F|--format) rerun_option_check $# ; FORMAT=$2 ; shift ;;
   -i|--id) rerun_option_check $# ; ID=$2 ; shift ;;
   -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
@@ -36,6 +37,8 @@ done
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$ACTION" ] && ACTION="create"
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
+[ -z "$FORMAT" ] && FORMAT='${NAME}:${ID}:${PARENT_NAME}:${PARENT_ID}:${CHILD_NAME}:${CHILD_ID}'
+
 # Check required options are set
 [ -z "$ACTION" ] && { echo "missing required option: --action" ; return 2 ; }
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }

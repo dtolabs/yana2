@@ -48,14 +48,30 @@ curl --silent --fail \
 xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || rerun_die "Yana response failed XML validation"
 
 #
+# Function to format the output
+# 
+format() {
+    oIFS=$IFS
+    while read line
+    do
+	IFS=:
+	arr=( $line )
+	[ ${#arr[*]} -eq 3 ] || continue
+	IFS=$oIFS
+	yana_expand "$FORMAT" TYPE="${arr[0]}" DESCRIPTION="${arr[1]}" ID="${arr[2]}"
+
+    done 
+}
+
+#
 # Output the data
 #
 
 if [ -n "$TYPE" ]
 then
-xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @name -o ":" -v @description -o ":" -v @id -n  $response
+xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @name -o ":" -v @description -o ":" -v @id -n  $response | format
 else
-xmlstarlet sel -t -m /nodetypes/nodetype -v @name -o ":" -v @description -o ":" -v @id  -n  $response
+xmlstarlet sel -t -m /nodetypes/nodetype -v @name -o ":" -v @description -o ":" -v @id  -n  $response | format
 fi
 
 # ------------------------------

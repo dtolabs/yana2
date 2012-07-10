@@ -38,6 +38,21 @@ fi
 xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || rerun_die "Server response failed XML validation"
 
 #
+# Function to format the output
+# 
+format() {
+    oIFS=$IFS
+    while read line
+    do
+	IFS=:
+	arr=( $line )
+	[ ${#arr[*]} -eq 2 ] || continue
+	IFS=$oIFS
+	yana_expand "$FORMAT" ATTRIBUTE=${arr[0]} VALUE=${arr[1]}
+    done 
+}
+
+#
 # Look up the type name if addressed by ID.
 #
 [ -z "$TYPE" ] &&  TYPE=$(xmlstarlet sel -t -m /nodetypes/nodetype -v @name $response)
@@ -46,20 +61,24 @@ xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || rerun_die "Serve
 #
 # Output the data
 #
-xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] \
-    -o "name:" -v @name -n \
-    -o "description:" -v @description -n \
-    -o "id:" -v @id  $response
-printf "%s" "attributes:"
-xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodeAttributes/nodeAttribute \
+NAME=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @name $response)
+DESCRIPTION=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @description $response)
+ID=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @id $response)
+ATTRIBUTES=$(xmlstarlet sel -t \
+    -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodeAttributes/nodeAttribute \
     -v @attributeName -i 'not(position()=last())' -o "," \
-    $response
-printf "%s" "relationships:"
-xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodetypeRelationships/nodetypeRelationship \
+    $response)
+RELATIONSHIPS=$(xmlstarlet sel -t \
+    -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodetypeRelationships/nodetypeRelationship \
     -v @roleName -i 'not(position()=last())' -o "," \
-    $response
+    $response)
 
 
+echo "type:$NAME" | format
+echo "id:$ID" | format
+printf "%s:%s\n" description '$DESCRIPTION' | format
+echo "attributes:$ATTRIBUTES" | format
+echo "relationships:$RELATIONSHIPS" | format
 
 # ------------------------------
 
