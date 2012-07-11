@@ -125,6 +125,10 @@ yana_initialize() {
     then
 	alias xmlstarlet=$RERUN_MODULES/yana/lib/xmlstarlet/${os_arch}
     fi
+    #
+    # Verify xmlstarlet and curl are contained in this environment
+    which -s xmlstarlet || rerun_die "this module needs xmlstarlet"
+    which -s curl || rerun_die "this module needs curl"
 }
 
 #
