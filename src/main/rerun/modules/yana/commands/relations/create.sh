@@ -10,7 +10,7 @@
 
 http_code=$(curl -w "%{http_code}" --silent --fail --request POST \
     --header "Content-Type: application/json" \
-    -d "{relationshipName:'${NAME}',parent:'${ID}',child:'${CHILD}'}" \
+    -d "{relationshipName:'${NAME}',parent:'${PARENT}',child:'${CHILD}'}" \
     ${YANA_URL}/api/childNode/xml \
     -o $response --cookie $cookie )
 
@@ -38,7 +38,7 @@ case "$http_code" in
 	    $response | format )|| rerun_die "failed parsing result"
 	;;
     404)
-	rerun_die "relations not permitted. (parent:$ID, child:$CHILD)"
+	rerun_die "relations not permitted. (parent:$PARENT, child:$CHILD)"
 	;;
     500)
 	rerun_die "server request failed"

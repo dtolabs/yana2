@@ -23,6 +23,7 @@ while [ "$#" -gt 0 ]; do
   -A|--action) rerun_option_check $# ; ACTION=$2 ; shift ;;
   -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
   -c|--child) rerun_option_check $# ; CHILD=$2 ; shift ;;
+  -p|--parent) rerun_option_check $# ; PARENT=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
         # unknown option
         -?)

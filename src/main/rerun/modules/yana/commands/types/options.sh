@@ -33,7 +33,7 @@ done
 
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
-[ -z "$FORMAT" ] && FORMAT='${TYPE}:${DESCRIPTION}:${ID}'
+[ -z "$FORMAT" ] && FORMAT='${ID}:${TYPE}:${DESCRIPTION}'
 # Check required options are set
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
 #

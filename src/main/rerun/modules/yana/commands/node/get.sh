@@ -41,11 +41,3 @@ echo "type:$TYPE" | format
 printf "description:$DESCRIPTION" | format
 
 xmlstarlet sel -t -m /nodes/node/attributes/attribute -v @name -o ":" -v @value -n $response|sort|format
-
-#if [ -n "$CHILDREN" ]
-#then
-#    for id in $(xmlstarlet sel -t -m /nodes/node/children/node -v @id $response)
-#    do
-#	$RERUN yana:node --id $id
-#    done
-#fi

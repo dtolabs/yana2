@@ -7,5 +7,5 @@ REQUIRED=true
 SHORT=a
 LONG=action
 DEFAULT=get
-RANGE="create delete get"
+RANGE="create,delete,get"
 
