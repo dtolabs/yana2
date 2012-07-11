@@ -3,12 +3,18 @@ package com.dtolabs
 import java.util.ArrayList;
 
 import grails.converters.JSON
+import java.text.SimpleDateFormat
 
 class JsonService {
 	
 	static transactional = false
 	static scope = "prototype"
-	
+        static RFC3339_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+    String formatDate(date) {
+        def d = new SimpleDateFormat(RFC3339_DATE_FORMAT).format(date)
+    }
+    
 	String formatNodes(ArrayList data){
 			ArrayList result = [:]
 			data.each(){ val1 ->
@@ -25,8 +31,10 @@ class JsonService {
 					kinder += [node:[childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags]]
 				}
 				
-				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags],
+				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags,status:val1.status?.toString()],
 					description:val1.description,
+                                        'date-created':DateFormatUtil.formatRfc3339(val1.dateCreated),
+                                        'date-modified':DateFormatUtil.formatRfc3339(val1.dateModified),
 					attributes:
 						values.each{ val2 ->
 							attribute:[id:val2.id,name:val2.attribute,value:val2.value,required:val2.required]

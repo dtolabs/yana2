@@ -2,12 +2,13 @@ package com.dtolabs
 
 import groovy.xml.MarkupBuilder
 import org.custommonkey.xmlunit.*
+import java.text.SimpleDateFormat
 
 class XmlService {
 	
 	static transactional = false
 	static scope = "prototype"
-	
+
 	String formatNodes(ArrayList nodes){
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)
@@ -17,8 +18,10 @@ class XmlService {
 				def attributequery = "select new map(TV.value as value,A.name as attribute,TA.required as required,A.id as id) from NodeValue as TV left join TV.node as N left join TV.nodeattribute as TA left join TA.attribute as A where N.id=${val1.id.toLong()} order by A.name desc"
 				def values = NodeValue.executeQuery(attributequery);
 				
-				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags){
+				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags,status:val1.status?.toString()){
 					description(val1.description)
+                                    'date-modified'(DateFormatUtil.formatRfc3339(val1.dateModified))
+                                    'date-created'(DateFormatUtil.formatRfc3339(val1.dateCreated))
 					attributes(){
 						values.each{ val2 ->
 							attribute(id:val2.id,name:val2.attribute,value:val2.value,required:val2.required)
