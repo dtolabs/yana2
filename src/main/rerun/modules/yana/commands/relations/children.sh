@@ -32,7 +32,7 @@ then
 #
     for child in $(xmlstarlet sel -t -m /nodes/node/children/node \
 	-v @childnodeId -o ":" -v @relationshipName -o ":" \
-	-v @type -o ":" -v @name -o ":" -v @id -n $response)
+	-v @id  -o ":"  -v @name  -o ":" -v @type  -n $response)
     do
   #
   # Print this child's info to stdout 
@@ -48,13 +48,13 @@ then
   #
   # ... and recurse another level 
   #
-  $RERUN yana:relations --action children --depth $(( $DEPTH - 1 )) --id ${arr[4]} --format $FORMAT \
+  $RERUN yana:relations --action children --depth $(( $DEPTH - 1 )) --id ${arr[2]} --format $FORMAT \
       || rerun_die "Failed recursing through children"
     done
 else
     xmlstarlet sel -t -m /nodes/node/children/node \
 	-v @childnodeId -o ":" -v @relationshipName -o ":" \
-	-v @type -o ":" -v @name -o ":" -v @id $response|sort | format
+	-v @id  -o ":" -v @name -o ":" -v @type  $response|sort | format
 fi
 
 

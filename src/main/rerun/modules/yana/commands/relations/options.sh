@@ -40,7 +40,7 @@ done
 [ -z "$ACTION" ] && ACTION=children
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
 [ -z "$DEPTH" ] && DEPTH=1
-[ -z "$FORMAT" ] && FORMAT='${RELATIONSHIP}:${CHILDNODE}:${TYPE}:${NAME}:${ID}'
+[ -z "$FORMAT" ] && FORMAT='${ID}:${RELATIONSHIP}:${CHILDNODE}:${NAME}:${TYPE}'
 # Check required options are set
 
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }

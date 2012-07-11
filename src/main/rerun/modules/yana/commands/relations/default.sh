@@ -48,7 +48,7 @@ format() {
 	arr=( $line )
 	[ ${#arr[*]} -eq 5 ] || continue
 	IFS=$oIFS
-	yana_expand "$FORMAT" RELATIONSHIP=${arr[0]} CHILDNODE=${arr[1]} TYPE=${arr[2]} NAME=${arr[3]} ID=${arr[4]}
+	yana_expand "$FORMAT"  CHILDNODE=${arr[0]} RELATIONSHIP=${arr[1]} ID=${arr[2]} NAME=${arr[3]} TYPE=${arr[4]} 
     done 
 }
 
