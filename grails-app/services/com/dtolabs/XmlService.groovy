@@ -2,7 +2,6 @@ package com.dtolabs
 
 import groovy.xml.MarkupBuilder
 import org.custommonkey.xmlunit.*
-import java.text.SimpleDateFormat
 
 class XmlService {
 	
