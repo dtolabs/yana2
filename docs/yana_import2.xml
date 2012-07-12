@@ -17,7 +17,7 @@
     <attribute id="vendor" filter="String"/>
     <attribute id="version" filter="String"/>
 
-    <!-- Node -->
+    <!-- Host -->
     <attribute id="hostname" filter="String"/>
     <attribute id="osFamily" filter="String"/>
     <attribute id="osName" filter="String"/>
@@ -36,22 +36,21 @@
 
   <nodetypes>
 
-    <nodetype id="Node">
+    <nodetype id="Host">
       <description>An application host</description>
       <image>Node.png</image>
       <nodeAttributes>
-
-	<nodeAttribute id="node.hostname" attribute="hostname" required="false"/>
-	<nodeAttribute id="node.osArch" attribute="arch" required="false"/>
-	<nodeAttribute id="node.osFamily" attribute="osFamily" required="false"/>
-	<nodeAttribute id="node.osName" attribute="osName" required="false"/>
-	<nodeAttribute id="node.osVersion" attribute="osVersion" required="false"/>
-	<nodeAttribute id="node.username" attribute="username" required="false"/>
-	<nodeAttribute id="node.port" attribute="port" required="false"/>
-	<nodeAttribute id="node.basedir" attribute="basedir" required="false"/>
-	<nodeAttribute id="node.appname" attribute="appname" required="false"/>
-	<nodeAttribute id="node.service" attribute="service" required="false"/>
-	<nodeAttribute id="node.environment" attribute="environment" required="false"/>
+	<nodeAttribute id="host.hostname" attribute="hostname" required="false"/>
+	<nodeAttribute id="host.osArch" attribute="arch" required="false"/>
+	<nodeAttribute id="host.osFamily" attribute="osFamily" required="false"/>
+	<nodeAttribute id="host.osName" attribute="osName" required="false"/>
+	<nodeAttribute id="host.osVersion" attribute="osVersion" required="false"/>
+	<nodeAttribute id="host.username" attribute="username" required="false"/>
+	<nodeAttribute id="host.port" attribute="port" required="false"/>
+	<nodeAttribute id="host.basedir" attribute="basedir" required="false"/>
+	<nodeAttribute id="host.appname" attribute="appname" required="false"/>
+	<nodeAttribute id="host.service" attribute="service" required="false"/>
+	<nodeAttribute id="host.environment" attribute="environment" required="false"/>
       </nodeAttributes>
 
     </nodetype>
@@ -97,23 +96,23 @@
 
   </nodetypes>
   <!--
-      Node Instances 
+      Host Instances 
   -->
   <nodes>
-    <node id="ubuntu" nodetype="Node" tags="tomcat,simpleapp,qa">
+    <node id="ubuntu" nodetype="Host" tags="tomcat,simpleapp,qa">
       <description>The ubuntu server</description>
       <values>
-	<attributeValue nodeAttribute="node.hostname">ubuntu</attributeValue>            
-	<attributeValue nodeAttribute="node.osArch">i386</attributeValue>              
-	<attributeValue nodeAttribute="node.osFamily">unix</attributeValue>              
-	<attributeValue nodeAttribute="node.osName">Linux</attributeValue>             
-	<attributeValue nodeAttribute="node.osVersion">2.6.32-28-generic</attributeValue>              
-	<attributeValue nodeAttribute="node.username">alexh</attributeValue>              
-	<attributeValue nodeAttribute="node.port">18080</attributeValue>              
-	<attributeValue nodeAttribute="node.basedir">/tmp/demo/tomcat</attributeValue>              
-	<attributeValue nodeAttribute="node.appname">simpleapp</attributeValue>              
-	<attributeValue nodeAttribute="node.service">tomcat</attributeValue>              
-	<attributeValue nodeAttribute="node.environment">qa</attributeValue>              
+	<attributeValue nodeAttribute="host.hostname">ubuntu</attributeValue>            
+	<attributeValue nodeAttribute="host.osArch">i386</attributeValue>              
+	<attributeValue nodeAttribute="host.osFamily">unix</attributeValue>              
+	<attributeValue nodeAttribute="host.osName">Linux</attributeValue>             
+	<attributeValue nodeAttribute="host.osVersion">2.6.32-28-generic</attributeValue>              
+	<attributeValue nodeAttribute="host.username">alexh</attributeValue>              
+	<attributeValue nodeAttribute="host.port">18080</attributeValue>              
+	<attributeValue nodeAttribute="host.basedir">/tmp/demo/tomcat</attributeValue>              
+	<attributeValue nodeAttribute="host.appname">simpleapp</attributeValue>              
+	<attributeValue nodeAttribute="host.service">tomcat</attributeValue>              
+	<attributeValue nodeAttribute="host.environment">qa</attributeValue>              
       </values>
     </node>
 
@@ -167,8 +166,8 @@
   </nodes>
 
   <nodetyperelationships>
-    <nodetyperelationship rolename="environment" parent="Site" child="Node"/>
-    <nodetyperelationship rolename="service" parent="Node" child="Service"/>
+    <nodetyperelationship rolename="environment" parent="Site" child="Host"/>
+    <nodetyperelationship rolename="service" parent="Host" child="Service"/>
     <nodetyperelationship rolename="package" parent="Service" child="Package"/>
   </nodetyperelationships>
 
