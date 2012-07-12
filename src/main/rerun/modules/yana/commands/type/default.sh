@@ -39,6 +39,9 @@ yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Ya
 #
 
 case $ACTION in
+    attributes)
+	source $RERUN_MODULES/yana/commands/type/attributes.sh
+	;;
     create)
 	[ -z "$TYPE" ] && { echo "missing required option: --type" ; return 2 ; }
 	source $RERUN_MODULES/yana/commands/type/create.sh
@@ -48,6 +51,9 @@ case $ACTION in
 	;;
     get)
 	source $RERUN_MODULES/yana/commands/type/get.sh
+	;;
+    relations)
+	source $RERUN_MODULES/yana/commands/type/relations.sh
 	;;
     *)
 	echo "Invalid action: $ACTION"

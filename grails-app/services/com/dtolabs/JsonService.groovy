@@ -8,7 +8,7 @@ class JsonService {
 	
 	static transactional = false
 	static scope = "prototype"
-	
+
 	String formatNodes(ArrayList data){
 			ArrayList result = [:]
 			data.each(){ val1 ->
@@ -18,15 +18,17 @@ class JsonService {
 				def rents = ChildNode.findByChild(Node.get(val1.id.toLong()));
 				ArrayList rent = [:]
 				rents.each{ parent ->
-					rent += [node:[id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags]]
+					rent += [node:[childnodeId:parent.id,id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags]]
 				}
 				ArrayList kinder = [:]
 				val1.children.each{ child ->
-					kinder += [node:[id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags]]
+					kinder += [node:[childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags]]
 				}
 				
-				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags],
+				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags,status:val1.status?.toString()],
 					description:val1.description,
+                                        'date-created':DateFormatUtil.formatRfc3339(val1.dateCreated),
+                                        'date-modified':DateFormatUtil.formatRfc3339(val1.dateModified),
 					attributes:
 						values.each{ val2 ->
 							attribute:[id:val2.id,name:val2.attribute,value:val2.value,required:val2.required]

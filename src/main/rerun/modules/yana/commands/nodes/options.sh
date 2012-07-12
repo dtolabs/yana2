@@ -18,6 +18,7 @@ while [ "$#" -gt 0 ]; do
     OPT="$1"
     case "$OPT" in
           -t|--type) rerun_option_check $# ; TYPE=$2 ; shift ;;
+          -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
           -F|--format) rerun_option_check $# ; FORMAT=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
         # unknown option
@@ -33,7 +34,7 @@ done
 
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
-[ -z "$FORMAT" ] && FORMAT='${TYPE}:${NAME}:${ID}'
+[ -z "$FORMAT" ] && FORMAT='${ID}:${NAME}:${TYPE}:${TAGS}:${DESCRIPTION}'
 
 # Check required options are set
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }

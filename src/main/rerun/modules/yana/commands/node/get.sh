@@ -19,13 +19,11 @@ curl --fail --silent ${YANA_URL}/node/show/${ID}?format=xml \
 xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || die "Yana response failed XML validation"
 
 format() {
+    regex='^([^:]+):(.*)'
     while read line
     do
-	IFS=:
-	arr=( $line )
-	[ ${#arr[*]} -eq 2 ] || continue
-	IFS=$oIFS
-	yana_expand "$FORMAT" ATTRIBUTE=${arr[0]} VALUE=${arr[1]}
+	[[ "$line" =~ $regex ]] || continue; #skip bad entries
+	yana_expand "$FORMAT" ATTRIBUTE=${BASH_REMATCH[1]} VALUE='${BASH_REMATCH[2]}'
     done 
 }
 
@@ -36,16 +34,10 @@ format() {
 NAME=$(xmlstarlet sel -t -m /nodes/node -v @name $response)
 TYPE=$(xmlstarlet sel -t -m /nodes/node -v @type $response)
 DESCRIPTION=$(xmlstarlet sel -t -m /nodes/node -v description $response)
+TAGS=$(xmlstarlet sel -t -m /nodes/node -v @tags $response)
 echo "name:$NAME" | format
 echo "type:$TYPE" | format
-printf "description:$DESCRIPTION" | format
+echo "description:$DESCRIPTION" | format
+echo "tags:$TAGS" | format
 
 xmlstarlet sel -t -m /nodes/node/attributes/attribute -v @name -o ":" -v @value -n $response|sort|format
-
-#if [ -n "$CHILDREN" ]
-#then
-#    for id in $(xmlstarlet sel -t -m /nodes/node/children/node -v @id $response)
-#    do
-#	$RERUN yana:node --id $id
-#    done
-#fi

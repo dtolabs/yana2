@@ -1,11 +1,11 @@
 #
 # ACTION
 #
-#   get
+#   attributes
 #
 # DESCRIPTION
 #
-#   get the node type
+#   list the attributes for this type
 #
 
 
@@ -48,7 +48,7 @@ format() {
 	arr=( $line )
 	[ ${#arr[*]} -eq 2 ] || continue
 	IFS=$oIFS
-	yana_expand "$FORMAT" ATTRIBUTE=${arr[0]} VALUE=${arr[1]}
+	yana_expand "$FORMAT" ATTRIBUTE=${arr[0]}  VALUE=${arr[1]}
     done 
 }
 
@@ -61,26 +61,13 @@ format() {
 #
 # Output the data
 #
-NAME=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @name $response)
-DESCRIPTION=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @description $response)
-ID=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @id $response)
-NODECNT=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @nodeCount $response)
-ATTRIBUTES=$(xmlstarlet sel -t \
+xmlstarlet sel -t \
     -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodeAttributes/nodeAttribute \
-    -v @attributeName -i 'not(position()=last())' -o "," \
-    $response)
-RELATIONSHIPS=$(xmlstarlet sel -t \
-    -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodetypeRelationships/nodetypeRelationship \
-    -v @roleName -i 'not(position()=last())' -o "," \
-    $response)
+    -v @id  -o ":" -v @attributeName -n \
+    $response | format
 
 
-echo "type:$NAME" | format
-echo "id:$ID" | format
-printf "%s:%s\n" description '$DESCRIPTION' | format
-echo "nodeCount:$NODECNT" | format
-echo "attributes:$ATTRIBUTES" | format
-echo "relationships:$RELATIONSHIPS" | format
+
 
 # ------------------------------
 
