@@ -12,7 +12,7 @@
 #
 # Retrieve the data from Yana
 #
-curl --fail --silent ${YANA_URL}/node/show/${ID}?format=xml \
+curl --fail --silent ${YANA_URL}/node/show/${NODE}?format=xml \
     --cookie ${cookie} -o ${response} || rerun_die "failed obtaining Yana data"
 
 
@@ -48,7 +48,7 @@ then
   #
   # ... and recurse another level 
   #
-  $RERUN yana:relations --action children --depth $(( $DEPTH - 1 )) --id ${arr[2]} --format $FORMAT \
+  $RERUN yana:relations --action children --depth $(( $DEPTH - 1 )) --node ${arr[2]} --format $FORMAT \
       || rerun_die "Failed recursing through children"
     done
 else

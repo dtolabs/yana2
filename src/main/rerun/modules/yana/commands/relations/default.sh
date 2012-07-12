@@ -58,14 +58,17 @@ format() {
 
 case $ACTION in
     children)
+	[ -z "$NODE" ] && { echo "missing required option: --node" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/relations/children.sh
 	;;
     parents)
+	[ -z "$NODE" ] && { echo "missing required option: --node" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/relations/parents.sh
 	;;
     create)
-	[ -z "$NAME" ] && { echo "missing required option: --name" ; exit 2 ; }
+	[ -z "$NODE" ] && { echo "missing required option: --node" ; exit 2 ; }
 	[ -z "$CHILD" ] && { echo "missing required option: --child" ; exit 2 ; }
+	[ -z "$NAME" ] && { echo "missing required option: --name" ; exit 2 ; }
 	source $RERUN_MODULES/yana/commands/relations/create.sh
 	;;
     delete)

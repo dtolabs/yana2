@@ -21,9 +21,9 @@ while [ "$#" -gt 0 ]; do
   -F|--format) rerun_option_check $# ; FORMAT=$2 ; shift ;;
   -i|--id) rerun_option_check $# ; ID=$2 ; shift ;;
   -A|--action) rerun_option_check $# ; ACTION=$2 ; shift ;;
-  -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
+  -N|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
   -c|--child) rerun_option_check $# ; CHILD=$2 ; shift ;;
-  -p|--parent) rerun_option_check $# ; PARENT=$2 ; shift ;;
+  -n|--node) rerun_option_check $# ; NODE=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
         # unknown option
         -?)
@@ -44,6 +44,6 @@ done
 # Check required options are set
 
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
-[ -z "$ID" ] && { echo "missing required option: --id" ; return 2 ; }
+
 #
 return 0

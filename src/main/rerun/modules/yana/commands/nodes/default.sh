@@ -57,9 +57,9 @@ format() {
     do
 	IFS=:
 	arr=( $line )
-	[ ${#arr[*]} -eq 4 ] || continue
+	[ ${#arr[*]} -eq 5 ] || continue
 	IFS=$oIFS
-	yana_expand "$FORMAT" TYPE=${arr[0]} NAME=${arr[1]} ID=${arr[2]} DESCRIPTION='${arr[3]}'
+	yana_expand "$FORMAT" ID=${arr[0]} NAME=${arr[1]} TYPE=${arr[2]} TAGS=${arr[3]} DESCRIPTION='${arr[4]}'
 
     done 
 }
@@ -111,7 +111,9 @@ xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || rerun_die "Yana 
 # Output the data
 #
 
-xmlstarlet sel -t -m /nodes/node -v @type -o ":" -v @name -o ":" -v @id  -o ":" -v description -n  $response | format
+xmlstarlet sel -t -m /nodes/node  -v @id  -o ":"  \
+    -v @name -o ":" -v @type -o ":"  -v @tags -o ":" \
+    -v description -n  $response | format
 
 # ------------------------------
 
