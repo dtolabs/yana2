@@ -127,8 +127,8 @@ yana_initialize() {
     fi
     #
     # Verify xmlstarlet and curl are contained in this environment
-    which -s xmlstarlet || rerun_die "this module needs xmlstarlet"
-    which -s curl || rerun_die "this module needs curl"
+    which xmlstarlet >/dev/null || rerun_die "this module needs xmlstarlet"
+    which curl >/dev/null || rerun_die "this module needs curl"
 }
 
 #

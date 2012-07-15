@@ -15,6 +15,7 @@ import com.dtolabs.*
 xmlFilePath = args[0]
 xsdFilePath = args[1]
 endOfTestMarker = args[2]
+testNumber = 0
 
 now = new Date()
 
@@ -57,8 +58,8 @@ def NodeType createNodeType(String name, String description, String image) {
 	return nodeType
 }
 
-def deleteNodeType(String name) {
-	nodeTypeMap.remove(name)
+def deleteNodeType(String type) {
+	nodeTypeMap.remove(type)
 }
 
 def NodeAttribute createNodeAttribute(NodeType nodeType, Attribute attribute) {	
@@ -75,8 +76,8 @@ def deleteNodeAttribute(String key) {
 	nodeTypeMap.remove(key)
 }
 
-def Node createNode(String name, String description,
-					String tags, NodeType nodeType) {
+def Node createNode(NodeType nodeType,
+                    String name, String description, String tags) {
 	Node node = new Node()
 	node.name = name
 	node.description = description 
@@ -173,10 +174,9 @@ def parseXML() {
 	xml.nodetypes.children().each {nodeTypeXml ->
 		NodeType nodeType = nodeTypeMap.get(nodeTypeXml.@id.toString())
 		if (!nodeType) {
-			nodeType =
-			  createNodeType(nodeTypeXml.@id.toString(),
-                             nodeTypeXml.description.text(),
-							 nodeTypeXml.image.text())
+			nodeType = createNodeType(nodeTypeXml.@id.toString(),
+				                      nodeTypeXml.description.text(),
+									  nodeTypeXml.image.text())
 		}
 
 		int order = 1
@@ -184,7 +184,6 @@ def parseXML() {
 			Attribute attribute =
 			  attributeMap.get(nodeAttributeXml.@attribute.toString())
 			if (attribute) {
-				println("${attribute.name}")
 				NodeAttribute nodeAttribute =
 				  nodeAttributeMap.get(nodeType.name + "::" + attribute.name)
 				if (!nodeAttribute) {
@@ -204,11 +203,10 @@ def parseXML() {
 		Node node = nodeMap.get(nodeXml.@id.toString())
 		if (nodeType) {
 			if (!node) {
-				node = new Node()
-				node = createNode(nodeXml.@id.toString(),
+				node = createNode(nodeType,
+					              nodeXml.@id.toString(),
 					              nodeXml.description.toString(),
-								  node.@tags.toString(),
-								  nodeType)
+								  nodeXml.@tags.toString())
 			} else {
 				//Error
 			}
@@ -291,48 +289,144 @@ def parseXML() {
 	}
 }
 
+def emitRerunZeroNodesTest() {
+	println("TEST:RerunZeroNodesTest:" + ++testNumber)
+	println("RERUN:yana:nodes")
+	println(endOfTestMarker)
+}
+
+def emitRerunZeroTypesTest() {
+	println("TEST:RerunZeroTypesTest:" + ++testNumber)
+	println("RERUN:yana:types")
+	println(endOfTestMarker)
+}
 
 def emitRerunImportXmlTest() {
-	println("TEST:ImportXmlTest")
+	println("TEST:ImportXmlTest:" + ++testNumber)
 	println("RERUN:yana:import -f ${xmlFilePath}")
 	println(endOfTestMarker)
 }
 
+def emitRerunCreateTypeTest(String name, String description) {
+	createNodeType(name, description, "")
+	println("TEST:CreateTypeTest:" + ++testNumber)
+	println("RERUN:yana:type -a create -t ${name} -d '${description}'")
+	println(endOfTestMarker)
+}
+
+def emitRerunDeleteTypeTest(String type) {
+	int nodeCount = 0
+	nodeMap.each() {nodeMapKey, nodeMapValue ->
+		if (nodeMapValue.nodetype.name == type) {
+			++nodeCount
+		}
+	}
+
+	boolean found = false
+	int i = 0
+	nodeTypeMap.each() {nodeTypeMapKey, nodeTypeMapValue ->
+		++i
+		if (nodeTypeMapKey == type) {
+			println("TEST:DeleteTypeTest:" + ++testNumber)
+			println("RERUN:yana:type -a delete -i ${i}")
+			print(nodeCount == 0
+				  ? ""
+				  : "Deleting NodeType with associated nodes forbidden. (nodeCount=${nodeCount})\n")
+			println(endOfTestMarker)
+			found = true
+		}
+	}
+	if (!found) {
+		System.err.println("TEST ERROR: DeleteTypeTest!")
+	} else if (nodeCount == 0) {
+		deleteNodeType(type)
+	}
+}
+
+def emitRerunCreateNodeTest(String type, String name, String description, String tags) {
+	boolean found = false
+	int i = 0
+	nodeTypeMap.each() {nodeTypeMapKey, nodeTypeMapValue ->
+		++i
+		if (nodeTypeMapKey == type) {
+			println("TEST:CreateNodeTest:" + ++testNumber)
+			println("RERUN:yana:node "
+				    + "-a create -t ${i} -n '${name}' "
+				    + "-d '${description}' --tags '${tags}'")
+			println(nodeMap.size() + 1
+				    + ":" + type
+					+ ":" + name)
+			println(endOfTestMarker)
+			found = true
+		}
+	}
+	if (!found) {		
+		System.err.println("TEST ERROR: CreateNodeTest!")
+	} else {
+		createNode(nodeTypeMap.get(type), name, description, tags)
+	}
+}
+
+def emitRerunDeleteNodeTest(String name) {
+	boolean found = false
+	int i = 0
+	nodeMap.each() {nodeMapKey, nodeMapValue ->
+		++i
+		if (nodeMapKey == name) {
+			println("TEST:DeleteNodeTest:" + ++testNumber)
+			println("RERUN:yana:node -a delete -i ${i}")
+			println(endOfTestMarker)			
+			found = true			
+		}
+	}
+	if (!found) {		
+		System.err.println("TEST ERROR: DeleteNodeTest!")
+	} else {
+		deleteNode(name)
+	}
+}
+
 def emitRerunNodesTest() {
-	println("TEST:NodesTest")
+	println("TEST:NodesTest:" + ++testNumber)
 	println("RERUN:yana:nodes -l")
 	int i = 0
 	nodeMap.each() {key, value ->
-		println(value.nodetype.name
+		println(++i
 				+ ":" + value.name
-				+ ":" + ++i)
+			    + ":" + value.nodetype.name
+				+ ":" + value.tags
+				+ ":" + value.description)
 	}
 	println(endOfTestMarker)
 }
 
 def emitRerunNodesByAllTypeTest() {
-	println("TEST:NodesByAllTypeTest")
+	println("TEST:NodesByAllTypeTest:" + ++testNumber)
 	println("RERUN:yana:nodes -t")
 	int i = 0
 	nodeMap.each() {key, value ->
-		println(value.nodetype.name
+		println(++i
 				+ ":" + value.name
-				+ ":" + ++i)
+			    + ":" + value.nodetype.name
+				+ ":" + value.tags
+				+ ":" + value.description)
 	}
 	println(endOfTestMarker)
 }
 
 def emitRerunNodesByTypeTest() {		
 	nodeTypeMap.each() {nodeTypeMapKey, nodeTypeMapValue ->
-		println("TEST:NodesByTypeTest")
+		println("TEST:NodesByTypeTest:" + ++testNumber)
 		println("RERUN:yana:nodes -t " + nodeTypeMapKey)
-		int j = 0
+		int i = 0
 		nodeMap.each() {nodeMapKey, nodeMapValue ->
-			++j
+			++i
 			if (nodeTypeMapKey == nodeMapValue.nodetype.name) {
-				println(nodeTypeMapKey
+				println(i
 						+ ":" + nodeMapValue.name
-						+ ":" + j)
+					    + ":" + nodeMapValue.nodetype.name
+						+ ":" + nodeMapValue.tags
+						+ ":" + nodeMapValue.description)
 			}
 		}
 		println(endOfTestMarker)
@@ -342,13 +436,13 @@ def emitRerunNodesByTypeTest() {
 def emitRerunNodeByIdTest() {
 	int i = 0
 	nodeMap.each() {nodeMapKey, nodeMapValue ->
-		println("TEST:NodeByIdTest")
+		println("TEST:NodeByIdTest:" + ++testNumber)
 		println("RERUN:yana:node -i " + ++i)
 		println("name:" + nodeMapValue.name)
 		println("type:" + nodeMapValue.nodetype.name)
-		//println("description:" + nodeMapValue.description)
+		println("description:" + nodeMapValue.description)
 		//println("status:" + ":" + value.status)
-		//println("tags:" + ":" + value.tags)
+		println("tags:" + nodeMapValue.tags)
 		nodeValueMap.each() {nodeValueMapKey, nodeValueMapValue ->
 			if (nodeMapValue.name == nodeValueMapValue.node.name) {
 				println(nodeValueMapValue.nodeattribute.attribute.name
@@ -360,13 +454,13 @@ def emitRerunNodeByIdTest() {
 }
 
 def emitRerunTypesTest() {
-	println("TEST:TypesTest")
+	println("TEST:TypesTest:" + ++testNumber)
 	println("RERUN:yana:types -l")
 	int i = 0
 	nodeTypeMap.each() {key, value ->
-		println(value.name
-				+ ":" + value.description
-				+ ":" + ++i)
+		println(++i
+			    + ":" + value.name
+				+ ":" + value.description)
 	}
 	println(endOfTestMarker)
 }
@@ -374,60 +468,123 @@ def emitRerunTypesTest() {
 def emitRerunTypesByTypeTest() {
 	int i = 0
 	nodeTypeMap.each() {key, value ->
-		println("TEST:TypesByTypeTest")
+		println("TEST:TypesByTypeTest:" + ++testNumber)
 		println("RERUN:yana:types -t " + value.name)
-		println(value.name
-				+ ":" + value.description
-				+ ":" + ++i)
+		println(++i + ":"
+			    + value.name
+				+ ":" + value.description)
 		println(endOfTestMarker)
 	}
+}
+
+def dumpNodeType(NodeType nodeType, int i) {
+	println("type:" + nodeType.name)
+	println("id:" + i)
+	println("description:" + nodeType.description)
+	
+	// Count the number of associated "nodes"
+	int nodeCount = 0
+    nodeMap.each() {nodeMapKey, nodeMapValue ->
+		if (nodeType.name == nodeMapValue.nodetype.name) {
+			++nodeCount
+		}
+	}
+	println("nodeCount:" + nodeCount)
+
+	String delim, eol;
+		
+	// List the associated "attributes"
+	delim = "attributes:"; eol = "";
+	nodeAttributeMap.each() {nodeAttributeMapKey, nodeAttributeMapValue ->
+		if (nodeType.name == nodeAttributeMapValue.nodetype.name) {
+			print(delim + nodeAttributeMapValue.attribute.name)
+			delim = ","; eol = "\n";
+		}
+	}
+	print(eol)
+
+	// List the associated "relationships"
+	delim = "relationships:"; eol = "";
+	nodeTypeRelationshipMap.each() {nodeTypeRelationshipMapKey, nodeTypeRelationshipMapValue ->
+		if ((nodeType.name == nodeTypeRelationshipMapValue.child.name)
+			|| (nodeType.name == nodeTypeRelationshipMapValue.parent.name)) {
+			print(delim + nodeTypeRelationshipMapValue.roleName)
+			delim = ","; eol = "\n";
+		}
+	}
+	print(eol)
+
+	println(endOfTestMarker)
 }
 
 def emitRerunTypeByTypeTest() {
 	int i = 0
 	nodeTypeMap.each() {nodeTypeMapKey, nodeTypeMapValue ->
-		println("TEST:TypeByTypeTest")
+		println("TEST:TypeByTypeTest:" + ++testNumber)
 		println("RERUN:yana:type -t " + nodeTypeMapValue.name)
-		println("type:" + nodeTypeMapValue.name)
-		println("description:" + nodeTypeMapValue.description)
-		println("id:" + ++i)
-		delim = ""
-		print("attributes:")
-		nodeAttributeMap.each() {nodeAttributeMapKey, nodeAttributeMapValue ->
-			if (nodeTypeMapValue.name == nodeAttributeMapValue.nodetype.name) {
-				print(delim + nodeAttributeMapValue.attribute.name)
-				delim = ","
-			}
-		}
-		println();
-		delim = ""
-		print("relationships:")
-		nodeTypeRelationshipMap.each() {nodeTypeRelationshipMapKey, nodeTypeRelationshipMapValue ->
-			if ((nodeTypeMapValue.name == nodeTypeRelationshipMapValue.child.name)
-				|| (nodeTypeMapValue.name == nodeTypeRelationshipMapValue.parent.name)) {
-				print(delim + nodeTypeRelationshipMapValue.roleName)
-				delim = ","
-			}
-		}
-		println();
-		println(endOfTestMarker)
+		dumpNodeType(nodeTypeMapValue, ++i)
+	}
+}
+
+def emitRerunTypeByIdTest() {
+	int i = 0
+	nodeTypeMap.each() {nodeTypeMapKey, nodeTypeMapValue ->
+		println("TEST:TypeByIdTest:" + ++testNumber)
+		println("RERUN:yana:type -i " + ++i)
+		dumpNodeType(nodeTypeMapValue, i)
 	}
 }
 
 parseXML()
 
+// Test that the database is empty:
+//emitRerunZeroAttributesTest() 
+emitRerunZeroNodesTest()
+emitRerunZeroTypesTest()
+
 emitRerunImportXmlTest()
+
+emitRerunTypesTest()
+emitRerunTypesByTypeTest()
+emitRerunTypeByTypeTest()
+emitRerunTypeByIdTest()
 
 emitRerunNodesTest()
 emitRerunNodesByAllTypeTest();
 emitRerunNodesByTypeTest()
-
 emitRerunNodeByIdTest()
+
+emitRerunCreateTypeTest("City",    "City description")
+emitRerunCreateTypeTest("State",   "State description")
+emitRerunCreateTypeTest("Country", "Country description")
+emitRerunCreateNodeTest("City", "San Francisco", "City by the bay", "bay,hills,foggy,bridges")
+emitRerunCreateNodeTest("City", "Berkeley", "Campus town", "Cal,hippies,liberal")
+emitRerunCreateNodeTest("City", "Las Vegas", "What happens in Vegas, stays in vegas", "gambling,casino,entertainment")
+emitRerunCreateNodeTest("State", "California", "The Golden Sate", "gold")
+emitRerunCreateNodeTest("State", "Nevada", "The Silver Sate", "silver")
+emitRerunCreateNodeTest("Country", "United States", "America, land of 50 states", "50,red,white,blue,freedom")
 
 emitRerunTypesTest()
 emitRerunTypesByTypeTest()
-
 emitRerunTypeByTypeTest()
+emitRerunTypeByIdTest()
 
-//yana:child-node -a list
-//emitRerunChildNodeTest()
+emitRerunNodesTest()
+emitRerunNodesByAllTypeTest();
+emitRerunNodesByTypeTest()
+emitRerunNodeByIdTest()
+
+emitRerunDeleteTypeTest("City")
+emitRerunDeleteTypeTest("State")
+emitRerunDeleteTypeTest("Country")
+
+emitRerunDeleteNodeTest("San Francisco")
+emitRerunDeleteNodeTest("Berkeley")
+emitRerunDeleteNodeTest("Las Vegas")
+emitRerunDeleteNodeTest("California")
+emitRerunDeleteNodeTest("Nevada")
+emitRerunDeleteNodeTest("United States")
+
+emitRerunDeleteTypeTest("City")
+emitRerunDeleteTypeTest("State")
+emitRerunDeleteTypeTest("Country")

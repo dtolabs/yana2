@@ -32,12 +32,17 @@ groovy -cp ../../../../grails-app/domain ./MakeRerunTests.groovy \
           mv ${benchFileOutput}.${testName}.s ${benchFileOutput}.${testName}
           sort ${rerunFileOutput}.${testName} > ${rerunFileOutput}.${testName}.s
           mv ${rerunFileOutput}.${testName}.s ${rerunFileOutput}.${testName}
-          diff -w ${rerunFileOutput}.${testName} ${benchFileOutput}.${testName} \
+          diff -w ${benchFileOutput}.${testName} \
+                  ${rerunFileOutput}.${testName}
                 > ${benchFileOutput}.${testName}.diff
           if [ $? -ne 0 ] ; then
             sed -i '/^$/d' ${benchFileOutput}.${testName}.diff
             echo FAILED: $rerunCommand
             cat ${benchFileOutput}.${testName}.diff
+            #echo "<<<<< EXPECTED OUTPUT"
+            #cat ${benchFileOutput}.${testName}
+            #echo ">>>>> ACTUAL OUTPUT"
+            #cat ${rerunFileOutput}.${testName}
           fi 
           rm -f ${rerunFileOutput}.${testName} \
                 ${benchFileOutput}.${testName} \

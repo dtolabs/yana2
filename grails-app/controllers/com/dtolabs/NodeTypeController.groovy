@@ -34,14 +34,13 @@ class NodeTypeController {
 						
 						response.status = 200
 						if(params.format && params.format!='none'){
-							ArrayList nodetypes = [nodeTypeInstance]
 							switch(params.format.toLowerCase()){
 								case 'xml':
-									def xml = xmlService.formatNodeTypes(nodetypes)
+									def xml = xmlService.formatNodeTypes(nodeTypes)
 									render(text: xml, contentType: "text/xml")
 									break;
 								case 'json':
-									def jsn = jsonService.formatNodeTypes(nodetypes)
+									def jsn = jsonService.formatNodeTypes(nodeTypes)
 									render(text:jsn, contentType: "text/json")
 									break;
 							}
