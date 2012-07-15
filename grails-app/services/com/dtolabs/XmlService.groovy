@@ -76,7 +76,7 @@ class XmlService {
 			
 		xml.nodeAttributes() {
 			tatts.each(){ val1 ->
-				nodeAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.nodetype.id,required:val1.required)
+				nodeAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.nodetype.id,required:val1.required,filterId:val2.attribute.filter.id,filterDataType:val2.attribute.filter.dataType)
 			}
 		}
 		return writer.toString()
@@ -100,7 +100,7 @@ class XmlService {
 			
 		xml.attributes() {
 			attributes.each(){ val1 ->
-				attribute(id:val1.id,name:val1.name,description:val1.description,filterId:val1.filter.id)
+                        attribute(id:val1.id,name:val1.name,description:val1.description,filterId:val1.filter.id,filterDataType:val1.filter.dataType) 
 			}
 		}
 		return writer.toString()
@@ -128,7 +128,7 @@ class XmlService {
 				nodetype(id:val1.id,name:val1.name,description:val1.description,image:val1.image,nodeCount:nodecount){
 					nodeAttributes() {
 						tatts.each(){ val2 ->
-							nodeAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.nodetype.id,required:val2.required)
+							nodeAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.nodetype.id,required:val2.required,filterId:val2.attribute.filter.id,filterDataType:val2.attribute.filter.dataType)
 						}
 					}
 					nodetypeRelationships() {
