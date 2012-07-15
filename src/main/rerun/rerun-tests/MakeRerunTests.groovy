@@ -388,7 +388,7 @@ def emitRerunDeleteNodeTest(String name) {
 
 def emitRerunNodesTest() {
 	println("TEST:NodesTest:" + ++testNumber)
-	println("RERUN:yana:nodes -l")
+	println("RERUN:yana:nodes")
 	int i = 0
 	nodeMap.each() {key, value ->
 		println(++i
@@ -443,19 +443,23 @@ def emitRerunNodeByIdTest() {
 		println("description:" + nodeMapValue.description)
 		//println("status:" + ":" + value.status)
 		println("tags:" + nodeMapValue.tags)
+		
+		Set<String> attributes = new TreeSet<String>()
 		nodeValueMap.each() {nodeValueMapKey, nodeValueMapValue ->
 			if (nodeMapValue.name == nodeValueMapValue.node.name) {
-				println(nodeValueMapValue.nodeattribute.attribute.name
-					    + ":" + nodeValueMapValue.value)
+				attributes.add(nodeValueMapValue.nodeattribute.attribute.name
+					           + ":" + nodeValueMapValue.value)
 			}
 		}
-		println(endOfTestMarker)
+		attributes.each() {attribute ->
+			println(attribute)
+		}
 	}
 }
 
 def emitRerunTypesTest() {
 	println("TEST:TypesTest:" + ++testNumber)
-	println("RERUN:yana:types -l")
+	println("RERUN:yana:types")
 	int i = 0
 	nodeTypeMap.each() {key, value ->
 		println(++i
@@ -477,6 +481,16 @@ def emitRerunTypesByTypeTest() {
 	}
 }
 
+def dumpDelimitedLine(String title, Set<String> entries) {
+	String delim = title
+	String eol = ""
+	entries.each() {entry ->
+		print(delim + entry)
+		delim = ","; eol = "\n";
+	}
+	print(eol)
+}
+
 def dumpNodeType(NodeType nodeType, int i) {
 	println("type:" + nodeType.name)
 	println("id:" + i)
@@ -491,28 +505,26 @@ def dumpNodeType(NodeType nodeType, int i) {
 	}
 	println("nodeCount:" + nodeCount)
 
-	String delim, eol;
-		
+	Set<String> entries
+	
 	// List the associated "attributes"
-	delim = "attributes:"; eol = "";
+	entries = new LinkedHashSet<String>()
 	nodeAttributeMap.each() {nodeAttributeMapKey, nodeAttributeMapValue ->
 		if (nodeType.name == nodeAttributeMapValue.nodetype.name) {
-			print(delim + nodeAttributeMapValue.attribute.name)
-			delim = ","; eol = "\n";
+			entries.add(nodeAttributeMapValue.attribute.name)
 		}
 	}
-	print(eol)
+	dumpDelimitedLine("attributes:", entries)
 
 	// List the associated "relationships"
-	delim = "relationships:"; eol = "";
+	entries = new TreeSet<String>()
 	nodeTypeRelationshipMap.each() {nodeTypeRelationshipMapKey, nodeTypeRelationshipMapValue ->
 		if ((nodeType.name == nodeTypeRelationshipMapValue.child.name)
 			|| (nodeType.name == nodeTypeRelationshipMapValue.parent.name)) {
-			print(delim + nodeTypeRelationshipMapValue.roleName)
-			delim = ","; eol = "\n";
+			entries.add(nodeTypeRelationshipMapValue.roleName)
 		}
 	}
-	print(eol)
+	dumpDelimitedLine("relationships:", entries)
 
 	println(endOfTestMarker)
 }
@@ -557,17 +569,18 @@ emitRerunNodeByIdTest()
 emitRerunCreateTypeTest("City",    "City description")
 emitRerunCreateTypeTest("State",   "State description")
 emitRerunCreateTypeTest("Country", "Country description")
+
+emitRerunTypesTest()
+emitRerunTypesByTypeTest()
+emitRerunTypeByTypeTest()
+emitRerunTypeByIdTest()
+
 emitRerunCreateNodeTest("City", "San Francisco", "City by the bay", "bay,hills,foggy,bridges")
 emitRerunCreateNodeTest("City", "Berkeley", "Campus town", "Cal,hippies,liberal")
 emitRerunCreateNodeTest("City", "Las Vegas", "What happens in Vegas, stays in vegas", "gambling,casino,entertainment")
 emitRerunCreateNodeTest("State", "California", "The Golden Sate", "gold")
 emitRerunCreateNodeTest("State", "Nevada", "The Silver Sate", "silver")
 emitRerunCreateNodeTest("Country", "United States", "America, land of 50 states", "50,red,white,blue,freedom")
-
-emitRerunTypesTest()
-emitRerunTypesByTypeTest()
-emitRerunTypeByTypeTest()
-emitRerunTypeByIdTest()
 
 emitRerunNodesTest()
 emitRerunNodesByAllTypeTest();
@@ -578,13 +591,13 @@ emitRerunDeleteTypeTest("City")
 emitRerunDeleteTypeTest("State")
 emitRerunDeleteTypeTest("Country")
 
-emitRerunDeleteNodeTest("San Francisco")
-emitRerunDeleteNodeTest("Berkeley")
-emitRerunDeleteNodeTest("Las Vegas")
-emitRerunDeleteNodeTest("California")
-emitRerunDeleteNodeTest("Nevada")
 emitRerunDeleteNodeTest("United States")
+emitRerunDeleteNodeTest("Nevada")
+emitRerunDeleteNodeTest("California")
+emitRerunDeleteNodeTest("Las Vegas")
+emitRerunDeleteNodeTest("Berkeley")
+emitRerunDeleteNodeTest("San Francisco")
 
-emitRerunDeleteTypeTest("City")
-emitRerunDeleteTypeTest("State")
 emitRerunDeleteTypeTest("Country")
+emitRerunDeleteTypeTest("State")
+emitRerunDeleteTypeTest("City")

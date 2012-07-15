@@ -74,7 +74,7 @@ curl --fail --silent --request POST --header "Content-Type: application/json" \
 
 nodeId=$(xmlstarlet sel -t -m /nodes/node -v @id $response)
 
-echo "$TYPE:$NAME:$nodeId"
+echo "$nodeId:$TYPE:$NAME"
 
 # ------------------------------
 

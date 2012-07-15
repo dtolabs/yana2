@@ -26,14 +26,11 @@ groovy -cp ../../../../grails-app/domain ./MakeRerunTests.groovy \
           ;;
       ${END_OF_TEST_MARKER})
           echo ================== TEST: $testName ================== 
+          echo $rerunBaseCommand $rerunCommand
           eval $rerunBaseCommand $rerunCommand \
           | sed '/^$/d' > ${rerunFileOutput}.${testName}
-          sort ${benchFileOutput}.${testName} > ${benchFileOutput}.${testName}.s
-          mv ${benchFileOutput}.${testName}.s ${benchFileOutput}.${testName}
-          sort ${rerunFileOutput}.${testName} > ${rerunFileOutput}.${testName}.s
-          mv ${rerunFileOutput}.${testName}.s ${rerunFileOutput}.${testName}
           diff -w ${benchFileOutput}.${testName} \
-                  ${rerunFileOutput}.${testName}
+                  ${rerunFileOutput}.${testName} \
                 > ${benchFileOutput}.${testName}.diff
           if [ $? -ne 0 ] ; then
             sed -i '/^$/d' ${benchFileOutput}.${testName}.diff
