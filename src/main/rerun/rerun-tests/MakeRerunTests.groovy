@@ -90,6 +90,34 @@ def Node createNode(NodeType nodeType,
 	//println("nodeMap.put(${node.name}, ${node})")
 	return node;
 }
+					
+def findNodeByName(String name) {
+	Node node = null;
+	int nodeId = -1
+	int i = 0
+	nodeMap.each() {nodeMapKey, nodeMapValue ->
+		++i
+		if (nodeMapKey == name) {
+			node = nodeMapValue;
+			nodeId = i
+		}
+	}
+	return [node, nodeId]
+}
+
+def findNodeIdByNodeName(String name) {
+	Node node = null;
+	int nodeId = -1
+	int i = 0
+	nodeMap.each() {nodeMapKey, nodeMapValue ->
+		++i
+		if (nodeMapKey == name) {
+			node = nodeMapValue;
+			nodeId = i
+		}
+	}
+	return [node, nodeId]
+}
 
 def deleteNode(String name) {
 	nodeMap.remove(name)
@@ -102,12 +130,12 @@ def createNodeValue(Node node, NodeAttribute nodeAttribute, String value) {
 	nodeValue.value = value
 	nodeValue.dateCreated = now
 	nodeValue.dateModified = now
-	nodeValueMap.putAt(nodeValue.node.name
-		               + "::"
-					   + nodeValue.nodeattribute.attribute.name
-					   + "::"
-					   + nodeValue.value,
-					   nodeValue)
+	nodeValueMap.put(nodeValue.node.name
+		             + "::"
+					 + nodeValue.nodeattribute.attribute.name
+					 + "::"
+					 + nodeValue.value,
+					 nodeValue)
 	//println("nodeValueMap.put(${nodeValue.node.name}::${nodeValue.nodeattribute.attribute.name}::${nodeValue.value}, ${nodeValue.value})")
 	return nodeValue
 }
@@ -139,7 +167,7 @@ def createChildNode(String relationshipName, Node parent, Node child) {
 	childNode.relationshipName = relationshipName
 	childNode.child = child
 	childNode.parent = parent
-	childNodeMap.get(child.name + "::" + parent.name, childNode)
+	childNodeMap.put(child.name + "::" + parent.name, childNode)
 	//println("childNodeMap.put(${child.name}::${parent.name}, ${childNode})")
 	return childNode;
 }
@@ -547,6 +575,50 @@ def emitRerunTypeByIdTest() {
 	}
 }
 
+def emitRerunNodeChildRelationships() {
+	int i = 0
+	nodeMap.each() {nodeMapKey, nodeMapValue ->
+		println("TEST:NodeChildRelationships:" + ++testNumber)
+		println("RERUN:yana:relations --action children --node " + ++i)
+		childNodeMap.each() {childNodeMapKey, childNodeMapValue ->
+			if (nodeMapKey == childNodeMapValue.parent.name) {
+				def (parentNode, parentNodeIndex) =
+				  findNodeByName(childNodeMapValue.parent.name)
+				def (childNode, childNodeIndex) =
+				  findNodeByName(childNodeMapValue.child.name) 
+				println(childNodeIndex
+					    + ":" + childNodeMapValue.relationshipName
+						+ ":" + parentNodeIndex
+						+ ":" + childNodeMapValue.child.name
+						+ ":" + childNodeMapValue.child.nodetype.name)
+			}
+		}
+		println(endOfTestMarker)
+	}
+}
+
+def emitRerunNodeParentRelationships() {
+	int i = 0
+	nodeMap.each() {nodeMapKey, nodeMapValue ->
+		println("TEST:NodeParentRelationships:" + ++testNumber)
+		println("RERUN:yana:relations --action parents --node " + ++i)
+		childNodeMap.each() {childNodeMapKey, childNodeMapValue ->
+			if (nodeMapKey == childNodeMapValue.child.name) {
+				def (parentNode, parentNodeIndex) =
+				  findNodeByName(childNodeMapValue.parent.name)
+				def (childNode, childNodeIndex) =
+				  findNodeByName(childNodeMapValue.child.name) 
+				println(parentNodeIndex
+						+ ":" + childNodeMapValue.relationshipName
+						+ ":" + childNodeIndex
+						+ ":" + childNodeMapValue.parent.name
+						+ ":" + childNodeMapValue.parent.nodetype.name)
+			}
+		}
+		println(endOfTestMarker)
+	}
+}
+
 parseXML()
 
 // Test that the database is empty:
@@ -565,6 +637,9 @@ emitRerunNodesTest()
 emitRerunNodesByAllTypeTest();
 emitRerunNodesByTypeTest()
 emitRerunNodeByIdTest()
+
+emitRerunNodeChildRelationships()
+emitRerunNodeParentRelationships()
 
 emitRerunCreateTypeTest("City",    "City description")
 emitRerunCreateTypeTest("State",   "State description")
