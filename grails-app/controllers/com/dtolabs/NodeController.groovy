@@ -61,6 +61,7 @@ class NodeController {
 	
    def listapi(){
 	   switch(request.method){
+		   case "GET":
 		   case "POST":
 			   def json = request.JSON
 			   this.list()
