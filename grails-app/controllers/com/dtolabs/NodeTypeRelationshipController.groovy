@@ -10,6 +10,10 @@ import grails.plugins.springsecurity.Secured
 class NodeTypeRelationshipController {
 
 	def iconService
+	def xmlService
+	def jsonService
+	def webhookService
+	
 	
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -18,9 +22,112 @@ class NodeTypeRelationshipController {
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [nodeTypeRelationshipInstanceList: NodeTypeRelationship.list(params), nodeTypeRelationshipInstanceTotal: NodeTypeRelationship.count()]
+		if(params.format && params.format!='none'){
+			def ntrs = NodeTypeRelationship.list(params)
+			switch(params.format.toLowerCase()){
+				case 'xml':
+					def xml = xmlService.formatNodeTypeRelationships(ntrs)
+					render(text: xml, contentType: "text/xml")
+					break;
+				case 'json':
+					def json = jsonService.formatNodeTypeRelationships(ntrs)
+					render(text:json, contentType: "text/json")
+					break;
+			}
+		}else{
+        	params.max = Math.min(params.max ? params.int('max') : 10, 100)
+			[nodeTypeRelationshipInstanceList: NodeTypeRelationship.list(params), nodeTypeRelationshipInstanceTotal: NodeTypeRelationship.count()]
+		}
     }
+	
+	def listapi(){
+		switch(request.method){
+			case "POST":
+				def json = request.JSON
+				this.list()
+				break
+		  }
+		return
+	}
+	 
+	def api(){
+		switch(request.method){
+			case "POST":
+				def json = request.JSON
+				def nodeTypeRelationship = new NodeTypeRelationship(params)
+				if(nodeTypeRelationship){
+					if (!nodeTypeRelationship.save(flush: true)) {
+						response.status = 400 //Bad Request
+						render "NodeTypeRelationship Creation Failed"
+					}else{
+						ArrayList nodeTypeRelationships = [nodeTypeRelationship]
+						webhookService.postToURL('nodetyperelationship', nodeTypeRelationships,'create')
+						
+						response.status = 200
+						if(params.format && params.format!='none'){
+							switch(params.format.toLowerCase()){
+								case 'xml':
+									def xml = xmlService.formatNodeTypeRelationships(nodeTypeRelationships)
+									render(text: xml, contentType: "text/xml")
+									break;
+								case 'json':
+									def jsn = jsonService.formatNodeTypeRelationships(nodeTypeRelationships)
+									render(text: jsn, contentType: "text/json")
+									break;
+							}
+						}else{
+							render "Successfully Created."
+						}
+						
+					}
+				}else{
+					  response.status = 404 //Not Found
+					  render "${params.id} not found."
+				}
+				break
+			case "GET":
+				def json = request.JSON
+				this.show()
+				break
+			case "PUT":
+				def json = request.JSON
+				this.update()
+				break
+			case "DELETE":
+				def json = request.JSON
+				if(params.id){
+					def nodetyperelationship = NodeTypeRelationship.get(params.id)
+					if(nodetyperelationship){
+						try{
+							nodetyperelationship.delete(flush:true)
+							
+							ArrayList nodetypes = [nodetyperelationship]
+							webhookService.postToURL('nodetyperelationship', nodetypes,'delete')
+							
+							response.status = 200
+							render "Successfully Deleted."
+						}catch(org.springframework.dao.DataIntegrityViolationException e) {
+							NodeTypeRelationship.withSession { session ->
+								session.clear()
+							}
+	
+							response.status = 403 //Bad Request
+							render "Referential Integrity Violation."
+						}
+					}else{
+					  response.status = 404 //Not Found
+					  render "${params.id} not found."
+					}
+				}else{
+					response.status = 400 //Bad Request
+					render """DELETE request must include the id"""
+				}
+				break
+		  }
+		return
+	}
+	
+	
 
     def create() {
 		def cardinality = ['0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','10':'10','999999999':'*']
@@ -53,12 +160,31 @@ class NodeTypeRelationshipController {
 		String path = iconService.getMedIconPath()
         def nodeTypeRelationshipInstance = NodeTypeRelationship.get(params.id)
         if (!nodeTypeRelationshipInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), params.id])
-            redirect(action: "list")
-            return
-        }
-
-        [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,path:path]
+			if(params.format){
+				response.status = 404 //Not Found
+				render "${params.id} not found."
+			} else {
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), params.id])
+				redirect(action: "list")
+				return
+			}
+        } else {
+			if(params.format && params.format!='none') {
+				ArrayList nodetyperelationships = [nodeTypeRelationshipInstance]
+				switch(params.format.toLowerCase()){
+					case 'xml':
+						def xml = xmlService.formatNodeTypeRelationships(nodetyperelationships)
+						render(text: xml, contentType: "text/xml")
+						break;
+					case 'json':
+						def json = jsonService.formatNodeTypeRelationships(nodetyperelationships)
+						render(text:json, contentType: "text/json")
+						break;
+				}
+			} else {
+				[nodeTypeRelationshipInstance: nodeTypeRelationshipInstance,path:path]
+			}
+        }        
     }
 
     def edit() {

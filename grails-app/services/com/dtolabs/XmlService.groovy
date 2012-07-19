@@ -145,6 +145,24 @@ class XmlService {
 		return writer.toString()
 	}
 	
+	String formatNodeTypeRelationships(ArrayList nodeTypeRelationships) {
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+
+		xml.nodeTypeRelationships() {
+			nodeTypeRelationships.each { 
+				nodeTypeRelationship(id:it.id, roleName: it.roleName,
+					parentCardinality: it.parentCardinality,
+					parentNodeTypeId: it.parent.id, parentNodeTypeName: it.parent.name,
+					childCardinality: it.childCardinality,
+					childNodeTypeId: it.child.id, childNodeTypeName: it.child.name,
+					) {
+				}
+			}
+		}
+		return writer.toString()
+	}
+	
 	String formatHooks(ArrayList hooks){
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)

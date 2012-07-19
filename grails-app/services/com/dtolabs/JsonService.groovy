@@ -117,6 +117,20 @@ class JsonService {
 		return result as JSON
 	}
 	
+	String formatNodeTypeRelationships(ArrayList data) {
+		ArrayList result = [:]
+		data.each(){
+			result += [nodetyperelationship:[id:it.id,roleName:it.roleName, 
+					parentCardinality: it.parentCardinality,
+					parentNodeTypeId: it.parent.id, parentNodeTypeName: it.parent.name,
+					childCardinality: it.childCardinality,
+					childNodeTypeId: it.child.id, childNodeTypeName: it.child.name,]]
+			
+		}
+		return result as JSON
+		
+	}
+	
 	String formatHooks(ArrayList data){
 		ArrayList result = [:]
 		data.each(){ val1 ->
