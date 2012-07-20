@@ -569,7 +569,15 @@ and (NTP.childCardinality>=${nodeInstance.children.size()} or NTP.childCardinali
 				println("")
 				List atts = []
 				if(params.node){
-					atts = NodeValue.executeQuery("select new map(TV.id as tid,TV.value as nodevalue,TA.required as required,A.name as attributename,A.id as id,F.dataType as datatype,F.regex as filter) from NodeValue as TV left join TV.nodeattribute as TA left join TA.attribute as A left join A.filter as F where TA.nodetype.id=${params.templateid} and TV.node.id=${params.node}")
+					NodeValue.findAllByNode(Node.get(params.node)).each{nodeValue ->
+					  atts += [tid:nodeValue.id,
+					   id:nodeValue.nodeattribute.attribute.id,
+					   required:nodeValue.nodeattribute.required,
+					   nodevalue:nodeValue.value,
+					   attributename:nodeValue.nodeattribute.attribute.name,
+					   datatype:nodeValue.nodeattribute.attribute.filter.dataType,
+					   filter:nodeValue.nodeattribute.attribute.filter.regex]
+					}
 				}else{
 					atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.nodetype.id=${params.templateid}")
 				}
