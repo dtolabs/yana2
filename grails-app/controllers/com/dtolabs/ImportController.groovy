@@ -96,6 +96,7 @@ class ImportController {
 						ntype.image=nodetype.image.text()
 						ntype.dateCreated = new Date()
 						ntype.dateModified = new Date()
+						
 						ntype.save(flush: true,failOnError:true)
 					}
 					def order = 1
@@ -106,6 +107,7 @@ class ImportController {
 							ta = new NodeAttribute()
 							ta.nodetype = ntype
 							ta.attribute = attribute
+							ta.required = nodeAttribute.@required.toString().toBoolean();
 							//ta.order = order
 							ta.save(flush: true,failOnError:true)
 							order++

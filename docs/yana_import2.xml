@@ -40,7 +40,7 @@
       <description>An application host</description>
       <image>Node.png</image>
       <nodeAttributes>
-	<nodeAttribute id="host.hostname" attribute="hostname" required="false"/>
+	<nodeAttribute id="host.hostname" attribute="hostname" required="true"/>
 	<nodeAttribute id="host.osArch" attribute="arch" required="false"/>
 	<nodeAttribute id="host.osFamily" attribute="osFamily" required="false"/>
 	<nodeAttribute id="host.osName" attribute="osName" required="false"/>
