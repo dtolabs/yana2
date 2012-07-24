@@ -87,6 +87,30 @@
   	  	}
   	}
 
+  	function selectMember(sourceListId, destListId) {
+		var sourceListItem = document.getElementById(sourceListId);
+		var destListItem   = document.getElementById(destListId);
+	    for (var i = sourceListItem.options.length - 1; i >= 0; i--) {
+	        if (sourceListItem.options[i].selected) {
+	        	destListItem.add(
+		          new Option(sourceListItem.options[i].text,
+		        		     sourceListItem.options[i].value));
+	        	sourceListItem.remove(i)
+	        }
+	    }
+  	}
+
+  	function selectAll() {
+		var selectAllListItem = document.getElementById('parents');
+	    for (var i = selectAllListItem.options.length - 1; i >= 0; i--) {
+	    	selectAllListItem.options[i].selected = true;
+	    }
+		var selectAllListItem = document.getElementById('children');
+	    for (var i = selectAllListItem.options.length - 1; i >= 0; i--) {
+	    	selectAllListItem.options[i].selected = true;
+	    }
+  	}
+
   	function validate(input){
   	  	var reset_color = '#ffffff';
   	  	var bad_color = '#ff0000';
@@ -142,7 +166,7 @@
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
 					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><span class="styled-select"><g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${((params?.status)?params.status:nodeInstance?.status?.name())}" noSelection="['null': 'Select One']"/></span></td>
+					<td><span class="styled-dropdown"><g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${((params?.status)?params.status:nodeInstance?.status?.name())}" noSelection="['null': 'Select One']"/></span></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
@@ -152,20 +176,31 @@
 				
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Parents: </td>
-					<td><span class="styled-select"><g:select name="parents" from="${parents}" optionKey="id" optionValue="name" value="${nodeInstance.children.parent.id}" multiple="true" noSelection="['null': 'Select One or More']"/></span></td>
+					<td><span class="styled-select"><g:select name="unselectedParents" from="${unselectedParents}" optionKey="id" optionValue="display" value="${nodeInstance.children.parent.id}" multiple="true"/></span></td>
+					<td>
+					<input type=button value="&gt;&gt;" onClick="selectMember('unselectedParents', 'parents')"/>
+					<br/>
+					<input type=button value="&lt;&lt;" onClick="selectMember('parents', 'unselectedParents')"/>
+					</td>
+					<td><span class="styled-select"><g:select name="parents" from="${selectedParents}" optionKey="id" optionValue="display" value="${nodeInstance.children.parent.id}" multiple="true"/></span></td>
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Children: </td>
-					<td><span class="styled-select"><g:select name="children" from="${children}" optionKey="id" optionValue="name" value="${nodeInstance.parents.child.id}" multiple="true" noSelection="['null': 'Select One or More']"/></span></td>
+					<td><span class="styled-select"><g:select name="unselectedChildren" from="${unselectedChildren}" optionKey="id" optionValue="display" value="${nodeInstance.parents.child.id}" multiple="true"/></span></td>
+					<td>
+					<input type=button value="&gt;&gt;" onClick="selectMember('unselectedChildren', 'children')"/>
+					<br/>
+					<input type=button value="&lt;&lt;" onClick="selectMember('children', 'unselectedChildren')"/>
+					</td>
+					<td><span class="styled-select"><g:select name="children" from="${selectedChildren}" optionKey="id" optionValue="display" value="${nodeInstance.parents.child.id}" multiple="true"/></span></td>
 				</tr>
-
 			</table>
 				
 				<div id="attributes" style="display:none;"></div>
 				
 				<fieldset class="form_footer">
 					<span class="fake_button"><g:link action="show" id="${nodeInstance?.id}"><g:message code="default.button.clone.label" default="Cancel" /></g:link></span>
-					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<g:actionSubmit class="save" action="update" onClick="selectAll()" value="${message(code: 'default.button.update.label', default: 'Update')}" />
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" formnovalidate="" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				</fieldset>
 			</g:form>

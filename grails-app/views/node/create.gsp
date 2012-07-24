@@ -10,34 +10,38 @@
   	window.onload = init;
   	function init() {
   		var nodetype = $("#nodetype").val();
-  		if(nodetype){
+  		if (nodetype) {
 			getAttributes();
   	  	}
   	}
 
   	function getFormFields(){
-  		getAttributes();
-		getNodeParents();
-		getNodeChildren();
+  		getNodeFamily("getNodeParents",  "unselectedParents", "children");
+  		getNodeFamily("getNodeChildren", "unselectedChildren", "parents");
+		getAttributes();
   	}
 
-  	function getNodeParents(){
+  	function clearList(listItemId) {
+		var sourceListItem = document.getElementById(listItemId);
+		for (var i = sourceListItem.length - 1; i >= 0; i--) {
+        	sourceListItem.remove(i)
+		}
+  	}
+
+  	function getNodeFamily(uri, unselectedListId, selectedListId) {
+  	  	clearList(unselectedListId)
+  	  	clearList(selectedListId)
   		var nodetype = $("#nodetype").val();
-		
-		if(nodetype){
+  		if (nodetype && nodetype!=null) {
 			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getNodeParents",{id:nodetype,ajax:'true'},function(json){
-				if(json){
-					var select = document.getElementById("parents");
+			$.getJSON("${request.contextPath}/node/"+uri,{id:nodetype,ajax:'true'},function(json){
+				if (json) {
+					var select = document.getElementById(unselectedListId);
 					select.innerHTML = '';
-					var opt = document.createElement('option');
-					opt.innerHTML="Select A Value";
-					opt.setAttribute('value','NULL');
-					select.appendChild(opt)
 					for(var i=0;i<json.length;i++){
 						var j = json[i];
 						var opt = document.createElement('option');
-						opt.innerHTML=j.name;
+						opt.innerHTML=j.name + " [" + j.nodeTypeName + "]";
 						opt.setAttribute('value',j.id);
 						select.appendChild(opt)
 					}
@@ -46,28 +50,28 @@
   		}
   	}
 
-  	function getNodeChildren(){
-  		var nodetype = $("#nodetype").val();
-  		if(nodetype && nodetype!=null){
-			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getNodeChildren",{id:nodetype,ajax:'true'},function(json){
-				if(json){
-					var select = document.getElementById("children");
-					select.innerHTML = '';
-					var opt = document.createElement('option');
-					opt.innerHTML="Select A Value";
-					opt.setAttribute('value','NULL');
-					select.appendChild(opt)
-					for(var i=0;i<json.length;i++){
-						var j = json[i];
-						var opt = document.createElement('option');
-						opt.innerHTML=j.name;
-						opt.setAttribute('value',j.id);
-						select.appendChild(opt)
-					}
-				}
-			});
-  		}
+  	function selectMember(sourceListId, destListId) {
+		var sourceListItem = document.getElementById(sourceListId);
+		var destListItem   = document.getElementById(destListId);
+	    for (var i = sourceListItem.options.length - 1; i >= 0; i--) {
+	        if (sourceListItem.options[i].selected) {
+	        	destListItem.add(
+		          new Option(sourceListItem.options[i].text,
+		        		     sourceListItem.options[i].value));
+	        	sourceListItem.remove(i)
+	        }
+	    }
+  	}
+
+  	function selectAll() {
+		var selectAllListItem = document.getElementById('parents');
+	    for (var i = selectAllListItem.options.length - 1; i >= 0; i--) {
+	    	selectAllListItem.options[i].selected = true;
+	    }
+		var selectAllListItem = document.getElementById('children');
+	    for (var i = selectAllListItem.options.length - 1; i >= 0; i--) {
+	    	selectAllListItem.options[i].selected = true;
+	    }
   	}
   	
   	function getAttributes(){
@@ -185,12 +189,12 @@
 				
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'nodetype', 'error')} required">
 					<td style="font-weight:bold;"><label for="nodetype"><g:message code="node.nodetype.label" default="Nodetype" />*</label>: </td>
-					<td class="styled-select"><g:select id="nodetype" name="nodetype" from="${com.dtolabs.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
+					<td class="styled-dropdown"><g:select id="nodetype" name="nodetype" from="${com.dtolabs.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
 				</tr>
 			
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
 					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td class="styled-select"><g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${params?.status}" noSelection="['null': 'Select One']"/></td>
+					<td class="styled-dropdown"><g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${params?.status}" noSelection="['null': 'Select One']"/></td>
 				</tr>
 	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
@@ -199,10 +203,22 @@
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Parents: </td>
+					<td class="styled-select"><select name="unselectedParents" id="unselectedParents" multiple="multiple"></select></td>
+					<td>
+					<input type=button value="&gt;&gt;" onClick="selectMember('unselectedParents', 'parents')"/>
+					<br/>
+					<input type=button value="&lt;&lt;" onClick="selectMember('parents', 'unselectedParents')"/>
+					</td>
 					<td class="styled-select"><select name="parents" id="parents" value="${parents?.id}" multiple="multiple"></select></td>
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Children: </td>
+					<td class="styled-select"><select name="unselectedChildren" id="unselectedChildren" multiple="multiple"></select></td>
+					<td>
+					<input type=button value="&gt;&gt;" onClick="selectMember('unselectedChildren', 'children')"/>
+					<br/>
+					<input type=button value="&lt;&lt;" onClick="selectMember('children', 'unselectedChildren')"/>
+					</td>
 					<td class="styled-select"><select name="children" id="children" value="${children?.id}" multiple="multiple"></select></td>
 				</tr>
 			</table>
@@ -210,7 +226,7 @@
 			<div id="attributes" style="display:none;"></div>
 		
 				<fieldset class="form_footer">
-					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
+					<g:submitButton name="create" class="save" onClick="selectAll()" value="${message(code: 'default.button.create.label', default: 'Create')}" />
 				</fieldset>
 			</g:form>
 		</div>
