@@ -24,7 +24,8 @@ class ImportController {
 
 	def springSecurityService
 	def webhookService
-	
+	def projectService
+
 	def api(){
 		switch(request.method){
 			case "POST":
@@ -45,12 +46,19 @@ class ImportController {
 	
     def index() {}
 	
-	def importxml() {}
+	def importxml() {
+        [projectList:projectService.listProjects()]
+    }
 	
 	
 	// all children are aspects of groovy.util.slurpersupport.NodeChild
 	// this allows us to pass them as NodeChild objects
 	def savexml() {
+        def project = Project.findByName(params.project)
+        if(!project){
+            request.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
+            return redirect(action: 'importxml')
+        }
 		if(!request.getFile("yanaimport").empty){
 			def xml = new XmlSlurper().parse(request.getFile("yanaimport").inputStream)
 			SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
@@ -66,13 +74,15 @@ class ImportController {
 
 				// parse attributes
 				xml.attributes.children().each{ attribute ->
-					Attribute att = Attribute.findByName(attribute.@id.toString())
+					Attribute att = Attribute.findByProjectAndName(project,attribute.@id.toString())
 					if(!att){
 						//get dependencies first
 						//println("attribute class:"+attribute.getClass())
-						Filter filter = Filter.findByDataType(attribute.@filter.toString())
+
+						Filter filter = Filter.findByProjectAndDataType(project,attribute.@filter.toString())
 						
 						att = new Attribute()
+                        att.project= project
 						att.name = attribute.@id
 						att.filter = filter
 						att.dateCreated = new Date()
@@ -85,11 +95,13 @@ class ImportController {
 
 				// parse nodetypes and nodeattributes
 				xml.nodetypes.children().each{ nodetype ->
-					NodeType ntype = NodeType.findByName(nodetype.@id.toString())
+                    //TODO: project in query
+					NodeType ntype = NodeType.findByProjectAndName(project,nodetype.@id.toString())
 					if(!ntype){
 						//println("nodetype class name:"+nodetype.getClass())
 
 						ntype = new NodeType()
+                        ntype.project= project
 						ntype.name = nodetype.@id
 						ntype.description=nodetype.description.text()
 						ntype.image=nodetype.image.text()
@@ -100,7 +112,7 @@ class ImportController {
 					}
 					def order = 1
 					nodetype.nodeAttributes.children().each{ nodeAttribute ->
-						Attribute attribute = Attribute.findByName(nodeAttribute.@attribute.toString())
+						Attribute attribute = Attribute.findByProjectAndName(project,nodeAttribute.@attribute.toString())
 						NodeAttribute ta = NodeAttribute.findByNodetypeAndAttribute(ntype,attribute)
 						if(!ta){
 							ta = new NodeAttribute()
@@ -116,10 +128,11 @@ class ImportController {
 				Node nd
 				// parse nodes and attributevalues
 				xml.nodes.children().each{ node ->
-					nd = Node.findByName(node.@id.toString())
-					NodeType nodetype = NodeType.findByName(node.@nodetype.toString())
+					nd = Node.findByProjectAndName(project,node.@id.toString())
+					NodeType nodetype = NodeType.findByProjectAndName(project,node.@nodetype.toString())
 					if(!nd){
 						nd = new Node()
+                        nd.project= project
 						nd.name = node.@id
 						nd.description = node.description.toString()
 						nd.tags = node.@tags.toString()
@@ -134,7 +147,7 @@ class ImportController {
 					node.values.children().each{ nodeValue ->
 						def nodeAttribute = nodeValue.@nodeAttribute.toString()
 						def att = xml.nodetypes.nodetype.nodeAttributes.nodeAttribute.findAll { it.@id.text()==nodeAttribute }
-						Attribute attribute = Attribute.findByName(att.@attribute.toString())
+						Attribute attribute = Attribute.findByProjectAndName(project,att.@attribute.toString())
 						NodeAttribute ta = NodeAttribute.findByNodetypeAndAttribute(nodetype,attribute)
 	
 						NodeValue tv = new NodeValue()
@@ -150,9 +163,9 @@ class ImportController {
 				// parse nodetype parent/child
 				xml.nodetyperelationships.children().each{ nodetypechild ->
 					// get dependencies
-					NodeType parent = NodeType.findByName(nodetypechild.@parent.toString())
-					NodeType child = NodeType.findByName(nodetypechild.@child.toString())
-	
+					NodeType parent = NodeType.findByProjectAndName(project,nodetypechild.@parent.toString())
+					NodeType child = NodeType.findByProjectAndName(project,nodetypechild.@child.toString())
+
 					NodeTypeRelationship childnodetype = NodeTypeRelationship.findByChildAndParent(child,parent)
 					if(!childnodetype){
 						childnodetype  = new NodeTypeRelationship()
@@ -166,8 +179,9 @@ class ImportController {
 				// parse node parent/child
 				xml.noderelationships.children().each{ nodechild ->
 					// get dependencies
-					Node parent = Node.findByName(nodechild.@parent.toString())
-					Node child = Node.findByName(nodechild.@child.toString())
+					Node parent = Node.findByProjectAndName(project,nodechild.@parent.toString())
+					Node child = Node.findByProjectAndName(project,nodechild.@child.toString())
+
 					Node[] childNodeTypes = Node.findAllByNodetype(child.nodetype)
 					Node[] parentNodeTypes = Node.findAllByNodetype(parent.nodetype)
 					
