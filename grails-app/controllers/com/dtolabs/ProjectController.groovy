@@ -12,18 +12,18 @@ class ProjectController {
     }
     def list() {
         if (params.mustChoose) {
-            request.message = "Please Choose or Create a Project"
+            request.message = message(code: 'project.view.list.mustChoose')
         }
         [projects:projectService.listProjects()]
     }
     def select() {
         if(!params.project) {
-            request.error = "No Project Chosen"
+            request.message = message(code: 'parameter.missing', args: ['project'], default: 'Parameter {0} is required')
             return redirect(action: 'list')
         }
         Project p = Project.findByName(params.project)
         if(!p){
-            request.error = message(code: 'default.not.found.message',args: [params.project],default: "Project {0} was not found")
+            request.message = message(code: 'default.not.found.message',args: [params.project],default: "Project {0} was not found")
             return redirect(action: 'list')
         }
         projectService.userSelectProject(session,p)
@@ -32,7 +32,7 @@ class ProjectController {
     def create() {
     }
     def cancel(){
-        flash.message="Create Project Cancelled"
+        flash.message = message(code: 'project.action.cancel.message')
         redirect(action: 'list')
     }
     def save() {
@@ -52,8 +52,7 @@ class ProjectController {
         projectService.userSelectProject(session, project)
 
 
-        flash.message="Created Project: ${project.name}"
+        flash.message = message(code: 'default.created.message', args: ['Project',project.name], default: 'Project {0} created')
         redirect(action: 'list')
-//        [project: project]
     }
 }

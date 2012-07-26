@@ -3,8 +3,8 @@ package com.dtolabs
 class Project {
 
     static constraints = {
-        name unique: true, nullable: false
-        description nullable: false
+        name unique: true, nullable: false, blank: false
+        description nullable: false, blank: false
     }
 
     String name
