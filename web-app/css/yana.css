@@ -149,10 +149,21 @@ select {
    background: transparent;
    border: 1px solid #0431f7;
 }
-
 .styled-select select {
    background: transparent;
    border: 1px solid #0431f7;
+   width: 200px;
+   height: 75px
+}
+
+.styled-dropdown textarea {
+   background: transparent;
+   border: 1px solid #0431f7;
+}
+.styled-dropdown select {
+   background: transparent;
+   border: 1px solid #0431f7;
+   width: 200px;
 }
 
 
