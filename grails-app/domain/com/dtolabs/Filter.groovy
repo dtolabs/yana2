@@ -12,7 +12,7 @@ class Filter {
     Date dateModified = new Date()
 
     static constraints = {
-        dataType(blank: false, unique: true)
+        dataType(blank: false, unique: 'project')
         regex(blank: true, size: 0..500)
         project(nullable: false)
     }
