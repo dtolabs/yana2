@@ -382,7 +382,9 @@ td.errors textarea {
     border: 1px solid red;
 }
 
-
+label.error{
+    color:red;
+}
 
 /* TABLES 
 

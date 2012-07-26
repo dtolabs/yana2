@@ -9,4 +9,12 @@ class Project {
 
     String name
     String description
+
+    @Override
+    public String toString() {
+        return "Project{" +
+               "name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               '}';
+    }
 }
