@@ -39,11 +39,13 @@
 					<ul>
 						<li><g:link controller="node" action="list">List</g:link></li>
 						<li><g:link controller="node" action="create">Create</g:link></li>
+						<!-- 
 						<li class="current"><g:link controller="childNode" action="list">Node Relationships</g:link>
 							<ul>
 								<li class="current"><g:link controller="childNode" action="create">Create Node Relationship</g:link></li>
 							</ul>
 						</li>
+						-->
 					</ul>
 					
 				</li>
@@ -51,27 +53,36 @@
 				<li><g:link controller="nodeType" action="list">Types</g:link>
 					<ul>
 						<li><g:link controller="nodeType" action="list">NodeTypes</g:link>
+						<!--
 							<ul>
 								<li><g:link controller="nodeType" action="create">Create NodeType</g:link></li>
 							</ul>
+					  	 -->
 						</li>
 						<li><g:link controller="attribute" action="list">Attributes</g:link>
+						<!-- 
 							<ul>
 								<li><g:link controller="attribute" action="create">Create Attribute</g:link></li>
 							</ul>
+						  -->
 						</li>
 						<li><g:link controller="filter" action="list">Filters</g:link>
+						<!-- 
 							<ul>
 								<li><g:link controller="filter" action="create">Create Filter</g:link></li>
 							</ul>
+						  -->
 						</li>
 						<li><g:link controller="nodeTypeRelationship" action="list">Nodetype Relationship</g:link>
+						<!-- 
 							<ul>
 								<li><g:link controller="nodeTypeRelationship" action="create">Create Nodetype Relationship</g:link></li>
 							</ul>
+						 -->
 						</li>
 					</ul>
 				</li>
+				<!-- 
 				<li class="spacer"><img src="<g:createLinkTo dir='images' file='pix.png'/>" width='10' height='24'/></li>
 				<li><g:link controller="webhook" action="list">Webhooks</g:link>
 					<ul>
@@ -79,6 +90,7 @@
 						<li><g:link controller="webhook" action="create">Create</g:link></li>
 					</ul>
 				</li>
+				-->
 				<li class="spacer"><img src="<g:createLinkTo dir='images' file='pix.png'/>" width='10' height='24'/></li>
 				<li><a href="${grailsApplication.config.grails.serverURL}/import">Admin</a>
 					<ul>
