@@ -8,6 +8,8 @@ class ProjectFilters {
                 if(!session.project){
                     redirect(controller: 'project', action: 'list', params: ['mustChoose': 1])
                     return false
+                }else if(!params.project){
+                    params.project=session.project
                 }
             }
         }
