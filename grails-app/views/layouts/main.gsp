@@ -14,8 +14,8 @@
 	
 
 	<link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'superfish.css')}" />
-	<script type="text/javascript" src="/js/hoverIntent.js"></script>
-	<script type="text/javascript" src="/js/superfish.js"></script>
+	<script type="text/javascript" src="${resource(dir:'js',file:'hoverIntent.js')}"></script>
+	<script type="text/javascript" src="${resource(dir:'js',file:'superfish.js')}"></script>
 	
 	<script type="text/javascript">
 	// initialise plugins
