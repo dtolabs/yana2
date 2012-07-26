@@ -45,13 +45,13 @@ class SearchControllerTests extends GroovyTestCase{
         final type2 = new NodeType(name: 'test2type', description: 'test2type desc2')
         assertTrue type2.validate()
         assertNotNull type2.save()
-        node1 = new Node(nodetype: type1, name: "node1", description: "node1 desc", tags: "taga, tagb, tagc", status: Status.TEST)
+        node1 = new Node(nodetype: type1, name: "node1", description: "node1 desc", tags: "taga, tagb, tagc")
         assertNotNull node1.save(flush: true)
 
-        node2 = new Node(nodetype: type2, name: "node2", description: "node2 desc", tags: "tagb, tagc", status: Status.TEST)
+        node2 = new Node(nodetype: type2, name: "node2", description: "node2 desc", tags: "tagb, tagc")
         assertNotNull node2.save(flush: true)
 
-        node3 = new Node(nodetype: type2, name: "node3", description: "node3 desc", tags: "tagc", status: Status.TEST)
+        node3 = new Node(nodetype: type2, name: "node3", description: "node3 desc", tags: "tagc")
         assertNotNull node3.save(flush: true)
 
         scTest = new SearchController()

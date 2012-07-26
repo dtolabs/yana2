@@ -119,7 +119,6 @@ class NodeController {
 		Node node = new Node()
 		node.name = nodeInstance.name+"_clone"
 		node.description = nodeInstance.description
-		node.status = nodeInstance.status
 		node.tags = nodeInstance.tags
 		node.nodetype = nodeInstance.nodetype
 		node.dateCreated =  now
@@ -199,7 +198,7 @@ class NodeController {
 		params.parents = null
 		params.parents = null
 
-		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
+		if((params.name && params.name!='null') && (params.nodetype && params.nodetype!='null')){
 			params.nodetype = NodeType.get(params.nodetype.toLong())
 			Node nodeInstance  = new Node(params)
 			nodeInstance.dateCreated = new Date()
@@ -426,7 +425,7 @@ class NodeController {
 			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:kinder]) }
 		}
 
-		if((params.name && params.name!='null') && (params.status && params.status!='null') && (params.nodetype && params.nodetype!='null')){
+		if((params.name && params.name!='null') && (params.nodetype && params.nodetype!='null')){
 			Date now = new Date()
 			if (!nodeInstance) {
 				if(params.format){
@@ -457,7 +456,6 @@ class NodeController {
 
 			nodeInstance.name = params.name
 			nodeInstance.description = params.description
-			nodeInstance.status = params.status
 			nodeInstance.tags = params.tags
 			nodeInstance.dateCreated = now
 			nodeInstance.dateModified = now

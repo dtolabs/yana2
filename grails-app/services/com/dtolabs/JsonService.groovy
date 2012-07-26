@@ -25,7 +25,7 @@ class JsonService {
 					kinder += [node:[childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags]]
 				}
 				
-				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags,status:val1.status?.toString()],
+				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags],
 					description:val1.description,
                                         'date-created':DateFormatUtil.formatRfc3339(val1.dateCreated),
                                         'date-modified':DateFormatUtil.formatRfc3339(val1.dateModified),

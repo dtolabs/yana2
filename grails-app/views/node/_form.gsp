@@ -26,14 +26,6 @@
 	<g:select id="template" name="template.id" from="${com.dtolabs.Template.list()}" optionKey="id" required="" value="${nodeInstance?.template?.id}" class="many-to-one"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
-	<label for="status">
-		<g:message code="node.status.label" default="Status" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${nodeInstance?.status?.name()}"/>
-</div>
-
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
 	<label for="tags">
 		<g:message code="node.tags.label" default="Tags" />

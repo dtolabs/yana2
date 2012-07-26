@@ -81,7 +81,6 @@ def Node createNode(NodeType nodeType,
 	Node node = new Node()
 	node.name = name
 	node.description = description 
-	node.status = Status.IMP
 	node.tags = tags
 	node.nodetype = nodeType
 	node.dateCreated = now

@@ -16,10 +16,10 @@ class ChildNodeControllerTests {
 	  mockDomain(NodeType, [new NodeType(id:2,version:1,name:'Software',dateCreated:now)])
 	  NodeType software = NodeType.get(2)
 	  
-	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',status:com.dtolabs.Status.DEV,tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
+	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
 	  Node serverNode = Node.get(1)
 
-	  mockDomain(Node, [new Node(id:2,version:1,name:'Jetty',description:'this is a description',status:com.dtolabs.Status.DEV,tags:"this,is,a,tag",nodetype:software,dateCreated:now)])
+	  mockDomain(Node, [new Node(id:2,version:1,name:'Jetty',description:'this is a description',tags:"this,is,a,tag",nodetype:software,dateCreated:now)])
 	  Node softwareNode = Node.get(2)
 	  
 	  params["id"] = 1

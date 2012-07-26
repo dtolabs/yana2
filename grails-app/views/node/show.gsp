@@ -38,13 +38,6 @@
 </div>
 
 <div style="padding-top:5px;">
-	<label for="status">
-		<b><g:message code="node.status.label" default="Status" />:</b>
-	</label>
-	<g:fieldValue bean="${nodeInstance}" field="status"/>
-</div>
-
-<div style="padding-top:5px;">
 	<label for="tags">
 		<b><g:message code="node.tags.label" default="Tags" />:</b>
 	</label>

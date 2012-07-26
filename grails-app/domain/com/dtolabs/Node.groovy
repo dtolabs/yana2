@@ -11,7 +11,6 @@ class Node {
 	
     String name
     String description
-	Status status
 	String tags
 	NodeType nodetype
     Date dateCreated
@@ -20,7 +19,6 @@ class Node {
     static constraints = {
         name(blank:false)
         description(blank:true, nullable:true)
-		status(nullable:false)
         tags(nullable:true)
 		nodetype(nullable:false)
     }
@@ -46,30 +44,3 @@ class Node {
 
 }
 
-public enum Status {
-	 DEV("Development"),
-	 TEST("Test"),
-	 STAGE("Stage"),
-	 PROD("Production"),
-	 IMP("Implementation"),
-	 BKP("Backup"),
-	 OTHER("Other")
-	
-	 private final String value
-	
-	 Status(String value){
-	  this.value = value;
-	 }
-	
-	 String toString() {
-	  value
-	 }
-	
-	 String getKey() {
-	  name()
-	 }
-	
-	 static list(){
-		 [DEV,TEST,STAGE,PROD,IMP,BKP,OTHER]
-	 }
-}

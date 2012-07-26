@@ -7,7 +7,7 @@ benchFileOutput=/tmp/$(basename $0).$$.gv.tmp
 rerunFileOutput=/tmp/$(basename $0).$$.rr.tmp
 END_OF_TEST_MARKER="==========END_OF_TEST=========="
 
-[ ! -x $importFile ] \
+[ ! -r $importFile ] \
   && echo "usage: $0 <xml-import-file>" 1>&2 \
   && exit 1
 [ ! -x ${rerunCommand} ] \

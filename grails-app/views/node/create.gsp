@@ -192,11 +192,6 @@
 					<td class="styled-dropdown"><g:select id="nodetype" name="nodetype" from="${com.dtolabs.NodeType.list()}" optionKey="id" required="" value="${params?.nodetype}" class="many-to-one" onchange="getFormFields();"  noSelection="['null': 'Select One']"/></td>
 				</tr>
 			
-				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
-					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td class="styled-dropdown"><g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${params?.status}" noSelection="['null': 'Select One']"/></td>
-				</tr>
-	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
 					<td style="font-weight:bold;"><label for="tags"><g:message code="node.tags.label" default="Tags" /></label>: </td>
 					<td><g:textField name="tags" value="${params?.tags}"/></td>

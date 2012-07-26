@@ -164,11 +164,6 @@
 					<td>${nodeInstance?.nodetype?.name}</td>
 				</tr>
 			
-				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'status', 'error')} required">
-					<td style="font-weight:bold;"><label for="status"><g:message code="node.status.label" default="Status" />*</label>: </td>
-					<td><span class="styled-dropdown"><g:select name="status" from="${com.dtolabs.Status?.values()}" keys="${com.dtolabs.Status.values()*.name()}" required="" value="${((params?.status)?params.status:nodeInstance?.status?.name())}" noSelection="['null': 'Select One']"/></span></td>
-				</tr>
-	
 				<tr class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'tags', 'error')} ">
 					<td style="font-weight:bold;"><label for="tags"><g:message code="node.tags.label" default="Tags" /></label>: </td>
 					<td><g:textField name="tags" value="${((params?.tags)?params.tags:nodeInstance?.tags)}"/></td>

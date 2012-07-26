@@ -13,7 +13,6 @@ import com.dtolabs.ChildNode
 import com.dtolabs.Filter
 import com.dtolabs.NodeType
 import com.dtolabs.Node
-import com.dtolabs.Status
 import com.dtolabs.NodeTypeRelationship
 import com.dtolabs.NodeAttribute
 import com.dtolabs.NodeValue
@@ -123,7 +122,6 @@ class ImportController {
 						nd = new Node()
 						nd.name = node.@id
 						nd.description = node.description.toString()
-						nd.status = Status.IMP
 						nd.tags = node.@tags.toString()
 						nd.nodetype = nodetype
 						nd.dateCreated = new Date()
