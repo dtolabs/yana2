@@ -4,9 +4,9 @@
         <xs:element name="yana">
             <xs:complexType>
                 <xs:sequence>
-                    <xs:element ref="attributes"  maxOccurs="1"/>
-                    <xs:element ref="nodetypes" maxOccurs="1"/>
-                    <xs:element ref="nodes"  maxOccurs="1"/>
+                    <xs:element ref="attributes" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="nodetypes" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="nodes" minOccurs="0" maxOccurs="1"/>
                     <xs:element ref="nodetyperelationships" minOccurs="0" maxOccurs="1"/>
                     <xs:element ref="noderelationships" minOccurs="0" maxOccurs="1"/>
                 </xs:sequence>
