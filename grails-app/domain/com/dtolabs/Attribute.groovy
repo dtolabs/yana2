@@ -10,11 +10,13 @@ class Attribute{
 	Date dateCreated
 	Date dateModified = new Date()
 	String description
+    Project project
 	
     static constraints = {
         name(nullable:false, unique: true)
 		filter(nullable:false)
 		description(nullable:true)
+        project(nullable: false)
     }
 
     def String toString() {

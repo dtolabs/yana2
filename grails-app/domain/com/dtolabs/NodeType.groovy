@@ -19,6 +19,7 @@ class NodeType{
 	String name
 	String description
 	String image
+    Project project
 	Date dateCreated
 	Date dateModified = new Date()
 	
@@ -26,6 +27,7 @@ class NodeType{
         name(blank:false)
 		description(blank:true, nullable:true)
 		image(blank:true, nullable:true)
+        project(nullable: false)
     }
 
     def String toString() {

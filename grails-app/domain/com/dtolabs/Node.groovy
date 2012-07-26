@@ -13,6 +13,7 @@ class Node {
     String description
 	String tags
 	NodeType nodetype
+    Project project;
     Date dateCreated
     Date dateModified = new Date()
 
@@ -21,6 +22,7 @@ class Node {
         description(blank:true, nullable:true)
         tags(nullable:true)
 		nodetype(nullable:false)
+        project(nullable: false)
     }
 
     def String toString() {
