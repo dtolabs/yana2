@@ -4,6 +4,7 @@ class Node {
 
     static searchable = {
         nodetype component:true
+        project component:true
     }
 	
 	static mappedBy = [children: 'child', parents: 'parent']
