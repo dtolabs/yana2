@@ -23,8 +23,6 @@ while [ "$#" -gt 0 ]; do
   -N|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
   -c|--child) rerun_option_check $# ; CHILD=$2 ; shift ;;
   -p|--parent) rerun_option_check $# ; PARENT=$2 ; shift ;;
-  -x|--parent-cardinality) rerun_option_check $# ; PARENT_CARDINALITY=$2 ; shift ;;
-  -z|--child-cardinality) rerun_option_check $# ; CHILD_CARDINALITY=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
         # unknown option
         -?)
@@ -40,10 +38,8 @@ done
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$ACTION" ] && ACTION=list
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
-[ -z "$FORMAT" ] && FORMAT='${ID}:${ROLE}:${PARENT_TYPE_ID}:${PARENT_TYPE_NAME}:${PARENT_CARDINALITY}:${CHILD_TYPE_ID}:${CHILD_TYPE_NAME}:${CHILD_CARDINALITY}'
+[ -z "$FORMAT" ] && FORMAT='${ID}:${ROLE}:${PARENT_TYPE_ID}:${PARENT_TYPE_NAME}:${CHILD_TYPE_ID}:${CHILD_TYPE_NAME}'
 
-[ -z "$PARENT_CARDINALITY" ] && PARENT_CARDINALITY=1
-[ -z "$CHILD_CARDINALITY" ] && CHILD_CARDINALITY=1
 # Check required options are set
 
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }

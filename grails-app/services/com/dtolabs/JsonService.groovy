@@ -121,9 +121,7 @@ class JsonService {
 		ArrayList result = [:]
 		data.each(){
 			result += [nodetyperelationship:[id:it.id,roleName:it.roleName, 
-					parentCardinality: it.parentCardinality,
 					parentNodeTypeId: it.parent.id, parentNodeTypeName: it.parent.name,
-					childCardinality: it.childCardinality,
 					childNodeTypeId: it.child.id, childNodeTypeName: it.child.name,]]
 			
 		}

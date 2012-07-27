@@ -157,10 +157,6 @@ class ImportController {
 					if(!childnodetype){
 						childnodetype  = new NodeTypeRelationship()
 						childnodetype.roleName = nodetypechild.@rolename.toString()
-
-						childnodetype.parentCardinality = (nodetypechild.@parentCardinality.toString())?nodetypechild.@parentCardinality.toInteger():'999999999'.toInteger()
-
-						childnodetype.childCardinality = (nodetypechild.@childCardinality.toString())?nodetypechild.@childCardinality.toInteger():'999999999'.toInteger()
 						childnodetype.child = child
 						childnodetype.parent = parent
 						childnodetype.save(flush: true,failOnError:true)
@@ -178,7 +174,7 @@ class ImportController {
 					NodeTypeRelationship childnodetype = NodeTypeRelationship.findByChildAndParent(child.nodetype,parent.nodetype)
 					
 					ChildNode childnode = ChildNode.findByChildAndParent(child,parent)
-					if(!childnode && childnodetype && (!childnodetype.childCardinality || childnodetype.childCardinality==0 || (childNodeTypes.size()+1<=childnodetype.childCardinality)) && (!childnodetype.parentCardinality || childnodetype.parentCardinality==0 || (parentNodeTypes.size()+1<=childnodetype.parentCardinality))){
+					if(!childnode && childnodetype){
 						childnode  = new ChildNode()
 						childnode.relationshipName = nodechild.@relationshipname.toString()
 						childnode.child = child

@@ -144,12 +144,9 @@ def deleteNodeValue(String key) {
 }
 
 def createNodeRelationship(String roleName,
-	                       int parentCardinality, int childCardinality,
 						   NodeType parentNodeType, NodeType childNodeType) {
 	NodeTypeRelationship nodeTypeRelationship = new NodeTypeRelationship()
 	nodeTypeRelationship.roleName = roleName
-	nodeTypeRelationship.parentCardinality = parentCardinality
-	nodeTypeRelationship.childCardinality = childCardinality
 	nodeTypeRelationship.child = childNodeType
 	nodeTypeRelationship.parent = parentNodeType
 	nodeTypeRelationshipMap.put(
@@ -269,12 +266,6 @@ def parseXML() {
 		if (!nodeTypeRelationship) {
 			nodeTypeRelationship =
 			  createNodeRelationship(nodeTypeRelationshipsXml.@rolename.toString(), 
-									 (nodeTypeRelationshipsXml.@parentCardinality.toString()
-									  ? nodeTypeRelationshipsXml.@parentCardinality.toInteger()
-									  : '999999999'.toInteger()),
-									 (nodeTypeRelationshipsXml.@childCardinality.toString()
-									  ? nodeTypeRelationshipsXml.@childCardinality.toInteger()
-									  : '999999999'.toInteger()),
 									 parentNodeType, childNodeType)
 		} else {
 			//Error!
@@ -301,13 +292,7 @@ def parseXML() {
 		  childNodeMap.get(child.name + "::" + parent.name)
 		NodeTypeRelationship nodeTypeRelationship =
 		  nodeTypeRelationshipMap.get(child.nodetype.name + "::" + parent.nodetype.name)
-		if (!childNode && nodeTypeRelationship
-			&& (!nodeTypeRelationship.childCardinality
-				|| (nodeRelationshipsXml.childCardinality == 0)
-				|| (childNodeTypes.size() + 1 <= nodeTypeRelationship.childCardinality))
-			&& (!nodeTypeRelationship.parentCardinality
-				|| (nodeRelationshipsXml.parentCardinality == 0)
-				|| (parentNodeTypes.size() + 1 <= nodeTypeRelationship.parentCardinality))) {
+		if (!childNode && nodeTypeRelationship) {
 			childNode = createChildNode(nodeRelationshipsXml.@relationshipname.toString(),
                                         parent, child)
 		} else {

@@ -152,9 +152,7 @@ class XmlService {
 		xml.nodeTypeRelationships() {
 			nodeTypeRelationships.each { 
 				nodeTypeRelationship(id:it.id, roleName: it.roleName,
-					parentCardinality: it.parentCardinality,
 					parentNodeTypeId: it.parent.id, parentNodeTypeName: it.parent.name,
-					childCardinality: it.childCardinality,
 					childNodeTypeId: it.child.id, childNodeTypeName: it.child.name,
 					) {
 				}

@@ -10,22 +10,6 @@
 	<g:textField name="roleName" value="${(params.roleName)?params.roleName:nodeTypeRelationshipInstance?.roleName}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'parentCardinality', 'error')} ">
-	<label for="parentCardinality">
-		<g:message code="nodeTypeRelationship.parentCardinality.label" default="Parent Cardinality" />
-		
-	</label>
-	<span class="styled-select"><g:select name="parentCardinality" from="${cardinality.entrySet()}" optionKey="key" optionValue="value" value="${(params.parentCardinality)?params.parentCardinality:nodeTypeRelationshipInstance.parentCardinality}"/></span>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'childCardinality', 'error')} ">
-	<label for="childCardinality">
-		<g:message code="nodeTypeRelationship.childCardinality.label" default="Child Cardinality" />
-		
-	</label>
-	<span class="styled-select"><g:select name="childCardinality" from="${cardinality.entrySet()}" optionKey="key" optionValue="value" value="${(params.childCardinality)?params.childCardinality:nodeTypeRelationshipInstance.childCardinality}"/></span>
-</div>
-
 <div class="fieldcontain ${hasErrors(bean: nodeTypeRelationshipInstance, field: 'parent', 'error')} required">
 	<label for="parent">
 		<g:message code="nodeTypeRelationship.parent.label" default="Parent" />

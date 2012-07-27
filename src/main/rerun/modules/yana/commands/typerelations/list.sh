@@ -27,9 +27,7 @@ xmlstarlet val --well-formed \
 (xmlstarlet sel -t -m /nodeTypeRelationships/nodeTypeRelationship \
 	    -v @id  -o ":" -v @roleName -o ":" \
 	    -v @parentNodeTypeId -o ":"  -v @parentNodeTypeName -o ":" \
-	    -v @parentCardinality -o ":" \
 	    -v @childNodeTypeId  -o ":" -v @childNodeTypeName -o ":" \
-	    -v @childCardinality \
 		-n \
     $response | format ) || rerun_die "failed parsing server response"
 

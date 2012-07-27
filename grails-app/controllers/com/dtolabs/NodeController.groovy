@@ -220,7 +220,7 @@ class NodeController {
 					}
 				}
 
-				def parentList = getNodeParentsByCardinality(nodeInstance)
+				def parentList = getNodeParentCandidates(nodeInstance)
 				if(parents){
 					parents.each{ parent ->
 						boolean goodParent = false
@@ -235,7 +235,7 @@ class NodeController {
 					}
 				}
 
-				def childList = getNodeChildrenByCardinality(nodeInstance)
+				def childList = getNodeChildrenCandidates(nodeInstance)
 				if(children){
 					children.each{ child ->
 						boolean goodChild = false
@@ -569,9 +569,8 @@ class NodeController {
 		}
 	}
 
-	def getNodeParentsByCardinality(Node node) {
-		def cardinality = (node.parents?.size())?node.parents?.size():0
-		def parents = Node.findAll("from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${node.nodetype.id} and (NTP.parentCardinality>=${cardinality} or NTP.parentCardinality is null)")
+	def getNodeParentCandidates(Node node) {
+		def parents = Node.findAll("from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${node.nodetype.id}")
 		return parents
 	}
 
@@ -591,9 +590,8 @@ class NodeController {
 		}
 	}
 
-	def getNodeChildrenByCardinality(Node node){
-		def cardinality = (node.children?.size())?node.children?.size():0
-		def children = Node.findAll("from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${node.nodetype.id} and (NTP.childCardinality>=${cardinality} or NTP.childCardinality is null)")
+	def getNodeChildrenCandidates(Node node){		
+		def children = Node.findAll("from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${node.nodetype.id}")
 		return children
 	}
 

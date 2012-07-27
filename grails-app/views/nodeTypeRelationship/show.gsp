@@ -45,17 +45,13 @@
 									
 									<td><b>Parent:</b></td>
 									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.parent.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
-									<td><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></td>
-									<td><b>Cardinality:</b></td>
-									<td><g:if test="${nodeTypeRelationshipInstance.parentCardinality==999999999}">MANY</g:if><g:elseif test="${nodeTypeRelationshipInstance.parentCardinality}">${nodeTypeRelationshipInstance.parentCardinality.encodeAsHTML()}</g:elseif><g:else>0</g:else></td>
+									<td><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.parent?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.parent?.encodeAsHTML()}</g:link></td>									
 								</tr>
 								<tr>
 									
 									<td><b>Child:</b></td>
 									<td><img src="${resource(dir:path,file:nodeTypeRelationshipInstance?.child.image)}" alt="" style="padding: 0px 25px 0px 7px;vertical-align:middle;" align="left" /></td>
 									<td><g:link controller="nodeType" action="show" id="${nodeTypeRelationshipInstance?.child?.id}" style="font: bold 13px verdana, arial, helvetica, sans-serif">${nodeTypeRelationshipInstance?.child?.encodeAsHTML()}</g:link></td>
-									<td><b>Cardinality:</b></td>
-									<td><g:if test="${nodeTypeRelationshipInstance.childCardinality==999999999}">MANY</g:if><g:elseif test="${nodeTypeRelationshipInstance.childCardinality}">${nodeTypeRelationshipInstance.childCardinality.encodeAsHTML()}</g:elseif><g:else>0</g:else></td>
 								</tr>
 							</table>
 

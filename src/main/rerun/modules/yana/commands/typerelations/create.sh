@@ -10,7 +10,7 @@
 
 http_code=$(curl -w "%{http_code}" --silent --fail --request POST \
     --header "Content-Type: application/json" \
-    -d "{roleName:'${NAME}', parentCardinality:'${PARENT_CARDINALITY}', childCardinality:'${CHILD_CARDINALITY}', parent.id:'${PARENT}', child.id: '${CHILD}' }" \
+    -d "{roleName:'${NAME}', parent.id:'${PARENT}', child.id: '${CHILD}' }" \
     ${YANA_URL}/api/nodeTypeRelationship/xml \
     -o $response --cookie $cookie )
 
@@ -27,9 +27,7 @@ case "$http_code" in
 	#
 	(xmlstarlet sel -t -m /nodeTypeRelationships/nodeTypeRelationships \
 	    -v @id  -o ":" -v @roleName -o ":" \
-	    -v @parentCardinality -o ":" \
 	    -v @parentNameparentName -o ":"  -v @parentNodeTypeparentNodeType -o ":" \
-	    -v @childCardinality  -o ":" \
 	    -v @childNodeTypeId  -o ":" -v @childNodeTypeName -n \
 	    $response  ) || rerun_die "failed parsing server response"
 	;;
