@@ -13,7 +13,7 @@ class Attribute{
     Project project
 	
     static constraints = {
-        name(nullable:false, unique: true)
+        name(nullable:false, unique: 'project')
 		filter(nullable:false)
 		description(nullable:true)
         project(nullable: false)
