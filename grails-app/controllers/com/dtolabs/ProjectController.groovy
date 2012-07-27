@@ -23,8 +23,9 @@ class ProjectController {
         }
         Project p = Project.findByName(params.project)
         if(!p){
+            response.status=404
             request.message = message(code: 'default.not.found.message',args: [params.project],default: "Project {0} was not found")
-            return redirect(action: 'list')
+            return render(text:request.message)
         }
         projectService.userSelectProject(session,p)
         return redirect(controller: 'node',action: 'index')
@@ -56,6 +57,30 @@ class ProjectController {
 
 
         flash.message = message(code: 'default.created.message', args: ['Project',project.name], default: 'Project {0} created')
+        redirect(action: 'list')
+    }
+
+    @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
+    def delete() {
+        if (!params.name) {
+            request.message = message(code: 'parameter.missing', args: ['name'], default: 'Parameter {0} is required')
+            return render(view: 'create')
+        }
+        Project p = Project.findByName(params.name)
+        if (!p) {
+            response.status = 404
+            request.message = message(code: 'default.not.found.message', args: [params.name], default: "Project {0} was not found")
+            return render(text: request.message)
+        }
+
+        def result = projectService.deleteProject(p)
+        if (result.error) {
+            flash.error=result.error
+            return redirect(controller: 'project',action:'list')
+        }
+        session.project=null
+
+        flash.message = message(code: 'default.deleted.message', args: ['Project', params.name], default: 'Project {0} deleted')
         redirect(action: 'list')
     }
 }

@@ -45,10 +45,11 @@ class ProjectControllerTests {
     }
     void testSelectMissingProject(){
         //project not found
+        messageSource.addMessage("default.not.found.message", request.locale, "NotFound: {0}")
         controller.params.project='test1'
         controller.select()
-        assert '/project/list' == response.redirectedUrl
-        assert request.message.contains('was not found')
+        assert 404==response.status
+        assert 'NotFound: test1' == response.text
     }
 
     void testSelect(){
