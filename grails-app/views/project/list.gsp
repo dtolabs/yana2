@@ -61,6 +61,8 @@
                     <g:if test="${project.description?.size() > 50}">${project.description[0..50].encodeAsHTML()}...</g:if>
                     <g:else>${project.description.encodeAsHTML()}</g:else>
                 </span>
+
+                <g:link controller="project" action="delete" params="${[name: project.name]}">Delete</g:link>
             </li>
         </g:each>
         </ul>
