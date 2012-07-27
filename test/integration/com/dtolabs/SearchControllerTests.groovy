@@ -27,7 +27,7 @@
 
 
  import com.dtolabs.SearchController
- 
+
 
 //@TestFor (SearchController)
 class SearchControllerTests extends GroovyTestCase{
@@ -35,35 +35,77 @@ class SearchControllerTests extends GroovyTestCase{
     Node node1
     Node node2
     Node node3
+    Node nodeProj2
+    Project proj1
+    Project proj2
     def SearchController scTest
     @Override
     protected void setUp() {
         super.setUp()
-        final type1 = new NodeType(name: 'testtype', description: 'testtype desc')
+        proj1 = new Project(name: 'proj1', description: 'desc1')
+        assertTrue proj1.validate()
+        assertNotNull proj1.save()
+
+        proj2 = new Project(name: 'proj2', description: 'desc1')
+        assertTrue proj2.validate()
+        assertNotNull proj2.save()
+
+        final type1 = new NodeType(name: 'testtype', description: 'testtype desc',project:proj1)
         assertTrue type1.validate()
         assertNotNull type1.save()
-        final type2 = new NodeType(name: 'test2type', description: 'test2type desc2')
+        final type2 = new NodeType(name: 'test2type', description: 'test2type desc2', project: proj1)
         assertTrue type2.validate()
         assertNotNull type2.save()
-        node1 = new Node(nodetype: type1, name: "node1", description: "node1 desc", tags: "taga, tagb, tagc")
+
+        assert 0==Node.list().size()
+
+        node1 = new Node(nodetype: type1, name: "node1", description: "node1 desc", tags: "taga, tagb, tagc", project: proj1)
         assertNotNull node1.save(flush: true)
 
-        node2 = new Node(nodetype: type2, name: "node2", description: "node2 desc", tags: "tagb, tagc")
+
+        assert 1 == Node.list().size()
+
+        node2 = new Node(nodetype: type2, name: "node2", description: "node2 desc", tags: "tagb, tagc", project: proj1)
         assertNotNull node2.save(flush: true)
 
-        node3 = new Node(nodetype: type2, name: "node3", description: "node3 desc", tags: "tagc")
+
+        assert 2 == Node.list().size()
+
+        node3 = new Node(nodetype: type2, name: "node3", description: "node3 desc", tags: "tagc", project: proj1)
         assertNotNull node3.save(flush: true)
+
+
+        assert 3 == Node.list().size()
+
+        final type3 = new NodeType(name: 'proj2Type', description: 'proj2 type desc', project: proj2)
+        assertTrue type3.validate()
+        assertNotNull type3.save()
+
+        nodeProj2 = new Node(nodetype: type3, name: "nodeProj2", description: "nodeProj2 desc", tags: "tagc", project: proj2)
+        assertNotNull nodeProj2.save(flush: true)
+
+
+        assert 4== Node.list().size()
 
         scTest = new SearchController()
         scTest.searchableService = searchableService
     }
 
-    /**
+    @Override
+    protected void tearDown() {
+        super.tearDown()
+        node1.delete(flush: true)
+        node2.delete(flush: true)
+        node3.delete(flush: true)
+        nodeProj2.delete(flush: true)
+    }
+/**
      * Test basic query
      */
     void testBasic() {
 
         scTest.params.q="node1"
+        scTest.params.project="proj1"
         def results= scTest.index()
 
         assertNotNull(results)
@@ -75,12 +117,55 @@ class SearchControllerTests extends GroovyTestCase{
         assertEquals("node1",noderes.name)
         assertEquals(node1.id,noderes.id)
     }
+    /**
+     * Test basic query
+     */
+    void testBasicAll() {
+
+        scTest.params.q="*"
+        scTest.params.project="proj1"
+        def results= scTest.index()
+
+        assertNotNull(results)
+        assertNotNull(results.searchResult)
+        assertNotNull(results.searchResult.results)
+        assert results.searchResult.results.size()>=3
+
+        def ids = new HashSet(results.searchResult.results.findAll{it.class.equals(Node.class)}.collect {it.id})
+        assertTrue results.searchResult.results.every {it.class.equals(Node.class)}
+        assert ids.contains(node1.id)
+        assert ids.contains(node2.id)
+        assert ids.contains(node3.id)
+        assert !ids.contains(nodeProj2.id)
+    }
+
+    /**
+     * Test basic query project specific
+     */
+    void testBasicAllProject2() {
+
+        scTest.params.q="*"
+        scTest.params.project="proj2"
+        def results= scTest.index()
+
+        assertNotNull(results)
+        assertNotNull(results.searchResult)
+        assertNotNull(results.searchResult.results)
+        assert results.searchResult.results.size()>=1
+        def ids = new HashSet(results.searchResult.results.findAll {it.class.equals(Node.class)}.collect {it.id})
+        assertTrue results.searchResult.results.every {it.class.equals(Node.class)}
+        assert ids.contains(nodeProj2.id)
+        assert !ids.contains(node1.id)
+        assert !ids.contains(node2.id)
+        assert !ids.contains(node3.id)
+    }
 
     /**
      * Test nodetype: field query for node type name
      */
     void testNodetypeField() {
         scTest.params.q="nodetype:testtype"
+        scTest.params.project = "proj1"
         def results= scTest.index()
 
         assertNotNull(results)
@@ -95,6 +180,7 @@ class SearchControllerTests extends GroovyTestCase{
         assertFalse ids.contains(node3.id)
 
         scTest.params.q="nodetype:test2type"
+        scTest.params.project = "proj1"
         results= scTest.index()
 
 
@@ -113,6 +199,7 @@ class SearchControllerTests extends GroovyTestCase{
      */
     void testNodetypeAll() {
         scTest.params.q="testtype"
+        scTest.params.project = "proj1"
         def results= scTest.index()
 
         assertNotNull(results)
@@ -127,6 +214,7 @@ class SearchControllerTests extends GroovyTestCase{
         assertFalse ids.contains(node3.id)
 
         scTest.params.q="test2type"
+        scTest.params.project = "proj1"
         results= scTest.index()
 
 
@@ -146,6 +234,7 @@ class SearchControllerTests extends GroovyTestCase{
      */
     void testTags() {
         scTest.params.q="tags:taga"
+        scTest.params.project = "proj1"
         def results= scTest.index()
 
         assertNotNull(results)
@@ -159,6 +248,7 @@ class SearchControllerTests extends GroovyTestCase{
         assertFalse ids.contains(node3.id)
 
         scTest.params.q="tags:tagb"
+        scTest.params.project = "proj1"
         results= scTest.index()
 
         assertNotNull(results)
