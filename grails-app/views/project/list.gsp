@@ -51,7 +51,7 @@
     <g:if test="${projects}">
         <ul>
         <g:each in="${projects}" status="i" var="project">
-            <li>
+            <li id="proj_${i}">
                 <span class="item_title">
                     <g:link action="select" params="${[project:project.name]}">
                         ${project.name.encodeAsHTML()}
@@ -61,8 +61,19 @@
                     <g:if test="${project.description?.size() > 50}">${project.description[0..50].encodeAsHTML()}...</g:if>
                     <g:else>${project.description.encodeAsHTML()}</g:else>
                 </span>
-
-                <g:link controller="project" action="delete" params="${[name: project.name]}">Delete</g:link>
+                <sec:ifAnyGranted roles="ROLE_YANA_ADMIN,ROLE_YANA_SUPERUSER">
+                    <span class="deleteConfirm">
+                        <input type="button" onclick="$('#proj_${i} .deleteConfirm').toggle()" value="Delete"/>
+                    </span>
+                    <div class="deleteConfirm" style="display:none">
+                        <span>Really delete project ${project.name.encodeAsHTML()}?</span>
+                        <g:form action="delete">
+                            <g:hiddenField name="name" value="${project.name}"/>
+                            <input type="button" onclick="$('#proj_${i} .deleteConfirm').toggle();return false" value="Cancel"/>
+                            <g:submitButton name="Delete"/>
+                        </g:form>
+                    </div>
+                </sec:ifAnyGranted>
             </li>
         </g:each>
         </ul>
