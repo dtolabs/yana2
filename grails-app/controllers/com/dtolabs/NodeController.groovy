@@ -77,8 +77,9 @@ class NodeController {
 	def list() {
         def project = Project.findByName(params.project)
         if (!project) {
-            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
-            return redirect(controller: 'project',action: 'list')
+            response.status=404
+            render(text:message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            return
         }
 		String path = iconService.getSmallIconPath()
         int totCount = Node.countByProject(project)
@@ -103,8 +104,9 @@ class NodeController {
 	def create() {
         def project = Project.findByName(params.project)
         if (!project) {
-            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
-            return redirect(controller: 'project', action: 'list')
+            response.status = 404
+            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            return
         }
 
         [nodeList: Node.findAllByProject(project),nodeTypeList: NodeType.findAllByProject(project),params:params]
@@ -113,8 +115,9 @@ class NodeController {
 	def clone(){
         def project = Project.findByName(params.project)
         if (!project) {
-            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
-            return redirect(controller: 'project', action: 'list')
+            response.status = 404
+            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            return
         }
 		Node nodeInstance = Node.get(params.id)
 
@@ -186,8 +189,9 @@ class NodeController {
 	def save() {
         def project = Project.findByName(params.project)
         if (!project) {
-            request.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
-            return redirect(controller: 'project', action: 'list')
+            response.status = 404
+            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            return
         }
         params.project=null
 		Node[] parents
@@ -356,8 +360,9 @@ class NodeController {
 	def edit() {
         def project = Project.findByName(params.project)
         if (!project) {
-            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
-            return redirect(controller: 'project', action: 'list')
+            response.status = 404
+            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            return
         }
 		Node nodeInstance = Node.get(params.id)
 		def criteria = Node.createCriteria()
