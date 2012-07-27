@@ -2,7 +2,7 @@ package com.dtolabs
 
 import grails.plugins.springsecurity.Secured
 
-@Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_USER', 'ROLE_YANA_ARCHITECT', 'ROLE_YANA_SUPERUSER'])
+@Secured(['ROLE_YANA_USER', 'ROLE_YANA_ARCHITECT', 'ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
 class ProjectController {
 
     def ProjectService projectService
@@ -29,12 +29,15 @@ class ProjectController {
         projectService.userSelectProject(session,p)
         return redirect(controller: 'node',action: 'index')
     }
+    @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_SUPERUSER'])
     def create() {
     }
     def cancel(){
         flash.message = message(code: 'project.action.cancel.message')
         redirect(action: 'list')
     }
+
+    @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
     def save() {
         if (!params.name) {
             request.message = message(code: 'parameter.missing', args: ['name'], default: 'Parameter {0} is required')
