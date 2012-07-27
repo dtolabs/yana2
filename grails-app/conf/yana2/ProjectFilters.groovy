@@ -6,12 +6,19 @@ class ProjectFilters {
         all(controller:'*', controllerExclude: 'project|login', action:'*') {
             before = {
                 if(!session.project && !params.project){
-                    redirect(controller: 'project', action: 'list', params: ['mustChoose': 1])
-                    return false
+                    if (actionName =~ /^.*api$/) {
+                        response.status=406
+                        render(text: "Project parameter is required")
+                        return false
+                    }else{
+                        redirect(controller: 'project', action: 'list', params: ['mustChoose': 1])
+                        return false
+                    }
                 }else if(!params.project){
                     params.project=session.project
-                }else if(!session.project){
-                    session.project=params.project
+                }else if(!session.project && !(actionName =~ /.*api$/)) {
+                    //only set session if not api call
+                    session.project = params.project
                 }
             }
         }
