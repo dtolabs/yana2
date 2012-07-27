@@ -18,6 +18,11 @@ class SearchController {
      * Search Nodes only
      */
     def index = {
+        if(!params.project){
+            response.status=406
+            render(text:"Project is required")
+            return
+        }
         String path = iconService.getSmallIconPath()
         if (!params.q?.trim()) {
             return [:]
