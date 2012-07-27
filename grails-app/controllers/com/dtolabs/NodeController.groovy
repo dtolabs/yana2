@@ -75,20 +75,14 @@ class NodeController {
 	}
 
 	def list() {
+        def project = Project.findByName(params.project)
+        if (!project) {
+            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
+            return redirect(controller: 'project',action: 'list')
+        }
 		String path = iconService.getSmallIconPath()
-		ArrayList nodes = []
-		if(params.nodetype){
-			List nodetypes = []
-			params.nodetype.each{
-				nodetypes += it.toLong()
-			}
-			def criteria = Node.createCriteria()
-			nodes = criteria.list{
-				not{'in'("nodetype.id",nodetypes)}
-			}
-		}else{
-			nodes = Node.list(params)
-		}
+        int totCount = Node.countByProject(project)
+		ArrayList nodes = Node.findAllByProject(project,params)
 		if(params.format && params.format!='none'){
 			switch(params.format.toLowerCase()){
 				case 'xml':
@@ -102,21 +96,32 @@ class NodeController {
 			}
 		}else{
 			params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[nodeInstanceList: Node.list(params), nodeInstanceTotal: Node.count(),path:path]
+			[nodeInstanceList: nodes, nodeInstanceTotal: totCount, path:path]
 		}
 	}
 
 	def create() {
+        def project = Project.findByName(params.project)
+        if (!project) {
+            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
+            return redirect(controller: 'project', action: 'list')
+        }
 
-		[nodeList: Node.list(),params:params]
+        [nodeList: Node.findAllByProject(project),nodeTypeList: NodeType.findAllByProject(project),params:params]
 	}
 
 	def clone(){
+        def project = Project.findByName(params.project)
+        if (!project) {
+            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
+            return redirect(controller: 'project', action: 'list')
+        }
 		Node nodeInstance = Node.get(params.id)
 
 		Date now = new Date()
 
 		Node node = new Node()
+        node.project = project
 		node.name = nodeInstance.name+"_clone"
 		node.description = nodeInstance.description
 		node.tags = nodeInstance.tags
@@ -179,11 +184,17 @@ class NodeController {
 	}
 
 	def save() {
+        def project = Project.findByName(params.project)
+        if (!project) {
+            request.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
+            return redirect(controller: 'project', action: 'list')
+        }
+        params.project=null
 		Node[] parents
 		if (params.parents) {
 			Long[] adults = Eval.me("${params.parents}")
 			if (params.parents) {
-				parents = Node.findAll("from Node as N where N.id IN (:ids)",[ids:adults])
+				parents = Node.findAll("from Node as N where N.id IN (:ids) and N.project = :project",[ids:adults,project:project])
 			}
 		}
 
@@ -191,7 +202,7 @@ class NodeController {
 		if (params.children) {
 			Long[] kinder = Eval.me("${params.children}")
 			if (params.children) {
-				children = Node.findAll("from Node as N where N.id IN (:ids)",[ids:kinder])
+				children = Node.findAll("from Node as N where N.id IN (:ids) and N.project = :project",[ids:kinder,project: project])
 			}
 		}
 
@@ -201,6 +212,7 @@ class NodeController {
 		if((params.name && params.name!='null') && (params.nodetype && params.nodetype!='null')){
 			params.nodetype = NodeType.get(params.nodetype.toLong())
 			Node nodeInstance  = new Node(params)
+            nodeInstance.project=project
 			nodeInstance.dateCreated = new Date()
 
 			if (!nodeInstance.save(flush: true)) {
@@ -292,7 +304,6 @@ class NodeController {
 	def show() {
 		String path = iconService.getLargeIconPath()
 		String smallpath = iconService.getSmallIconPath()
-		NodeType nodeTypeInstance = NodeType.get(params.id)
 
 		Node nodeInstance = Node.get(params.id)
 		List tagList=[]
@@ -343,10 +354,16 @@ class NodeController {
 	}
 
 	def edit() {
+        def project = Project.findByName(params.project)
+        if (!project) {
+            flash.message = message(code: 'default.not.found.message', args: [params.project], default: "Project {0} was not found")
+            return redirect(controller: 'project', action: 'list')
+        }
 		Node nodeInstance = Node.get(params.id)
 		def criteria = Node.createCriteria()
 		def nodes = criteria.list{
 			ne ("id", params.id?.toLong())
+            eq("project",project)
 		}
 
 		if (!nodeInstance) {
@@ -412,34 +429,37 @@ class NodeController {
 
 	def update() {
 		Node nodeInstance = Node.get(params.id)
+        if (!nodeInstance) {
+            if (params.format) {
+                response.status = 404 //Not Found
+                return render("${params.id} not found.")
+            } else {
+                flash.message = message(code: 'default.not.found.message', args: [
+                        message(code: 'node.label', default: 'Node'),
+                        params.id
+                ])
+                redirect(action: "list")
+                return
+            }
+        }
+
+        def project = nodeInstance.project
 
 		Node[] parents
 		if(params.parents){
 			Long[] adults = Eval.me("${params.parents}")
-			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:adults]) }
+			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id} and N.project = :project",[ids:adults,project: project]) }
 		}
 
 		Node[] children
 		if(params.children){
 			Long[] kinder = Eval.me("${params.children}")
-			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id}",[ids:kinder]) }
+			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id} and N.project = :project",[ids:kinder,project: project]) }
 		}
 
 		if((params.name && params.name!='null') && (params.nodetype && params.nodetype!='null')){
 			Date now = new Date()
-			if (!nodeInstance) {
-				if(params.format){
-					response.status = 404 //Not Found
-					render "${params.id} not found."
-				}else{
-					flash.message = message(code: 'default.not.found.message', args: [
-						message(code: 'node.label', default: 'Node'),
-						params.id
-					])
-					redirect(action: "list")
-					return
-				}
-			}
+
 
 			if (params.version) {
 				def version = params.version.toLong()
