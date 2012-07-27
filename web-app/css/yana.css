@@ -181,8 +181,8 @@ input[type=button]{
     font: 13px verdana, arial, helvetica, sans-serif;
     color:#89a9ff;
     text-align:center;
-    padding:0;
-    margin:0;
+    padding:2px 4px;
+    margin:2px 0;
 }
 
 .ui-state-highlight a {color:auto !important;}
