@@ -148,6 +148,21 @@
       </values>
     </node>        
 
+   <node id="mysql-5.1" nodetype="Package" tags="mysql">
+      <description>the mysql database</description>
+      <values>
+	<attributeValue nodeAttribute="package.arch">no-arch</attributeValue>  
+	<attributeValue nodeAttribute="package.base">mysql-5.1</attributeValue>  
+	<attributeValue nodeAttribute="package.filename">mysql-5.1.tgz</attributeValue>  
+	<attributeValue nodeAttribute="package.filetype">tgz</attributeValue>  
+	<attributeValue nodeAttribute="package.installroot">/tmp/demo/mysql</attributeValue>  
+	<attributeValue nodeAttribute="package.installrank">2</attributeValue>  
+	<attributeValue nodeAttribute="package.repoUrl">http://localhost/database/mysql-5.1.tgz</attributeValue>  
+	<attributeValue nodeAttribute="package.version">5.1</attributeValue>  
+	<attributeValue nodeAttribute="package.controller">tgz</attributeValue>  
+      </values>
+    </node>        
+
 
    <node id="simple-1.0.0.war" nodetype="Package" tags="tomcat">
       <description>the simple webapp</description>

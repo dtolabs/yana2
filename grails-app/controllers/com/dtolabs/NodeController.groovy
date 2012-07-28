@@ -11,17 +11,14 @@ import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
 class NodeController {
-
 	def iconService
 	def springSecurityService
 	def xmlService
 	def jsonService
 	def webhookService
 
-	//static allowedMethods = [get: "POST", save: "POST", update: "POST", delete: "POST"]
-
-	def api(){
-		switch(request.method){
+	def api() {
+		switch (request.method) {
 			case "POST":
 				def json = request.JSON
 				this.save()
@@ -36,9 +33,9 @@ class NodeController {
 				break
 			case "DELETE":
 				def json = request.JSON
-				if(params.id){
+				if (params.id) {
 					def node = Node.get(params.id)
-					if(node){
+					if (node) {
 						node.delete()
 
 						ArrayList nodes = [node]
@@ -46,11 +43,11 @@ class NodeController {
 
 						response.status = 200
 						render "Successfully Deleted."
-					}else{
+					} else {
 						response.status = 404 //Not Found
 						render "${params.id} not found."
 					}
-				}else{
+				} else {
 					response.status = 400 //Bad Request
 					render """DELETE request must include the id"""
 				}
@@ -59,8 +56,8 @@ class NodeController {
 		return
 	}
 
-	def listapi(){
-		switch(request.method){
+	def listapi() {
+		switch (request.method) {
 			case "GET":
 			case "POST":
 				def json = request.JSON
@@ -78,14 +75,28 @@ class NodeController {
         def project = Project.findByName(params.project)
         if (!project) {
             response.status=404
-            render(text:message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            render(text:message(code: 'default.not.found.message',
+								args: ['Project', params.project],
+								default: "Project {0} was not found"))
             return
         }
 		String path = iconService.getSmallIconPath()
         int totCount = Node.countByProject(project)
-		ArrayList nodes = Node.findAllByProject(project,params)
-		if(params.format && params.format!='none'){
-			switch(params.format.toLowerCase()){
+		ArrayList nodes = []
+		if (params.nodetype) {
+			List nodetypes = []
+			params.nodetype.each{
+				nodetypes += it.toLong()
+			}
+			def criteria = Node.createCriteria()
+			nodes = criteria.list{
+				not{'in'("nodetype.id",nodetypes)}
+			}
+		} else {
+			nodes = Node.list(params)
+		}
+		if (params.format && params.format!='none') {
+			switch (params.format.toLowerCase()) {
 				case 'xml':
 					def xml = xmlService.formatNodes(nodes)
 					render(text: xml, contentType: "text/xml")
@@ -95,7 +106,7 @@ class NodeController {
 					render(text:json, contentType: "text/json")
 					break
 			}
-		}else{
+		} else {
 			params.max = Math.min(params.max ? params.int('max') : 10, 100)
 			[nodeInstanceList: nodes, nodeInstanceTotal: totCount, path:path]
 		}
@@ -105,18 +116,24 @@ class NodeController {
         def project = Project.findByName(params.project)
         if (!project) {
             response.status = 404
-            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            render(text: message(code: 'default.not.found.message',
+				   args: ['Project', params.project],
+				   default: "Project {0} was not found"))
             return
         }
 
-        [nodeList: Node.findAllByProject(project),nodeTypeList: NodeType.findAllByProject(project),params:params]
+        [nodeList: Node.findAllByProject(project),
+		 nodeTypeList: NodeType.findAllByProject(project),
+		 params:params]
 	}
 
 	def clone(){
         def project = Project.findByName(params.project)
         if (!project) {
             response.status = 404
-            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            render(text: message(code: 'default.not.found.message',
+								 args: ['Project', params.project],
+								 default: "Project {0} was not found"))
             return
         }
 		Node nodeInstance = Node.get(params.id)
@@ -134,7 +151,7 @@ class NodeController {
 		if (!node.save(flush: true)) {
 			flash.message = message(code: 'Failed to clone node ${nodeInstance.id}')
 			redirect(action: "show", id: nodeInstance.id)
-		}else{
+		} else {
 			nodeInstance.nodeValues.each(){
 				def tv = new NodeValue()
 				tv.node = node
@@ -152,156 +169,246 @@ class NodeController {
 		}
 	}
 
-	boolean addNodeParent(String name,Node parent,Node nodeInstance){
-		ChildNode parentNode = ChildNode.findByParentAndChild(parent,nodeInstance)
-		if(!parentNode){
-			parentNode = new ChildNode()
-			parentNode.relationshipName = name
-			parentNode.parent = parent
-			parentNode.child = nodeInstance
-			parentNode.save(flush: true)
-			return true
-		}else{
-			return false
-		}
-	}
-
-	boolean addNodeChild(String name,Node nodeInstance,Node child){
-		ChildNode childNode = ChildNode.findByParentAndChild(nodeInstance,child)
-		if(!childNode){
+	boolean addChildNode(String name, Node parent, Node child) {
+		ChildNode childNode = ChildNode.findByParentAndChild(parent, child)
+		if (!childNode) {
 			childNode = new ChildNode()
 			childNode.relationshipName = name
-			childNode.parent = nodeInstance
+			childNode.parent = parent
 			childNode.child = child
 			childNode.save(flush: true)
 			return true
-		}else{
+		} else {
 			return false
 		}
 	}
 
-	String getRelationshipName(Node parent,Node child){
+	String getRelationshipName(Node parent,Node child) {
 		String rolename = NodeTypeRelationship.findByParent(parent.nodetype).roleName
 		String name = (rolename)?"${parent.name} [$rolename]":"${parent.name}"
 		return name
+	}
+
+	private Node commitNode(boolean doUpdate,
+							Project project,
+							Node nodeInstance,
+							NodeType nodeType,
+							List<Node> parentList,
+							List<Node> childList) {
+		Date dateModified, dateCreated
+		if (doUpdate) {
+			dateCreated = nodeInstance.dateCreated
+			dateModified = new Date()
+		} else {
+			dateCreated = new Date()
+			dateModified = dateCreated
+		}
+
+		nodeInstance.project = project
+		nodeInstance.name = params.name;
+		nodeInstance.description = params.description
+		nodeInstance.tags = params.tags
+		if (!doUpdate) {
+			nodeInstance.nodetype = nodeType;
+			nodeInstance.dateCreated = dateModified
+		}
+		nodeInstance.dateModified = dateModified  
+
+		Node.withTransaction() {status ->
+			try {
+				if (!nodeInstance.save(flush: true)) {
+					throw new Exception()
+				}
+
+				if (doUpdate) {
+					["child", "parent"].each { kind ->
+						ChildNode.createCriteria().list{
+							eq(kind, nodeInstance)}.each { childNode ->
+							childNode.delete()
+						}
+					}
+
+					// Delete all from NodeValue where referenced to this node.
+					NodeValue.findByNode(nodeInstance).each {nodeValue ->
+						nodeValue.delete()
+					}
+				}
+
+				// Next, assign all selected parent nodes of this node.
+				parentList.each {parent ->
+					addChildNode(getRelationshipName(parent, nodeInstance),
+								 parent, nodeInstance)
+				}
+
+				// Next, assign all selected child nodes of this node.
+				childList.each {child ->
+					addChildNode(getRelationshipName(nodeInstance, child),
+								 nodeInstance, child)
+				}
+
+				// Next, [re]create all the NodeValue objects for this node.
+				params.each {key, val ->
+					if (key.contains('xxxatt')
+						&& !key.contains('_filter')
+						&& !key.contains('_require')) {
+						NodeAttribute att = NodeAttribute.get(key[3..-1].toInteger())
+						new NodeValue(node:nodeInstance,
+									  nodeattribute:att,
+									  value:val,
+									  dateCreated:dateCreated,
+									  dateModified:dateModified).save(failOnError:true)
+					}
+				}
+			} catch (Exception e) {
+				status.setRollbackOnly()
+				throw e;
+			}
+		}
+		
+		return nodeInstance
 	}
 
 	def save() {
         def project = Project.findByName(params.project)
         if (!project) {
             response.status = 404
-            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            render(text: message(code: 'default.not.found.message',
+								 args: ['Project', params.project],
+								 default: "Project {0} was not found"))
             return
         }
-        params.project=null
-		Node[] parents
-		if (params.parents) {
-			Long[] adults = Eval.me("${params.parents}")
-			if (params.parents) {
-				parents = Node.findAll("from Node as N where N.id IN (:ids) and N.project = :project",[ids:adults,project:project])
+        params.project = null
+
+		if (! (params.nodetype && params.nodetype != 'null')) {
+			if (params.action == 'api') {
+				response.status = 400
+				render "must specify node type"
+			} else {
+				flash.message = 'Please select a node type and try again.'
+				render(view: "create", model:
+					   [params:params])
 			}
+			return
 		}
 
-		Node[] children
-		if (params.children) {
-			Long[] kinder = Eval.me("${params.children}")
-			if (params.children) {
-				children = Node.findAll("from Node as N where N.id IN (:ids) and N.project = :project",[ids:kinder,project: project])
+		NodeType nodeType = NodeType.get(params.nodetype.toLong())
+		if (!nodeType) {
+			if (params.action=='api') {
+				response.status = 400 //Bad Request
+				render "node type '${params.nodetype}' not found"
+			} else {
+				render(view: "create", model: [nodeType: nodeType])
 			}
+			return
 		}
 
-		params.parents = null
-		params.parents = null
-
-		if((params.name && params.name!='null') && (params.nodetype && params.nodetype!='null')){
-			params.nodetype = NodeType.get(params.nodetype.toLong())
-			Node nodeInstance  = new Node(params)
-            nodeInstance.project=project
-			nodeInstance.dateCreated = new Date()
-
-			if (!nodeInstance.save(flush: true)) {
-				if(params.action=='api'){
-					response.status = 400 //Bad Request
-					render "Node Creation Failed"
-				}else{
-					render(view: "create", model: [nodeInstance: nodeInstance])
-					return
-				}
-			}else{
-				Date now = new Date()
-				params.each{ key, val ->
-					if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
-						NodeAttribute att = NodeAttribute.get(key[3..-1].toInteger())
-						new NodeValue(node:nodeInstance,nodeattribute:att,value:val,dateCreated:now,dateModified:now).save(failOnError:true)
-					}
-				}
-
-				def parentList = getNodeParentCandidates(nodeInstance)
-				if(parents){
-					parents.each{ parent ->
-						boolean goodParent = false
-						parentList?.each() { pit ->
-							if(pit.contains(parent)){ goodParent = true }
-						}
-						if(goodParent){
-							//String name = (NodeTypeRelationship.findRoleNameByParent(parent.nodetype))?"${parent.name}_${nodeInstance.name} [${NodeTypeRelationship.findRoleNameByParent(parent.nodetype)}]":"${parent.name}_${nodeInstance.name}"
-							String name = getRelationshipName(parent,nodeInstance)
-							addNodeParent(name,parent,nodeInstance)
-						}
-					}
-				}
-
-				def childList = getNodeChildrenCandidates(nodeInstance)
-				if(children){
-					children.each{ child ->
-						boolean goodChild = false
-						childList?.each() { cit ->
-							if(cit.contains(child)){ goodChild = true }
-						}
-						if(goodChild){
-							//String name = (NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype))?"${nodeInstance.name}_${child.name} [${NodeTypeRelationship.findRoleNameByParent(nodeInstance.nodetype)}]":"${nodeInstance.name}_${child.name}"
-							String name = getRelationshipName(nodeInstance,child)
-							addNodeChild(name,nodeInstance,child)
-						}
-					}
-				}
-
-				ArrayList nodes = [nodeInstance]
-				webhookService.postToURL('node', nodes,'create')
-
-				if(params.action=='api'){
-					response.status = 200
-					if(params.format && params.format!='none'){
-						switch(params.format.toLowerCase()){
-							case 'xml':
-								def xml = xmlService.formatNodes(nodes)
-								render(text: xml, contentType: "text/xml")
-								break
-							case 'json':
-								def jsn = jsonService.formatNodes(nodes)
-								render(text:jsn, contentType: "text/json")
-								break
-						}
-					}else{
-						render "Successfully Created."
-					}
-				}else{
-					flash.message = message(code: 'default.created.message', args: [
-						message(code: 'node.label', default: 'Node'),
-						nodeInstance.id
-					])
-					redirect(action: "show", id: nodeInstance.id)
-				}
+		Node nodeInstance
+		try {
+			nodeInstance =
+			  commitNode(false, project, new Node(), nodeType,
+						 getNodeParentsFromParams(nodeType),
+						 getNodeChildrenFromParams(nodeType))
+		} catch (Throwable t) {
+			if (params.action == 'api') {
+				response.status = 400 //Bad Request
+				render "node creation failed"
+			} else {
+				render(view: params.action,
+					   model: [nodeInstance: nodeInstance])
+				flash.message = message(code: 'default.not.created.message', args: [
+					message(code: 'node.label', default: 'Node'),
+					params.name
+				])
+				redirect(action: "create", name: params.name)
 			}
-		}else{
-			if(params.action=='api'){
-				response.status = 404 //Not Found
-				render "${params.id} not found."
-			}else{
-				Node nodeInstance  = new Node()
-				flash.message = 'Required fields not filled out. Please try again'
-				render(view: "create", model: [nodeInstance: nodeInstance,parents:parents,children:children,params: params])
+			return
+		}
+		
+		if (params.action == 'api') {
+			response.status = 200
+			if (params.format && params.format != 'none') {
+				switch (params.format.toLowerCase()) {
+					case 'xml':
+						def xml = xmlService.formatNodes(nodes)
+						render(text: xml, contentType: "text/xml")
+						break
+					case 'json':
+						def jsn = jsonService.formatNodes(nodes)
+						render(text:jsn, contentType: "text/json")
+						break
+				}
+			} else {
+				render "Successfully Created."
 			}
+		} else {
+			flash.message = message(code: 'default.created.message', args: [
+				message(code: 'node.label', default: 'Node'),
+				nodeInstance.id
+			])
+			redirect(action: "show", id: nodeInstance.id)
+		}
+	}
+	
+	def update() {		
+		Node nodeInstance = Node.get(params.id)
+		if (!nodeInstance) {
+			if (params.action == 'api') {
+				response.status = 400 //Not Found
+				render "node with id ${params.id} not found"
+			} else {
+				flash.message = message(code: 'default.not.found.message', args: [
+					message(code: 'node.label', default: 'Node'),
+					params.id
+				])
+				redirect(action: "list")
+			}
+			return
+		}
+
+		try {
+			nodeInstance =
+			  commitNode(true, nodeInstance.project, nodeInstance, nodeInstance.nodetype,
+						 getNodeParentsFromParams(nodeInstance.nodetype),
+						 getNodeChildrenFromParams(nodeInstance.nodetype))
+		} catch (Exception e) {
+println("ERROR: ${e}")
+			if (params.action == 'api') {
+				response.status = 400 //Bad Request
+				render "node update failed"
+			} else {
+				render(view: params.action,
+					   model: [nodeInstance: nodeInstance])
+				flash.message = message(code: 'default.not.updated.message', args: [
+					message(code: 'node.label', default: 'Node'),
+					params.name
+				])	
+				redirect(action: params.action, id: params.id)
+			}
+			return
+		}
+
+		if (params.action == 'api') {
+			response.status = 200
+			if (params.format && params.format != 'none') {
+				switch (params.format.toLowerCase()) {
+					case 'xml':
+						def xml = xmlService.formatNodes(nodes)
+						render(text: xml, contentType: "text/xml")
+						break
+					case 'json':
+						def jsn = jsonService.formatNodes(nodes)
+						render(text:jsn, contentType: "text/json")
+						break
+				}
+			} else {
+				render "Successfully Updated."
+			}
+		} else {
+			flash.message = message(code: 'default.updated.message', args: [
+				message(code: 'node.label', default: 'Node'),
+				nodeInstance.id
+			])
+			redirect(action: "show", id: nodeInstance.id)
 		}
 	}
 
@@ -310,11 +417,11 @@ class NodeController {
 		String smallpath = iconService.getSmallIconPath()
 
 		Node nodeInstance = Node.get(params.id)
-		List tagList=[]
+		List tagList = []
 
-		if(params.format && params.format!='none'){
+		if (params.format && params.format!='none') {
 			ArrayList nodes = [nodeInstance]
-			if(nodeInstance){
+			if (nodeInstance) {
 				switch(params.format.toLowerCase()){
 					case 'xml':
 						def xml = xmlService.formatNodes(nodes)
@@ -325,22 +432,20 @@ class NodeController {
 						render(text:json, contentType: "text/json")
 						break
 				}
-			}else{
+			} else {
 				response.status = 404 //Not Found
 				render "${params.id} not found."
 			}
-		}else{
-			def criteria = ChildNode.createCriteria()
-			def parents = criteria.list{
+		} else {
+			ChildNode[] parents = ChildNode.createCriteria().list{
 				eq("child", Node.get(params.id?.toLong()))
 			}
 
-			def criteria2 = ChildNode.createCriteria()
-			def children = criteria2.list{
-				eq ("parent", Node.get(params.id?.toLong()))
+			ChildNode[] children = ChildNode.createCriteria().list{
+				eq("parent", Node.get(params.id?.toLong()))
 			}
 
-			if(nodeInstance?.tags){
+			if (nodeInstance?.tags) {
 				tagList = nodeInstance.tags.split(',')
 			}
 
@@ -353,7 +458,13 @@ class NodeController {
 				return
 			}
 
-			render(view:"show",model:[children:children,parents:parents,nodeInstance: nodeInstance,path:path,smallpath:smallpath,taglist:tagList])
+			render(view:"show",
+				   model:[parents:parents,
+						  children:children,
+						  nodeInstance:nodeInstance,
+						  path:path,
+						  smallpath:smallpath,
+						  taglist:tagList])
 		}
 	}
 
@@ -361,7 +472,9 @@ class NodeController {
         def project = Project.findByName(params.project)
         if (!project) {
             response.status = 404
-            render(text: message(code: 'default.not.found.message', args: ['Project', params.project], default: "Project {0} was not found"))
+            render(text: message(code: 'default.not.found.message',
+								 args: ['Project', params.project],
+								 default: "Project {0} was not found"))
             return
         }
 		Node nodeInstance = Node.get(params.id)
@@ -392,11 +505,11 @@ class NodeController {
 				}
 				if (selectedParent != null) {
 					selectedParents += [id:node.id,
-					   				    name:node.name,
+										name:node.name,
 										display:"${node.name} [${node.nodetype.name}]"]
 				} else {
 					unselectedParents += [id:node.id,
-					   				      name:node.name,
+										  name:node.name,
 										  display:"${node.name} [${node.nodetype.name}]"]
 				}
 			}
@@ -414,150 +527,22 @@ class NodeController {
 				}
 				if (selectedChild != null) {
 					selectedChildren += [id:node.id,
-					   				     name:node.name,
+										 name:node.name,
 										 display:"${node.name} [${node.nodetype.name}]"]
 				} else {
 					unselectedChildren += [id:node.id,
-					   				       name:node.name,
+										   name:node.name,
 										   display:"${node.name} [${node.nodetype.name}]"]
 				}
 			}
 		}
 
-		[selectedParents:selectedParents,	
+		[selectedParents:selectedParents,
 		 selectedChildren:selectedChildren,
 		 unselectedParents:unselectedParents,
 		 unselectedChildren:unselectedChildren,
 		 nodes:nodes,
 		 nodeInstance:nodeInstance]
-	}
-
-	def update() {
-		Node nodeInstance = Node.get(params.id)
-        if (!nodeInstance) {
-            if (params.format) {
-                response.status = 404 //Not Found
-                return render("${params.id} not found.")
-            } else {
-                flash.message = message(code: 'default.not.found.message', args: [
-                        message(code: 'node.label', default: 'Node'),
-                        params.id
-                ])
-                redirect(action: "list")
-                return
-            }
-        }
-
-        def project = nodeInstance.project
-
-		Node[] parents
-		if(params.parents){
-			Long[] adults = Eval.me("${params.parents}")
-			if(params.parents){ parents = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id} and N.project = :project",[ids:adults,project: project]) }
-		}
-
-		Node[] children
-		if(params.children){
-			Long[] kinder = Eval.me("${params.children}")
-			if(params.children){ children = Node.findAll("from Node as N where N.id IN (:ids) and N.id!=${params.id} and N.project = :project",[ids:kinder,project: project]) }
-		}
-
-		if((params.name && params.name!='null') && (params.nodetype && params.nodetype!='null')){
-			Date now = new Date()
-
-
-			if (params.version) {
-				def version = params.version.toLong()
-				if (nodeInstance.version > version) {
-					nodeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-							[
-								message(code: 'node.label', default: 'Node')]
-							as Object[],
-							"Another user has updated this Node while you were editing")
-					render(view: "edit", model: [nodeInstance: nodeInstance])
-					return
-				}
-			}
-
-			nodeInstance.name = params.name
-			nodeInstance.description = params.description
-			nodeInstance.tags = params.tags
-			nodeInstance.dateCreated = now
-			nodeInstance.dateModified = now
-
-			if (!nodeInstance.save(flush: true)) {
-				render(view: "edit", model: [nodeInstance: nodeInstance])
-				return
-			}else{
-				params.each{ key, val ->
-					if (key.contains('att') && !key.contains('_filter') && !key.contains('_require')) {
-						NodeValue tval = NodeValue.get(key[3..-1].toInteger())
-						tval.value = val
-						tval.dateCreated = now
-						tval.dateModified = now
-						tval.save(flush: true)
-					}
-				}
-
-				// delete all from childnode where node is child and reassign
-				//def parentNodes = ChildNode.findByChild(nodeInstance)
-				//parentNodes.each{
-				//	it.delete()
-				//}
-
-				parents.each{
-					def pNode = ChildNode.findByChildAndParent(nodeInstance,it)
-					if(pNode){
-						pNode.parent=it
-						pNode.child=nodeInstance
-						pNode.save(flush: true)
-					}else{
-						String pname = getRelationshipName(it,nodeInstance)
-						pNode = new ChildNode()
-						pNode.relationshipName = pname
-						pNode.parent=it
-						pNode.child=nodeInstance
-						pNode.save(flush: true)
-					}
-				}
-
-				// delete all from childnode where node is parent and reasign
-				//def childNodes = ChildNode.findByParent(nodeInstance)
-				//childNodes.each{
-				//	it.delete()
-				//}
-
-				children.each{
-					def cNode = ChildNode.findByParentAndChild(nodeInstance,it)
-					if(cNode){
-						cNode.parent=nodeInstance
-						cNode.child=it
-						cNode.save(flush: true)
-					}else{
-						String cname = getRelationshipName(nodeInstance,it)
-						cNode = new ChildNode()
-						cNode.relationshipName = cname
-						cNode.parent=nodeInstance
-						cNode.child=it
-						cNode.save(flush: true)
-					}
-				}
-
-				ArrayList nodes = [nodeInstance]
-				webhookService.postToURL('node', nodes,'edit')
-
-				flash.message = message(code: 'default.updated.message', args: [
-					message(code: 'node.label', default: 'Node'),
-					nodeInstance.id
-				])
-				redirect(action: "show", id: nodeInstance.id)
-			}
-
-			render(view: "edit", model: [nodeList: Node.list(),nodeInstance: nodeInstance])
-		}else{
-			flash.message = 'Required fields not filled out. Please try again'
-			render(view: "edit", model: [parents:parents,children:children,nodeInstance: nodeInstance,params: params])
-		}
 	}
 
 	def delete() {
@@ -583,7 +568,7 @@ class NodeController {
 					params.id
 				])
 				redirect(action: "list")
-			}catch (Exception e) {
+			} catch (Exception e) {
 				status.setRollbackOnly()
 				flash.message = message(code: 'default.not.deleted.message', args: [
 					message(code: 'node.label', default: 'Node'),
@@ -593,56 +578,102 @@ class NodeController {
 			}
 		}
 	}
-
-	def getNodeParentCandidates(Node node) {
-		def parents = Node.findAll("from Node as N left join N.nodetype as NT left join NT.parents as NTP where NTP.child=${node.nodetype.id}")
-		return parents
-	}
-
-	def getNodeParents = {
-		Node nodeInstance = Node.get(params.id)
-		def response = []
-		if(params?.id.trim()){
-			def unselectedParents = []
-			nodeInstance.nodetype.children.each {nodeTypeRelationship ->
-				nodeTypeRelationship.parent.nodes.each {node ->
-					unselectedParents += [id:node.id,
-					   				      name:node.name,
-										  nodeTypeName:node.nodetype.name]
+	
+	private List<Node> getSelectedMembers(List<Node> selectedNodes,
+										  List<Node> nodeCandidatesList) {
+		List<Node> selectedMembers = []
+		if (selectedNodes && nodeCandidatesList) {
+			selectedNodes.each {selectedNode ->
+				if (nodeCandidatesList.contains(selectedNode)) {
+					selectedMembers += selectedNode
 				}
 			}
-			render unselectedParents as JSON
 		}
+		return selectedMembers
 	}
 
-	def getNodeChildrenCandidates(Node node){		
-		def children = Node.findAll("from Node as N left join N.nodetype as NT left join NT.children as NTP where NTP.parent=${node.nodetype.id}")
+	private List<Node> getNodeParentsFromParams(NodeType nodeType) {
+		List<Node> parents = null
+		if (params.parents) {
+			Long[] adults = Eval.me("${params.parents}")
+			if (adults) {
+			    parents = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
+														  [ids:adults]),
+							  			     getNodeParentCandidates(nodeType))
+			}
+		}
+		return parents
+	}
+	
+	private List<Node> getNodeChildrenFromParams(NodeType nodeType) {
+		List<Node> children = null
+		if (params.children) {
+			Long[] kinder = Eval.me("${params.children}")
+			if (kinder) {
+				children = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
+														   [ids:kinder]),
+					  			  			  getNodeChildrenCandidates(nodeType))
+			}
+		}
 		return children
 	}
 
-	def getNodeChildren = {
-		Node nodeInstance = Node.get(params.id)
-		def response = []
-		if(params?.id.trim()){
-			def unselectedChildren = []
-			nodeInstance.nodetype.parents.each {nodeTypeRelationship ->
+	private List<Node> getNodeParentCandidates(NodeType nodeType) {
+		def parents = []
+		nodeType.children.each {nodeTypeRelationship ->
+			nodeTypeRelationship.parent.nodes.each {node ->
+				parents += node
+			}
+		}
+		return parents
+	}
+	
+	private List<Node> getNodeChildrenCandidates(NodeType nodeType) {
+		def children = []
+		nodeType.parents.each {nodeTypeRelationship ->
+			nodeTypeRelationship.child.nodes.each {node ->
+				children += node
+			}
+		}
+		return children
+	}
+
+	def getNodeTypeParentNodes = {
+		def unselectedParents = []
+		if (params?.id.trim()) {
+			NodeType nodeType = NodeType.get(params.id)
+			nodeType.children.each {nodeTypeRelationship ->
+				nodeTypeRelationship.parent.nodes.each {node ->
+					unselectedParents += [id:node.id,
+										  name:node.name,
+										  nodeTypeName:node.nodetype.name]
+				}
+			}
+		}
+		render unselectedParents as JSON
+	}
+
+	def getNodeTypeChildNodes = {
+		def unselectedChildren = []
+		if (params?.id.trim()) {
+			NodeType nodeType = NodeType.get(params.id)
+			nodeType.parents.each {nodeTypeRelationship ->
 				nodeTypeRelationship.child.nodes.each {node ->
 					unselectedChildren += [id:node.id,
-					   				       name:node.name,
+										   name:node.name,
 										   nodeTypeName:node.nodetype.name]
 				}
 			}
-			render unselectedChildren as JSON
 		}
+		render unselectedChildren as JSON
 	}
 
 	def getNodeAttributes = {
-
 		def response = []
 
-		if(params.templateid){
+		if (params.templateid) {
 			List atts = []
-			if(params.node){
+			if (params.node) {
 				NodeValue.findAllByNode(Node.get(params.node)).each {nodeValue ->
 					atts += [tid:nodeValue.id,
 							 id:nodeValue.nodeattribute.attribute.id,
@@ -652,11 +683,17 @@ class NodeController {
 							 datatype:nodeValue.nodeattribute.attribute.filter.dataType,
 							 filter:nodeValue.nodeattribute.attribute.filter.regex]
 				}
-			}else{
+			} else {
 				atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.nodetype.id=${params.templateid}")
 			}
 			atts.each(){
-				response += [tid:it.tid,id:it.id,required:it.required,key:it.nodevalue,val:it.attributename,datatype:it.datatype,filter:it.filter]
+				response += [tid:it.tid,
+							 id:it.id,
+							 required:it.required,
+							 key:it.nodevalue,
+							 val:it.attributename,
+							 datatype:it.datatype,
+							 filter:it.filter]
 			}
 		}
 

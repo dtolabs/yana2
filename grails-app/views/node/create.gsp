@@ -16,8 +16,8 @@
   	}
 
   	function getFormFields(){
-  		getNodeFamily("getNodeParents",  "unselectedParents", "children");
-  		getNodeFamily("getNodeChildren", "unselectedChildren", "parents");
+  		getNodeFamily("getNodeTypeParentNodes",  "unselectedParents", "children");
+  		getNodeFamily("getNodeTypeChildNodes", "unselectedChildren", "parents");
 		getAttributes();
   	}
 
