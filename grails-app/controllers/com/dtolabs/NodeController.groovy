@@ -194,7 +194,8 @@ class NodeController {
 							Node nodeInstance,
 							NodeType nodeType,
 							List<Node> parentList,
-							List<Node> childList) {
+							List<Node> childList,
+							List<NodeValue> nodeValues) {
 		Date dateModified, dateCreated
 		if (doUpdate) {
 			dateCreated = nodeInstance.dateCreated
@@ -227,11 +228,6 @@ class NodeController {
 							childNode.delete()
 						}
 					}
-
-					// Delete all from NodeValue where referenced to this node.
-					NodeValue.findByNode(nodeInstance).each {nodeValue ->
-						nodeValue.delete()
-					}
 				}
 
 				// Next, assign all selected parent nodes of this node.
@@ -246,18 +242,12 @@ class NodeController {
 								 nodeInstance, child)
 				}
 
-				// Next, [re]create all the NodeValue objects for this node.
-				params.each {key, val ->
-					if (key.contains('xxxatt')
-						&& !key.contains('_filter')
-						&& !key.contains('_require')) {
-						NodeAttribute att = NodeAttribute.get(key[3..-1].toInteger())
-						new NodeValue(node:nodeInstance,
-									  nodeattribute:att,
-									  value:val,
-									  dateCreated:dateCreated,
-									  dateModified:dateModified).save(failOnError:true)
+				// Next, all the NodeValue objects for this node.
+				nodeValues.each {nodeValue ->
+					if (!doUpdate) {
+						nodeValue.node = nodeInstance
 					}
+					nodeValue.save().save(failOnError:true)
 				}
 			} catch (Exception e) {
 				status.setRollbackOnly()
@@ -304,10 +294,24 @@ class NodeController {
 
 		Node nodeInstance
 		try {
+			List<NodeValue> nodeValues = []
+			params.each {key, val ->
+				if (key.contains('att')
+					&& !key.contains('_filter')
+					&& !key.contains('_require')) {
+					NodeAttribute att = NodeAttribute.get(key[3..-1].toInteger())
+					nodeValues +=
+					  new NodeValue(node:nodeInstance,
+								    nodeattribute:att,
+								    value:val)
+				}
+			}
+
 			nodeInstance =
 			  commitNode(false, project, new Node(), nodeType,
 						 getNodeParentsFromParams(nodeType),
-						 getNodeChildrenFromParams(nodeType))
+						 getNodeChildrenFromParams(nodeType),
+						 nodeValues)
 		} catch (Throwable t) {
 			if (params.action == 'api') {
 				response.status = 400 //Bad Request
@@ -366,12 +370,22 @@ class NodeController {
 		}
 
 		try {
+			List<NodeValue> nodeValues = []
+			params.each {key, val ->
+				if (key.contains('att')
+					&& !key.contains('_filter')
+					&& !key.contains('_require')) {
+					NodeValue nodeValue = NodeValue.get(key[3..-1].toInteger())
+					nodeValue.value = val
+				}
+			}
+			
 			nodeInstance =
 			  commitNode(true, nodeInstance.project, nodeInstance, nodeInstance.nodetype,
 						 getNodeParentsFromParams(nodeInstance.nodetype),
-						 getNodeChildrenFromParams(nodeInstance.nodetype))
+						 getNodeChildrenFromParams(nodeInstance.nodetype),
+						 nodeValues)
 		} catch (Exception e) {
-println("ERROR: ${e}")
 			if (params.action == 'api') {
 				response.status = 400 //Bad Request
 				render "node update failed"
@@ -640,7 +654,7 @@ println("ERROR: ${e}")
 
 	def getNodeTypeParentNodes = {
 		def unselectedParents = []
-		if (params?.id.trim()) {
+		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
 			nodeType.children.each {nodeTypeRelationship ->
 				nodeTypeRelationship.parent.nodes.each {node ->
@@ -655,7 +669,7 @@ println("ERROR: ${e}")
 
 	def getNodeTypeChildNodes = {
 		def unselectedChildren = []
-		if (params?.id.trim()) {
+		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
 			nodeType.parents.each {nodeTypeRelationship ->
 				nodeTypeRelationship.child.nodes.each {node ->
@@ -671,29 +685,25 @@ println("ERROR: ${e}")
 	def getNodeAttributes = {
 		def response = []
 
-		if (params.templateid) {
-			List atts = []
+		if (params.templateid != 'null') {
 			if (params.node) {
 				NodeValue.findAllByNode(Node.get(params.node)).each {nodeValue ->
-					atts += [tid:nodeValue.id,
-							 id:nodeValue.nodeattribute.attribute.id,
-							 required:nodeValue.nodeattribute.required,
-							 nodevalue:nodeValue.value,
-							 attributename:nodeValue.nodeattribute.attribute.name,
-							 datatype:nodeValue.nodeattribute.attribute.filter.dataType,
-							 filter:nodeValue.nodeattribute.attribute.filter.regex]
+					response += [tid:nodeValue.id,
+								 id:nodeValue.nodeattribute.attribute.id,
+								 required:nodeValue.nodeattribute.required,
+								 key:nodeValue.value,
+								 val:nodeValue.nodeattribute.attribute.name,
+								 datatype:nodeValue.nodeattribute.attribute.filter.dataType,
+								 filter:nodeValue.nodeattribute.attribute.filter.regex]
 				}
 			} else {
-				atts = NodeAttribute.executeQuery("select new map(A.id as id,TA.required as required,A.name as attributename,F.dataType as datatype,F.regex as filter) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.nodetype.id=${params.templateid}")
-			}
-			atts.each(){
-				response += [tid:it.tid,
-							 id:it.id,
-							 required:it.required,
-							 key:it.nodevalue,
-							 val:it.attributename,
-							 datatype:it.datatype,
-							 filter:it.filter]
+			    NodeAttribute.findAllByNodetype(NodeType.get(params.templateid)).each {nodeAttribute ->
+					response += [id:nodeAttribute.id,
+						         required:nodeAttribute.required,
+							     val:nodeAttribute.attribute.name,
+							     datatype:nodeAttribute.attribute.filter.dataType,
+							     filter:nodeAttribute.attribute.filter.regex]
+				}
 			}
 		}
 
