@@ -13,8 +13,14 @@ class WebhookService {
     static scope = "prototype"
 
     def postToURL(String service, ArrayList data, String state) { 
-		// set attempts number in config.properties so we can override
-		def hooks = Webhook.findAll("from Webhook where service='${service}' and attempts<5")
+
+
+        def c = Webhook.createCriteria()
+        def hooks = c {
+            eq("service", service)
+            //TODO: set attempts max in config.properties so we can override
+            between("attempts", 0, 5)
+        }
 		hooks.each { hook ->
 			try{
 				String hookData
