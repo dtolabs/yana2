@@ -79,8 +79,8 @@
 										</tr>
 									
 										<tr>
-											<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="node.dateModified.label" default="Date Modified" />: </td>
-											<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${nodeInstance?.dateModified}" /></td>
+											<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="node.lastUpdated.label" default="Last Updated" />: </td>
+											<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${nodeInstance?.lastUpdated}" /></td>
 										</tr>
 									</thead>
 								</table>

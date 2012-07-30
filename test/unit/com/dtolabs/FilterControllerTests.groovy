@@ -14,7 +14,7 @@ class FilterControllerTests{
 	  params["version"] = 1
       params["dataType"] = 'FLOAT'
 	  params["regex"] = "^([+-]?(((\\d+(\\.)?)|(\\d*\\.\\d+))([eE][+-]?\\d+)?))"
-	  params["dateModified"] = new Date()
+	  params["lastUpdated"] = new Date()
     }
 
     void testIndex() {

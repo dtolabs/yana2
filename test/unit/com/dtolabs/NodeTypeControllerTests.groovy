@@ -15,7 +15,7 @@ class NodeTypeControllerTests{
 	  params["id"] = 1
 	  params["version"] = 1
       params["name"] = 'nodetype_test'
-	  params["dateModified"] = new Date()
+	  params["lastUpdated"] = new Date()
     }
 
     void testIndex() {

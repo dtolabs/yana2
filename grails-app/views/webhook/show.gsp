@@ -74,8 +74,8 @@
 											</tr>
 										
 											<tr>
-												<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="attribute.dateModified.label" default="Date Modified" />: </td>
-												<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${webhookInstance?.dateModified}" /></td>
+												<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="attribute.lastUpdated.label" default="Date Modified" />: </td>
+												<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${webhookInstance?.lastUpdated}" /></td>
 											</tr>
 										</thead>
 									</table>

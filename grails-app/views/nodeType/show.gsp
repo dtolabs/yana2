@@ -87,8 +87,8 @@
 										</tr>
 									
 										<tr>
-											<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="nodeType.dateModified.label" default="Date Modified" />: </td>
-											<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${nodeTypeInstance?.dateModified}" /></td>
+											<td style="font: bold 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:message code="nodeType.lastUpdated.label" default="Last Updated" />: </td>
+											<td style="font: 11px verdana, arial, helvetica, sans-serif;color:#0431f7;"><g:formatDate date="${nodeTypeInstance?.lastUpdated}" /></td>
 										</tr>
 									</thead>
 								</table>

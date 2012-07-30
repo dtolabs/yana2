@@ -50,12 +50,12 @@
 	<g:select id="parent" name="parent.id" from="${com.dtolabs.Node.list()}" optionKey="id" value="${nodeInstance?.parent?.id}" class="many-to-one" noSelection="['null': '']"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'dateModified', 'error')} required">
-	<label for="dateModified">
-		<g:message code="node.dateModified.label" default="Date Modified" />
+<div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'lastUpdated', 'error')} required">
+	<label for="lastUpdated">
+		<g:message code="node.lastUpdated.label" default="Date Modified" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:datePicker name="dateModified" precision="day"  value="${nodeInstance?.dateModified}"  />
+	<g:datePicker name="lastUpdated" precision="day"  value="${nodeInstance?.lastUpdated}"  />
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: nodeInstance, field: 'instances', 'error')} ">

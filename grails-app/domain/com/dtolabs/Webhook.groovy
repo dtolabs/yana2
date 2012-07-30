@@ -9,8 +9,8 @@ class Webhook {
 	String format = 'XML'
 	String service
 	int attempts = 0
-	Date dateCreated
-	Date dateModified = new Date()
+    Date dateCreated
+    Date lastUpdated
 
     static constraints = {
 		user(nullable:false)

@@ -91,7 +91,6 @@ class WebhookController {
 			if(protocol){
 				def user = springSecurityService.isLoggedIn() ? User.get(springSecurityService.principal.id) : null
 				params.user=user
-				params.dateCreated= new Date()
 				webhookInstance = new Webhook(params)
 			}else{
 				flash.message = "BAD PROTOCOL: URL MUST BE FORMATTED WITH HTTP/HTTPS. PLEASE TRY AGAIN."

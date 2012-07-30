@@ -11,10 +11,10 @@ class NodeTypeRelationshipControllerTests {
       // TODO: Populate valid properties like...
 
 	  Date now = new Date()
-	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
+	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server')])
 	  NodeType server = NodeType.get(1)
 	  
-	  mockDomain(NodeType, [new NodeType(id:2,version:1,name:'Software',dateCreated:now)])
+	  mockDomain(NodeType, [new NodeType(id:2,version:1,name:'Software')])
 	  NodeType software = NodeType.get(2)
 	  
 	  params["id"] = 1

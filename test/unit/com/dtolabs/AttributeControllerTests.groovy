@@ -9,13 +9,12 @@ class AttributeControllerTests {
       assert params != null
       // TODO: Populate valid properties like...
 	  Date now = new Date()
-	  mockDomain(Filter, [new Filter(id:1,version:1,dataType:'String',regex:'^.*\$',dateCreated:now)])
+	  mockDomain(Filter, [new Filter(id:1,version:1,dataType:'String',regex:'^.*\$')])
 	  
 	  params["id"] = 1
 	  params["version"] = 1
       params["name"] = 'attribute_name'
 	  params["filter"] = Filter.get(1)
-	  params["dateModified"] = new Date()
 
     }
 

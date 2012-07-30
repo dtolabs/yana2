@@ -20,8 +20,8 @@ class NodeType{
 	String description
 	String image
     Project project
-	Date dateCreated
-	Date dateModified = new Date()
+    Date dateCreated
+    Date lastUpdated
 	
     static constraints = {
         name(blank:false)

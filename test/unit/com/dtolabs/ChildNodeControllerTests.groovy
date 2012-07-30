@@ -10,16 +10,16 @@ class ChildNodeControllerTests {
       // TODO: Populate valid properties like...
 	  
 	  Date now = new Date()
-	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
+	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server')])
 	  NodeType server = NodeType.get(1)
 	  
-	  mockDomain(NodeType, [new NodeType(id:2,version:1,name:'Software',dateCreated:now)])
+	  mockDomain(NodeType, [new NodeType(id:2,version:1,name:'Software')])
 	  NodeType software = NodeType.get(2)
 	  
-	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',tags:"this,is,a,tag",nodetype:server,dateCreated:now)])
+	  mockDomain(Node, [new Node(id:1,version:1,name:'test.server.com',description:'this is a description',tags:"this,is,a,tag",nodetype:server)])
 	  Node serverNode = Node.get(1)
 
-	  mockDomain(Node, [new Node(id:2,version:1,name:'Jetty',description:'this is a description',tags:"this,is,a,tag",nodetype:software,dateCreated:now)])
+	  mockDomain(Node, [new Node(id:2,version:1,name:'Jetty',description:'this is a description',tags:"this,is,a,tag",nodetype:software)])
 	  Node softwareNode = Node.get(2)
 	  
 	  params["id"] = 1

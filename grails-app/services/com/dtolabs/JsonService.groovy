@@ -28,7 +28,7 @@ class JsonService {
 				result += [node:[id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags],
 					description:val1.description,
                                         'date-created':DateFormatUtil.formatRfc3339(val1.dateCreated),
-                                        'date-modified':DateFormatUtil.formatRfc3339(val1.dateModified),
+                                        'date-modified':DateFormatUtil.formatRfc3339(val1.lastUpdated),
 					attributes:
 						values.each{ val2 ->
 							attribute:[id:val2.id,name:val2.attribute,value:val2.value,required:val2.required]

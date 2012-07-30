@@ -146,7 +146,6 @@ class NodeController {
 		node.description = nodeInstance.description
 		node.tags = nodeInstance.tags
 		node.nodetype = nodeInstance.nodetype
-		node.dateCreated =  now
 
 		if (!node.save(flush: true)) {
 			flash.message = message(code: 'Failed to clone node ${nodeInstance.id}')
@@ -157,7 +156,6 @@ class NodeController {
 				tv.node = node
 				tv.nodeattribute = it.nodeattribute
 				tv.value = it.value
-				tv.dateCreated = now
 				tv.save(flush: true)
 			}
 
@@ -196,14 +194,6 @@ class NodeController {
 							List<Node> parentList,
 							List<Node> childList,
 							List<NodeValue> nodeValues) {
-		Date dateModified, dateCreated
-		if (doUpdate) {
-			dateCreated = nodeInstance.dateCreated
-			dateModified = new Date()
-		} else {
-			dateCreated = new Date()
-			dateModified = dateCreated
-		}
 
 		nodeInstance.project = project
 		nodeInstance.name = params.name;
@@ -211,9 +201,7 @@ class NodeController {
 		nodeInstance.tags = params.tags
 		if (!doUpdate) {
 			nodeInstance.nodetype = nodeType;
-			nodeInstance.dateCreated = dateModified
 		}
-		nodeInstance.dateModified = dateModified  
 
 		Node.withTransaction() {status ->
 			try {

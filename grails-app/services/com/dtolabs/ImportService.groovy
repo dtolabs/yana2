@@ -69,7 +69,7 @@ class ImportService {
             xml.attributes.children().each { attribute ->
                 Attribute att = Attribute.findByProjectAndName(project, attribute.@id.toString())
                 if (!att) {
-                    att = new Attribute(project: project, dateCreated: new Date())
+                    att = new Attribute(project: project) 
                 }
                 Filter filter = Filter.findByProjectAndDataType(project, attribute.@filter.toString())
                 if (null == filter) {
@@ -78,7 +78,7 @@ class ImportService {
                 }
                 att.filter = filter
                 att.name = attribute.@id
-                att.dateModified = new Date()
+                att.lastUpdated = new Date()
                 att.description = attribute.@description.toString()
 
                 att.save(flush: true, failOnError: true)
@@ -89,12 +89,12 @@ class ImportService {
 
                 NodeType ntype = NodeType.findByProjectAndName(project, nodetype.@id.toString())
                 if (!ntype) {
-                    ntype = new NodeType(project: project, dateCreated: new Date())
+                    ntype = new NodeType(project: project)
                 }
                 ntype.name = nodetype.@id
                 ntype.description = nodetype.description.text()
                 ntype.image = nodetype.image.text()
-                ntype.dateModified = new Date()
+                ntype.lastUpdated = new Date()
 
                 ntype.save(flush: true, failOnError: true)
 
@@ -117,7 +117,7 @@ class ImportService {
                 nd = Node.findByProjectAndName(project, node.@id.toString())
                 NodeType nodetype = NodeType.findByProjectAndName(project, node.@nodetype.toString())
                 if (!nd) {
-                    nd = new Node(project: project, dateCreated: new Date())
+                    nd = new Node(project: project)
                 } else {
                     NodeValue.executeUpdate("delete NodeValue NV where NV.node = ?", [nd])
                 }
@@ -125,7 +125,7 @@ class ImportService {
                 nd.description = node.description.toString()
                 nd.tags = node.@tags.toString()
                 nd.nodetype = nodetype
-                nd.dateModified = new Date()
+                nd.lastUpdated = new Date()
                 nd.save(flush: true, failOnError: true)
 
                 node.values.children().each { nodeValue ->
@@ -141,8 +141,7 @@ class ImportService {
                     NodeAttribute na = NodeAttribute.findByNodetypeAndAttribute(nodetype, attribute)
 
                     NodeValue value = new NodeValue(node: nd,
-                            nodeattribute: na, value: nodeValue.toString(),
-                            dateCreated: new Date(), dateModified: new Date()
+                            nodeattribute: na, value: nodeValue.toString()
                     )
 
                     value.save(flush: true, failOnError: true)

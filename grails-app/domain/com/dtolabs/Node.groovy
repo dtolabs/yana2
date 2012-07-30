@@ -16,7 +16,7 @@ class Node {
 	NodeType nodetype
     Project project;
     Date dateCreated
-    Date dateModified = new Date()
+    Date lastUpdated
 
     static constraints = {
         name(blank:false)

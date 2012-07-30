@@ -19,7 +19,7 @@ class XmlService {
 				
 				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags){
 					description(val1.description)
-                                    'date-modified'(DateFormatUtil.formatRfc3339(val1.dateModified))
+                                    'date-modified'(DateFormatUtil.formatRfc3339(val1.lastUpdated))
                                     'date-created'(DateFormatUtil.formatRfc3339(val1.dateCreated))
 					attributes(){
 						values.each{ val2 ->

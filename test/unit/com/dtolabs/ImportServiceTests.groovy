@@ -16,17 +16,110 @@ import org.springframework.core.io.ClassPathResource
 Node, NodeValue, NodeAttribute, ChildNode])
 class ImportServiceTests {
 
+
+    /*
+     * No yana root element
+     */
+    def bad_xml1 = """<yoda>
+  <attributes>
+    <attribute id="hostname" filter="String"/>
+  </attributes>
+
+  <nodetypes>
+    <nodetype id="host">
+      <description>host type</description>
+      <image>Node.png</image>
+      <nodeAttributes>
+        <nodeAttribute id="node.hostname" attribute="hostname" required="true"/>
+      </nodeAttributes>
+    </nodetype>
+  </nodetypes>
+
+  <nodes>
+    <node id="host1" nodetype="host" tags="tag1,tag2,tag3">
+      <description>Sample node instance</description>
+      <values>
+        <attributeValue nodeAttribute="node.hostname">centos62-rundeck-tomcat</attributeValue>
+      </values>
+    </node>
+  </nodes>
+</yoda>
+    """
+
+    /**
+     * Non-yana sub elements
+     */
+    def bad_xml2 = """<yana>
+  <ooh>
+    <attribute id="hostname" filter="String"/>
+  </ooh>
+
+  <aah>
+    <nodetype id="host">
+      <description>host type</description>
+      <image>Node.png</image>
+      <nodeAttributes>
+        <nodeAttribute id="node.hostname" attribute="hostname" required="true"/>
+      </nodeAttributes>
+    </nodetype>
+  </aah>
+
+  <doh>
+    <node id="host1" nodetype="host" tags="tag1,tag2,tag3">
+      <description>Sample node instance</description>
+      <values>
+        <attributeValue nodeAttribute="node.hostname">centos62-rundeck-tomcat</attributeValue>
+      </values>
+    </doh>
+  </nodes>
+</yana>
+    """
+
+    /**
+     * Basic model
+     */
+    def ok_xml1 = """<yana>
+  <attributes>
+    <attribute id="hostname" filter="String"/>
+  </attributes>
+
+  <nodetypes>
+    <nodetype id="host">
+      <description>host type</description>
+      <image>Node.png</image>
+      <nodeAttributes>
+        <nodeAttribute id="node.hostname" attribute="hostname" required="true"/>
+      </nodeAttributes>
+    </nodetype>
+  </nodetypes>
+
+  <nodes>
+    <node id="host1" nodetype="host" tags="tag1,tag2,tag3">
+      <description>Sample node instance</description>
+      <values>
+        <attributeValue nodeAttribute="node.hostname">centos62-rundeck-tomcat</attributeValue>
+      </values>
+    </node>
+  </nodes>
+</yana>
+    """
+
     /**
      * Validate a model import file
      */
     void testValidate() {
 
         /**
-         * Verify the model in the XML conforms to the allowed schema
+         * Verify a trivial example
+         */
+        service.validate(new StringBufferInputStream(ok_xml1))
+        /**
+         * Verify a more extensive model
          */
         service.validate(asInputStream("/import/example2.xml"))
 
     }
+
 
     /**
      * Test the population of a model

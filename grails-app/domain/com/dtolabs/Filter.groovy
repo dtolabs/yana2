@@ -9,7 +9,8 @@ class Filter {
     String dataType
     String regex
     Project project
-    Date dateModified = new Date()
+    Date dateCreated
+    Date lastUpdated
 
     static constraints = {
         dataType(blank: false, unique: 'project')

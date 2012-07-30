@@ -2,7 +2,7 @@ package com.dtolabs
 
 
 @TestFor(NodeController)
-@Mock(Node)
+@Mock([Node])
 class NodeControllerTests {
 
 
@@ -10,7 +10,7 @@ class NodeControllerTests {
       assert params != null
       // TODO: Populate valid properties like...
 	  Date now = new Date()
-	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server',dateCreated:now)])
+	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server')])
 	  NodeType server = NodeType.get(1)
 	  
 	  params["id"] = 1
@@ -19,8 +19,6 @@ class NodeControllerTests {
 	  params["description"] = "some description"
 	  params["tags"] = "this,is,a,test"
 	  params["nodetype"] = server
-	  params["dateCreated"] = new Date()
-	  params["dateModified"] = new Date()
 
     }
 

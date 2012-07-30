@@ -34,8 +34,6 @@ def Attribute createAttribute(String name, Filter filter) {
 	Attribute attribute = new Attribute()
 	attribute.name = name
 	attribute.filter = filter
-	attribute.dateCreated = now
-	attribute.dateModified = now
 	attribute.description=''
 	attributeMap.put(attribute.name, attribute)
 	//println("attributeMap.put(${attribute.name}, ${attribute})")
@@ -51,8 +49,6 @@ def NodeType createNodeType(String name, String description, String image) {
 	nodeType.name = name
 	nodeType.description = description
 	nodeType.image = image
-	nodeType.dateCreated = now
-	nodeType.dateModified = now
 	nodeTypeMap.put(nodeType.name, nodeType)
 	//println("nodeTypeMap.put(${nodeType.name}, ${nodeType})")
 	return nodeType
@@ -83,8 +79,6 @@ def Node createNode(NodeType nodeType,
 	node.description = description 
 	node.tags = tags
 	node.nodetype = nodeType
-	node.dateCreated = now
-	node.dateModified = now
 	nodeMap.put(node.name, node)
 	//println("nodeMap.put(${node.name}, ${node})")
 	return node;
@@ -127,8 +121,6 @@ def createNodeValue(Node node, NodeAttribute nodeAttribute, String value) {
 	nodeValue.node = node
 	nodeValue.nodeattribute = nodeAttribute
 	nodeValue.value = value
-	nodeValue.dateCreated = now
-	nodeValue.dateModified = now
 	nodeValueMap.put(nodeValue.node.name
 		             + "::"
 					 + nodeValue.nodeattribute.attribute.name
@@ -188,13 +180,13 @@ def parseXML() {
 		new BufferedInputStream(
 		  new FileInputStream(xmlFile)))
 	
-	// parse attributes
+	// validate attributes
 	xml.attributes.children().each {attributeXml ->
 		createAttribute(attributeXml.@id.toString(),
 						filterMap.get(attributeXml.@filter.toString()))
 	}
 
-	// parse nodetypes and nodeattributes
+	// validate nodetypes and nodeattributes
 	xml.nodetypes.children().each {nodeTypeXml ->
 		NodeType nodeType = nodeTypeMap.get(nodeTypeXml.@id.toString())
 		if (!nodeType) {
@@ -221,7 +213,7 @@ def parseXML() {
 		}
 	}
 	
-	// parse nodes and attributevalues
+	// validate nodes and attributevalues
 	xml.nodes.children().each {nodeXml ->
 		NodeType nodeType = nodeTypeMap.get(nodeXml.@nodetype.toString())
 		Node node = nodeMap.get(nodeXml.@id.toString())
@@ -255,7 +247,7 @@ def parseXML() {
 		}
 	}
 
-	// parse nodetype parent/child
+	// validate nodetype parent/child
 	xml.nodetyperelationships.children().each {nodeTypeRelationshipsXml ->
 		// get dependencies
 		NodeType parentNodeType = nodeTypeMap.get(nodeTypeRelationshipsXml.@parent.toString())
@@ -272,7 +264,7 @@ def parseXML() {
 		}
 	}
 	
-	// parse node parent/child
+	// validate node parent/child
 	xml.noderelationships.children().each {nodeRelationshipsXml ->
 		// get dependencies
 		Node parent = nodeMap.get(nodeRelationshipsXml.@parent.toString())

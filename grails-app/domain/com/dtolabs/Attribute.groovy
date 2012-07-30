@@ -7,8 +7,9 @@ class Attribute{
 
 	String name
 	Filter filter
-	Date dateCreated
-	Date dateModified = new Date()
+    Date dateCreated
+    Date lastUpdated
+
 	String description
     Project project
 	
