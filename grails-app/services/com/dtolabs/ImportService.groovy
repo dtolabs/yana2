@@ -47,7 +47,8 @@ class ImportService {
      * @param project Project to store the model data
      */
     def populate(InputStream xmlInput, Project project) {
-        if (null == xmlInput) throw new ImportServiceException("XML content stream was null")
+        if (null == xmlInput) throw new IllegalArgumentException("XML content stream was null")
+        if (null == project) throw new IllegalArgumentException("Project parameter was null")
 
         // Nodes list to return
         def results = []
@@ -78,7 +79,6 @@ class ImportService {
                 }
                 att.filter = filter
                 att.name = attribute.@id
-                att.lastUpdated = new Date()
                 att.description = attribute.@description.toString()
 
                 att.save(flush: true, failOnError: true)
@@ -94,7 +94,6 @@ class ImportService {
                 ntype.name = nodetype.@id
                 ntype.description = nodetype.description.text()
                 ntype.image = nodetype.image.text()
-                ntype.lastUpdated = new Date()
 
                 ntype.save(flush: true, failOnError: true)
 
@@ -125,7 +124,6 @@ class ImportService {
                 nd.description = node.description.toString()
                 nd.tags = node.@tags.toString()
                 nd.nodetype = nodetype
-                nd.lastUpdated = new Date()
                 nd.save(flush: true, failOnError: true)
 
                 node.values.children().each { nodeValue ->
