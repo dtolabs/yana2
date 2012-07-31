@@ -149,7 +149,6 @@ class NodeController {
 		node.description = nodeInstance.description
 		node.tags = nodeInstance.tags
 		node.nodetype = nodeInstance.nodetype
-		node.dateCreated =  now
 
 		if (!node.save(flush: true)) {
 			flash.message = message(code: 'Failed to clone node ${nodeInstance.id}')
@@ -160,7 +159,6 @@ class NodeController {
 				tv.node = node
 				tv.nodeattribute = it.nodeattribute
 				tv.value = it.value
-				tv.dateCreated = now
 				tv.save(flush: true)
 			}
 
