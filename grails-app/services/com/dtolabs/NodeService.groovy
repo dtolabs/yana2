@@ -3,11 +3,7 @@ package com.dtolabs
 import java.util.List;
 
 class NodeService {
-	
-    def listNodes() {
 
-    }
-	
 	def Node createNode(Project project,
 						NodeType nodeType,
 						String name,
@@ -31,24 +27,51 @@ class NodeService {
 						List<Long> parentIds,
 						List<Long> childIds,
 						List<NodeValue> nodeValues) {
-		commitNode(false, project, nodeInstance,
+		commitNode(true, project, nodeInstance,
 				   nodeInstance.nodetype, name, description, tags,
 	  			   getParentNodesFromIDs(parentIds, nodeInstance.nodetype),
 				   getChildNodesFromIDs(childIds, nodeInstance.nodetype),
 				   nodeValues)
 	}
+						
+	def void deleteNode(Node nodeInstance) {
+		Node.withTransaction{ status ->
+			try {
+				deleteParentsAndChildren(nodeInstance)
+
+				nodeInstance.delete(flush: true)
+			} catch (Exception e) {
+				status.setRollbackOnly()
+				throw e
+			}
+		}
+	}
+	
+	def listNodes() {
+
+	}
 	
 	def showNode() {
 		
 	}
-	
-	def cloneNode() {
+					
+	def Node cloneNode(Project project, Node nodeInstance) {
+		List<NodeValue> nodeValues = []
+		nodeInstance.nodeValues.each() {NodeValue nodeValue ->
+			def nodeValueClone = new NodeValue()
+			nodeValueClone.nodeattribute = nodeValue.nodeattribute
+			nodeValueClone.value = nodeValue.value
+			nodeValues += nodeValueClone
+		}
 		
+		return commitNode(false, project, new Node(),
+						  nodeInstance.nodetype,
+						  nodeInstance.name  + "_clone",
+						  nodeInstance.description,
+						  nodeInstance.tags,
+						  [], [],
+						  nodeValues)
 	}
-
-	def deleteNode() {
-		
-	}	
 
 	private Node commitNode(boolean doUpdate,
 							Project project,
@@ -75,12 +98,7 @@ class NodeService {
 				}
 
 				if (doUpdate) {
-					["child", "parent"].each { kind ->
-						ChildNode.createCriteria().list{
-							eq(kind, nodeInstance)}.each { childNode ->
-							childNode.delete()
-						}
-					}
+					deleteParentsAndChildren(nodeInstance)
 				}
 
 				// Next, assign all selected parent nodes of this node.
@@ -111,6 +129,15 @@ class NodeService {
 		return nodeInstance
 	}
 
+    private deleteParentsAndChildren(Node nodeInstance) {
+		["child", "parent"].each { kind ->
+			ChildNode.createCriteria().list{
+				eq(kind, nodeInstance)}.each {childNode ->
+				childNode.delete()
+			}
+		}
+	}
+
 	private List<Node> getSelectedMembers(List<Node> selectedNodes,
 										  List<Node> nodeCandidatesList) {
 		List<Node> selectedMembers = []
@@ -125,7 +152,7 @@ class NodeService {
 	}
 
 	private List<Node> getParentNodesFromIDs(List<Long> nodeIDs, NodeType nodeType) {
-		List<Node> nodes = [];
+		List<Node> nodes = []
 		if (nodeIDs.size() != 0) {
 		    nodes = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
 													[ids:nodeIDs]),
@@ -135,7 +162,7 @@ class NodeService {
 	}
 	
 	private List<Node> getChildNodesFromIDs(List<Long> nodeIDs, NodeType nodeType) {
-		List<Node> nodes = [];
+		List<Node> nodes = []
 		if (nodeIDs.size() != 0) {
 			nodes = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
 													[ids:nodeIDs]),

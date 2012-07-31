@@ -116,21 +116,21 @@ class NodeController {
 	}
 
 	def create() {
-        def project = Project.findByName(params.project)
-        if (!project) {
-            response.status = 404
-            render(text: message(code: 'default.not.found.message',
+		def project = Project.findByName(params.project)
+		if (!project) {
+			response.status = 404
+			render(text: message(code: 'default.not.found.message',
 				   args: ['Project', params.project],
 				   default: "Project {0} was not found"))
-            return
-        }
+			return
+		}
 
-        [nodeList: Node.findAllByProject(project),
+		[nodeList: Node.findAllByProject(project),
 		 nodeTypeList: NodeType.findAllByProject(project),
 		 params:params]
 	}
 
-	def clone(){
+	def clone() {
         def project = Project.findByName(params.project)
         if (!project) {
             response.status = 404
@@ -138,35 +138,23 @@ class NodeController {
 								 args: ['Project', params.project],
 								 default: "Project {0} was not found"))
             return
-        }
-		Node nodeInstance = Node.get(params.id)
+        }		
 
-		Date now = new Date()
-
-		Node node = new Node()
-        node.project = project
-		node.name = nodeInstance.name+"_clone"
-		node.description = nodeInstance.description
-		node.tags = nodeInstance.tags
-		node.nodetype = nodeInstance.nodetype
-
-		if (!node.save(flush: true)) {
-			flash.message = message(code: 'Failed to clone node ${nodeInstance.id}')
-			redirect(action: "show", id: nodeInstance.id)
-		} else {
-			nodeInstance.nodeValues.each(){
-				def tv = new NodeValue()
-				tv.node = node
-				tv.nodeattribute = it.nodeattribute
-				tv.value = it.value
-				tv.save(flush: true)
-			}
-
+		Node node = Node.get(params.id)
+		try {		
+			Node nodeInstance = nodeService.cloneNode(project, node)
 			flash.message = message(code: 'default.created.message', args: [
 				message(code: 'node.label', default: 'Node'),
 				nodeInstance.id
 			])
-			redirect(action: "show", id: node.id)
+			redirect(action: "show", id: nodeInstance.id)
+		} catch (Throwable t) {
+			render(view: params.action, model: [nodeInstance: node])
+			flash.message = message(code: 'default.not.created.message', args: [
+				message(code: 'node.label', default: 'Node'),
+				params.name
+			])
+			redirect(action: "show", id: params.id)
 		}
 	}
 
@@ -474,36 +462,43 @@ class NodeController {
 	}
 
 	def delete() {
-		Node.withTransaction{ status ->
-			Node nodeInstance = Node.get(params.id)
-			if (!nodeInstance) {
-				flash.message = message(code: 'default.not.found.message', args: [
-					message(code: 'node.label', default: 'Node'),
-					params.id
-				])
-				redirect(action: "list")
-				return
-			}
+        def project = Project.findByName(params.project)
+        if (!project) {
+            response.status = 404
+            render(text: message(code: 'default.not.found.message',
+								 args: ['Project', params.project],
+								 default: "Project {0} was not found"))
+            return
+        }
 
-			try {
-				nodeInstance.delete(flush: true)
+		Node nodeInstance = Node.get(params.id)
+		if (!nodeInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [
+				message(code: 'node.label', default: 'Node'),
+				params.id
+			])
+			redirect(action: "list")
+			return
+		}
 
-				ArrayList nodes = [nodeInstance]
-				webhookService.postToURL('node', nodes,'delete')
+		try {
+			nodeService.deleteNode(nodeInstance)
 
-				flash.message = message(code: 'default.deleted.message', args: [
-					message(code: 'node.label', default: 'Node'),
-					params.id
-				])
-				redirect(action: "list")
-			} catch (Exception e) {
-				status.setRollbackOnly()
-				flash.message = message(code: 'default.not.deleted.message', args: [
-					message(code: 'node.label', default: 'Node'),
-					params.id
-				])
-				redirect(action: "show", id: params.id)
-			}
+			ArrayList nodes = [nodeInstance]
+			webhookService.postToURL('node', nodes,'delete')
+
+			flash.message = message(code: 'default.deleted.message', args: [
+				message(code: 'node.label', default: 'Node'),
+				params.id
+			])
+			redirect(action: "list")
+		} catch (Exception e) {
+			status.setRollbackOnly()
+			flash.message = message(code: 'default.not.deleted.message', args: [
+				message(code: 'node.label', default: 'Node'),
+				params.id
+			])
+			redirect(action: "show", id: params.id)
 		}
 	}
 
