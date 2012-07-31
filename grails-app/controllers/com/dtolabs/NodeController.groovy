@@ -7,6 +7,8 @@ import com.dtolabs.NodeAttribute
 import com.dtolabs.NodeValue
 import grails.converters.JSON
 import java.util.Date
+import java.util.List;
+
 import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
@@ -16,6 +18,7 @@ class NodeController {
 	def xmlService
 	def jsonService
 	def webhookService
+	def nodeService
 
 	def api() {
 		switch (request.method) {
@@ -146,6 +149,7 @@ class NodeController {
 		node.description = nodeInstance.description
 		node.tags = nodeInstance.tags
 		node.nodetype = nodeInstance.nodetype
+		node.dateCreated =  now
 
 		if (!node.save(flush: true)) {
 			flash.message = message(code: 'Failed to clone node ${nodeInstance.id}')
@@ -156,6 +160,7 @@ class NodeController {
 				tv.node = node
 				tv.nodeattribute = it.nodeattribute
 				tv.value = it.value
+				tv.dateCreated = now
 				tv.save(flush: true)
 			}
 
@@ -165,85 +170,6 @@ class NodeController {
 			])
 			redirect(action: "show", id: node.id)
 		}
-	}
-
-	boolean addChildNode(String name, Node parent, Node child) {
-		ChildNode childNode = ChildNode.findByParentAndChild(parent, child)
-		if (!childNode) {
-			childNode = new ChildNode()
-			childNode.relationshipName = name
-			childNode.parent = parent
-			childNode.child = child
-			childNode.save(flush: true)
-			return true
-		} else {
-			return false
-		}
-	}
-
-	String getRelationshipName(Node parent,Node child) {
-		String rolename = NodeTypeRelationship.findByParent(parent.nodetype).roleName
-		String name = (rolename)?"${parent.name} [$rolename]":"${parent.name}"
-		return name
-	}
-
-	private Node commitNode(boolean doUpdate,
-							Project project,
-							Node nodeInstance,
-							NodeType nodeType,
-							List<Node> parentList,
-							List<Node> childList,
-							List<NodeValue> nodeValues) {
-
-		nodeInstance.project = project
-		nodeInstance.name = params.name;
-		nodeInstance.description = params.description
-		nodeInstance.tags = params.tags
-		if (!doUpdate) {
-			nodeInstance.nodetype = nodeType;
-		}
-
-		Node.withTransaction() {status ->
-			try {
-				if (!nodeInstance.save(flush: true)) {
-					throw new Exception()
-				}
-
-				if (doUpdate) {
-					["child", "parent"].each { kind ->
-						ChildNode.createCriteria().list{
-							eq(kind, nodeInstance)}.each { childNode ->
-							childNode.delete()
-						}
-					}
-				}
-
-				// Next, assign all selected parent nodes of this node.
-				parentList.each {parent ->
-					addChildNode(getRelationshipName(parent, nodeInstance),
-								 parent, nodeInstance)
-				}
-
-				// Next, assign all selected child nodes of this node.
-				childList.each {child ->
-					addChildNode(getRelationshipName(nodeInstance, child),
-								 nodeInstance, child)
-				}
-
-				// Next, all the NodeValue objects for this node.
-				nodeValues.each {nodeValue ->
-					if (!doUpdate) {
-						nodeValue.node = nodeInstance
-					}
-					nodeValue.save().save(failOnError:true)
-				}
-			} catch (Exception e) {
-				status.setRollbackOnly()
-				throw e;
-			}
-		}
-		
-		return nodeInstance
 	}
 
 	def save() {
@@ -296,10 +222,11 @@ class NodeController {
 			}
 
 			nodeInstance =
-			  commitNode(false, project, new Node(), nodeType,
-						 getNodeParentsFromParams(nodeType),
-						 getNodeChildrenFromParams(nodeType),
-						 nodeValues)
+			  nodeService.createNode(project, nodeType,
+				  				     params.name, params.descripiton, params.tags,
+									 getParentIDsFromParams(),
+									 getChildIDsFromParams(),
+									 nodeValues)
 		} catch (Throwable t) {
 			if (params.action == 'api') {
 				response.status = 400 //Bad Request
@@ -367,12 +294,13 @@ class NodeController {
 					nodeValue.value = val
 				}
 			}
-			
-			nodeInstance =
-			  commitNode(true, nodeInstance.project, nodeInstance, nodeInstance.nodetype,
-						 getNodeParentsFromParams(nodeInstance.nodetype),
-						 getNodeChildrenFromParams(nodeInstance.nodetype),
-						 nodeValues)
+
+			nodeService.updateNode(
+			  nodeInstance.project, nodeInstance,
+			  params.name, params.descripiton, params.tags,
+			  getParentIDsFromParams(),
+			  getChildIDsFromParams(),
+			  nodeValues)
 		} catch (Exception e) {
 			if (params.action == 'api') {
 				response.status = 400 //Bad Request
@@ -580,65 +508,6 @@ class NodeController {
 			}
 		}
 	}
-	
-	private List<Node> getSelectedMembers(List<Node> selectedNodes,
-										  List<Node> nodeCandidatesList) {
-		List<Node> selectedMembers = []
-		if (selectedNodes && nodeCandidatesList) {
-			selectedNodes.each {selectedNode ->
-				if (nodeCandidatesList.contains(selectedNode)) {
-					selectedMembers += selectedNode
-				}
-			}
-		}
-		return selectedMembers
-	}
-
-	private List<Node> getNodeParentsFromParams(NodeType nodeType) {
-		List<Node> parents = null
-		if (params.parents) {
-			Long[] adults = Eval.me("${params.parents}")
-			if (adults) {
-			    parents = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
-														  [ids:adults]),
-							  			     getNodeParentCandidates(nodeType))
-			}
-		}
-		return parents
-	}
-	
-	private List<Node> getNodeChildrenFromParams(NodeType nodeType) {
-		List<Node> children = null
-		if (params.children) {
-			Long[] kinder = Eval.me("${params.children}")
-			if (kinder) {
-				children = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
-														   [ids:kinder]),
-					  			  			  getNodeChildrenCandidates(nodeType))
-			}
-		}
-		return children
-	}
-
-	private List<Node> getNodeParentCandidates(NodeType nodeType) {
-		def parents = []
-		nodeType.children.each {nodeTypeRelationship ->
-			nodeTypeRelationship.parent.nodes.each {node ->
-				parents += node
-			}
-		}
-		return parents
-	}
-	
-	private List<Node> getNodeChildrenCandidates(NodeType nodeType) {
-		def children = []
-		nodeType.parents.each {nodeTypeRelationship ->
-			nodeTypeRelationship.child.nodes.each {node ->
-				children += node
-			}
-		}
-		return children
-	}
 
 	def getNodeTypeParentNodes = {
 		def unselectedParents = []
@@ -697,4 +566,15 @@ class NodeController {
 
 		render response as JSON
 	}
+
+	private List<Long> getParentIDsFromParams() {
+		Long[] nodeIDs = Eval.me("${params.parents}")
+		return (nodeIDs ? nodeIDs : [])
+	}
+
+	private List<Long> getChildIDsFromParams() {
+		Long[] nodeIDs = Eval.me("${params.children}")
+		return (nodeIDs ? nodeIDs : [])
+	}
+
 }
