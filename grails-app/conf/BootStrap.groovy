@@ -5,13 +5,16 @@ import com.dtolabs.UserRole
 import com.dtolabs.*
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import grails.util.Environment
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.springframework.security.core.authority.AuthorityUtils
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 
 class BootStrap {
+    def projectService
+    def sessionFactory
 
     def init = { servletContext ->
 		
-		Date now = new Date()
-
 		Role adminRole = Role.findByAuthority('ROLE_YANA_ADMIN')?: new Role(authority:'ROLE_YANA_ADMIN').save(faileOnError:true)
 		Role userRole = Role.findByAuthority('ROLE_YANA_USER')?: new Role(authority:'ROLE_YANA_USER').save(faileOnError:true)
 		Role archRole = Role.findByAuthority('ROLE_YANA_ARCHITECT')?: new Role(authority:'ROLE_YANA_ARCHITECT').save(faileOnError:true)
@@ -23,36 +26,40 @@ class BootStrap {
 			user.password="${CH.config.root.password}"
 			user.save(faileOnError:true)
 		}else{
-			user = new User(username:"${CH.config.root.login}",password:"${CH.config.root.password}",enabled:'true',accountExpired:'false',accountLocked:'false',passwordExpired:'false').save(failOnError:true)
+			user = new User(username:"${CH.config.root.login}",password:"${CH.config.root.password}",enabled:true,accountExpired:false,accountLocked:false,passwordExpired:false).save(failOnError:true)
 		}
 			
 		if(!user?.authorities?.contains(rootRole)){
 			UserRole.create user,rootRole
+		}
+		if(!user?.authorities?.contains(adminRole)){
+			UserRole.create user,adminRole
 		}
 
 
         if (Environment.current.name == 'development') {
             Project proj = Project.findByName('default')
             if (!proj) {
-                proj=new Project(name: 'default', description: 'Default project')
-                proj.save(failOnError: true,flush:true)
-            }
-            assert null!=proj
-            Properties defaultFilters = new Properties()
-            def instream=servletContext.getResourceAsStream("/properties/default-filters.properties")
-            if(instream){
-                defaultFilters.load(instream)
-            }
-            defaultFilters.each{String k,String v->
-                if(!Filter.findByProjectAndDataType(proj,k)){
-                    Filter test = new Filter(dataType: k, regex: v)
-                    test.project=proj
-                    test.save(failOnError: true,flush:true)
-                }
+                //admin role required to create grants on the new project
+                loginAsAdmin()
+                projectService.createProject('default', 'Default project')
+                sessionFactory.currentSession.flush()
+
+                // logout
+                SCH.clearContext()
             }
         }
 
 
     }
+
+    private void loginAsAdmin() {
+        // have to be authenticated as an admin to create ACLs
+        SCH.context.authentication = new UsernamePasswordAuthenticationToken(
+                CH.config.root.login, CH.config.root.password,
+                AuthorityUtils.createAuthorityList('ROLE_YANA_ADMIN'))
+    }
+
+
     def destroy = {}
 }

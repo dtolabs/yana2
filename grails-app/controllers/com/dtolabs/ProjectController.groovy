@@ -22,7 +22,7 @@ class ProjectController {
             request.message = message(code: 'parameter.missing', args: ['project'], default: 'Parameter {0} is required')
             return redirect(action: 'list')
         }
-        Project p = Project.findByName(params.project)
+        Project p = projectService.findProject(params.project)
         if(!p){
             response.status=404
             request.message = message(code: 'default.not.found.message',args: [params.project],default: "Project {0} was not found")
@@ -67,7 +67,7 @@ class ProjectController {
             request.message = message(code: 'parameter.missing', args: ['name'], default: 'Parameter {0} is required')
             return render(view: 'create')
         }
-        Project p = Project.findByName(params.name)
+        Project p = projectService.findProject(params.project)
         if (!p) {
             response.status = 404
             request.message = message(code: 'default.not.found.message', args: [params.name], default: "Project {0} was not found")

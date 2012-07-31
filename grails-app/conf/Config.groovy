@@ -199,3 +199,8 @@ grails.plugins.springsecurity.secureChannel.definition = [
 grails.rest.injectInto = ["Controller", "Service", "Routes"]
 
 webhook.services = ["node"]
+
+// spring-security-acl definitions
+grails.plugins.springsecurity.acl.authority.modifyAuditingDetails = 'ROLE_YANA_ADMIN'
+grails.plugins.springsecurity.acl.authority.changeOwnership = 'ROLE_YANA_ADMIN'
+grails.plugins.springsecurity.acl.authority.changeAclDetails = 'ROLE_YANA_ADMIN'
