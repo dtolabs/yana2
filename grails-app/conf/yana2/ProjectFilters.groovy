@@ -3,7 +3,7 @@ package yana2
 class ProjectFilters {
 
     def filters = {
-        all(controller:'*', controllerExclude: 'project|login|logout', action:'*') {
+        all(controller:'*', controllerExclude: 'project|login|logout|errors', action:'*') {
             before = {
                 if(!session.project && !params.project){
                     if (actionName =~ /^.*api$/) {
