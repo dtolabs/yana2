@@ -64,6 +64,7 @@ class ExportService {
             BuilderUtil.makeAttribute(typeMap, "id")
 
             typeMap.remove("parents") // don't include relationship info
+            typeMap.remove("children")//
 
             typeMap.attributes.each { Map m ->
                 BuilderUtil.makeAttribute(m, "required")
@@ -103,6 +104,7 @@ class ExportService {
 
             Map ndMap = nd.toMap()
             ndMap.remove("parents") // ChildNodes are not included here
+            ndMap.remove("children")
 
             ["name", "id", "type", "tags"].each { key ->
                 BuilderUtil.makeAttribute(ndMap, key)
