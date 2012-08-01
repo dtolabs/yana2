@@ -6,6 +6,12 @@ import org.springframework.security.access.prepost.PostFilter
 
 import org.springframework.security.acls.model.Permission
 import com.dtolabs.yana2.springacl.YanaPermission
+import org.springframework.security.acls.model.ObjectIdentity
+import org.springframework.security.acls.model.Sid
+import org.springframework.security.acls.model.NotFoundException
+import org.springframework.security.acls.domain.GrantedAuthoritySid
+import org.springframework.security.acls.domain.PrincipalSid
+import org.springframework.security.core.Authentication
 
 class ProjectService {
     static transactional = true
@@ -27,6 +33,67 @@ class ProjectService {
         aclUtilService.addPermission project, username, permission
     }
 
+    void denyPermission(Project project, String username, int permission) {
+        denyPermission project, username, aclPermissionFactory.buildFromMask(permission)
+    }
+
+    /**
+     * Deny a permission. Used when you have the instance available.
+     *
+     * @param domainObject the domain class instance
+     * @param recipient the grantee; can be a username, role name, Sid, or Authentication
+     * @param permission the permission to grant
+     */
+    @PreAuthorize("hasPermission(#project, admin)")
+    void denyPermission(Project project, String recipient, Permission permission) {
+        ObjectIdentity oid = objectIdentityRetrievalStrategy.getObjectIdentity(project)
+        denyPermission oid, recipient, permission
+    }
+
+    /**
+     * Deny a permission.
+     *
+     * @param oid represents the domain object
+     * @param recipient the grantee; can be a username, role name, Sid, or Authentication
+     * @param permission the permission to grant
+     */
+    void denyPermission(ObjectIdentity oid, recipient, Permission permission) {
+
+        Sid sid = createSid(recipient)
+
+        def acl
+        try {
+            acl = aclService.readAclById(oid)
+        }
+        catch (NotFoundException e) {
+            acl = aclService.createAcl(oid)
+        }
+
+        acl.insertAce 0, permission, sid, false
+        aclService.updateAcl acl
+
+        log.debug "Denied permission $permission for Sid $sid for $oid.type with id $oid.identifier"
+    }
+
+    protected Sid createSid(recipient) {
+        if (recipient instanceof String) {
+            return recipient.startsWith('ROLE_') ?
+                   new GrantedAuthoritySid(recipient) :
+                   new PrincipalSid(recipient)
+        }
+
+        if (recipient instanceof Sid) {
+            return recipient
+        }
+
+        if (recipient instanceof Authentication) {
+            return new PrincipalSid(recipient)
+        }
+
+        throw new IllegalArgumentException('recipient must be a String, Sid, or Authentication')
+    }
+
+
     @PreAuthorize("hasPermission(#id, 'com.dtolabs.Project', read) or hasPermission(#id, 'com.dtolabs.Project', admin)")
     Project getProject(long id){
         Project.get(id)
@@ -44,6 +111,16 @@ class ProjectService {
     boolean hasArchitectPermission(Project p) {
         return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ARCHITECT) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
     }
+    /**
+     * Return true if the user has Architect permission for the project,
+     * but fail if not
+     * @param p
+     * @return
+     */
+    @PreAuthorize("hasPermission(#p,'architect') or hasPermission(#p,admin)")
+    boolean authorizedArchitectPermission(Project p) {
+        return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ARCHITECT) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
+    }
 
     /**
      * Return true if the user has User permission for the project
@@ -51,6 +128,16 @@ class ProjectService {
      * @return
      */
     boolean hasOperatorPermission(Project p) {
+        return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.OPERATOR) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
+    }
+    /**
+     * Return true if the user has User permission for the project,
+     * but fail if not
+     * @param p
+     * @return
+     */
+    @PreAuthorize("hasPermission(#p,'operator') or hasPermission(#p,admin)")
+    boolean authorizedOperatorPermission(Project p) {
         return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.OPERATOR) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
     }
 
@@ -88,9 +175,9 @@ class ProjectService {
         return Project.list()
     }
 
-    @PreAuthorize("hasPermission(#p, read) or hasPermission(#p, admin)")
-    def userSelectProject(session, Project p) {
-        session.project = p.name
+    @PreAuthorize("hasPermission(#project, read) or hasPermission(#project, admin)")
+    def userSelectProject(session, Project project) {
+        session.project = project.name
     }
 
     @PreAuthorize("hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
