@@ -42,11 +42,13 @@
         <div class="message" role="status">${message.encodeAsHTML()}</div>
     </g:if>
 
+    <sec:ifAnyGranted roles="ROLE_YANA_ADMIN,ROLE_YANA_SUPERUSER">
     <div>
         <span class="control">
             <g:link action="create"><g:message code="default.create.label" args="[entityName]"/></g:link>
         </span>
     </div>
+    </sec:ifAnyGranted>
 
     <g:if test="${projects}">
         <ul>
@@ -61,7 +63,7 @@
                     <g:if test="${project.description?.size() > 50}">${project.description[0..50].encodeAsHTML()}...</g:if>
                     <g:else>${project.description.encodeAsHTML()}</g:else>
                 </span>
-                <sec:ifAnyGranted roles="ROLE_YANA_ADMIN,ROLE_YANA_SUPERUSER">
+                <sec:permitted className='com.dtolabs.Project' id='${project.id}' permission='delete'>
                     <span class="deleteConfirm">
                         <input type="button" onclick="$('#proj_${i} .deleteConfirm').toggle()" value="Delete"/>
                     </span>
@@ -73,7 +75,7 @@
                             <g:submitButton name="Delete"/>
                         </g:form>
                     </div>
-                </sec:ifAnyGranted>
+                </sec:permitted>
             </li>
         </g:each>
         </ul>
