@@ -12,7 +12,7 @@ class ExportController {
 
     def api() {
         switch (request.method) {
-            case "POST":
+            case "GET":
                 this.xml()
                 break
         }
