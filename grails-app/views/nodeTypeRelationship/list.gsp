@@ -18,7 +18,7 @@
 				<thead>
 					<tr>
 					
-						<g:sortableColumn property="roleName" title="${message(code: 'nodeTypeRelationship.roleName.label', default: 'Role Name')}" />
+						<g:sortableColumn property="roleName" title="${message(code: 'nodeTypeRelationship.name.label', default: 'Role Name')}" />
 															
 						<th><g:message code="nodeTypeRelationship.parent.label" default="Parent" /></th>
 					
@@ -30,7 +30,7 @@
 				<g:each in="${nodeTypeRelationshipInstanceList}" status="i" var="nodeTypeRelationshipInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${nodeTypeRelationshipInstance.id}">${fieldValue(bean: nodeTypeRelationshipInstance, field: "roleName")}</g:link></td>
+						<td><g:link action="show" id="${nodeTypeRelationshipInstance.id}">${fieldValue(bean: nodeTypeRelationshipInstance, field: "name")}</g:link></td>
 					
 						<td>${fieldValue(bean: nodeTypeRelationshipInstance, field: "parent")}</td>
 					

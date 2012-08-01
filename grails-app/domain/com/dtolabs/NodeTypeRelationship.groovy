@@ -3,12 +3,12 @@ package com.dtolabs
 class NodeTypeRelationship {
 	static belongsTo = [ NodeType ]
 	
-	String roleName
+	String name
 	NodeType parent
 	NodeType child
 
     static constraints = {
-		roleName(nullable:false)
+		name(nullable:false)
 		parent(nullable:false)
 		child(nullable:false)
     }
@@ -16,7 +16,7 @@ class NodeTypeRelationship {
     Map toMap() {
         def map = [
                 id: this.id,
-                name: this.roleName,
+                name: this.name,
                 parent: parent.name,
                 child: child.name
         ]
@@ -24,7 +24,7 @@ class NodeTypeRelationship {
     }
 
     String toString() {
-        return roleName
+        return name
     }
 }
 

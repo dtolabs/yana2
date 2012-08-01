@@ -250,12 +250,12 @@ class ImportServiceTests {
         assertEquals("Node name did not match", apachetom.name, "apache-tomcat-5.5.31")
 
         // NodeTypeRelationship
-        def environment = NodeTypeRelationship.findByRoleName("environment")
-        assertEquals("NodeTypeRelationship name did not match", environment.roleName, "environment")
-        def service = NodeTypeRelationship.findByRoleName("service")
-        assertEquals("NodeTypeRelationship name did not match", service.roleName, "service")
-        def pack = NodeTypeRelationship.findByRoleName("package")
-        assertEquals("NodeTypeRelationship name did not match", pack.roleName, "package")
+        def environment = NodeTypeRelationship.findByName("environment")
+        assertEquals("NodeTypeRelationship name did not match", environment.name, "environment")
+        def service = NodeTypeRelationship.findByName("service")
+        assertEquals("NodeTypeRelationship name did not match", service.name, "service")
+        def pack = NodeTypeRelationship.findByName("package")
+        assertEquals("NodeTypeRelationship name did not match", pack.name, "package")
 
         // ChildNode
         assertEquals("Incorrect number of child nodes", ChildNode.count, 4)

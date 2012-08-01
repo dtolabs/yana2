@@ -1,7 +1,5 @@
 package com.dtolabs
 
-import java.util.List;
-
 class NodeService {
 
 	def Node createNode(Project project,
@@ -205,7 +203,7 @@ class NodeService {
 	}
 	
 	private String getRelationshipName(Node parent,Node child) {
-		String rolename = NodeTypeRelationship.findByParent(parent.nodetype).roleName
+		String rolename = NodeTypeRelationship.findByParent(parent.nodetype).name
 		String name = (rolename)?"${parent.name} [$rolename]":"${parent.name}"
 		return name
 	}

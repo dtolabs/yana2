@@ -30,14 +30,14 @@ class XmlService {
 					parents(){
 						def rents = ChildNode.findAllByChild(Node.get(val1.id.toLong()));
 						rents.each{ parent ->
-							node(childnodeId:parent.id,id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).roleName)
+							node(childnodeId:parent.id,id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).name)
 						}
 					}
 
 					children(){
 						def kinder = ChildNode.findAllByParent(Node.get(val1.id.toLong()));
 						kinder.each{ child ->
-							node(childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).roleName)
+							node(childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).name)
 						}
 					}
 				}
@@ -133,10 +133,10 @@ class XmlService {
 					}
 					nodetypeRelationships() {
 						parents.each(){ val3 ->
-							nodetypeRelationship(id:val3.id,parentNodeId:val3.parent.id,parentName:val3.parent.name,childNodeId:val3.child.id,childName:val3.child.name,roleName:val3.roleName)
+							nodetypeRelationship(id:val3.id,parentNodeId:val3.parent.id,parentName:val3.parent.name,childNodeId:val3.child.id,childName:val3.child.name,roleName:val3.name)
 						}
 						children.each(){ val4 ->
-							nodetypeRelationship(id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.roleName)
+							nodetypeRelationship(id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.name)
 						}
 					}
 				}
@@ -151,7 +151,7 @@ class XmlService {
 
 		xml.nodeTypeRelationships() {
 			nodeTypeRelationships.each { 
-				nodeTypeRelationship(id:it.id, roleName: it.roleName,
+				nodeTypeRelationship(id:it.id, roleName: it.name,
 					parentNodeTypeId: it.parent.id, parentNodeTypeName: it.parent.name,
 					childNodeTypeId: it.child.id, childNodeTypeName: it.child.name,
 					) {

@@ -1,7 +1,5 @@
 package com.dtolabs
 
-import java.util.ArrayList;
-
 import grails.converters.JSON
 
 class JsonService {
@@ -106,10 +104,10 @@ class JsonService {
 			}
 			ArrayList ntr = [:]
 			parents.each(){ val3 ->
-				ntr += [nodetypeRelationship:[id:val3.id,parentNodeId:val3.parent.id,parentName:val3.parent.name,childNodeId:val3.child.id,childName:val3.child.name,roleName:val3.roleName]]
+				ntr += [nodetypeRelationship:[id:val3.id,parentNodeId:val3.parent.id,parentName:val3.parent.name,childNodeId:val3.child.id,childName:val3.child.name,roleName:val3.name]]
 			}
 			children.each(){ val4 ->
-				ntr += [nodetypeRelationship:[id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.roleName]]
+				ntr += [nodetypeRelationship:[id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.name]]
 			}
 
 			result += 	[nodetype:[id:val1.id,name:val1.name,description:val1.description,image:val1.image,nodeAttributes:attributes,nodetypeRelationships:ntr,nodeCount:nodecount]]
@@ -120,7 +118,7 @@ class JsonService {
 	String formatNodeTypeRelationships(ArrayList data) {
 		ArrayList result = [:]
 		data.each(){
-			result += [nodetyperelationship:[id:it.id,roleName:it.roleName, 
+			result += [nodetyperelationship:[id:it.id,roleName:it.name,
 					parentNodeTypeId: it.parent.id, parentNodeTypeName: it.parent.name,
 					childNodeTypeId: it.child.id, childNodeTypeName: it.child.name,]]
 			

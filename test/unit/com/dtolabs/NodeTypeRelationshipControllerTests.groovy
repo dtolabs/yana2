@@ -19,7 +19,7 @@ class NodeTypeRelationshipControllerTests {
 	  
 	  params["id"] = 1
 	  params["version"] = 1
-	  params["roleName"] = "softwareInstallation"
+	  params["name"] = "softwareInstallation"
 	  params["parent"] = server
 	  params["child"] = software
 	  

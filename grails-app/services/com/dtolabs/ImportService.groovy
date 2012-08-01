@@ -121,7 +121,7 @@ class ImportService {
                     NodeTypeRelationship.findByParentAndChild(parent, child)
                 if (!relationship) {
                     relationship = new NodeTypeRelationship(
-                            roleName: typerel.@name.toString(),
+                            name: typerel.@name.toString(),
                             parent: parent, child: child
                     )
                     relationship.save(flush: true, failOnError: true)

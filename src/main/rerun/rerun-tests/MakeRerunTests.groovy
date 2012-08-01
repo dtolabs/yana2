@@ -138,7 +138,7 @@ def deleteNodeValue(String key) {
 def createNodeRelationship(String roleName,
 						   NodeType parentNodeType, NodeType childNodeType) {
 	NodeTypeRelationship nodeTypeRelationship = new NodeTypeRelationship()
-	nodeTypeRelationship.roleName = roleName
+	nodeTypeRelationship.name = roleName
 	nodeTypeRelationship.child = childNodeType
 	nodeTypeRelationship.parent = parentNodeType
 	nodeTypeRelationshipMap.put(
@@ -524,7 +524,7 @@ def dumpNodeType(NodeType nodeType, int i) {
 	nodeTypeRelationshipMap.each() {nodeTypeRelationshipMapKey, nodeTypeRelationshipMapValue ->
 		if ((nodeType.name == nodeTypeRelationshipMapValue.child.name)
 			|| (nodeType.name == nodeTypeRelationshipMapValue.parent.name)) {
-			entries.add(nodeTypeRelationshipMapValue.roleName)
+			entries.add(nodeTypeRelationshipMapValue.name)
 		}
 	}
 	dumpDelimitedLine("relationships:", entries)

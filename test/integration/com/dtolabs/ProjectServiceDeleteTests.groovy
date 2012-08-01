@@ -1,8 +1,5 @@
 package com.dtolabs
 
-import grails.test.mixin.TestFor
-import grails.test.mixin.Mock
-
 /*
  * Copyright 2012 DTO Labs, Inc. (http://dtolabs.com)
  * 
@@ -118,7 +115,7 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         assert null !=t2.save()
 
         //nnodetype rleationship
-        def ntr1 = new NodeTypeRelationship(roleName: 'blah', parent: t1, child: t1b)
+        def ntr1 = new NodeTypeRelationship(name: 'blah', parent: t1, child: t1b)
         assert null!=ntr1.save()
 
         //node
