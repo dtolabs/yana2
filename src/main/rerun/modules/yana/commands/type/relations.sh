@@ -18,13 +18,13 @@ if [ -n "$TYPE" -a -z "$ID" ]
 then
     curl --silent --fail \
 	--request POST --header "Content-Type: application/json" \
-	${YANA_URL}/api/nodeType/list/xml --cookie ${cookie} -o ${response}
+	${YANA_URL}/api/nodeType/list/xml?project=${PROJECT} --cookie ${cookie} -o ${response}
 elif [ -z "$TYPE" -a -n "$ID" ]
 then
     http_code=$(curl --silent --fail \
 	-w "%{http_code}" \
 	--request GET \
-	"${YANA_URL}/api/nodeType/xml/$ID" --cookie ${cookie} -o ${response})
+	"${YANA_URL}/api/nodeType/xml/$ID?project=${PROJECT}" --cookie ${cookie} -o ${response})
     #
     # Exit with an error if the type does not exist
     #

@@ -12,6 +12,11 @@
 # Read module function library
 source $RERUN_MODULES/yana/lib/functions.sh || exit 1 ;
 
+#
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
 # Parse the command options
 [ -r $RERUN_MODULES/yana/commands/types/options.sh ] && {
   source $RERUN_MODULES/yana/commands/types/options.sh || exit 2 ;
@@ -25,11 +30,6 @@ response=/tmp/yana-types-response.txt
 [ -f $response ] && rm $response
 
 #
-# Initialize the context
-#
-yana_initialize $CFG || rerun_die "Yana initialization failed"
-
-#
 # Login and create a session
 #
 yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
@@ -40,7 +40,7 @@ yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Ya
 
 curl --silent --fail \
     --request POST --header "Content-Type: application/json" \
-    ${YANA_URL}/api/nodeType/list/xml --cookie ${cookie} -o ${response}
+    ${YANA_URL}/api/nodeType/list/xml?project=${PROJECT} --cookie ${cookie} -o ${response}
 
 #
 # Validate the response is well formed XML

@@ -19,6 +19,8 @@ while [ "$#" -gt 0 ]; do
     case "$OPT" in
           -f|--file) rerun_option_check $# ; FILE=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
+  -P|--project) rerun_option_check $# ; PROJECT=$2 ; shift ;;
+  -a|--action)  rerun_option_check $# ; ACTION=$2 ; shift ;;
         # unknown option
         -?)
             rerun_option_error
@@ -32,8 +34,13 @@ done
 
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
+[ -z "$PROJECT" ] && PROJECT=$YANA_PROJECT
+[ -z "$ACTION" ] && ACTION=import
+
 # Check required options are set
 [ -z "$FILE" ] && { echo "missing required option: --file" ; return 2 ; }
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
+[ -z "$PROJECT" ] && { echo "missing required option: --project" ; return 2 ; }
+
 #
 return 0

@@ -5,11 +5,11 @@
 #
 # DESCRIPTION
 #
-#   delete a child node
+#   delete the attribute
 #
 
 curl --silent --fail --request DELETE \
-    ${YANA_URL}/api/childNode/none/${ID} \
+    ${YANA_URL}/api/attribute/none/${ID}?project=${PROJECT} \
     -o ${response} --cookie ${cookie}
 
 # ------------------------------

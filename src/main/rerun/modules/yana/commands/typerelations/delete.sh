@@ -9,7 +9,7 @@
 #
 
 curl --silent --fail --request DELETE \
-    ${YANA_URL}/api/nodeTypeRelationship/xml/${ID} \
+    ${YANA_URL}/api/nodeTypeRelationship/xml/${ID}?project=${PROJECT} \
     -o ${response} --cookie ${cookie}
 
 # ------------------------------

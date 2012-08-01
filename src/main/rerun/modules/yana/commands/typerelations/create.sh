@@ -11,7 +11,7 @@
 http_code=$(curl -w "%{http_code}" --silent --fail --request POST \
     --header "Content-Type: application/json" \
     -d "{roleName:'${NAME}', parent.id:'${PARENT}', child.id: '${CHILD}' }" \
-    ${YANA_URL}/api/nodeTypeRelationship/xml \
+    ${YANA_URL}/api/nodeTypeRelationship/xml?project=${PROJECT} \
     -o $response --cookie $cookie )
 
 

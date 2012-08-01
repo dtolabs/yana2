@@ -1,17 +1,17 @@
-#
+g#
 # ACTION
 #
 #   create
 #
 # DESCRIPTION
 #
-#   create a new relation
+#   create a new attribute
 #
 
 http_code=$(curl -w "%{http_code}" --silent --fail --request POST \
     --header "Content-Type: application/json" \
-    -d "{relationshipName:'${NAME}',parent:'${NODE}',child:'${CHILD}'}" \
-    ${YANA_URL}/api/childNode/xml \
+    -d "{name:'${NAME}',description:'${DESCRIPTION}',filter.id:'${FILTER}'}" \
+    ${YANA_URL}/api/attribute/xml?project=${PROJECT} \
     -o $response --cookie $cookie )
 
 format() {

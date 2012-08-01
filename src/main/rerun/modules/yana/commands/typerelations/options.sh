@@ -24,6 +24,7 @@ while [ "$#" -gt 0 ]; do
   -c|--child) rerun_option_check $# ; CHILD=$2 ; shift ;;
   -p|--parent) rerun_option_check $# ; PARENT=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
+  -P|--project) rerun_option_check $# ; PROJECT=$2 ; shift ;;
         # unknown option
         -?)
             rerun_option_error
@@ -39,6 +40,7 @@ done
 [ -z "$ACTION" ] && ACTION=list
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
 [ -z "$FORMAT" ] && FORMAT='${ID}:${ROLE}:${PARENT_TYPE_ID}:${PARENT_TYPE_NAME}:${CHILD_TYPE_ID}:${CHILD_TYPE_NAME}'
+[ -z "$PROJECT" ] && PROJECT=$YANA_PROJECT
 
 # Check required options are set
 

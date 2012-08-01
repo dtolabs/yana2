@@ -12,6 +12,11 @@
 # Read module function library
 source $RERUN_MODULES/yana/lib/functions.sh || exit 1 ;
 
+#
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
 # Parse the command options
 [ -r $RERUN_MODULES/yana/commands/nodes/options.sh ] && {
     source $RERUN_MODULES/yana/commands/nodes/options.sh || exit 2 ;
@@ -27,11 +32,6 @@ response=/tmp/yana-nodes-response.txt
 [ -f $response ] && rm $response
 
 #
-# Initialize the context
-#
-yana_initialize $CFG || rerun_die "Yana initialization failed"
-
-#
 # Login and create a session
 #
 yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Yana authentication failed"
@@ -39,7 +39,7 @@ yana_authenticate $YANA_URL $YANA_USER $YANA_PASSWORD ${cookie} || rerun_die "Ya
 #
 # Retrieve the data from Yana
 #
-curl --fail --silent ${YANA_URL}/node/list?format=xml \
+curl --fail --silent "${YANA_URL}/node/list?format=xml&project=${PROJECT}" \
     --cookie ${cookie} -o ${response} || rerun_die "failed obtaining Yana data"
 
 
@@ -86,7 +86,7 @@ then
     # Submit the search
     #
     curl --fail --silent \
-	"${YANA_URL}/search/index?q=${qString}&format=xml" \
+	"${YANA_URL}/search/index?q=${qString}&format=xml&project=${PROJECT}" \
 	--cookie ${cookie} -o ${response} || rerun_die "failed loading data to server"
 
     grep -q 'Invalid search' ${response} && { echo 'invalid search criteria' ; exit 1 ; }
@@ -96,7 +96,7 @@ else
     #
     # Normal listing.
     #
-    curl --fail --silent ${YANA_URL}/node/list?format=xml \
+    curl --fail --silent "${YANA_URL}/node/list?format=xml&project=${PROJECT}" \
 	--cookie ${cookie} -o ${response} || rerun_die "failed obtaining Yana data"
 
 fi

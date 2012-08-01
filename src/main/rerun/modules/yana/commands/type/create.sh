@@ -20,7 +20,7 @@ data="$data $(printf "%s:'%s'," image "${IMAGE:-unknown.png}")"
 http_code=$(curl -w "%{http_code}" --silent --fail --request POST \
     --header "Content-Type: application/json" \
     -d {"$data"} \
-    ${YANA_URL}/api/nodeType/xml --cookie ${cookie} -o ${response})
+    ${YANA_URL}/api/nodeType/xml?project=${PROJECT} --cookie ${cookie} -o ${response})
 
 case ${http_code} in
     500)

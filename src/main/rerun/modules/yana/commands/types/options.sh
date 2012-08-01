@@ -20,6 +20,7 @@ while [ "$#" -gt 0 ]; do
           -F|--format) rerun_option_check $# ; FORMAT=$2 ; shift ;;
           -t|--type) rerun_option_check $# ; TYPE=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
+  -P|--project) rerun_option_check $# ; PROJECT=$2 ; shift ;;
         # unknown option
         -?)
             rerun_option_error
@@ -34,7 +35,10 @@ done
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
 [ -z "$FORMAT" ] && FORMAT='${ID}:${TYPE}:${DESCRIPTION}'
+[ -z "$PROJECT" ] && PROJECT=$YANA_PROJECT
 # Check required options are set
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
+[ -z "$PROJECT" ] && { echo "missing required option: --project" ; return 2 ; }
+
 #
 return 0

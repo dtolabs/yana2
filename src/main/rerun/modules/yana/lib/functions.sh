@@ -103,14 +103,15 @@ yana_authenticate() {
 yana_initialize() {
     local cfg=$1
 
-    if [ -r $cfg ] 
+    if [ -r "$cfg" ] 
     then 
-	source $cfg
+	source "$cfg"
     else
 	#echo "config file not found: $cfg"
 	YANA_URL=http://localhost:8080
 	YANA_USER=admin
 	YANA_PASSWORD=admin	
+	YANA_PROJECT=default
     fi
     [ -z "$YANA_URL" -o -z "$YANA_USER" -o -z "$YANA_PASSWORD" ] && {
 	echo "missing server connection info in file: $cfg"

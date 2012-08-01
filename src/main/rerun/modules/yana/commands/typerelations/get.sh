@@ -9,7 +9,7 @@
 #
 
 http_code=$(curl -w "%{http_code}" --silent --fail --request GET \
-    ${YANA_URL}/api/nodeTypeRelationship/xml/${ID} \
+    ${YANA_URL}/api/nodeTypeRelationship/xml/${ID}?project=${PROJECT} \
     -o $response --cookie $cookie )
 
 

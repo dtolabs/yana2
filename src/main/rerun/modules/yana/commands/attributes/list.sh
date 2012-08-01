@@ -10,8 +10,20 @@
 
 curl --silent --fail --request POST \
     --header "Content-Type: application/json" \
-    ${YANA_URL}/api/nodeTypeRelationship/list/xml?project=${PROJECT} \
+    ${YANA_URL}/api/attribute/list/xml?project=${PROJECT} \
     -o $response --cookie $cookie
+
+format() {
+    while read line
+    do
+	IFS=:
+	arr=( $line )
+	[ ${#arr[*]} -eq 4 ] || continue
+	IFS=$oIFS
+	yana_expand "$FORMAT" ID=${arr[0]} NAME=${arr[1]} \
+	    FILTER_ID=${arr[2]} FILTER_DATATYPE=${arr[3]}
+    done 
+}
 
 
 #
@@ -24,11 +36,9 @@ xmlstarlet val --well-formed \
 #
 # Output the response
 #
-(xmlstarlet sel -t -m /nodeTypeRelationships/nodeTypeRelationship \
-	    -v @id  -o ":" -v @roleName -o ":" \
-	    -v @parentNodeTypeId -o ":"  -v @parentNodeTypeName -o ":" \
-	    -v @childNodeTypeId  -o ":" -v @childNodeTypeName -o ":" \
-		-n \
+(xmlstarlet sel -t -m /attributes/attribute \
+     -v @id  -o ":" -v @name -o ":" \
+     -v @filterId  -o ":" -v @filterDataType -n \
     $response | format ) || rerun_die "failed parsing server response"
 
 # ------------------------------

@@ -12,6 +12,11 @@
 # Read module function library
 source $RERUN_MODULES/yana/lib/functions.sh || exit 1 ;
 
+#
+# Initialize the context
+#
+yana_initialize $CFG || rerun_die "Yana initialization failed"
+
 # Parse the command options
 [ -r $RERUN_MODULES/yana/commands/node/options.sh ] && {
   source $RERUN_MODULES/yana/commands/node/options.sh || exit 2 ;
@@ -24,11 +29,6 @@ flags="" #-v --silent --fail --show-error"
 cookie=/tmp/yana-node-cookiejar.txt
 response=/tmp/yana-node-response.txt
 [ -f $response ] && rm $response
-
-#
-# Initialize the context
-#
-yana_initialize $CFG || rerun_die "Yana initialization failed"
 
 #
 # Login and create a session

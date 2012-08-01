@@ -17,14 +17,12 @@ rerun_option_check() {
 while [ "$#" -gt 0 ]; do
     OPT="$1"
     case "$OPT" in
-  -D|--depth) rerun_option_check $# ; DEPTH=$2 ; shift ;;
   -F|--format) rerun_option_check $# ; FORMAT=$2 ; shift ;;
   -i|--id) rerun_option_check $# ; ID=$2 ; shift ;;
   -A|--action) rerun_option_check $# ; ACTION=$2 ; shift ;;
   -N|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
-  -c|--child) rerun_option_check $# ; CHILD=$2 ; shift ;;
-  -n|--node) rerun_option_check $# ; NODE=$2 ; shift ;;
   -C|--cfg) rerun_option_check $# ; CFG=$2 ; shift ;;
+  -P|--project) rerun_option_check $# ; PROJECT=$2 ; shift ;;
         # unknown option
         -?)
             rerun_option_error
@@ -37,13 +35,14 @@ while [ "$#" -gt 0 ]; do
 done
 
 # If defaultable options variables are unset, set them to their DEFAULT
-[ -z "$ACTION" ] && ACTION=children
+[ -z "$ACTION" ] && ACTION=list
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
-[ -z "$DEPTH" ] && DEPTH=1
-[ -z "$FORMAT" ] && FORMAT='${ID}:${RELATIONSHIP}:${CHILDNODE}:${NAME}:${TYPE}'
+[ -z "$FORMAT" ] && FORMAT='${ID}:${NAME}:${FILTER_ID}:${FILTER_DATATYPE}'
+[ -z "$PROJECT" ] && PROJECT=$YANA_PROJECT
 # Check required options are set
 
 [ -z "$CFG" ] && { echo "missing required option: --cfg" ; return 2 ; }
+[ -z "$PROJECT" ] && { echo "missing required option: --project" ; return 2 ; }
 
 #
 return 0

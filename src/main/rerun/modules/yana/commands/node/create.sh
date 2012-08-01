@@ -24,7 +24,7 @@ lookupAttrId() {
 #
 curl --fail --silent \
     --request GET \
-    ${YANA_URL}/api/nodeType/xml/${TYPEID} \
+    "${YANA_URL}/api/nodeType/xml/${TYPEID}?project=${PROJECT}" \
     --cookie $cookie -o $response
 
 [ $? -eq 0 ] || { echo "Type not found with that id: $TYPEID" ; exit 1 ; }
