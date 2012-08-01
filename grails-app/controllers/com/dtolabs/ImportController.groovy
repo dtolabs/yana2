@@ -28,6 +28,62 @@ class ImportController {
         [projectList: projectService.listProjects()]
     }
 
+    /**
+     * Check the uploaded file passes the import validation test.
+     * @return XML response containing true or false status
+     */
+    def validatexml() {
+
+        def project = Project.findByName(params.project)
+        if (!project) {
+            render(contentType:  "text/xml") {
+                response {
+                    status(error: "Project not found: ${params.project}")
+                }
+            }
+            return redirect(action: 'importxml')
+        }
+
+        /**
+         * Get the user's file upload.
+         */
+        def importFile = request.getFile("yanaimport")
+
+        log.debug("importFile name: " + importFile.name
+                + ", content-type: " + importFile.contentType
+                + ", fileName: " + importFile.originalFilename)
+
+        /**
+         * Validate and then load the project's model
+         */
+        if (!importFile.empty) {
+
+            try {
+                // validate the XML input data
+                importService.validate(importFile.inputStream)
+                render(contentType: "text/xml") {
+                    response {
+                        status(valid: true)
+                    }
+                }
+
+            } catch (ImportServiceException e) {
+                render(contentType: "text/xml") {
+                    response {
+                        status(valid: false, message: e.message, xsd: importService.YANA_XSD)
+                    }
+                }
+            }
+        } else {
+            flash.message = "Import file cannot be empty. Please try again."
+            render(contentType: "text/xml") {
+                response {
+                    status(valid: false, message: 'Empty file')
+                }
+            }
+        }
+
+    }
 
     def savexml() {
 

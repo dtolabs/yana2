@@ -15,6 +15,7 @@ import grails.validation.ValidationException
  */
 class ImportService {
 
+    public YANA_XSD = "/import/yana.xsd"
 
     /**
      * Validate the input XML conforms to the yana XSD.
@@ -23,8 +24,8 @@ class ImportService {
     def validate(final InputStream xml) {
         if (null==xml) throw new ImportServiceException("XML content was empty")
 
-        def InputStream xsd = getClass().getResourceAsStream("/import/yana.xsd")
-        if (null==xsd) throw new ImportServiceException("Could not load yana.xsd from classpath")
+        def InputStream xsd = getClass().getResourceAsStream(YANA_XSD)
+        if (null==xsd) throw new ImportServiceException("Could not load ${YANA_XSD} from classpath.")
 
         SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
         Schema schema = factory.newSchema(new StreamSource(xsd))
