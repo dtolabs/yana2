@@ -5,6 +5,7 @@ import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
 import javax.xml.transform.stream.StreamSource
 import org.xml.sax.SAXException
+import grails.validation.ValidationException
 
 /**
  * Provides a model import service that takes file uploads
@@ -35,25 +36,25 @@ class ImportService {
 
         } catch (SAXException e) {
 
-            throw new ImportServiceException("Invalid XML content", e);
+            throw new ImportServiceException("Invalid XML content: " + e.message, e);
 
         }
     }
 
     /**
-     * Read an input stream for an XML import and populate the model with its contents.
+     * Read an input stream for an XML import and load the model with its contents.
      * TODO: Refactor to use better separated collaboration. Encapsulate with domain class methods.
      * @param xmlInput InputStream containing yana XML data
      * @param project Project to store the model data
      */
-    def populate(InputStream xmlInput, Project project) {
+    def load(InputStream xmlInput, Project project) {
         if (null == xmlInput) throw new IllegalArgumentException("XML content stream was null")
         if (null == project) throw new IllegalArgumentException("Project parameter was null")
 
         // Nodes list to return
         def results = []
 
-        // Store parsed XML GPath result
+        // Store XML GPath result from parse
         def xml
 
         try {
@@ -68,78 +69,93 @@ class ImportService {
         try {
             // read Attributes
             xml.attributes.children().each { attribute ->
-                Attribute att = Attribute.findByProjectAndName(project, attribute.@id.toString())
+                Attribute att = Attribute.findByProjectAndName(project, attribute.@name.toString())
                 if (!att) {
                     att = new Attribute(project: project) 
                 }
                 Filter filter = Filter.findByProjectAndDataType(project, attribute.@filter.toString())
                 if (null == filter) {
-                    throw new ImportServiceException("No Filter defined for data type: "
-                            + attribute.@filter.toString())
+                    throw new ImportServiceException("Filter not defined for data type: "
+                            + attribute.@filter)
                 }
                 att.filter = filter
-                att.name = attribute.@id
+                att.name = attribute.@name.toString()
                 att.description = attribute.@description.toString()
 
                 att.save(flush: true, failOnError: true)
             }
 
             // read NodeTypes and NodeAttributes
-            xml.nodetypes.children().each { nodetype ->
+            xml.types.children().each { type ->
 
-                NodeType ntype = NodeType.findByProjectAndName(project, nodetype.@id.toString())
-                if (!ntype) {
-                    ntype = new NodeType(project: project)
+                NodeType nodeType = NodeType.findByProjectAndName(project, type.@name.toString())
+                if (!nodeType) {
+                    nodeType = new NodeType(project: project)
                 }
-                ntype.name = nodetype.@id
-                ntype.description = nodetype.description.text()
-                ntype.image = nodetype.image.text()
+                nodeType.name = type.@name.toString()
+                nodeType.description = type.description.text()
+                nodeType.image = type.image.text()
 
-                ntype.save(flush: true, failOnError: true)
+                nodeType.save(flush: true, failOnError: true)
 
-                nodetype.nodeAttributes.children().each { nodeAttribute ->
-                    Attribute attribute = Attribute.findByProjectAndName(project,
-                            nodeAttribute.@attribute.toString())
-                    NodeAttribute na = NodeAttribute.findByNodetypeAndAttribute(ntype, attribute)
+                type.attributes.children().each { attribute ->
+                    Attribute attr = Attribute.findByProjectAndName(project, attribute.@name.toString())
+                    NodeAttribute na = NodeAttribute.findByNodetypeAndAttribute(nodeType, attr)
                     if (!na) {
-                        na = new NodeAttribute(nodetype: ntype)
+                        na = new NodeAttribute(nodetype: nodeType)
                     }
-                    na.attribute = attribute
-                    na.required = nodeAttribute.@required.toString().toBoolean();
+                    na.attribute = attr
+                    na.required = attribute.@required.toBoolean();
 
                     na.save(flush: true, failOnError: true)
                 }
             }
+
+            // read NodeTypeRelationships
+            xml.relationships.children().each { typerel ->
+
+                NodeType parent = NodeType.findByProjectAndName(project, typerel.@parent.toString())
+                NodeType child = NodeType.findByProjectAndName(project, typerel.@child.toString())
+
+                NodeTypeRelationship relationship =
+                    NodeTypeRelationship.findByParentAndChild(parent, child)
+                if (!relationship) {
+                    relationship = new NodeTypeRelationship(
+                            roleName: typerel.@name.toString(),
+                            parent: parent, child: child
+                    )
+                    relationship.save(flush: true, failOnError: true)
+                }
+            }
+
+
             Node nd
             // read Nodes and NodeValues
             xml.nodes.children().each { node ->
-                nd = Node.findByProjectAndName(project, node.@id.toString())
-                NodeType nodetype = NodeType.findByProjectAndName(project, node.@nodetype.toString())
+                nd = Node.findByProjectAndName(project, node.@name.toString())
+                NodeType nodeType = NodeType.findByProjectAndName(project, node.@type.toString())
                 if (!nd) {
                     nd = new Node(project: project)
                 } else {
                     NodeValue.executeUpdate("delete NodeValue NV where NV.node = ?", [nd])
                 }
-                nd.name = node.@id
-                nd.description = node.description.toString()
+                nd.name = node.@name.toString()
+                nd.description = node.description.text()
                 nd.tags = node.@tags.toString()
-                nd.nodetype = nodetype
+                nd.nodetype = nodeType
                 nd.save(flush: true, failOnError: true)
 
-                node.values.children().each { nodeValue ->
-                    def nodeAttribute = nodeValue.@nodeAttribute.toString()
-                    def att = xml.nodetypes.nodetype.nodeAttributes.nodeAttribute.findAll {
-                        it.@id.text() == nodeAttribute
-                    }
-                    Attribute attribute = Attribute.findByProjectAndName(project,
-                            att.@attribute.toString())
-                    if (null == attribute) {
-                        throw new ImportServiceException("attribute not found " + att.@attribute)
-                    }
-                    NodeAttribute na = NodeAttribute.findByNodetypeAndAttribute(nodetype, attribute)
+                node.attributes.children().each { attribute ->
+                    def attrName = attribute.@name.toString()
 
+                    Attribute attr = Attribute.findByProjectAndName(project, attrName)
+                    NodeAttribute na = NodeAttribute.findByNodetypeAndAttribute(nodeType, attr)
+                    if (null == na) {
+                        throw new ImportServiceException("attribute not found for that node type: "
+                                + att.@name.toString())
+                    }
                     NodeValue value = new NodeValue(node: nd,
-                            nodeattribute: na, value: nodeValue.toString()
+                            nodeattribute: na, value: attribute.@value.toString()
                     )
 
                     value.save(flush: true, failOnError: true)
@@ -147,41 +163,31 @@ class ImportService {
                 results += nd
             }
 
-            // read NodeTypeRelationships
-            xml.nodetyperelationships.children().each { typerel ->
-
-                NodeType parent = NodeType.findByProjectAndName(project, typerel.@parent.toString())
-                NodeType child = NodeType.findByProjectAndName(project, typerel.@child.toString())
-
-                NodeTypeRelationship relationship = NodeTypeRelationship.findByChildAndParent(
-                        child, parent)
-                if (!relationship) {
-                    relationship = new NodeTypeRelationship(
-                            roleName: typerel.@rolename.toString(),
-                            child: child, parent: parent
-                    )
-
-                    relationship.save(flush: true, failOnError: true)
-                }
-            }
-
             // read ChildNodes
-            xml.noderelationships.children().each { nodechild ->
+            xml."children".children().each { nodechild ->
+                Node parent = Node.findByProjectAndNameAndNodetype(project, nodechild.parent.@name.toString(),
+                        NodeType.findByName(nodechild.parent.@type.toString()))
+                Node child = Node.findByProjectAndNameAndNodetype(project, nodechild.@name.toString(),
+                        NodeType.findByName(nodechild.@type.toString()))
 
-                Node parent = Node.findByProjectAndName(project, nodechild.@parent.toString())
-                Node child = Node.findByProjectAndName(project, nodechild.@child.toString())
+                // Lookup the relationship to see if these two nodes are allowed to relate.
+                NodeTypeRelationship relationship =
+                    NodeTypeRelationship.findByParentAndChild(parent.nodetype, child.nodetype)
 
-                NodeTypeRelationship relationship = NodeTypeRelationship.findByChildAndParent(
-                        child.nodetype, parent.nodetype)
+                // See if there already is a child Node
+                ChildNode childNode = ChildNode.findByChildAndParent(child, parent)
 
-                ChildNode childnode = ChildNode.findByChildAndParent(child, parent)
-                if (!childnode && relationship) {
-                    childnode = new ChildNode(child: child, parent: parent)
-                    childnode.relationshipName = nodechild.@relationshipname.toString()
+                if (!childNode && relationship) {
+                    childNode = new ChildNode(child: child, parent: parent)
+                    childNode.relationshipName = nodechild.@relationship.toString()
 
-                    childnode.save(flush: true, failOnError: true)
+                    childNode.save(flush: true, failOnError: true)
                 }
             }
+
+        } catch (ValidationException ve) {
+
+            throw new ImportServiceException("Error storing model", ve)
 
         } catch (SAXException e) {
 

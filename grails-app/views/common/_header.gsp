@@ -100,8 +100,10 @@
 				<li class="spacer"><img src="<g:createLinkTo dir='images' file='pix.png'/>" width='10' height='24'/></li>
 				<li><a href="${grailsApplication.config.grails.serverURL}/import">Admin</a>
 					<ul>
-						<li><g:link controller="import" action="importxml">Import Resources</g:link></li>
-						<li><g:link controller="user" action="search">Users</g:link>
+						<li><g:link controller="import" action="importxml">Import Model</g:link></li>
+                        <li><g:link controller="export" action="xml">Export Model</g:link></li>
+
+                        <li><g:link controller="user" action="search">Users</g:link>
 							<ul>
 								<li><g:link controller="user" action="create">Create User</g:link></li>
 							</ul>

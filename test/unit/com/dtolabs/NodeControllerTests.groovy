@@ -1,5 +1,6 @@
 package com.dtolabs
 
+import grails.test.mixin.*
 
 @TestFor(NodeController)
 @Mock([Node])

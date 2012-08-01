@@ -1,7 +1,5 @@
 package com.dtolabs
 
-import java.util.Date;
-
 class Attribute{
     static hasMany = [ NodeAttribute ]
 
@@ -22,5 +20,15 @@ class Attribute{
 
     def String toString() {
         return name
+    }
+
+    Map toMap() {
+        def map = [
+                id: this.id,
+                name: this.name,
+                description: this.description,
+                filter: this.filter.dataType
+        ]
+        return map
     }
 }

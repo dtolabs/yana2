@@ -52,7 +52,7 @@ class ImportController {
                 + ", fileName: " + importFile.originalFilename)
 
         /**
-         * Validate and then populate the project's model
+         * Validate and then load the project's model
          */
         if (!importFile.empty) {
 
@@ -60,8 +60,8 @@ class ImportController {
                 // validate the XML input data
                 importService.validate(importFile.inputStream)
 
-                // populate the project
-                nodes = importService.populate(
+                // load the project
+                nodes = importService.load(
                         importFile.inputStream, project)
                 log.info("imported node count: " + nodes.size())
                 webhookService.postToURL('node', nodes, 'create')

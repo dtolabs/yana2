@@ -13,4 +13,13 @@ class NodeAttribute{
         nodetype(nullable:false)
 		required(nullable:false)
     }
+
+    Map toMap() {
+        def map = [
+                id: this.id,
+                required: this.required,
+                name: this.attribute.name,
+        ]
+        return map
+    }
 }

@@ -1,10 +1,6 @@
 package com.dtolabs
 
-import java.util.Date;
-
 class Filter {
-
-    //static belongsTo = [ Attribute ]
 
     String dataType
     String regex
@@ -22,8 +18,11 @@ class Filter {
         return dataType
     }
 
-    def Boolean isValid(String dataType, String value) {
-        // get filter based on name and test value
-        return true
+    Map toMap() {
+        def map = [
+                dataType: this.dataType,
+                regex: this.regex
+        ]
+        return map
     }
 }

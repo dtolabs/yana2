@@ -14,9 +14,10 @@ class NodeType{
     }
 	
 	static mappedBy = [children: 'child', parents: 'parent']
-	static hasMany = [nodes:Node,attributes:NodeAttribute,children:NodeTypeRelationship,parents:NodeTypeRelationship]
+	static hasMany = [nodes:Node, attributes:NodeAttribute,
+            children:NodeTypeRelationship,parents:NodeTypeRelationship]
 
-	String name
+    String name
 	String description
 	String image
     Project project
@@ -32,5 +33,27 @@ class NodeType{
 
     def String toString() {
         return name
+    }
+
+    Map toMap() {
+        def map = [
+                id: this.id,
+                name: this.name,
+                description: this.description,
+                image: this.image
+        ]
+        map.attributes = []
+        this.attributes.each { NodeAttribute attr ->
+            map.attributes <<  attr.toMap()
+        }
+        map.children = []
+        this.children.each {NodeTypeRelationship rel->
+            map.children << rel.toMap()
+        }
+        map.parents = []
+        this.parents.each {NodeTypeRelationship rel->
+            map.parents << rel.toMap()
+        }
+        return map
     }
 }

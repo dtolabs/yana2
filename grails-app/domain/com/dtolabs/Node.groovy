@@ -27,7 +27,7 @@ class Node {
     }
 
     def String toString() {
-        return name
+        return "${name}[${nodetype.name}]"
     }
 
    // A dynamic (like?) find method
@@ -44,6 +44,38 @@ class Node {
             like ('tags',"%${tagName}%")
        }
    }
+
+    Map toMap() {
+        def map = [
+                id: this.id,
+                name: this.name,
+                description: this.description,
+                tags: this.tags,
+                type: this.nodetype.name,
+                typeId: this.nodetype.id
+        ]
+
+        if (this.nodeValues) {
+            map.attributes = []
+            this.nodeValues.each { NodeValue attr ->
+                map.attributes << attr.toMap()
+            }
+        }
+        if (this.children) {
+            map.children = []
+            this.children.each {ChildNode child ->
+                map.children << child.toMap()
+            }
+        }
+        if (this.parents) {
+            map.parents = []
+            this.parents.each {ChildNode child ->
+                map.parents << child.toMap()
+            }
+        }
+
+        return map
+    }
 
 }
 

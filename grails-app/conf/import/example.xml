@@ -1,0 +1,191 @@
+<yana>
+  <attributes>
+
+    <attribute name="controller" filter="String"/>
+
+    <!-- Package -->
+    <attribute name="arch" filter="String"/>
+    <attribute name="base" filter="String"/>
+    <attribute name="buildtime" filter="String"/>
+    <attribute name="filename" filter="String"/>
+    <attribute name="filetype" filter="String"/>
+    <attribute name="installroot" filter="String"/>
+    <attribute name="installrank" filter="String"/>
+    <attribute name="release" filter="String"/>
+    <attribute name="releasetag" filter="String"/>
+    <attribute name="repoUrl" filter="URL"/>
+    <attribute name="vendor" filter="String"/>
+    <attribute name="version" filter="String"/>
+
+    <!-- Host -->
+    <attribute name="hostname" filter="String"/>
+    <attribute name="osFamily" filter="String"/>
+    <attribute name="osName" filter="String"/>
+    <attribute name="osVersion" filter="String"/> 
+    <attribute name="osArch" filter="String"/>
+    <attribute name="username" filter="String"/> 
+    <attribute name="appname" filter="String"/> 
+    <attribute name="environment" filter="String"/> 
+    <attribute name="service" filter="String"/> 
+
+    <!-- Service -->
+    <attribute name="basedir" filter="String"/>
+    <attribute name="startuprank" filter="String"/>
+    <attribute name="port" filter="String"/>
+  </attributes>
+
+  <types>
+
+    <type name="Host">
+      <description>An application host</description>
+      <image>Node.png</image>
+      <attributes>
+	<attribute name="hostname"  required="true"/>
+	<attribute name="osArch" required="false"/>
+	<attribute name="osFamily" required="false"/>
+	<attribute name="osName"  required="false"/>
+	<attribute name="osVersion" required="false"/>
+	<attribute name="username" required="false"/>
+	<attribute name="port" required="false"/>
+	<attribute name="basedir" required="false"/>
+	<attribute name="appname" required="false"/>
+	<attribute name="service" required="false"/>
+	<attribute name="environment" required="false"/>
+      </attributes>
+
+    </type>
+
+    <type name="Package">
+      <description>A software package</description>
+      <image>Package.png</image>
+      <attributes>
+	<attribute name="arch"  required="false"/>
+	<attribute name="base" required="false"/>
+	<attribute name="buildtime"  required="false"/>
+	<attribute name="filename" required="false"/>
+	<attribute name="filetype" required="false"/>
+	<attribute name="installroot" required="false"/>
+	<attribute name="installrank" required="false"/>
+	<attribute name="release"  required="false"/>
+	<attribute name="releasetag" required="false"/>
+	<attribute name="repoUrl" required="false"/>
+	<attribute name="vendor" required="false"/>
+	<attribute name="version" required="false"/>
+	<attribute name="controller" required="false"/>
+      </attributes>
+    </type>
+
+    <type name="Service">
+      <description>A software service</description>
+      <image>Service.png</image>
+      <attributes>
+	<attribute name="basedir" required="false"/>
+	<attribute name="startuprank" required="false"/>
+	<attribute name="controller" required="false"/>
+	<attribute name="port"  required="false"/>
+      </attributes>
+    </type> 
+
+    <type name="Site">
+      <description>A service site</description>
+      <image>Site.png</image>
+      <attributes>
+	<attribute  name="startuprank" required="false"/>
+      </attributes>
+    </type> 
+
+  </types>
+
+
+  <relationships>
+    <relationship name="environment" parent="Site" child="Host"/>
+    <relationship name="service" parent="Host" child="Service"/>
+    <relationship name="package" parent="Service" child="Package"/>
+  </relationships>
+
+  <!--
+      Host Instances 
+  -->
+  <nodes>
+    <node name="ubuntu" type="Host" tags="tomcat,simpleapp,qa">
+      <description>The ubuntu server</description>
+      <attributes>
+	<attribute name="hostname" value="ubuntu"/>
+	<attribute name="osArch" value="i386"/>
+	<attribute name="osFamily" value="unix"/>
+	<attribute name="osName" value="Linux"/>
+	<attribute name="osVersion" value="2.6.32-28-generic"/>
+	<attribute name="username" value="alexh"/>
+	<attribute name="port" value="18080"/>
+	<attribute name="basedir" value="/tmp/demo/tomcat"/>
+	<attribute name="appname" value="simpleapp"/>
+	<attribute name="service" value="tomcat"/>
+	<attribute name="environment" value="qa"/>
+      </attributes>
+    </node>
+
+    <node name="tomcat" type="Service" tags="QA">
+      <description>The tomcat service</description>
+      <attributes>
+	<attribute name="basedir" value="/tmp/demo/tomcat"/>
+	<attribute name="startuprank" value="1"/>
+	<attribute name="controller" value="tomcat"/>
+	<attribute name="port" value="18080"/>
+      </attributes>
+    </node>
+
+    <node name="qa" type="Site" tags="QA">
+      <description>The QA site</description>
+      <attributes>
+	<attribute name="startuprank" value="1"/>
+      </attributes>
+    </node>
+
+    <node name="apache-tomcat-5.5.31" type="Package" tags="tomcat">
+      <description>the tomcat container</description>
+      <attributes>
+	<attribute name="arch" value="no-arch"/>  
+	<attribute name="base" value="apache-tomcat-5.5.31"/>  
+	<attribute name="filename" value="apache-tomcat-5.5.31.zip"/>  
+	<attribute name="filetype" value="zip"/>  
+	<attribute name="installroot" value="/tmp/demo/tomcat"/>  
+	<attribute name="installrank" value="1"/>  
+	<attribute name="repoUrl" value="http://localhost/simpleapp/apache-tomcat-5.5.31.zip"/>  
+	<attribute name="version" value="5.5.31"/>  
+	<attribute name="controller" value="zip"/>  
+      </attributes>
+    </node>        
+
+
+    <node name="simple-1.0.0.war" type="Package" tags="tomcat">
+      <description>the simple webapp</description>
+      <attributes>
+	<attribute name="arch" value="no-arch"/>  
+	<attribute name="base" value="simple"/>  
+	<attribute name="filename" value="simple-1.0.0.war"/>  
+	<attribute name="filetype" value="war"/>  
+	<attribute name="installroot" value="/tmp/demo/tomcat/webapps"/>  
+	<attribute name="installrank" value="1"/>  
+	<attribute name="repoUrl" value="http://localhost/simpleapp/simple-1.0.0.war"/>  
+	<attribute name="version" value="1.0.0"/> 
+	<attribute name="controller" value="war"/>   
+      </attributes>
+    </node>        
+  </nodes>
+
+  <children>
+    <child name="ubuntu" type="Host">
+      <parent name="qa" type="Site"/>
+    </child>
+    <child name="tomcat" type="Service">
+      <parent name="ubuntu" type="Host"/>
+    </child>
+    <child name="apache-tomcat-5.5.31" type="Package">
+      <parent name="tomcat" type="Service"/>
+    </child>
+    <child name="simple-1.0.0.war" type="Package">
+      <parent name="tomcat" type="Service"/>
+    </child>
+  </children>
+
+</yana>

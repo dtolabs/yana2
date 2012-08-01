@@ -1,11 +1,8 @@
 package com.dtolabs
 
-
-import grails.test.mixin.*
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.mock.web.MockMultipartHttpServletRequest
-import org.springframework.core.io.Resource
-import org.springframework.core.io.ClassPathResource
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +15,7 @@ import org.springframework.core.io.ClassPathResource
 @TestFor(ImportController)
 @Mock([Project, Attribute, Filter, NodeType, NodeTypeRelationship,
 Node, NodeValue, NodeAttribute, ChildNode,Webhook])
+
 class ImportControllerTests {
 
     /**
@@ -30,25 +28,25 @@ class ImportControllerTests {
 
     def example1 = """<yana>
   <attributes>
-    <attribute id="hostname" filter="String"/>
+    <attribute name="hostname" filter="String"/>
   </attributes>
 
-  <nodetypes>
-    <nodetype id="host">
+  <types>
+    <type name="host">
       <description>host type</description>
       <image>Node.png</image>
-      <nodeAttributes>
-        <nodeAttribute id="node.hostname" attribute="hostname" required="true"/>
-      </nodeAttributes>
-    </nodetype>
-  </nodetypes>
+      <attributes>
+        <attribute name="hostname" required="true"/>
+      </attributes>
+    </type>
+  </types>
 
   <nodes>
-    <node id="host1" nodetype="host" tags="tag1,tag2,tag3">
+    <node name="host1" type="host" tags="tag1,tag2,tag3">
       <description>Sample node instance</description>
-      <values>
-        <attributeValue nodeAttribute="node.hostname">centos62-rundeck-tomcat</attributeValue>
-      </values>
+      <attributes>
+        <attribute name="hostname" value="centos62-rundeck-tomcat"/>
+      </attributes>
     </node>
   </nodes>
 </yana>
@@ -102,17 +100,6 @@ class ImportControllerTests {
         assertEquals("Node name did not match", host1.name, "host1")
         def hostname = Attribute.findByProjectAndName(project, "hostname")
         assertEquals("Attribute name did not match", hostname.name, "hostname")
-    }
-
-    /**
-     * Utility method to lookup a resource and return it as an InputStream
-     * @param filename Filename to check in the classpath
-     * @return InputStream
-     */
-    private InputStream asInputStream(String filename) {
-        final Resource resource = new ClassPathResource(filename, getClass().classLoader)
-        final File f = resource.getFile()
-        return new FileInputStream(f)
     }
 
 }
