@@ -1,7 +1,13 @@
 <?xml version="1.0" ?>
 <breadcrumbs>
     <controller name='login'>
-        <action name='login'>Login</action>
+        <action name='auth'>Login</action>
+    </controller>
+    <controller name='project'>
+        <action name='show' parent='list'>Show</action>
+        <action name='edit' parent='list'>Edit</action>
+        <action name='create' parent='list'>Create</action>
+        <action name='list'>Choose a Project</action>
     </controller>
     <controller name='artifact'>
         <action name='show' parent='list'>Show</action>
