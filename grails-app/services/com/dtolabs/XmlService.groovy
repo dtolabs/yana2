@@ -30,14 +30,14 @@ class XmlService {
 					parents(){
 						def rents = ChildNode.findAllByChild(Node.get(val1.id.toLong()));
 						rents.each{ parent ->
-							node(childnodeId:parent.id,id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags,relationshipName:parent.relationshipName,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).roleName)
+							node(childnodeId:parent.id,id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).roleName)
 						}
 					}
 
 					children(){
 						def kinder = ChildNode.findAllByParent(Node.get(val1.id.toLong()));
 						kinder.each{ child ->
-							node(childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags,relationshipName:child.relationshipName,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).roleName)
+							node(childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).roleName)
 						}
 					}
 				}
@@ -52,7 +52,7 @@ class XmlService {
 			
 		xml.childNodes() {
 			cnodes.each(){ val1 ->
-				childNode(id:val1.id,parentNodeId:val1.parent.id,parentName:val1.parent.name,parentNodeType:val1.parent.nodetype.name,childNodeId:val1.child.id,childName:val1.child.name,childNodeType:val1.child.nodetype.name,relationshipName:val1.relationshipName)
+				childNode(id:val1.id,parentNodeId:val1.parent.id,parentName:val1.parent.name,parentNodeType:val1.parent.nodetype.name,childNodeId:val1.child.id,childName:val1.child.name,childNodeType:val1.child.nodetype.name)
 			}
 		}
 		return writer.toString()

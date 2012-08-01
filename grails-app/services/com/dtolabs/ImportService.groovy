@@ -179,7 +179,6 @@ class ImportService {
 
                 if (!childNode && relationship) {
                     childNode = new ChildNode(child: child, parent: parent)
-                    childNode.relationshipName = nodechild.@relationship.toString()
 
                     childNode.save(flush: true, failOnError: true)
                 }

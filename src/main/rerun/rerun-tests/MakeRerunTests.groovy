@@ -150,9 +150,8 @@ def deleteNodeRelationship(String key) {
    nodeTypeRelationshipMap.remove(key)
 }
 
-def createChildNode(String relationshipName, Node parent, Node child) {
+def createChildNode(Node parent, Node child) {
 	ChildNode childNode  = new ChildNode()
-	childNode.relationshipName = relationshipName
 	childNode.child = child
 	childNode.parent = parent
 	childNodeMap.put(child.name + "::" + parent.name, childNode)
@@ -285,8 +284,8 @@ def parseXML() {
 		NodeTypeRelationship nodeTypeRelationship =
 		  nodeTypeRelationshipMap.get(child.nodetype.name + "::" + parent.nodetype.name)
 		if (!childNode && nodeTypeRelationship) {
-			childNode = createChildNode(nodeRelationshipsXml.@relationshipname.toString(),
-                                        parent, child)
+			childNode = createChildNode(
+                    parent, child)
 		} else {
 			//Error
 		}
@@ -563,7 +562,6 @@ def emitRerunNodeChildRelationships() {
 				def (childNode, childNodeIndex) =
 				  findNodeByName(childNodeMapValue.child.name) 
 				println(childNodeIndex
-					    + ":" + childNodeMapValue.relationshipName
 						+ ":" + parentNodeIndex
 						+ ":" + childNodeMapValue.child.name
 						+ ":" + childNodeMapValue.child.nodetype.name)
@@ -585,7 +583,6 @@ def emitRerunNodeParentRelationships() {
 				def (childNode, childNodeIndex) =
 				  findNodeByName(childNodeMapValue.child.name) 
 				println(parentNodeIndex
-						+ ":" + childNodeMapValue.relationshipName
 						+ ":" + childNodeIndex
 						+ ":" + childNodeMapValue.parent.name
 						+ ":" + childNodeMapValue.parent.nodetype.name)

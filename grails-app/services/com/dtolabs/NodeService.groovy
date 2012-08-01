@@ -195,7 +195,6 @@ class NodeService {
 		ChildNode childNode = ChildNode.findByParentAndChild(parent, child)
 		if (!childNode) {
 			childNode = new ChildNode()
-			childNode.relationshipName = name
 			childNode.parent = parent
 			childNode.child = child
 			childNode.save(flush: true)

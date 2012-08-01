@@ -163,7 +163,7 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         assert null != n2.save()
 
         //child node
-        def cn1 = new ChildNode(relationshipName: 'blah', parent: n1, child: n1b)
+        def cn1 = new ChildNode(parent: n1, child: n1b)
         assert null!=cn1.save()
 
 

@@ -24,7 +24,6 @@ class ChildNodeControllerTests {
 	  
 	  params["id"] = 1
 	  params["version"] = 1
-	  params["relationshipName"] = "test.server.com_Jetty [softwareInstallation]"
 	  params["parent"] = serverNode
 	  params["child"] = softwareNode
     }
