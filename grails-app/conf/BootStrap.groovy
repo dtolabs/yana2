@@ -8,6 +8,7 @@ import grails.util.Environment
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import com.dtolabs.yana2.springacl.YanaPermission
 
 class BootStrap {
     def projectService
@@ -38,11 +39,37 @@ class BootStrap {
 
 
         if (Environment.current.name == 'development') {
+            //create dev users
+            User archUser = User.findByUsername('arch1')
+            if(!archUser){
+                archUser = new User(username: 'arch1',password: 'arch1',enabled: true,accountExpired: false,accountLocked: false,passwordExpired: false).save(failOnError: true)
+                UserRole.create archUser,archRole
+            }
+
+            User opUser = User.findByUsername('op1')
+            if(!opUser){
+                opUser = new User(username: 'op1',password: 'op1',enabled: true,accountExpired: false,accountLocked: false,passwordExpired: false).save(failOnError: true)
+                UserRole.create opUser,userRole
+            }
+
+
+
             Project proj = Project.findByName('default')
             if (!proj) {
                 //admin role required to create grants on the new project
                 loginAsAdmin()
                 projectService.createProject('default', 'Default project')
+                Project t1=projectService.createProject('test1', 'Default project')
+                Project t2 =projectService.createProject('test2', 'Default project')
+
+                //deny read to test1 by arch1
+                projectService.denyPermission(t1,'arch1',YanaPermission.READ)
+
+                //deny read to test2 by op1
+                projectService.denyPermission(t2, 'op1', YanaPermission.READ)
+
+                log.error("completed")
+
                 sessionFactory.currentSession.flush()
 
                 // logout
