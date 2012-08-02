@@ -1,5 +1,10 @@
 package com.dtolabs
 
+import com.dtolabs.yana2.springacl.YanaPermission
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.AuthorityUtils
+
 /*
  * Copyright 2012 DTO Labs, Inc. (http://dtolabs.com)
  * 
@@ -25,24 +30,38 @@ package com.dtolabs
  * 
  */
 class ProjectServiceDeleteTests extends GroovyTestCase {
+    def ProjectService projectService
+
+    private void loginAsAdmin() {
+        // have to be authenticated as an admin to create ACLs
+        SecurityContextHolder.context.authentication = new UsernamePasswordAuthenticationToken(
+                'admin', 'admin',
+                AuthorityUtils.createAuthorityList('ROLE_YANA_ADMIN'))
+    }
     void testDeleteProject() {
-        def service = new ProjectService()
         def p1 = new Project(name: 'test1', description: 'desc')
         assert null !=p1.save()
         def p2 = new Project(name: 'test2', description: 'desc')
         assert null !=p2.save()
         assertEquals 2, Project.list().size()
 
-        def result = service.deleteProject(p1)
+        //login
+        loginAsAdmin()
+
+        //add some acls for the project
+        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
+        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+
+        def result = projectService.deleteProject(p1)
         assertNotNull(result)
         assert result.success
 
         assertEquals 1, Project.list().size()
+
+        SecurityContextHolder.clearContext()
     }
 
     void testDeleteProjectNodeTypes(){
-        def service = new ProjectService()
-
         def p1 = new Project(name: 'test1', description: 'desc')
         assert null !=p1.save()
         def p2 = new Project(name: 'test2', description: 'desc')
@@ -55,16 +74,24 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         def t2 = new NodeType(project:p2, name: 't2',description: 'd2',)
         assert null !=t2.save()
 
-        def result = service.deleteProject(p1)
+        //login
+        loginAsAdmin()
+
+        //add some acls for the project
+        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
+        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+
+        def result = projectService.deleteProject(p1)
         assertNotNull(result)
         assert result.success
 
         assertEquals 1, Project.list().size()
         assertEquals 1, NodeType.list().size()
+
+        SecurityContextHolder.clearContext()
     }
 
     void testDeleteProjectNodeTypesAndNodes(){
-        def service = new ProjectService()
 
         def p1 = new Project(name: 'test1', description: 'desc')
         assert null !=p1.save()
@@ -84,20 +111,28 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         def n2 = new Node(project:p2, name: 't2',description: 'd2', nodetype: t2)
         assert null !=n2.save()
 
-        def result = service.deleteProject(p1)
+        //login
+        loginAsAdmin()
+
+        //add some acls for the project
+        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
+        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+
+        def result = projectService.deleteProject(p1)
         assertNotNull(result)
         assert result.success
 
         assertEquals 1, Project.list().size()
         assertEquals 1, NodeType.list().size()
         assertEquals 1, Node.list().size()
+
+        SecurityContextHolder.clearContext()
     }
 
     /**
      * Test deleting a project with domain instances of all types
      */
     void testDeleteProjectAllDomains(){
-        def service = new ProjectService()
 
         def p1 = new Project(name: 'test1', description: 'desc')
         assert null !=p1.save()
@@ -174,7 +209,14 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         assertEquals 2, NodeValue.list().size()
         assertEquals 1, ChildNode.list().size()
 
-        def result = service.deleteProject(p1)
+        //login
+        loginAsAdmin()
+
+        //add some acls for the project
+        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
+        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+
+        def result = projectService.deleteProject(p1)
         assertNotNull(result)
         assert result.success
 
@@ -187,5 +229,7 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         assertEquals 1, NodeAttribute.list().size()
         assertEquals 1, NodeValue.list().size()
         assertEquals 0, ChildNode.list().size()
+
+        SecurityContextHolder.clearContext()
     }
 }

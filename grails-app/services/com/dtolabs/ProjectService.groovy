@@ -228,10 +228,14 @@ class ProjectService {
         //grant admin permissions to this project
         addPermission(project,'ROLE_YANA_SUPERUSER', YanaPermission.ADMINISTRATION)
         addPermission(project,'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+
+        //YANA_USER gets OPERATOR and READ access
         addPermission(project,'ROLE_YANA_USER',YanaPermission.OPERATOR)
         addPermission(project,'ROLE_YANA_USER', YanaPermission.READ)
-        addPermission(project,'ROLE_YANA_ARCHITECT', YanaPermission.READ)
+
+        //YANA_ARCHITECT gets ARCHITECT and READ access
         addPermission(project,'ROLE_YANA_ARCHITECT',YanaPermission.ARCHITECT)
+        addPermission(project,'ROLE_YANA_ARCHITECT', YanaPermission.READ)
 
         return project
     }

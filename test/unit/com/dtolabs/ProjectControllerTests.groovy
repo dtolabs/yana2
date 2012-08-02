@@ -46,6 +46,11 @@ class ProjectControllerTests {
     void testSelectMissingProject(){
         //project not found
         messageSource.addMessage("default.not.found.message", request.locale, "NotFound: {0}")
+
+        def strictControl = mockFor(ProjectService)
+        strictControl.demand.findProject(1..1) {proj-> return null }
+        controller.projectService = strictControl.createMock()
+
         controller.params.project='test1'
         controller.select()
         assert 404==response.status
@@ -55,6 +60,7 @@ class ProjectControllerTests {
     void testSelect(){
         def strictControl = mockFor(ProjectService)
         def project = new Project(name: 'bob', description: 'x').save()
+        strictControl.demand.findProject(1..1) {proj -> return project }
         strictControl.demand.userSelectProject(1..1) {session, pr -> assert pr==project  }
         controller.projectService = strictControl.createMock()
         controller.params.project = 'bob'
