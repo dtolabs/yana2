@@ -25,7 +25,7 @@ class ProjectService {
     def springSecurityService
 
 
-    @PreAuthorize("hasPermission(#project, admin)")
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
     void addPermission(Project project, String username, Permission permission) {
         aclUtilService.addPermission project, username, permission
     }
