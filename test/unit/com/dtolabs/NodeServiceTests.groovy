@@ -1,5 +1,8 @@
 package com.dtolabs
 
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
@@ -88,6 +91,7 @@ class NodeServiceTests {
 										   [], [], [])
 		def testNode1 = service.createNode(testProject,
 										   testNodeType1,
+
 										   "testNode1",
 										   "test node 1 description",
 										   "test node 1 tags",
@@ -135,15 +139,18 @@ class NodeServiceTests {
 
 	void testCreateNode() {
 		assertEquals(0, Node.list().size())
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
+        service.projectService = mockControl.createMock()
 
-		service.createNode(testProject,
+        service.createNode(testProject,
 						   testNodeType1,
 						   "testNode1",
 						   "test node 1 description",
 						   "test node 1 tags",
 						   [], [], [])
 		
-		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")	
+		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
 		assertEquals('testNode1', testNode1.name)
 		assertEquals("test node 1 description", testNode1.description)
 		assertEquals("test node 1 tags", testNode1.tags)
@@ -162,7 +169,13 @@ class NodeServiceTests {
 						   "test node 1 tags",
 						   [], [], [])
 
-		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")	
+		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
+
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
+        service.projectService = mockControl.createMock()
+
 		service.updateNode(testProject,
 						   testNode1,
 						   "testNode1Update",
@@ -181,6 +194,11 @@ class NodeServiceTests {
 	
 	void testDeleteNode() {
 		assertEquals(0, Node.list().size())
+
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
+        service.projectService = mockControl.createMock()
 
 		service.createNode(testProject,
 						   testNodeType1,
@@ -220,7 +238,7 @@ Node.findAll().each {node ->
 		println("   child-p: ${child.parent.name}")
 		println("   child-c: ${child.child.name}")
 	}
-	println("<--")			
+	println("<--")
 }
 ChildNode.findAll().each {cn ->
 	println("-->")
@@ -229,7 +247,7 @@ ChildNode.findAll().each {cn ->
 	println("<--")
 }
 println("<----------------------")
-		
+
 		// 0    1    2
 		//     / \	/ \
 		//    3    4   5
@@ -269,7 +287,7 @@ println("<----------------------")
 		def Node testNode7 = Node.findByProjectAndName(testProject, "testNode7")
 		assertEquals(1, testNode7.parents.size())
 		assertNull(testNode7.children)
-		
+
 		childNodes = ChildNode.findAllByParent(testNode0)
 		assertEquals([], childNodes)
 		childNodes = ChildNode.findAllByChild(testNode0)
@@ -279,7 +297,7 @@ println("<----------------------")
 		assertEquals(2, childNodes.size())
 		childNodes = ChildNode.findAllByChild(testNode1)
 		assertEquals([], childNodes)
-		
+
 		childNodes = ChildNode.findAllByParent(testNode2)
 		assertEquals(2, childNodes.size())
 		childNodes = ChildNode.findAllByChild(testNode2)
