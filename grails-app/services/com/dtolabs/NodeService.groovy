@@ -81,11 +81,11 @@ class NodeService {
 							List<Node> parentList,
 							List<Node> childList,
 							List<NodeValue> nodeValues) {
-		nodeInstance.project = project
 		nodeInstance.name = name
 		nodeInstance.description = description
 		nodeInstance.tags = tags
 		if (!doUpdate) {
+			nodeInstance.project = project
 			nodeInstance.nodetype = nodeType;
 		}
 
@@ -101,17 +101,15 @@ class NodeService {
 
 				// Next, assign all selected parent nodes of this node.
 				parentList.each {parent ->
-					addChildNode(getRelationshipName(parent, nodeInstance),
-								 parent, nodeInstance)
+					addChildNode(parent, nodeInstance)
 				}
 
 				// Next, assign all selected child nodes of this node.
 				childList.each {child ->
-					addChildNode(getRelationshipName(nodeInstance, child),
-								 nodeInstance, child)
+					addChildNode(nodeInstance, child)
 				}
 
-				// Next, all the NodeValue objects for this node.
+				// Next, assign all the NodeValue objects for this node.
 				nodeValues.each {nodeValue ->
 					if (!doUpdate) {
 						nodeValue.node = nodeInstance
@@ -129,10 +127,17 @@ class NodeService {
 
     private deleteParentsAndChildren(Node nodeInstance) {
 		["child", "parent"].each { kind ->
-			ChildNode.createCriteria().list{
-				eq(kind, nodeInstance)}.each {childNode ->
+			ChildNode.createCriteria().list {
+				eq(kind, nodeInstance)
+			}.each { childNode ->
 				childNode.delete()
 			}
+		}
+	}
+	
+	private deleteNodeValues(Node nodeInstance) {
+		nodeInstance.nodeValues.each { nodeValue ->
+			nodeValue.delete()	
 		}
 	}
 
@@ -151,7 +156,7 @@ class NodeService {
 
 	private List<Node> getParentNodesFromIDs(List<Long> nodeIDs, NodeType nodeType) {
 		List<Node> nodes = []
-		if (nodeIDs.size() != 0) {
+		if (nodeIDs && (nodeIDs.size() != 0)) {
 		    nodes = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
 													[ids:nodeIDs]),
 						  			   getNodeParentCandidates(nodeType))
@@ -161,7 +166,7 @@ class NodeService {
 	
 	private List<Node> getChildNodesFromIDs(List<Long> nodeIDs, NodeType nodeType) {
 		List<Node> nodes = []
-		if (nodeIDs.size() != 0) {
+		if (nodeIDs && (nodeIDs.size() != 0)) {
 			nodes = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
 													[ids:nodeIDs]),
 									   getNodeChildrenCandidates(nodeType))
@@ -189,7 +194,7 @@ class NodeService {
 		return children
 	}
 	
-	private boolean addChildNode(String name, Node parent, Node child) {
+	private boolean addChildNode(Node parent, Node child) {
 		ChildNode childNode = ChildNode.findByParentAndChild(parent, child)
 		if (!childNode) {
 			childNode = new ChildNode()
@@ -200,12 +205,6 @@ class NodeService {
 		} else {
 			return false
 		}
-	}
-	
-	private String getRelationshipName(Node parent,Node child) {
-		String rolename = NodeTypeRelationship.findByParent(parent.nodetype).name
-		String name = (rolename)?"${parent.name} [$rolename]":"${parent.name}"
-		return name
 	}
 
 }
