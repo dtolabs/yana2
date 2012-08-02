@@ -167,9 +167,9 @@ class ImportService {
             // read ChildNodes
             xml."children".children().each { nodechild ->
                 Node parent = Node.findByProjectAndNameAndNodetype(project, nodechild.parent.@name.toString(),
-                        NodeType.findByName(nodechild.parent.@type.toString()))
+                        NodeType.findByNameAndProject(nodechild.parent.@type.toString(),project))
                 Node child = Node.findByProjectAndNameAndNodetype(project, nodechild.@name.toString(),
-                        NodeType.findByName(nodechild.@type.toString()))
+                        NodeType.findByNameAndProject(nodechild.@type.toString(),project))
 
                 // Lookup the relationship to see if these two nodes are allowed to relate.
                 NodeTypeRelationship relationship =
