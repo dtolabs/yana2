@@ -1,82 +1,109 @@
 package com.dtolabs
 
-class NodeService {
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.access.prepost.PostFilter
 
+class NodeService {
+    def projectService
+    def aclService
+    def aclUtilService
+    def springSecurityService
     static transactional = true // on by default but being explicit
 
-    def Node createNode(Project project,
-                        NodeType nodeType,
-                        String name,
-                        String description,
-                        String tags,
-                        List<Node> selectedParents,
-                        List<Node> selectedChildren,
-                        List<NodeValue> nodeValues) {
-        return commitNode(false, project, new Node(),
-                nodeType, name, description, tags,
-                selectedParents,
-                selectedChildren,
-                nodeValues)
-    }
-
-    def void updateNode(Project project,
-                        Node nodeInstance,
-                        String name,
-                        String description,
-                        String tags,
-                        List<Node> selectedParents,
-                        List<Node> selectedChildren,
-                        List<NodeValue> nodeValues) {
-        commitNode(true, project, nodeInstance,
-                nodeInstance.nodetype, name, description, tags,
-                selectedParents,
-                selectedChildren,
-                nodeValues)
-    }
-
     /**
-     * Delete a node and any child relationships
-     * @param nodeInstance
+     * Create a node, requires 'operator' or 'admin' permission.
+     * @param project
+     * @param nodeType
+     * @param name
+     * @param description
+     * @param tags
+     * @param parentIds
+     * @param childIds
+     * @param nodeValues
+     * @return
      */
-    def deleteNode(Node nodeInstance) {
+	Node createNode(Project project,
+						NodeType nodeType,
+						String name,
+						String description,
+						String tags,
+						List<Node> selectedParents,
+						List<Node> selectedChildren,
+						List<NodeValue> nodeValues) {
+        projectService.authorizedOperatorPermission(nodeType.project)
+		return commitNode(false, project, new Node(),
+			              nodeType, name, description, tags,
+			  			  selectedParents,
+						  selectedChildren,
+						  nodeValues)
+
+	}
+
+	void updateNode(Project project,
+						Node nodeInstance,
+						String name,
+						String description,
+						String tags,
+						List<Node> selectedParents,
+						List<Node> selectedChildren,
+						List<NodeValue> nodeValues) {
+        projectService.authorizedOperatorPermission(nodeInstance.project)
+		commitNode(true, project, nodeInstance,
+				   nodeInstance.nodetype, name, description, tags,
+	  			   selectedParents,
+				   selectedChildren,
+				   nodeValues)
+	}
+
+    void deleteNode(Node nodeInstance) {
+        projectService.authorizedOperatorPermission(nodeInstance.project)
         deleteParentsAndChildren(nodeInstance)
-        return nodeInstance.delete(flush: true)
-    }
+        nodeInstance.delete(flush: true)
+	}
 
-    def listNodes() {
+    private Node readNode(Node node)
+    {
+        projectService.authorizedReadPermission(node.project)
+        return node
     }
-
-    def showNode() {
-    }
-
-    def Node cloneNode(Project project, Node nodeInstance) {
-        List<NodeValue> nodeValues = []
-        nodeInstance.nodeValues.each() {NodeValue nodeValue ->
-            def nodeValueClone = new NodeValue()
-            nodeValueClone.nodeattribute = nodeValue.nodeattribute
-            nodeValueClone.value = nodeValue.value
-            nodeValues += nodeValueClone
+    Node readNode(id)
+    {
+        def node = Node.get(id)
+        if(!node){
+            return null
         }
-
-        return commitNode(false, project, new Node(),
-                nodeInstance.nodetype,
-                nodeInstance.name + "_clone",
-                nodeInstance.description,
-                nodeInstance.tags,
-                [], [],
-                nodeValues)
+        return readNode(node)
     }
 
-    private Node commitNode(boolean doUpdate,
-                            Project project,
-                            Node nodeInstance,
-                            NodeType nodeType,
-                            String name,
-                            String description,
-                            String tags,
-                            List<Node> parentList,
-                            List<Node> childList,
-                            List<NodeValue> nodeValues) {
+	Node cloneNode(Node nodeInstance) {
+        projectService.authorizedOperatorPermission(nodeInstance.project)
+		List<NodeValue> nodeValues = []
+		nodeInstance.nodeValues.each() {NodeValue nodeValue ->
+			def nodeValueClone = new NodeValue()
+			nodeValueClone.nodeattribute = nodeValue.nodeattribute
+			nodeValueClone.value = nodeValue.value
+			nodeValues += nodeValueClone
+		}
+		
+		return commitNode(false, nodeInstance.project, new Node(),
+						  nodeInstance.nodetype,
+						  nodeInstance.name  + "_clone",
+						  nodeInstance.description,
+						  nodeInstance.tags,
+						  [], [],
+						  nodeValues)
+	}
+	
+	private Node commitNode(boolean doUpdate,
+							Project project,
+							Node nodeInstance,
+							NodeType nodeType,
+							String name,
+							String description,
+							String tags,
+							List<Node> parentList,
+							List<Node> childList,
+							List<NodeValue> nodeValues) {
         nodeInstance.name = name
         nodeInstance.description = description
         nodeInstance.tags = tags

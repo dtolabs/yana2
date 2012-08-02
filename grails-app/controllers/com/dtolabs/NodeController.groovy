@@ -11,6 +11,7 @@ class NodeController {
 	def jsonService
 	def webhookService
 	def nodeService
+	def projectService
 
 	def api() {
 		switch (request.method) {
@@ -28,10 +29,11 @@ class NodeController {
 				break
 			case "DELETE":
 				def json = request.JSON
+
 				if (params.id) {
-					def node = Node.get(params.id)
+					def node = nodeService.readNode(params.id)
 					if (node) {
-						node.delete()
+						nodeService.deleteNode(node)
 
 						ArrayList nodes = [node]
 						webhookService.postToURL('node', nodes,'delete')
@@ -67,7 +69,7 @@ class NodeController {
 	}
 
 	def list() {
-        def project = Project.findByName(params.project)
+        def project = projectService.findProject(params.project)
         if (!project) {
             response.status=404
             render(text:message(code: 'default.not.found.message',
@@ -77,19 +79,7 @@ class NodeController {
         }
 		String path = iconService.getSmallIconPath()
         int totCount = Node.countByProject(project)
-		ArrayList nodes = []
-		if (params.nodetype) {
-			List nodetypes = []
-			params.nodetype.each{
-				nodetypes += it.toLong()
-			}
-			def criteria = Node.createCriteria()
-			nodes = criteria.list{
-				not{'in'("nodetype.id",nodetypes)}
-			}
-		} else {
-			nodes = Node.list(params)
-		}
+        ArrayList nodes = Node.findAllByProject(project, params)
 		if (params.format && params.format!='none') {
 			switch (params.format.toLowerCase()) {
 				case 'xml':
@@ -108,50 +98,53 @@ class NodeController {
 	}
 
 	def create() {
-		def project = Project.findByName(params.project)
-		if (!project) {
-			response.status = 404
-			render(text: message(code: 'default.not.found.message',
+        def project = projectService.findProject(params.project)
+        if (!project) {
+            response.status = 404
+            render(text: message(code: 'default.not.found.message',
 				   args: ['Project', params.project],
 				   default: "Project {0} was not found"))
-			return
-		}
+            return
+        }
+        if(!projectService.authorizedOperatorPermission(project)){
+            return
+        }
 
 		[nodeList: Node.findAllByProject(project),
 		 nodeTypeList: NodeType.findAllByProject(project),
 		 params:params]
 	}
 
-	def clone() {
-        def project = Project.findByName(params.project)
+	def clone(){
+        def project = projectService.findProject(params.project)
         if (!project) {
             response.status = 404
             render(text: message(code: 'default.not.found.message',
 								 args: ['Project', params.project],
 								 default: "Project {0} was not found"))
             return
-        }		
+        }
 
-		Node node = Node.get(params.id)
+		Node node = nodeService.readNode(params.id)
 		try {		
-			Node nodeInstance = nodeService.cloneNode(project, node)
+			Node nodeInstance = nodeService.cloneNode(node)
 			flash.message = message(code: 'default.created.message', args: [
 				message(code: 'node.label', default: 'Node'),
 				nodeInstance.id
 			])
 			redirect(action: "show", id: nodeInstance.id)
 		} catch (Throwable t) {
-			render(view: params.action, model: [nodeInstance: node])
+            log.error("could not create clone",t)
 			flash.message = message(code: 'default.not.created.message', args: [
 				message(code: 'node.label', default: 'Node'),
-				params.name
+				t.message
 			])
 			redirect(action: "show", id: params.id)
 		}
 	}
 
 	def save() {
-        def project = Project.findByName(params.project)
+        def project = projectService.findProject(params.project)
         if (!project) {
             response.status = 404
             return render(text: message(code: 'default.not.found.message',
@@ -234,8 +227,16 @@ class NodeController {
 		}
 	}
 	
-	def update() {		
-		Node nodeInstance = Node.get(params.id)
+	def update() {
+        def project = projectService.findProject(params.project)
+        if (!project) {
+            response.status = 404
+            render(text: message(code: 'default.not.found.message',
+                                 args: ['Project', params.project],
+                                 default: "Project {0} was not found"))
+            return
+        }
+		Node nodeInstance = nodeService.readNode(params.id)
 		if (!nodeInstance) {
 			if (params.action == 'api') {
 				response.status = 400 //Not Found
@@ -310,10 +311,18 @@ class NodeController {
 	}
 
 	def show() {
+//        def project = projectService.findProject(params.project)
+//        if (!project) {
+//            response.status = 404
+//            render(text: message(code: 'default.not.found.message',
+//                                 args: ['Project', params.project],
+//                                 default: "Project {0} was not found"))
+//            return
+//        }
 		String path = iconService.getLargeIconPath()
 		String smallpath = iconService.getSmallIconPath()
 
-		Node nodeInstance = Node.get(params.id)
+        Node nodeInstance=nodeService.readNode(params.id)
 		List tagList = []
 
 		if (params.format && params.format!='none') {
@@ -366,7 +375,7 @@ class NodeController {
 	}
 
 	def edit() {
-        def project = Project.findByName(params.project)
+        def project = projectService.findProject(params.project)
         if (!project) {
             response.status = 404
             render(text: message(code: 'default.not.found.message',
@@ -374,7 +383,10 @@ class NodeController {
 								 default: "Project {0} was not found"))
             return
         }
-		Node nodeInstance = Node.get(params.id)
+        if (!projectService.authorizedOperatorPermission(project)) {
+            return
+        }
+		Node nodeInstance = nodeService.readNode(params.id)
 		def criteria = Node.createCriteria()
 		def nodes = criteria.list{
 			ne ("id", params.id?.toLong())
@@ -442,16 +454,7 @@ class NodeController {
 	}
 
 	def delete() {
-        def project = Project.findByName(params.project)
-        if (!project) {
-            response.status = 404
-            render(text: message(code: 'default.not.found.message',
-								 args: ['Project', params.project],
-								 default: "Project {0} was not found"))
-            return
-        }
-
-		Node nodeInstance = Node.get(params.id)
+		Node nodeInstance = nodeService.readNode(params.id)
 		if (!nodeInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [
 				message(code: 'node.label', default: 'Node'),
@@ -461,6 +464,7 @@ class NodeController {
 			return
 		}
 
+        def nodeStr = nodeInstance.toString()
 		try {
 			nodeService.deleteNode(nodeInstance)
 
@@ -473,6 +477,7 @@ class NodeController {
 			])
 			redirect(action: "list")
 		} catch (Exception e) {
+            log.error("could not delete node ${nodeStr}: ${e.message}",e)
 			flash.message = message(code: 'default.not.deleted.message', args: [
 				message(code: 'node.label', default: 'Node'),
 				params.id
@@ -485,6 +490,7 @@ class NodeController {
 		def unselectedParents = []
 		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
+            projectService.authorizedReadPermission(nodeType.project)
 			nodeType.children.each {nodeTypeRelationship ->
 				nodeTypeRelationship.parent.nodes.each {node ->
 					unselectedParents += [id:node.id,
@@ -500,6 +506,7 @@ class NodeController {
 		def unselectedChildren = []
 		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
+            projectService.authorizedReadPermission(nodeType.project)
 			nodeType.parents.each {nodeTypeRelationship ->
 				nodeTypeRelationship.child.nodes.each {node ->
 					unselectedChildren += [id:node.id,
@@ -516,7 +523,8 @@ class NodeController {
 
 		if (params.templateid != 'null') {
 			if (params.node) {
-				NodeValue.findAllByNode(Node.get(params.node)).each {nodeValue ->
+                def node = nodeService.readNode(params.node)
+                NodeValue.findAllByNode(node).each {nodeValue ->
 					response += [tid:nodeValue.id,
 								 id:nodeValue.nodeattribute.attribute.id,
 								 required:nodeValue.nodeattribute.required,
@@ -526,7 +534,9 @@ class NodeController {
 								 filter:nodeValue.nodeattribute.attribute.filter.regex]
 				}
 			} else {
-			    NodeAttribute.findAllByNodetype(NodeType.get(params.templateid)).each {nodeAttribute ->
+                def ntype = NodeType.get(params.templateid)
+                projectService.authorizedReadPermission(ntype.project)
+                NodeAttribute.findAllByNodetype(ntype).each {nodeAttribute ->
 					response += [id:nodeAttribute.id,
 						         required:nodeAttribute.required,
 							     val:nodeAttribute.attribute.name,
