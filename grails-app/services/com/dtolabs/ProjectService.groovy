@@ -24,17 +24,14 @@ class ProjectService {
     def aclUtilService
     def springSecurityService
 
-    void addPermission(Project project, String username, int permission) {
-        addPermission project, username, aclPermissionFactory.buildFromMask(permission)
-    }
 
     @PreAuthorize("hasPermission(#project, admin)")
     void addPermission(Project project, String username, Permission permission) {
         aclUtilService.addPermission project, username, permission
     }
 
-    void denyPermission(Project project, String username, int permission) {
-        denyPermission project, username, aclPermissionFactory.buildFromMask(permission)
+    void addPermission(Project project, String username, int permission) {
+        addPermission project, username, aclPermissionFactory.buildFromMask(permission)
     }
 
     /**
@@ -47,9 +44,13 @@ class ProjectService {
     @PreAuthorize("hasPermission(#project, admin)")
     void denyPermission(Project project, String recipient, Permission permission) {
         ObjectIdentity oid = objectIdentityRetrievalStrategy.getObjectIdentity(project)
-        denyPermission oid, recipient, permission
+        int_denyPermission oid, recipient, permission
     }
 
+    @PreAuthorize("hasPermission(#project, admin)")
+    void denyPermission(Project project, String username, int permission) {
+        denyPermission project, username, aclPermissionFactory.buildFromMask(permission)
+    }
     /**
      * Deny a permission.
      *
@@ -57,7 +58,7 @@ class ProjectService {
      * @param recipient the grantee; can be a username, role name, Sid, or Authentication
      * @param permission the permission to grant
      */
-    void denyPermission(ObjectIdentity oid, recipient, Permission permission) {
+    private void int_denyPermission(ObjectIdentity oid, recipient, Permission permission) {
 
         Sid sid = createSid(recipient)
 
@@ -75,7 +76,7 @@ class ProjectService {
         log.debug "Denied permission $permission for Sid $sid for $oid.type with id $oid.identifier"
     }
 
-    protected Sid createSid(recipient) {
+    private Sid createSid(recipient) {
         if (recipient instanceof String) {
             return recipient.startsWith('ROLE_') ?
                    new GrantedAuthoritySid(recipient) :
@@ -117,7 +118,7 @@ class ProjectService {
      * @param p
      * @return
      */
-    @PreAuthorize("hasPermission(#p,'architect') or hasPermission(#p,admin)")
+    @PreAuthorize("hasPermission(#p, 'architect') or hasPermission(#p, admin)")
     boolean authorizedArchitectPermission(Project p) {
         return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ARCHITECT) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
     }
@@ -136,9 +137,28 @@ class ProjectService {
      * @param p
      * @return
      */
-    @PreAuthorize("hasPermission(#p,'operator') or hasPermission(#p,admin)")
+    @PreAuthorize("hasPermission(#p, 'operator') or hasPermission(#p, admin)")
     boolean authorizedOperatorPermission(Project p) {
         return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.OPERATOR) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
+    }
+
+    /**
+     * Return true if the user has User permission for the project
+     * @param p
+     * @return
+     */
+    boolean hasReadPermission(Project p) {
+        return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.READ) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
+    }
+    /**
+     * Return true if the user has User permission for the project,
+     * but fail if not
+     * @param p
+     * @return
+     */
+    @PreAuthorize("hasPermission(#p, read) or hasPermission(#p, admin)")
+    boolean authorizedReadPermission(Project p) {
+        return aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.READ) || aclUtilService.hasPermission(springSecurityService.authentication, p, YanaPermission.ADMINISTRATION)
     }
 
     @PreAuthorize("hasPermission(#p, delete) or hasPermission(#p, admin)")
