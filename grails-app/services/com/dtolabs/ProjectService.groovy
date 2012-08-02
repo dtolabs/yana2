@@ -176,9 +176,11 @@ class ProjectService {
                 NodeType.executeUpdate("delete from NodeType as N where N.project = :project ", [project: p])
                 Attribute.executeUpdate("delete from Attribute as N where N.project = :project ", [project: p])
                 Filter.executeUpdate("delete from Filter as N where N.project = :project ", [project: p])
-                p.delete(flush: true)
+
                 // Delete the ACL information as well
                 aclUtilService.deleteAcl p
+
+                p.delete(flush: true)
                 result = [success: true]
             }catch(Exception e){
                 status.setRollbackOnly()
