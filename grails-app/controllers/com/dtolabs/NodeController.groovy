@@ -210,8 +210,8 @@ class NodeController {
 			nodeInstance =
 			  nodeService.createNode(project, nodeType,
 				  				     params.name, params.descripiton, params.tags,
-									 getParentIDsFromParams(),
-									 getChildIDsFromParams(),
+									 getParentNodesFromParams(),
+									 getChildNodesFromParams(),
 									 nodeValues)
 		} catch (Throwable t) {
 			if (params.action == 'api') {
@@ -284,8 +284,8 @@ class NodeController {
 			nodeService.updateNode(
 			  nodeInstance.project, nodeInstance,
 			  params.name, params.descripiton, params.tags,
-			  getParentIDsFromParams(),
-			  getChildIDsFromParams(),
+			  getParentNodesFromParams(),
+			  getChildNodesFromParams(),
 			  nodeValues)
 		} catch (Exception e) {
 			if (params.action == 'api') {
@@ -559,15 +559,19 @@ class NodeController {
 
 		render response as JSON
 	}
-
-	private List<Long> getParentIDsFromParams() {
-		Long[] nodeIDs = Eval.me("${params.parents}")
-		return (nodeIDs ? nodeIDs : [])
+	
+	private List<Node> getNodesFromParams(Long[] nodeIDs) {
+		return Node.findAll("from Node as N where N.id IN (:ids)", [ids:nodeIDs])
 	}
 
-	private List<Long> getChildIDsFromParams() {
-		Long[] nodeIDs = Eval.me("${params.children}")
-		return (nodeIDs ? nodeIDs : [])
+	private List<Node> getParentNodesFromParams() {
+		Long[] nodeIDs = Eval.me("${params.parents}")		
+		return (nodeIDs ? getNodesFromParams(nodeIDs) : [])
+	}
+
+	private List<Node> getChildNodesFromParams() {
+		Long[] nodeIDs = Eval.me("${params.children}")		
+		return (nodeIDs ? getNodesFromParams(nodeIDs) : [])
 	}
 
 }

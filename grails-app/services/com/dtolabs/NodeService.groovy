@@ -7,13 +7,13 @@ class NodeService {
 						String name,
 						String description,
 						String tags,
-						List<Long> parentIds,
-						List<Long> childIds,
+						List<Node> selectedParents,
+						List<Node> selectedChildren,
 						List<NodeValue> nodeValues) {
 		return commitNode(false, project, new Node(),
 			              nodeType, name, description, tags,
-			  			  getParentNodesFromIDs(parentIds, nodeType),
-						  getChildNodesFromIDs(childIds, nodeType),
+			  			  selectedParents,
+						  selectedChildren,
 						  nodeValues)
 	}
 	
@@ -22,13 +22,13 @@ class NodeService {
 						String name,
 						String description,
 						String tags,
-						List<Long> parentIds,
-						List<Long> childIds,
+						List<Node> selectedParents,
+						List<Node> selectedChildren,
 						List<NodeValue> nodeValues) {
 		commitNode(true, project, nodeInstance,
 				   nodeInstance.nodetype, name, description, tags,
-	  			   getParentNodesFromIDs(parentIds, nodeInstance.nodetype),
-				   getChildNodesFromIDs(childIds, nodeInstance.nodetype),
+	  			   selectedParents,
+				   selectedChildren,
 				   nodeValues)
 	}
 						
@@ -46,11 +46,9 @@ class NodeService {
 	}
 	
 	def listNodes() {
-
 	}
 	
 	def showNode() {
-		
 	}
 					
 	def Node cloneNode(Project project, Node nodeInstance) {
@@ -70,7 +68,7 @@ class NodeService {
 						  [], [],
 						  nodeValues)
 	}
-
+	
 	private Node commitNode(boolean doUpdate,
 							Project project,
 							Node nodeInstance,
@@ -114,25 +112,31 @@ class NodeService {
 					if (!doUpdate) {
 						nodeValue.node = nodeInstance
 					}
-					nodeValue.save().save(failOnError:true)
+					nodeValue.save(failOnError:true)
 				}
 			} catch (Exception e) {
 				status.setRollbackOnly()
 				throw e;
 			}
 		}
-		
+println("-->")
+println("nodeInstance.name: ${nodeInstance.name}")
+nodeInstance.parents.each {parent ->
+	println("  parent-p: ${parent.parent.name}")
+	println("  parent-c: ${parent.child.name}")
+}
+nodeInstance.children.each {child ->
+	println("   child-p: ${child.parent.name}")
+	println("   child-c: ${child.child.name}")
+}
+println("<--")
+
 		return nodeInstance
 	}
 
     private deleteParentsAndChildren(Node nodeInstance) {
-		["child", "parent"].each { kind ->
-			ChildNode.createCriteria().list {
-				eq(kind, nodeInstance)
-			}.each { childNode ->
-				childNode.delete()
-			}
-		}
+		ChildNode.findAllByParent(nodeInstance).each() { it.delete() }
+		ChildNode.findAllByChild(nodeInstance).each() { it.delete() }
 	}
 	
 	private deleteNodeValues(Node nodeInstance) {
@@ -140,71 +144,25 @@ class NodeService {
 			nodeValue.delete()	
 		}
 	}
-
-	private List<Node> getSelectedMembers(List<Node> selectedNodes,
-										  List<Node> nodeCandidatesList) {
-		List<Node> selectedMembers = []
-		if (selectedNodes && nodeCandidatesList) {
-			selectedNodes.each {selectedNode ->
-				if (nodeCandidatesList.contains(selectedNode)) {
-					selectedMembers += selectedNode
-				}
-			}
-		}
-		return selectedMembers
-	}
-
-	private List<Node> getParentNodesFromIDs(List<Long> nodeIDs, NodeType nodeType) {
-		List<Node> nodes = []
-		if (nodeIDs && (nodeIDs.size() != 0)) {
-		    nodes = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
-													[ids:nodeIDs]),
-						  			   getNodeParentCandidates(nodeType))
-		}
-		return nodes
-	}
-	
-	private List<Node> getChildNodesFromIDs(List<Long> nodeIDs, NodeType nodeType) {
-		List<Node> nodes = []
-		if (nodeIDs && (nodeIDs.size() != 0)) {
-			nodes = getSelectedMembers(Node.findAll("from Node as N where N.id IN (:ids)",
-													[ids:nodeIDs]),
-									   getNodeChildrenCandidates(nodeType))
-		}
-		return nodes
-	}
-
-	private List<Node> getNodeParentCandidates(NodeType nodeType) {
-		def parents = []
-		nodeType.children.each {nodeTypeRelationship ->
-			nodeTypeRelationship.parent.nodes.each {node ->
-				parents += node
-			}
-		}
-		return parents
-	}
-
-	private List<Node> getNodeChildrenCandidates(NodeType nodeType) {
-		def children = []
-		nodeType.parents.each {nodeTypeRelationship ->
-			nodeTypeRelationship.child.nodes.each {node ->
-				children += node
-			}
-		}
-		return children
-	}
 	
 	private boolean addChildNode(Node parent, Node child) {
 		ChildNode childNode = ChildNode.findByParentAndChild(parent, child)
 		if (!childNode) {
-			childNode = new ChildNode()
-			childNode.parent = parent
-			childNode.child = child
-			childNode.save(flush: true)
-			return true
+            // Is a relationship between parent & child allowed?
+            NodeTypeRelationship nodeTypeRelationship =
+              NodeTypeRelationship.findByParentAndChild(parent.nodetype, child.nodetype)
+			if (nodeTypeRelationship) {
+println("=== INFO: node-type-relationship allowed between ${parent.name} & ${child.name}")			
+				childNode = new ChildNode(parent:parent, child:child)
+				childNode.save(flush: true, failOnError: true)
+				return true
+			} else {
+println("=== ERROR: node-type-relationship disallowed between ${parent.name} & ${child.name}")			
+			}
 		} else {
-			return false
+println("=== ERROR: child-node already exists for ${parent.name} & ${child.name}")			
 		}
+		return false
 	}
 
 }
