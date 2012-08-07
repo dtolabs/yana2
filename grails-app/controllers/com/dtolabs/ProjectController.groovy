@@ -25,8 +25,8 @@ class ProjectController {
         Project p = projectService.findProject(params.project)
         if(!p){
             response.status=404
-            request.message = message(code: 'default.not.found.message',args: [params.project],default: "Project {0} was not found")
-            return render(text:request.message)
+            request.message = message(code: 'default.not.found.message',args: [message(code: 'project.label',default: 'Project'),params.project],default: "Project {0} was not found")
+            return render(view:'/errors/error404')
         }
         projectService.userSelectProject(session,p)
         return redirect(controller: 'node',action: 'index')
