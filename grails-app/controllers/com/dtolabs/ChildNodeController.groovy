@@ -5,19 +5,33 @@ import com.dtolabs.Node
 import com.dtolabs.NodeTypeRelationship
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.ProjectAccess
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
 
 @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_ARCHITECT', 'ROLE_YANA_SUPERUSER'])
+@DefaultProjectAccess(ProjectAccess.Level.operator)
 class ChildNodeController {
 
     def iconService
     def xmlService
     def jsonService
+    def projectService
 
+    static defaultAction = "list"
     //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def api() {
         switch (request.method) {
             case "POST":
+                def project = projectService.findProject(params.project)
+                if (!project) {
+                    response.status = 404
+                    break
+                }
+                if (!projectService.authorizedOperatorPermission(project)) {
+                    break
+                }
                 def json = request.JSON
                 this.save()
                 break
@@ -30,6 +44,15 @@ class ChildNodeController {
                 this.update()
                 break
             case "DELETE":
+
+                def project = projectService.findProject(params.project)
+                if (!project) {
+                    response.status = 404
+                    break
+                }
+                if (!projectService.authorizedOperatorPermission(project)) {
+                    break
+                }
                 def json = request.JSON
                 if (params.id) {
                     def cnode = ChildNode.get(params.id)
@@ -59,6 +82,7 @@ class ChildNodeController {
         return
     }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def listapi() {
         switch (request.method) {
             case "POST":
@@ -69,10 +93,7 @@ class ChildNodeController {
         return
     }
 
-    def index() {
-        redirect(action: "list", params: params)
-    }
-
+    @ProjectAccess(ProjectAccess.Level.read)
     def list() {
         if (params.format && params.format != 'none') {
             ArrayList cnodes = ChildNode.list()
@@ -172,6 +193,7 @@ class ChildNodeController {
         }
     }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def show() {
         String path = iconService.getSmallIconPath()
         def childNodeInstance = ChildNode.get(params.id)

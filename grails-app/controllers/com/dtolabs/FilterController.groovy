@@ -3,14 +3,19 @@ package com.dtolabs
 import org.springframework.dao.DataIntegrityViolationException
 import com.dtolabs.Filter
 import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
+import com.dtolabs.yana2.springacl.ProjectAccess
 
-@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER','ROLE_YANA_USER'])
+@DefaultProjectAccess(ProjectAccess.Level.architect)
 class FilterController {
 
 	def springSecurityService
 	def iconService
 	def xmlService
 	def jsonService
+	def projectService
+    static defaultAction = "list"
 	
     //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -71,6 +76,7 @@ class FilterController {
 		return
 	}
 
+    @ProjectAccess(ProjectAccess.Level.read)
    def listapi(){
 	   switch(request.method){
 		   case "POST":
@@ -80,14 +86,16 @@ class FilterController {
 	   }
 	   return
    }
-   
+
     def index() {
         redirect(action: "list", params: params)
     }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def list() {
+        def project = projectService.findProject(params.project)
 		if(params.format && params.format!='none'){
-			def filters = Filter.list()
+			def filters = Filter.findAllByProject(project)
 			switch(params.format.toLowerCase()){
 				case 'xml':
 					def xml = xmlService.formatFilters(filters)
@@ -100,16 +108,24 @@ class FilterController {
 			}
 		}else{
 	        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-	        [filterInstanceList: Filter.list(max:params.max,offset:params.offset,sort:"dataType",order:"asc"), filterInstanceTotal: Filter.count()]
+	        [filterInstanceList: Filter.findAllByProject(project,[max:params.max,offset:params.offset,sort:"dataType",order:"asc"]), filterInstanceTotal: Filter.countByProject(project)]
 		}
     }
 
     def create() {
-        [filterInstance: new Filter(params)]
+        def project = projectService.findProject(params.project)
+        params.project=null
+        def filter = new Filter(params)
+        filter.project=project
+        [filterInstance: filter]
     }
 
     def save() {
+
+        def project = projectService.findProject(params.project)
+        params.project = null
         def filterInstance = new Filter(params)
+        filterInstance.project = project
         if (!filterInstance.save(flush: true)) {
             render(view: "create", model: [filterInstance: filterInstance])
             return
@@ -119,6 +135,7 @@ class FilterController {
         redirect(action: "show", id: filterInstance.id)
     }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def show() {
 		String path = iconService.getLargeIconPath()
         def filterInstance = Filter.get(params.id)
@@ -184,8 +201,11 @@ class FilterController {
                 return
             }
         }
+        def project = projectService.findProject(params.project)
+        params.project = null
 
         filterInstance.properties = params
+        filterInstance.project = project
 
         if (!filterInstance.save(flush: true)) {
             render(view: "edit", model: [filterInstance: filterInstance])

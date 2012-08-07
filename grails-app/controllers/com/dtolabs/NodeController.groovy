@@ -2,8 +2,11 @@ package com.dtolabs
 
 import grails.converters.JSON
 import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
+import com.dtolabs.yana2.springacl.ProjectAccess
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
+@DefaultProjectAccess(ProjectAccess.Level.operator)
 class NodeController {
 	def iconService
 	def springSecurityService
@@ -13,6 +16,9 @@ class NodeController {
 	def nodeService
 	def projectService
 
+    static defaultAction = "list"
+
+    @ProjectAccess(ProjectAccess.Level.read)
 	def api() {
 		switch (request.method) {
 			case "POST":
@@ -53,6 +59,7 @@ class NodeController {
 		return
 	}
 
+    @ProjectAccess(ProjectAccess.Level.read)
 	def listapi() {
 		switch (request.method) {
 			case "GET":
@@ -61,22 +68,16 @@ class NodeController {
 				this.list()
 				break
 		}
-		return
 	}
 
+    @ProjectAccess(ProjectAccess.Level.read)
 	def index() {
 		redirect(action: "list", params: params)
 	}
 
+    @ProjectAccess(ProjectAccess.Level.read)
 	def list() {
         def project = projectService.findProject(params.project)
-        if (!project) {
-            response.status=404
-            render(text:message(code: 'default.not.found.message',
-								args: ['Project', params.project],
-								default: "Project {0} was not found"))
-            return
-        }
 		String path = iconService.getSmallIconPath()
         int totCount = Node.countByProject(project)
         ArrayList nodes = Node.findAllByProject(project, params)
@@ -99,16 +100,6 @@ class NodeController {
 
 	def create() {
         def project = projectService.findProject(params.project)
-        if (!project) {
-            response.status = 404
-            render(text: message(code: 'default.not.found.message',
-				   args: ['Project', params.project],
-				   default: "Project {0} was not found"))
-            return
-        }
-        if(!projectService.authorizedOperatorPermission(project)){
-            return
-        }
 
 		[nodeList: Node.findAllByProject(project),
 		 nodeTypeList: NodeType.findAllByProject(project),
@@ -116,15 +107,6 @@ class NodeController {
 	}
 
 	def clone(){
-        def project = projectService.findProject(params.project)
-        if (!project) {
-            response.status = 404
-            render(text: message(code: 'default.not.found.message',
-								 args: ['Project', params.project],
-								 default: "Project {0} was not found"))
-            return
-        }
-
 		Node node = nodeService.readNode(params.id)
 		try {		
 			Node nodeInstance = nodeService.cloneNode(node)
@@ -145,12 +127,6 @@ class NodeController {
 
 	def save() {
         def project = projectService.findProject(params.project)
-        if (!project) {
-            response.status = 404
-            return render(text: message(code: 'default.not.found.message',
-								 args: ['Project', params.project],
-								 default: "Project {0} was not found"))
-        }
         params.project = null
 
 		Node nodeInstance = new Node(params)
@@ -229,13 +205,6 @@ class NodeController {
 	
 	def update() {
         def project = projectService.findProject(params.project)
-        if (!project) {
-            response.status = 404
-            render(text: message(code: 'default.not.found.message',
-                                 args: ['Project', params.project],
-                                 default: "Project {0} was not found"))
-            return
-        }
 		Node nodeInstance = nodeService.readNode(params.id)
 		if (!nodeInstance) {
 			if (params.action == 'api') {
@@ -310,15 +279,8 @@ class NodeController {
 		}
 	}
 
+    @ProjectAccess(ProjectAccess.Level.read)
 	def show() {
-//        def project = projectService.findProject(params.project)
-//        if (!project) {
-//            response.status = 404
-//            render(text: message(code: 'default.not.found.message',
-//                                 args: ['Project', params.project],
-//                                 default: "Project {0} was not found"))
-//            return
-//        }
 		String path = iconService.getLargeIconPath()
 		String smallpath = iconService.getSmallIconPath()
 
@@ -376,13 +338,6 @@ class NodeController {
 
 	def edit() {
         def project = projectService.findProject(params.project)
-        if (!project) {
-            response.status = 404
-            render(text: message(code: 'default.not.found.message',
-								 args: ['Project', params.project],
-								 default: "Project {0} was not found"))
-            return
-        }
         if (!projectService.authorizedOperatorPermission(project)) {
             return
         }
@@ -486,7 +441,8 @@ class NodeController {
 		}
 	}
 
-	def getNodeTypeParentNodes = {
+    @ProjectAccess(ProjectAccess.Level.read)
+	def getNodeTypeParentNodes() {
 		def unselectedParents = []
 		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
@@ -502,7 +458,8 @@ class NodeController {
 		render unselectedParents as JSON
 	}
 
-	def getNodeTypeChildNodes = {
+    @ProjectAccess(ProjectAccess.Level.read)
+	def getNodeTypeChildNodes() {
 		def unselectedChildren = []
 		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
@@ -518,7 +475,8 @@ class NodeController {
 		render unselectedChildren as JSON
 	}
 
-	def getNodeAttributes = {
+    @ProjectAccess(ProjectAccess.Level.read)
+	def getNodeAttributes () {
 		def response = []
 
 		if (params.templateid != 'null') {

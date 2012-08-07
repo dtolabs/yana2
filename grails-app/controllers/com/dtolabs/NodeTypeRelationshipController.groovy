@@ -1,28 +1,28 @@
 package com.dtolabs
 
-import com.dtolabs.NodeType
-import com.dtolabs.NodeTypeRelationship
 import org.springframework.dao.DataIntegrityViolationException
-import com.dtolabs.NodeTypeRelationship
-import grails.plugins.springsecurity.Secured
 
-@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
+import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.ProjectAccess
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
+
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER','ROLE_YANA_USER'])
+@DefaultProjectAccess(ProjectAccess.Level.architect)
 class NodeTypeRelationshipController {
 
 	def iconService
 	def xmlService
 	def jsonService
 	def webhookService
-	
-	
+	def projectService
+
+    static defaultAction = "list"
+
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-    def index() {
-        redirect(action: "list", params: params)
-    }
-
+    @ProjectAccess(ProjectAccess.Level.read)
     def list() {
-		if(params.format && params.format!='none'){
+        if(params.format && params.format!='none'){
 			def ntrs = NodeTypeRelationship.list(params)
 			switch(params.format.toLowerCase()){
 				case 'xml':
@@ -39,7 +39,8 @@ class NodeTypeRelationshipController {
 			[nodeTypeRelationshipInstanceList: NodeTypeRelationship.list(params), nodeTypeRelationshipInstanceTotal: NodeTypeRelationship.count()]
 		}
     }
-	
+
+    @ProjectAccess(ProjectAccess.Level.read)
 	def listapi(){
 		switch(request.method){
 			case "POST":
@@ -49,11 +50,21 @@ class NodeTypeRelationshipController {
 		  }
 		return
 	}
-	 
+
+    @ProjectAccess(ProjectAccess.Level.read)
 	def api(){
 		switch(request.method){
 			case "POST":
-				def json = request.JSON
+                def project = projectService.findProject(params.project)
+                if (!project) {
+                    response.status = 404
+                    break
+                }
+                if (!projectService.authorizedArchitectPermission(project)) {
+                    break
+                }
+
+                def json = request.JSON
 				def nodeTypeRelationship = new NodeTypeRelationship(params)
 				if(nodeTypeRelationship){
 					if (!nodeTypeRelationship.save(flush: true)) {
@@ -94,7 +105,17 @@ class NodeTypeRelationshipController {
 				this.update()
 				break
 			case "DELETE":
-				def json = request.JSON
+                def project = projectService.findProject(params.project)
+                if (!project) {
+                    response.status = 404
+                    break
+                }
+                if (!projectService.authorizedArchitectPermission(project)) {
+                    break
+                }
+
+
+                def json = request.JSON
 				if(params.id){
 					def nodetyperelationship = NodeTypeRelationship.get(params.id)
 					if(nodetyperelationship){
@@ -126,10 +147,9 @@ class NodeTypeRelationshipController {
 		  }
 		return
 	}
-	
-	
 
-    def create() {		
+
+    def create() {
         [nodeTypeRelationshipInstance: new NodeTypeRelationship(params)]
     }
 
@@ -154,6 +174,7 @@ class NodeTypeRelationshipController {
 		}
     }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def show() {
 		String path = iconService.getMedIconPath()
         def nodeTypeRelationshipInstance = NodeTypeRelationship.get(params.id)
@@ -191,7 +212,7 @@ class NodeTypeRelationshipController {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeTypeRelationship.label', default: 'NodeTypeRelationship'), params.id])
             redirect(action: "list")
             return
-        }		
+        }
         [nodeTypeRelationshipInstance: nodeTypeRelationshipInstance]
     }
 

@@ -7,8 +7,11 @@ import grails.converters.JSON
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException
 import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
+import com.dtolabs.yana2.springacl.ProjectAccess
 
-@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
+@Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_USER', 'ROLE_YANA_ARCHITECT', 'ROLE_YANA_SUPERUSER'])
+@DefaultProjectAccess(ProjectAccess.Level.architect)
 class NodeTypeController {
 
 	def iconService;
@@ -16,13 +19,26 @@ class NodeTypeController {
 	def xmlService
 	def jsonService
 	def webhookService
-	
+    def projectService
+
+    static defaultAction = "list"
+
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    @ProjectAccess(ProjectAccess.Level.read)
 	def api(){
 		switch(request.method){
 			case "POST":
-				def json = request.JSON
+                def project = projectService.findProject(params.project)
+                if(!project){
+                    response.status=404
+                    break
+                }
+                if(!projectService.authorizedArchitectPermission(project)){
+                    break
+                }
+
+                def json = request.JSON
 				def nodeType = new NodeType(params)
 				if(nodeType){
 					if (!nodeType.save(flush: true)) {
@@ -63,7 +79,16 @@ class NodeTypeController {
 				this.update()
 				break
 			case "DELETE":
-				def json = request.JSON
+                def project = projectService.findProject(params.project)
+                if (!project) {
+                    response.status = 404
+                    break
+                }
+                if (!projectService.authorizedArchitectPermission(project)) {
+                    break
+                }
+
+                def json = request.JSON
 				if(params.id){
 			        def nodetype = NodeType.get(params.id)
 			        if(nodetype){
@@ -95,7 +120,8 @@ class NodeTypeController {
 		  }
 		return
 	}
-	
+
+   @ProjectAccess(ProjectAccess.Level.read)
    def listapi(){
 	   switch(request.method){
 		   case "POST":
@@ -103,13 +129,9 @@ class NodeTypeController {
 			   this.list()
 			   break
 		 }
-	   return
    }
-   
-    def index() {
-        redirect(action: "list", params: params)
-    }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def list() {
 		def path = iconService.getSmallIconPath()
 		if(params.format && params.format!='none'){
@@ -131,7 +153,7 @@ class NodeTypeController {
     }
 
     def create() {
-		def externalPath = servletContext.getRealPath("${grailsApplication.config.images.icons.large}")
+        def externalPath = servletContext.getRealPath("${grailsApplication.config.images.icons.large}")
 		def defaultPath = servletContext.getRealPath("/images/icons/64")
 		def images = iconService.listImages(defaultPath,externalPath)
         params.project=null // Nullify param because project.id is the expected
@@ -165,8 +187,9 @@ class NodeTypeController {
         redirect(action: "show", id: nodeTypeInstance.id)
     }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def show() {
-		def path = iconService.getLargeIconPath()
+        def path = iconService.getLargeIconPath()
         def nodeTypeInstance = NodeType.get(params.id)
 		
 		def criteria = NodeTypeRelationship.createCriteria()
@@ -209,7 +232,7 @@ class NodeTypeController {
     }
 
     def edit() {
-		def externalPath = servletContext.getRealPath("${grailsApplication.config.images.icons.large}")
+        def externalPath = servletContext.getRealPath("${grailsApplication.config.images.icons.large}")
 		def defaultPath = servletContext.getRealPath("/images/icons/64")
 		def images = iconService.listImages(defaultPath,externalPath)
         def nodeTypeInstance = NodeType.get(params.id)
@@ -295,13 +318,14 @@ class NodeTypeController {
             redirect(action: "show", id: params.id)
         }
     }
-	
+
 
     /**
      * AJAX call used in the views, "/nodeType/{create,edit}.gsp"
      */
-	def getNodeAttributes = {
-			def response = []
+    @ProjectAccess(ProjectAccess.Level.read)
+	def getNodeAttributes(){
+        def response = []
 			def attrs = []
 			if(params.templateid){
 				println("")

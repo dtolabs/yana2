@@ -1,9 +1,12 @@
 package com.dtolabs
 
 import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
+import com.dtolabs.yana2.springacl.ProjectAccess
 
 
 @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
+@DefaultProjectAccess(ProjectAccess.Level.read)
 class ExportController {
     def springSecurityService
     def projectService

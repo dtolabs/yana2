@@ -4,8 +4,11 @@ import org.compass.core.engine.SearchEngineQueryParseException
 import grails.plugins.springsecurity.Secured
 import grails.converters.JSON
 import com.dtolabs.Node
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
+import com.dtolabs.yana2.springacl.ProjectAccess
 
 @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_USER', 'ROLE_YANA_ARCHITECT', 'ROLE_YANA_SUPERUSER'])
+@DefaultProjectAccess(ProjectAccess.Level.read)
 class SearchController {
 
     def iconService

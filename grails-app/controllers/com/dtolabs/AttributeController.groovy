@@ -3,15 +3,20 @@ package com.dtolabs
 import org.springframework.dao.DataIntegrityViolationException
 import com.dtolabs.Attribute
 import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.DefaultProjectAccess
+import com.dtolabs.yana2.springacl.ProjectAccess
 
-@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
+@Secured(['ROLE_YANA_ADMIN','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER','ROLE_YANA_USER'])
+@DefaultProjectAccess(ProjectAccess.Level.architect)
 class AttributeController {
 
 	def springSecurityService
 	def iconService
 	def xmlService
 	def jsonService
-	
+	def projectService
+
+    static defaultAction = "list"
     //static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
 	def api(){
@@ -70,7 +75,8 @@ class AttributeController {
 		  }
 		return
 	}
-	
+
+    @ProjectAccess(ProjectAccess.Level.read)
    def listapi(){
 	   switch(request.method){
 		   case "POST":
@@ -80,14 +86,12 @@ class AttributeController {
 		 }
 	   return
    }
-	
-    def index() {
-        redirect(action: "list", params: params)
-    }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def list() {
+        def project=projectService.findProject(params.project)
 		if(params.format && params.format!='none'){
-			ArrayList atts = Attribute.list()
+            ArrayList atts = Attribute.findAllByProject(project)
 			switch(params.format.toLowerCase()){
 				case 'xml':
 					def xml = xmlService.formatAttributes(atts)
@@ -100,16 +104,24 @@ class AttributeController {
 			}
 		}else{
         	params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[attributeInstanceList: Attribute.list(max:params.max,offset:params.offset,sort:"name",order:"asc"), attributeInstanceTotal: Attribute.count()]
+			[attributeInstanceList: Attribute.findAllByProject(project,[max:params.max,offset:params.offset,sort:"name",order:"asc"]), attributeInstanceTotal: Attribute.countByProject(project)]
 		}
     }
 
     def create() {
-        [attributeInstance: new Attribute(params)]
+        def project = projectService.findProject(params.project)
+        params.project = null
+        def attribute = new Attribute(params)
+        attribute.project = project
+        [attributeInstance: attribute]
     }
 
     def save() {
+
+        def project = projectService.findProject(params.project)
+        params.project = null
         def attributeInstance = new Attribute(params)
+        attributeInstance.project = project
         if (!attributeInstance.save(flush: true)) {
             render(view: "create", model: [attributeInstance: attributeInstance])
             return
@@ -119,6 +131,7 @@ class AttributeController {
         redirect(action: "show", id: attributeInstance.id)
     }
 
+    @ProjectAccess(ProjectAccess.Level.read)
     def show() {
 		String path = iconService.getLargeIconPath()
         def attributeInstance = Attribute.get(params.id)
@@ -184,8 +197,10 @@ class AttributeController {
                 return
             }
         }
-
+        def project = projectService.findProject(params.project)
+        params.project = null
         attributeInstance.properties = params
+        attributeInstance.project = project
 
         if (!attributeInstance.save(flush: true)) {
             render(view: "edit", model: [attributeInstance: attributeInstance])
