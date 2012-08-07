@@ -8,6 +8,14 @@
 	<body>
     <h1><g:message code="page.not.found.title"/></h1>
 
-    <div class='errors'><g:message code="page.not.found.message"/></div>
+    <div class='errors'>
+    <g:if test="${message}">
+        ${message.encodeAsHTML()}
+    </g:if>
+    <g:else>
+        <g:message code="page.not.found.message"/>
+    </g:else>
+    </div>
+
 	</body>
 </html>
