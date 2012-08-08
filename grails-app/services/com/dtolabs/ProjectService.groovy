@@ -12,6 +12,8 @@ import org.springframework.security.acls.model.NotFoundException
 import org.springframework.security.acls.domain.GrantedAuthoritySid
 import org.springframework.security.acls.domain.PrincipalSid
 import org.springframework.security.core.Authentication
+import org.springframework.security.acls.model.AccessControlEntry
+import org.springframework.security.acls.domain.PermissionFactory
 
 class ProjectService {
     static transactional = true
@@ -19,7 +21,7 @@ class ProjectService {
     def servletContext
 
     def objectIdentityRetrievalStrategy
-    def aclPermissionFactory
+    def PermissionFactory aclPermissionFactory
     def aclService
     def aclUtilService
     def springSecurityService
@@ -30,8 +32,14 @@ class ProjectService {
         aclUtilService.addPermission project, username, permission
     }
 
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
     void addPermission(Project project, String username, int permission) {
         addPermission project, username, aclPermissionFactory.buildFromMask(permission)
+    }
+
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
+    void addPermission(Project project, String username, String permission) {
+        addPermission project, username, YanaPermission.forName(permission)
     }
 
     /**
@@ -41,15 +49,20 @@ class ProjectService {
      * @param recipient the grantee; can be a username, role name, Sid, or Authentication
      * @param permission the permission to grant
      */
-    @PreAuthorize("hasPermission(#project, admin)")
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
     void denyPermission(Project project, String recipient, Permission permission) {
         ObjectIdentity oid = objectIdentityRetrievalStrategy.getObjectIdentity(project)
         int_denyPermission oid, recipient, permission
     }
 
-    @PreAuthorize("hasPermission(#project, admin)")
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
     void denyPermission(Project project, String username, int permission) {
         denyPermission project, username, aclPermissionFactory.buildFromMask(permission)
+    }
+
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
+    void denyPermission(Project project, String username, String permission) {
+        denyPermission project, username, YanaPermission.forName(permission)
     }
     /**
      * Deny a permission.
@@ -238,5 +251,84 @@ class ProjectService {
         addPermission(project,'ROLE_YANA_ARCHITECT', YanaPermission.READ)
 
         return project
+    }
+
+    /**
+     * Return a set of permission maps describing permissions for the project.
+     * Each map will define these keys: 'granted' (true/false), 'permission' (name of permission),
+     * 'entry' (acl entry object).
+     * Additionally it will either define 'role' with a rolename or 'username' with a username.
+     * @param project
+     * @return list of maps
+     */
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
+    def List getProjectPermissions(Project project) {
+        def acl = aclUtilService.readAcl(project)
+        //map acl defs in to a symbolic map
+        def aclset=[]
+        acl.entries.each { AccessControlEntry entry->
+            def map =[:]
+
+            if (entry.sid instanceof GrantedAuthoritySid || entry.sid.respondsTo('instanceOf',[Class.class] as Object[]) && entry.sid.instanceOf(GrantedAuthoritySid)) {
+                //role
+                map.role = entry.sid.grantedAuthority
+            } else if (entry.sid instanceof PrincipalSid || entry.sid.respondsTo('instanceOf', [Class.class] as Object[]) && entry.sid.instanceOf(PrincipalSid)) {
+                //principal
+                map.username = entry.sid.principal
+            }
+            map.granted=entry.granting
+            map.permission=YanaPermission.nameFor(entry.permission)
+            map.entry=entry
+            aclset<<map
+        }
+        return aclset
+    }
+
+    /**
+     * Removes a granted permission. Used when you don't have the instance available.
+     *
+     * @param domainClass the domain class
+     * @param id the instance id
+     * @param recipient the grantee; can be a username, role name, Sid, or Authentication
+     * @param permission the permission to remove
+     */
+    protected void deletePermission(Class<?> domainClass, long id, recipient, Permission permission, boolean granted) {
+        Sid sid = createSid(recipient)
+        def acl = aclUtilService.readAcl(domainClass, id)
+
+        def todelete=[]
+        acl.entries.eachWithIndex { entry, i ->
+            if (entry.sid.equals(sid) && entry.permission.equals(permission) && entry.granting==granted) {
+                todelete<<i
+            }
+        }
+        if(todelete){
+            todelete.sort().reverse().each{i->
+                acl.deleteAce i
+            }
+        }
+
+        aclService.updateAcl acl
+
+        log.debug "Deleted ${domainClass.name}($id) ACL permissions for recipient $recipient"
+    }
+
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
+    def boolean deleteProjectPermission(Project project,String recipient, String perm) {
+        aclUtilService.deletePermission(project,recipient, YanaPermission.forName(perm))
+        return true
+    }
+    /**
+     * Delete a project permission, specifying recipient, permission name string, and whether it is grant or deny.
+     * @param project
+     * @param recipient
+     * @param perm
+     * @param granted
+     * @return true if successful
+     */
+    @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
+    def boolean deleteProjectPermission(Project project,String recipient, String perm, boolean granted) {
+        deletePermission(Project,project.id,recipient, YanaPermission.forName(perm),granted)
+        return true
     }
 }
