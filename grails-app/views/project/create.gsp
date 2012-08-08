@@ -51,20 +51,13 @@
 
     <section class="form">
         <g:form action="save">
-            <div>
-                <label class="${g.hasErrors([bean:project,field:'name'],'error')}">Name:
-                <g:textField name="name" maxlength="30" value="${project?.name}"/>
-                </label>
-            </div>
-            <div>
-                <label>Description:
-                    <g:textArea name="description" rows="2" cols="50">${project?.description}</g:textArea>
-                </label>
-            </div>
-            <div class="formbuttons">
-                <g:submitButton name="cancel" value="Cancel"/>
+            <fieldset class="form">
+                <g:render template="form"/>
+            </fieldset>
+            <fieldset class="buttons">
+                <g:actionSubmit action="cancel" value="Cancel" formnovalidate=""/>
                 <g:submitButton name="save" value="Save"/>
-            </div>
+            </fieldset>
         </g:form>
     </section>
 </div>

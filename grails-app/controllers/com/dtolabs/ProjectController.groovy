@@ -1,6 +1,7 @@
 package com.dtolabs
 
 import grails.plugins.springsecurity.Secured
+import com.dtolabs.yana2.springacl.YanaPermission
 
 @Secured(['ROLE_YANA_USER', 'ROLE_YANA_ARCHITECT', 'ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
 class ProjectController {
@@ -19,7 +20,7 @@ class ProjectController {
     }
     def select() {
         if(!params.project) {
-            request.message = message(code: 'parameter.missing', args: ['project'], default: 'Parameter {0} is required')
+            flash.message = message(code: 'parameter.missing', args: ['project'], default: 'Parameter {0} is required')
             return redirect(action: 'list')
         }
         Project p = projectService.findProject(params.project)
@@ -67,11 +68,11 @@ class ProjectController {
             request.message = message(code: 'parameter.missing', args: ['name'], default: 'Parameter {0} is required')
             return render(view: 'create')
         }
-        Project p = projectService.findProject(params.project)
+        Project p = projectService.findProject(params.name)
         if (!p) {
             response.status = 404
-            request.message = message(code: 'default.not.found.message', args: [params.name], default: "Project {0} was not found")
-            return render(text: request.message)
+            request.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.project], default: "Project {0} was not found")
+            return render(view: '/errors/error404')
         }
 
         def result = projectService.deleteProject(p)
@@ -84,4 +85,77 @@ class ProjectController {
         flash.message = message(code: 'default.deleted.message', args: ['Project', params.name], default: 'Project {0} deleted')
         redirect(action: 'list')
     }
+
+    @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
+    def editAdmin(){
+        if (!params.name) {
+            request.message = message(code: 'parameter.missing', args: ['name'], default: 'Parameter {0} is required')
+            return render(view: 'create')
+        }
+        Project p = projectService.findProject(params.name)
+        if (!p) {
+            response.status = 404
+            request.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.project], default: "Project {0} was not found")
+            return render(view: '/errors/error404')
+        }
+
+        def acls=projectService.getProjectPermissions(p)
+        [acls:acls,project: p]
+    }
+
+    @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
+    def deleteProjectPermission(){
+        if (!params.name) {
+            request.message = message(code: 'parameter.missing', args: ['name'], default: 'Parameter {0} is required')
+            return render(view: 'create')
+        }
+        Project p = projectService.findProject(params.name)
+        if (!p) {
+            response.status = 404
+            request.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.project], default: "Project {0} was not found")
+            return render(view: '/errors/error404')
+        }
+        def recipient = params.recipient
+        def perm = params.permission
+        def grant = params.permissionGrant=='grant'
+        def done=projectService.deleteProjectPermission(p,recipient,perm,grant)
+        return redirect(action: 'editAdmin',params: [name:params.name]+[deleted:1])
+    }
+    @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
+    def saveProjectPermission(){
+        if (!params.name) {
+            request.message = message(code: 'parameter.missing', args: ['name'], default: 'Parameter {0} is required')
+            return render(view: 'create')
+        }
+        Project p = projectService.findProject(params.name)
+        if (!p) {
+            response.status = 404
+            request.message = message(code: 'default.not.found.message', args: [message(code: 'project.label', default: 'Project'), params.project], default: "Project {0} was not found")
+            return render(view: '/errors/error404')
+        }
+        def missingParams = ['recipient', 'permission', 'permissionGrant'].findAll{!params[it]}
+        if (missingParams) {
+            flash.message = message(code: 'parameter.missing', args: missingParams)
+            return redirect(action: 'editAdmin', params: [name: params.name])
+        }
+        def validGrant = ['grant', 'deny']
+        if(!(params.permissionGrant in validGrant)){
+            flash.message = message(code:'parameter.not.inlist.message',args:['permissionGrant',params.permissionGrant,validGrant.toString()])
+            return redirect(action: 'editAdmin', params: [name: params.name])
+        }
+
+        def recipient = params.recipient
+        def perm = params.permission
+        def grant
+
+        if(params.permissionGrant=='grant'){
+            grant=true
+            projectService.addPermission(p, recipient, perm)
+        }else if(params.permissionGrant=='deny'){
+            grant=false
+            projectService.denyPermission(p, recipient, perm)
+        }
+        return redirect(action: 'editAdmin', params: params.subMap(['recipient','permission','permissionGrant','name']) + [saved: 1])
+    }
+
 }

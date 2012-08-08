@@ -63,7 +63,7 @@
                     <g:if test="${project.description?.size() > 50}">${project.description[0..50].encodeAsHTML()}...</g:if>
                     <g:else>${project.description.encodeAsHTML()}</g:else>
                 </span>
-                <sec:permitted className='com.dtolabs.Project' id='${project.id}' permission='delete'>
+                <sec:permitted className='com.dtolabs.Project' id='${project.id}' permission='delete,administration'>
                     <span class="deleteConfirm">
                         <input type="button" onclick="$('#proj_${i} .deleteConfirm').toggle()" value="Delete"/>
                     </span>
@@ -75,6 +75,11 @@
                             <g:submitButton name="Delete"/>
                         </g:form>
                     </div>
+                </sec:permitted>
+                <sec:permitted className='com.dtolabs.Project' id='${project.id}' permission='administration'>
+                    <span>
+                        <g:link  class="fake_button" action="editAdmin" params="${[name:project.name]}">Admin</g:link>
+                    </span>
                 </sec:permitted>
             </li>
         </g:each>
