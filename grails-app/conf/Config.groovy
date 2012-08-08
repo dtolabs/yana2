@@ -194,6 +194,9 @@ grails.plugins.springsecurity.secureChannel.definition = [
 	'/role/**':					'REQUIRES_SECURE_CHANNEL',
 	'/registrationCode/**':		'REQUIRES_SECURE_CHANNEL',
 	'/securityInfo/**':			'REQUIRES_SECURE_CHANNEL',
+	'/project/editAdmin*':			'REQUIRES_SECURE_CHANNEL',
+	'/project/saveProjectPermission*':			'REQUIRES_SECURE_CHANNEL',
+	'/project/deleteProjectPermission*':			'REQUIRES_SECURE_CHANNEL',
  ]
 
 grails.rest.injectInto = ["Controller", "Service", "Routes"]
