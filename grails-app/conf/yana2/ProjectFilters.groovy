@@ -12,7 +12,7 @@ class ProjectFilters {
     def messageSource
 
     def filters = {
-        all(controller:'*', controllerExclude: 'project|login|logout|errors', action:'*') {
+        all(controller:'*', controllerExclude: 'project|login|logout|errors|user|role', action:'*') {
             before = {
                 if(!session.project && !params.project){
                     if (actionName =~ /^.*api$/) {
@@ -30,7 +30,7 @@ class ProjectFilters {
                 }
             }
         }
-        projectAccessPermission(controller: '*', controllerExclude: 'project|login|logout|errors', action: '*') {
+        projectAccessPermission(controller: '*', controllerExclude: 'project|login|logout|errors|user|role', action: '*') {
             before={
                 if(params.project){
                     //default project access level, if undeclared in the controller is 'read'
