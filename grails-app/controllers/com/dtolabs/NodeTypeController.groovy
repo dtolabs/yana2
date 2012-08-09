@@ -281,32 +281,25 @@ class NodeTypeController {
 
         try {
             nodeTypeInstance.delete(flush: true)
-			println("DEBUG: nodeTypeInstance deleted")
+			log.info("Deleted nodeType: ${nodeTypeInstance.name}")
 
 			ArrayList nodetypes = [nodeTypeInstance]
 			webhookService.postToURL('nodetype', nodetypes,'delete')
 			
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
-        }catch (DataIntegrityViolationException e) {
-            println("DEBUG: delete(): exception: " + e.message)
+
+        } catch (DataIntegrityViolationException e) {
+
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "show", id: params.id)
         }
     }
 	
-	def getNodeTypes(){
-		def response = []
-		List origList = Topic.executeQuery( "select  new map(T.id as id, T.topicName as topicName) from Topic T");
-		List delList = PostTopics.executeQuery( "select  new map(T.id as id, T.topicName as topicName) from Topic T left join T.posts P where P.post.id=?",[params.id.toLong()]);
-		List addList = origList - delList
 
-		//List origList = NodeType.findAll()
-
-		response = [dellist:dellist,addlist:addlist];
-		render response as JSON
-	}
-	
+    /**
+     * AJAX call used in the views, "/nodeType/{create,edit}.gsp"
+     */
 	def getNodeAttributes = {
 			def response = []
 			def attrs = []
