@@ -38,6 +38,12 @@ class NodeControllerTests {
 
         // model:	[nodeInstanceList: nodes, nodeInstanceTotal: totCount, path:path]
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService=control.createMock()
         /**
          * Run the controller action
          */
@@ -75,6 +81,12 @@ class NodeControllerTests {
         params.project = project.name
         params.format = "xml"
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
         /**
          * Run the controller action
          */
@@ -103,6 +115,12 @@ class NodeControllerTests {
 
         params.project = project.name
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
         /**
          * Run the controller action
          */
@@ -115,7 +133,6 @@ class NodeControllerTests {
 
     void testSave() {
         defineBeans {
-            nodeService(NodeService)
             webhookService(WebhookService)
         }
 
@@ -133,14 +150,37 @@ class NodeControllerTests {
         params.project = project.name
         request.method = "POST"
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
+
+        def control2 = mockFor(NodeService,false)
+        control2.demand.createNode { Project proj, NodeType nodetype, name, description, tags, parentNodes, childNodes, nodeValues ->
+            assert name == 'node1'
+            assert proj == project
+            assert description=='desc'
+            assert tags=='tag1,tag2'
+            assert parentNodes==[]
+            assert childNodes==[]
+            assert nodeValues==[]
+            def node= new Node(name: name, description: description, tags: tags, project: proj, nodetype: nodetype)
+            assert null!=node.save()
+            node
+        }
+        controller.nodeService = control2.createMock()
         /**
          * Run the controller action
          */
-        def model = controller.save()
+        controller.save()
+        assert 'default.created.message'==flash.message
+        assert 0==model.size()
 
-        assertEquals("Incorrect node count: " + Node.count, 1, Node.count)
         assertEquals("Incorrect response code.", 302, response.status)
         assertEquals("/node/show/1", response.redirectedUrl)
+        assertEquals("Incorrect node count: " + Node.count, 1, Node.count)
 
         def node1 = Node.findByNameAndProject("node1", project)
         assertNotNull("The node1 instance not found after save operation.", node1)
@@ -170,6 +210,12 @@ class NodeControllerTests {
         params.project = project.name
         request.method = "POST"
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
         /**
          * Run the controller action
          */
@@ -191,8 +237,8 @@ class NodeControllerTests {
 
     void testShow() {
         defineBeans {
-            nodeService(NodeService)
             webhookService(WebhookService)
+            projectService(ProjectService)
         }
 
         Project project = new Project(name: 'test1', description: 'desc').save()
@@ -207,6 +253,19 @@ class NodeControllerTests {
 
         params.id = 1
         params.project = project.name
+
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
+        def control2 = mockFor(NodeService, false)
+        control2.demand.readNode { id ->
+            assert id==1L
+            node1
+        }
+        controller.nodeService = control2.createMock()
 
         /**
          * Run the controller action
@@ -238,6 +297,12 @@ class NodeControllerTests {
         params.project = project.name
         params.format = "xml"
 
+        def control2 = mockFor(NodeService, false)
+        control2.demand.readNode { id ->
+            assert id == 1L
+            node1
+        }
+        controller.nodeService = control2.createMock()
         /**
          * Run the controller action
          */
@@ -263,6 +328,19 @@ class NodeControllerTests {
         params.id = 1
         params.project = project.name
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
+
+        def control2 = mockFor(NodeService, false)
+        control2.demand.readNode { id ->
+            assert id == 1L
+            node1
+        }
+        controller.nodeService = control2.createMock()
         /**
          * Run the controller action
          */
@@ -302,16 +380,39 @@ class NodeControllerTests {
         params.tags = "tag3"
         params.description = "new description"
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
+
+        def control2 = mockFor(NodeService, false)
+        control2.demand.readNode { id ->
+            assert id == 1L
+            node1
+        }
+        control2.demand.updateNode{ Project proj, Node nodeInstance,
+                    String name, String  description, String tags,
+                    parentNodes,
+                    childNodes,
+                    nodeValues->
+            assert proj==project
+            assert nodeInstance==node1
+            assert name == null
+            assert description=='new description'
+            assert tags=='tag3'
+            assert parentNodes==[]
+            assert childNodes==[]
+            assert nodeValues==[]
+        }
+        controller.nodeService = control2.createMock()
         /**
          * Run the controller action
          */
         controller.update()
 
         assertEquals("/node/show/1", response.redirectedUrl)
-        def nodeInstance = Node.get(1)
-        assertEquals(params.tags, nodeInstance.tags)
-        assertEquals(params.description, nodeInstance.description)
-
     }
 
     void testUpdate_withAttributes() {
@@ -341,19 +442,42 @@ class NodeControllerTests {
         params.tags = "tag3"
         params.description = "new description"
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
+
+        def control2 = mockFor(NodeService, false)
+        control2.demand.readNode { id ->
+            assert id == 1L
+            node1
+        }
+        control2.demand.updateNode { Project proj, Node nodeInstance,
+                                     String name, String description, String tags,
+                                     parentNodes,
+                                     childNodes,
+                                     nodeValues ->
+            assert proj == project
+            assert nodeInstance == node1
+            assert name == null
+            assert description == 'new description'
+            assert tags == 'tag3'
+            assert parentNodes == []
+            assert childNodes == []
+            assert nodeValues == [nv1,nv2]
+        }
+        controller.nodeService = control2.createMock()
         /**
          * Run the controller action
          */
         controller.update()
 
         assertEquals("/node/show/1", response.redirectedUrl)
-        def nodeInstance = Node.get(1)
-        assertEquals(params.tags, nodeInstance.tags)
-        assertEquals(params.description, nodeInstance.description)
-        assertEquals(params.att1, nv1.value )
-        assertEquals(params.att2, nv2.value )
 
-
+        assert nv1.value=='noarch'
+        assert nv2.value=='http://localhost/resource'
     }
 
 
@@ -371,12 +495,22 @@ class NodeControllerTests {
         params.id = 1
         params.project = project.name
 
+        def control2 = mockFor(NodeService, false)
+        control2.demand.readNode { id ->
+            assert id == 1L
+            node1
+        }
+        control2.demand.deleteNode { Node node ->
+            assert node==node1
+            node1
+        }
+        controller.nodeService = control2.createMock()
         /**
          * Run the controller action
          */
         controller.delete()
 
         assertEquals("/node/list", response.redirectedUrl)
-        assertNull("Node not deleted", Node.get(1))
+        assert 'default.deleted.message'==flash.message
     }
 }

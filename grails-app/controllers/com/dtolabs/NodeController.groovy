@@ -156,12 +156,12 @@ class NodeController {
 
 			nodeInstance =
 			  nodeService.createNode(project, nodeInstance.nodetype,
-				  				     params.name, params.descripiton, params.tags,
+				  				     params.name, params.description, params.tags,
 									 getParentNodesFromParams(),
 									 getChildNodesFromParams(),
 									 nodeValues)
 
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			if (params.action == 'api') {
 				response.status = 400 //Bad Request
 				render "node creation failed"
@@ -228,6 +228,7 @@ class NodeController {
 					&& !key.contains('_require')) {
 					NodeValue nodeValue = NodeValue.get(key[3..-1].toInteger()) // TODO: What happens if NodeValue does not exit?
 					nodeValue.value = val
+                    nodeValues<<nodeValue
 				}
 			}
 
@@ -338,9 +339,6 @@ class NodeController {
 
 	def edit() {
         def project = projectService.findProject(params.project)
-        if (!projectService.authorizedOperatorPermission(project)) {
-            return
-        }
 		Node nodeInstance = nodeService.readNode(params.id)
 		def criteria = Node.createCriteria()
 		def nodes = criteria.list{
