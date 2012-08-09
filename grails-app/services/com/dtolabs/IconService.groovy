@@ -40,17 +40,17 @@ class IconService {
 	}
 	
 	String getLargeIconPath(){
-		def testpath = new File("${grailsApplication.config.images.icons.large}")
+		def testpath = new File("${grailsApplication?.config?.images?.icons?.large}")
 		return (testpath.isDirectory())? "${grailsApplication.config.images.icons.large}":"/images/icons/64/"
 	}
 	
 	String getMedIconPath(){
-		def testpath = new File("${grailsApplication.config.images.icons.med}")
+		def testpath = new File("${grailsApplication?.config?.images?.icons?.med}")
 		return (testpath.isDirectory())? "${grailsApplication.config.images.isons.med}":"/images/icons/32/"
 	}
 	
 	String getSmallIconPath(){
-		def testpath = new File("${grailsApplication.config.images.icons.small}")
+		def testpath = new File("${grailsApplication?.config?.images?.icons?.small}")
 		return (testpath.isDirectory())? "${grailsApplication.config.images.icons.small}":"/images/icons/16/"
 	}
 }
