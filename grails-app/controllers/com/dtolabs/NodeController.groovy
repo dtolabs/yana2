@@ -1,14 +1,6 @@
 package com.dtolabs
 
-import com.dtolabs.ChildNode
-import com.dtolabs.NodeType
-import com.dtolabs.Node
-import com.dtolabs.NodeAttribute
-import com.dtolabs.NodeValue
 import grails.converters.JSON
-import java.util.Date
-import java.util.List;
-
 import grails.plugins.springsecurity.Secured
 
 @Secured(['ROLE_YANA_ADMIN','ROLE_YANA_USER','ROLE_YANA_ARCHITECT','ROLE_YANA_SUPERUSER'])
@@ -162,37 +154,23 @@ class NodeController {
         def project = Project.findByName(params.project)
         if (!project) {
             response.status = 404
-            render(text: message(code: 'default.not.found.message',
+            return render(text: message(code: 'default.not.found.message',
 								 args: ['Project', params.project],
 								 default: "Project {0} was not found"))
-            return
         }
         params.project = null
 
-		if (! (params.nodetype && params.nodetype != 'null')) {
-			if (params.action == 'api') {
-				response.status = 400
-				render "must specify node type"
-			} else {
-				flash.message = 'Please select a node type and try again.'
-				render(view: "create", model:
-					   [params:params])
-			}
-			return
-		}
+		Node nodeInstance = new Node(params)
+        nodeInstance.project = project
 
-		NodeType nodeType = NodeType.get(params.nodetype.toLong())
-		if (!nodeType) {
-			if (params.action=='api') {
-				response.status = 400 //Bad Request
-				render "node type '${params.nodetype}' not found"
-			} else {
-				render(view: "create", model: [nodeType: nodeType])
-			}
-			return
-		}
+        if (!nodeInstance.validate()) {
+            return render(view: "create", model:[
+                    nodeTypeList: NodeType.findAllByProject(project),
+                    nodeInstance: nodeInstance,
+                    params: params
+            ])
+        }
 
-		Node nodeInstance
 		try {
 			List<NodeValue> nodeValues = []
 			params.each {key, val ->
@@ -208,17 +186,18 @@ class NodeController {
 			}
 
 			nodeInstance =
-			  nodeService.createNode(project, nodeType,
+			  nodeService.createNode(project, nodeInstance.nodetype,
 				  				     params.name, params.descripiton, params.tags,
 									 getParentNodesFromParams(),
 									 getChildNodesFromParams(),
 									 nodeValues)
+
 		} catch (Throwable t) {
 			if (params.action == 'api') {
 				response.status = 400 //Bad Request
 				render "node creation failed"
 			} else {
-				render(view: params.action,
+				render(view: 'create',
 					   model: [nodeInstance: nodeInstance])
 				flash.message = message(code: 'default.not.created.message', args: [
 					message(code: 'node.label', default: 'Node'),
@@ -250,6 +229,7 @@ class NodeController {
 				message(code: 'node.label', default: 'Node'),
 				nodeInstance.id
 			])
+            response.status = 201
 			redirect(action: "show", id: nodeInstance.id)
 		}
 	}
@@ -276,23 +256,24 @@ class NodeController {
 				if (key.contains('att')
 					&& !key.contains('_filter')
 					&& !key.contains('_require')) {
-					NodeValue nodeValue = NodeValue.get(key[3..-1].toInteger())
+					NodeValue nodeValue = NodeValue.get(key[3..-1].toInteger()) // TODO: What happens if NodeValue does not exit?
 					nodeValue.value = val
 				}
 			}
 
 			nodeService.updateNode(
 			  nodeInstance.project, nodeInstance,
-			  params.name, params.descripiton, params.tags,
+			  params.name, params.description, params.tags,
 			  getParentNodesFromParams(),
 			  getChildNodesFromParams(),
 			  nodeValues)
 		} catch (Exception e) {
-			if (params.action == 'api') {
+
+            if (params.action == 'api') {
 				response.status = 400 //Bad Request
 				render "node update failed"
 			} else {
-				render(view: params.action,
+				render(view: "edit",
 					   model: [nodeInstance: nodeInstance])
 				flash.message = message(code: 'default.not.updated.message', args: [
 					message(code: 'node.label', default: 'Node'),
@@ -405,8 +386,7 @@ class NodeController {
 				message(code: 'node.label', default: 'Node'),
 				params.id
 			])
-			redirect(action: "list")
-			return
+			return redirect(action: "list")
 		}
 		
 		def selectedParents = []
@@ -493,7 +473,6 @@ class NodeController {
 			])
 			redirect(action: "list")
 		} catch (Exception e) {
-			status.setRollbackOnly()
 			flash.message = message(code: 'default.not.deleted.message', args: [
 				message(code: 'node.label', default: 'Node'),
 				params.id
