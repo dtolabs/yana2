@@ -134,14 +134,28 @@ class NodeTypeController {
 		def externalPath = servletContext.getRealPath("${grailsApplication.config.images.icons.large}")
 		def defaultPath = servletContext.getRealPath("/images/icons/64")
 		def images = iconService.listImages(defaultPath,externalPath)
+        params.project=null // Nullify param because project.id is the expected
+                            // value by save() not project's name
+
         [nodeTypeInstance: new NodeType(params),images:images]
     }
 
     def save() {
+        def project = Project.findByName(params.project)
+        if (!project) {
+            response.status = 404
+            return render(text: message(code: 'default.not.found.message',
+                    args: ['Project', params.project],
+                    default: "Project {0} was not found"))
+        }
+
+        params.project=null // Nullify param because project.id is the expected
+                            // value by save() not project's name
+
         def nodeTypeInstance = new NodeType(params)
+        nodeTypeInstance.project = project
         if (!nodeTypeInstance.save(flush: true)) {
-            render(view: "create", model: [nodeTypeInstance: nodeTypeInstance])
-            return
+            return render(view: "create", model: [nodeTypeInstance: nodeTypeInstance])
         }
 
 		ArrayList nodetypes = [nodeTypeInstance]
@@ -254,20 +268,28 @@ class NodeTypeController {
     def delete() {
         def nodeTypeInstance = NodeType.get(params.id)
         if (!nodeTypeInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
-            redirect(action: "list")
-            return
+			flash.message = message(code: 'default.not.found.message', args: [
+                    message(code: 'nodeType.label', default: 'NodeType'), params.id])
+            return redirect(action: "list")
+        }
+        if (nodeTypeInstance?.nodes?.size() > 0) {
+            flash.message = message(code: 'nodeType.delete.nodesExist', args: [
+                    message(code: 'nodeType.label', default: 'NodeType'), params.id])
+
+            return redirect(action: "show", id: params.id)
         }
 
         try {
             nodeTypeInstance.delete(flush: true)
-			
+			println("DEBUG: nodeTypeInstance deleted")
+
 			ArrayList nodetypes = [nodeTypeInstance]
 			webhookService.postToURL('nodetype', nodetypes,'delete')
 			
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "list")
         }catch (DataIntegrityViolationException e) {
+            println("DEBUG: delete(): exception: " + e.message)
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'nodeType.label', default: 'NodeType'), params.id])
             redirect(action: "show", id: params.id)
         }

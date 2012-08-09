@@ -13,11 +13,18 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
+            <g:if test="${nodeTypeInstance}">
+                <g:hasErrors bean="${nodeTypeInstance}">
+                    <div class="message">
+                        <g:renderErrors bean="${nodeTypeInstance}"/>
+                    </div>
+                </g:hasErrors>
+            </g:if>
 
-			<g:form action="save" >
+            <g:form action="save" >
 				<table border=0 cellspacing=0 cellpadding=0 valign=top>
 					<tr valign=top>
-						<td>Name:</td><td><g:textField name="name" required="" value="${nodeTypeInstance?.name}"/></td>
+						<td>Name:</td><td><g:textField name="name" value="${nodeTypeInstance?.name}"/></td>
 					</tr>			
 					<tr valign=top>
 						<td>Description:</td><td><g:textField name="description" value="${nodeTypeInstance?.description}"/></td>

@@ -1,140 +1,152 @@
 package com.dtolabs
 
+import grails.test.mixin.TestFor
+import grails.test.mixin.Mock
+
 
 @TestFor(NodeTypeController)
-//@Mock(NodeType)
-@Mock([NodeType,Webhook,WebhookService,IconService])
-class NodeTypeControllerTests{
+@Mock([NodeType, Project, NodeTypeRelationship, Webhook, Node])
 
-	def iconService;
-	def webhookService
+class NodeTypeControllerTests {
 
-    def populateValidParams(params) {
-      assert params != null
-      // TODO: Populate valid properties like...
-	  params["id"] = 1
-	  params["version"] = 1
-      params["name"] = 'nodetype_test'
-    }
 
     void testIndex() {
         controller.index()
         assert "/nodeType/list" == response.redirectedUrl
     }
 
-	/*
-	 * need to fix for included service call
-    void testList() {
 
+    void testList() {
+        defineBeans {
+            iconService(IconService)
+        }
+
+        Project project = new Project(name: 'test1', description: 'desc').save()
+
+        def typeA = new NodeType(project: project,
+                name: "TypeA",
+                description: "test node type A description",
+                image: "Node.png").save()
+        def typeB = new NodeType(project: project,
+                name: "TypeB",
+                description: "test node type B description",
+                image: "Node.png").save()
+        def typeC = new NodeType(project: project,
+                name: "TypeC",
+                description: "test node type C description",
+                image: "Node.png").save()
+
+        params.project = project.name
+
+        /**
+         * Run the controller action
+         */
         def model = controller.list()
 
-        assert model.nodeTypeInstanceList.size() == 0
-        assert model.nodeTypeInstanceTotal == 0
-    }
-    */
+        //  model: [nodeTypeInstanceList: NodeType.list(params), nodeTypeInstanceTotal: NodeType.count(),path:path]
+        assertNotNull("Model not returned", model)
+        assertEquals(3, model.nodeTypeInstanceList.size())
+        assertTrue(model.nodeTypeInstanceList.contains(typeA))
+        assertTrue(model.nodeTypeInstanceList.contains(typeB))
+        assertTrue(model.nodeTypeInstanceList.contains(typeC))
 
-    void testSave () {
-        controller.save()
-
-        assert model.nodeTypeInstance != null
-        assert view == '/nodeType/create'
-
-        response.reset()
-
-        populateValidParams(params)
-        //controller.save()
-		
-        //assert response.redirectedUrl == '/nodeType/show/1'
-       // assert controller.flash.message != null
-       // assert NodeType.count() == 1
     }
 
-    void testEdit() {
-        //controller.edit()
+    void testShow() {
+        defineBeans {
+            iconService(IconService)
+        }
 
-        //assert flash.message != null
-        //assert response.redirectedUrl == '/nodeType/list'
+        Project project = new Project(name: 'test1', description: 'desc').save()
 
+        def typeA = new NodeType(project: project,
+                name: "TypeA",
+                description: "test node type A description",
+                image: "Node.png").save()
 
-        populateValidParams(params)
-        def nodeType = new NodeType(params)
+        params.project = project.name
+        params.id = typeA.id
 
-        assert nodeType.save() != null
+        /**
+         * Run the controller action
+         */
+        def model = controller.show()
 
-        params.id = nodeType.id
+        // model:	[children:children,parents:parents,nodeTypeInstance: nodeTypeInstance,path:path]
 
-        //def model = controller.edit()
+        assertNotNull("Model not returned", model)
+        assertEquals(typeA.name, model.nodeTypeInstance.name)
+        assertEquals(0, model.children.size())
+        assertEquals(0, model.parents.size())
+        assertEquals("Incorrect number of node types", 1, NodeType.count)
 
-        //assert model.nodeTypeInstance == nodeType
-    }
-
-    void testUpdate() {
-        controller.update()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/nodeType/list'
-
-        response.reset()
-
-
-        populateValidParams(params)
-        def nodeType = new NodeType(params)
-
-		if(nodeType.save()){
-			
-			assert nodeType.save(flush:true) != null
-			
-			//FIX
-			//controller.update()
-			//params.id = nodeType.id
-			//assert response.redirectedUrl == "/nodeType/show/$nodeType.id"
-			//assert flash.message != null
-		}else{
-			// test invalid parameters in update
-			//TODO: add invalid values to params object
-			assert view == "/nodeType/edit"
-			
-		}
-
-        //controller.update()
-        //nodeType.clearErrors()
-        //populateValidParams(params)
-
-
-        //test outdated version number
-        response.reset()
-        nodeType.clearErrors()
-
-        populateValidParams(params)
-        params.id = nodeType.id
-        params.version = -1
-        //controller.update()
-
-        //assert view == "/nodeType/edit"
-        //assert model.nodeTypeInstance != null
-        //assert model.nodeTypeInstance.errors.getFieldError('version')
-        //assert flash.message != null
     }
 
     void testDelete() {
+        defineBeans {
+            iconService(IconService)
+            webhookService(WebhookService)
+        }
+
+        Project project = new Project(name: 'test1', description: 'desc').save()
+
+        def typeA = new NodeType(project: project,
+                name: "TypeA",
+                description: "test node type A description",
+                image: "Node.png").save()
+
+        params.project = project.name
+        params.id = typeA.id
+
+        /**
+         * Run the controller action
+         */
         controller.delete()
-        assert flash.message != null
-        assert response.redirectedUrl == '/nodeType/list'
 
-        response.reset()
+        assertEquals("Incorrect number of node types", 0, NodeType.count)
+        assert "/nodeType/list" == response.redirectedUrl
+        assertFalse(NodeType.exists(params.id))
 
-        populateValidParams(params)
-        def nodeType = new NodeType(params)
+    }
 
-        assert nodeType.save() != null
-        assert NodeType.count() == 1
+    /**
+     * A NodeType that has Nodes cannot be deleted
+     */
+    void testDelete_withNodes() {
+        defineBeans {
+            iconService(IconService)
+            webhookService(WebhookService)
+        }
 
-        params.id = nodeType.id
+        Project project = new Project(name: 'test1', description: 'desc').save()
 
-        //controller.delete()
+        def typeA = new NodeType(project: project,
+                name: "TypeA",
+                description: "test node type A description",
+                image: "Node.png").save()
 
-        //assert NodeType.count() == 0
-        //assert NodeType.get(nodeType.id) == null
-        //assert response.redirectedUrl == '/nodeType/list'
+        // create an instance of this NodeType
+        def node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
+                project: project, nodetype: typeA).save()
+
+        // Make sure the type sees it has one node
+        assert 1 == typeA.nodes.size()
+
+        // Declare the request parameters to delete the NodeType
+        params.project = project.name
+        params.id = typeA.id
+
+        /**
+         * Run the controller action
+         */
+        controller.delete()
+
+        // Ensure the type still exists
+        assertEquals("Incorrect number of node types", 1, NodeType.count)
+        assertTrue("NodeType no longer exists.", NodeType.exists(params.id))
+
+        // Should be redirected back to show page
+        assertEquals("/nodeType/show/${params.id}", response.redirectedUrl)
+
     }
 }

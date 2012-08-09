@@ -25,7 +25,7 @@ class NodeType{
     Date lastUpdated
 	
     static constraints = {
-        name(blank:false)
+        name(blank:false, unique: 'project')
 		description(blank:true, nullable:true)
 		image(blank:true, nullable:true)
         project(nullable: false)
