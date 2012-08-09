@@ -140,7 +140,7 @@ class NodeServiceTests {
 	void testCreateNode() {
 		assertEquals(0, Node.list().size())
         def mockControl = mockFor(ProjectService)
-        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
         service.projectService = mockControl.createMock()
 
         service.createNode(testProject,
@@ -162,6 +162,11 @@ class NodeServiceTests {
 	void testUpdateNode() {
 		assertEquals(0, Node.list().size())
 
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        service.projectService = mockControl.createMock()
+
 		service.createNode(testProject,
 						   testNodeType1,
 						   "testNode1",
@@ -171,10 +176,6 @@ class NodeServiceTests {
 
 		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
 
-        def mockControl = mockFor(ProjectService)
-        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
-        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
-        service.projectService = mockControl.createMock()
 
 		service.updateNode(testProject,
 						   testNode1,
@@ -196,8 +197,8 @@ class NodeServiceTests {
 		assertEquals(0, Node.list().size())
 
         def mockControl = mockFor(ProjectService)
-        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
-        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject1 }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
         service.projectService = mockControl.createMock()
 
 		service.createNode(testProject,
@@ -218,6 +219,11 @@ class NodeServiceTests {
 	void testCreateNodes() {
 		assertEquals(0, Node.list().size())
 
+        def mockControl = mockFor(ProjectService)
+        8.times {
+            mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        }
+        service.projectService = mockControl.createMock()
 		createNodes()
 
 println("---------------------->")
