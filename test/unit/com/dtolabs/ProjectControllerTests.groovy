@@ -41,7 +41,7 @@ class ProjectControllerTests {
         messageSource.addMessage("parameter.missing", request.locale, "Missing: {0}")
         controller.select()
         assert '/project/list'==response.redirectedUrl
-        assert 'Missing: project'==request.message
+        assert 'Missing: project'== flash.message
     }
     void testSelectMissingProject(){
         //project not found
