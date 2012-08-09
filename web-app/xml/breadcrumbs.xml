@@ -7,7 +7,8 @@
         <action name='show' parent='list'>Show</action>
         <action name='edit' parent='list'>Edit</action>
         <action name='create' parent='list'>Create</action>
-        <action name='list'>Choose a Project</action>
+        <action name='editAdmin' parent='list'>ACLs</action>
+        <action name='list'>Projects</action>
     </controller>
     <controller name='artifact'>
         <action name='show' parent='list'>Show</action>
