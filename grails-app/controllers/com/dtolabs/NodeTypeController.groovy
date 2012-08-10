@@ -131,6 +131,10 @@ class NodeTypeController {
 		 }
    }
 
+    def index() {
+        redirect(action: "list", params: params)
+    }
+
     @ProjectAccess(ProjectAccess.Level.read)
     def list() {
 		def path = iconService.getSmallIconPath()
@@ -326,18 +330,25 @@ class NodeTypeController {
     @ProjectAccess(ProjectAccess.Level.read)
 	def getNodeAttributes(){
         def response = []
-			def attrs = []
-			if(params.templateid){
-				println("")
-				List attributes = Attribute.executeQuery("select new map(A.id as id,A.name as name) from Attribute as A order by A.name asc")
-				List atts = NodeAttribute.executeQuery("select new map(TA.id as tid,A.id as id,A.name as attributename,F.dataType as datatype) from NodeAttribute as TA left join TA.attribute as A left join A.filter as F where TA.nodetype.id=${params.templateid} order by A.name asc");
-				atts.each(){
-					attrs += [tid:it.tid,id:it.id,key:it.nodevalue,val:it.attributename,datatype:it.datatype];
-				}
-				
-				response += [attList:attributes,atts:attrs]
-			}
+        def attrs = []
+        def NodeType nodeType = NodeType.get(params.templateid.toLong())
+        if (nodeType) {
 
-			render response as JSON
-	}
+            def attributes = []
+            Attribute.list().each() {
+                attributes += [id:it.id, name:it.name]
+            }
+
+            NodeAttribute.findAllByNodetype(nodeType).each() { NodeAttribute na ->
+
+                attrs += [tid:na.nodetype.id, id:na.id,
+                        val:na.attribute.name, datatype:na.attribute.filter.dataType];
+            }
+
+            response += [attList:attributes, atts:attrs]
+        }
+
+        render response as JSON
+
+    }
 }

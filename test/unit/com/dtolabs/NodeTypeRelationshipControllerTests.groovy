@@ -1,36 +1,25 @@
 package com.dtolabs
 
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+
 
 @TestFor(NodeTypeRelationshipController)
-@Mock(NodeTypeRelationship)
+@Mock([NodeTypeRelationship,Project,NodeType])
 class NodeTypeRelationshipControllerTests {
 
 
-    def populateValidParams(params) {
-      assert params != null
-      // TODO: Populate valid properties like...
+    void testList1() {
+        def project = new Project(name: 'test1', description: 'desc').save()
 
-	  Date now = new Date()
-	  mockDomain(NodeType, [new NodeType(id:1,version:1,name:'Server')])
-	  NodeType server = NodeType.get(1)
-	  
-	  mockDomain(NodeType, [new NodeType(id:2,version:1,name:'Software')])
-	  NodeType software = NodeType.get(2)
-	  
-	  params["id"] = 1
-	  params["version"] = 1
-	  params["name"] = "softwareInstallation"
-	  params["parent"] = server
-	  params["child"] = software
-	  
-    }
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
 
-    void testIndex() {
-        controller.index()
-        assert "/nodeTypeRelationship/list" == response.redirectedUrl
-    }
-
-    void testList() {
+        params.project = project.name
 
         def model = controller.list()
 
@@ -38,135 +27,60 @@ class NodeTypeRelationshipControllerTests {
         assert model.nodeTypeRelationshipInstanceTotal == 0
     }
 
-    void testCreate() {
-       def model = controller.create()
 
-       assert model.nodeTypeRelationshipInstance != null
-    }
 
-    void testSave() {
-		//controller.save()
-		
-		def nodeTypeRelationshipInstance = new NodeTypeRelationship(params)
-		if(nodeTypeRelationshipInstance.save()){
-			assert nodeTypeRelationshipInstance.save(flush:true) != null
-			
-			controller.save()
-			params.id = nodeTypeRelationshipInstance.id
-        	assert response.redirectedUrl == '/nodeTypeRelationship/show/1'
-			assert controller.flash.message != null
-			assert NodeTypeRelationship.count() == 1
-		}
-    }
-
-	/*
-	 * fix - iconservice causing break
     void testShow() {
-        controller.show()
+        defineBeans {
+            iconService(IconService)
+        }
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/nodeTypeRelationship/list'
+        def project = new Project(name: 'test1', description: 'desc').save()
+        def parent =  new NodeType(name:  "typeA", description: "desc", project: project).save()
+        def child =   new NodeType(name:  "typeB", description: "desc", project:  project).save()
+
+        def relationship = new NodeTypeRelationship(name: "rel1", parent: parent, child: child )
+        assert relationship.validate()
+        assert null != relationship.save()
 
 
-        populateValidParams(params)
-        def nodeTypeRelationship = new NodeTypeRelationship(params)
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
 
-        assert nodeTypeRelationship.save() != null
-
-        params.id = nodeTypeRelationship.id
+        params.id = relationship.id
+        params.project = project.id
 
         def model = controller.show()
 
-        assert model.nodeTypeRelationshipInstance == nodeTypeRelationship
-    }
-    */
-
-    void testEdit() {
-        controller.edit()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/nodeTypeRelationship/list'
-
-
-        populateValidParams(params)
-        def nodeTypeRelationship = new NodeTypeRelationship(params)
-
-        assert nodeTypeRelationship.save() != null
-
-        params.id = nodeTypeRelationship.id
-
-        def model = controller.edit()
-
-        assert model.nodeTypeRelationshipInstance == nodeTypeRelationship
+        assert model.nodeTypeRelationshipInstance == relationship
     }
 
-    void testUpdate() {
-        controller.update()
 
-        assert flash.message != null
-        //assert response.redirectedUrl == '/nodeTypeRelationship/list'
-
-        response.reset()
-
-
-        populateValidParams(params)
-        def nodeTypeRelationship = new NodeTypeRelationship(params)
-
-		
-		
-		if(nodeTypeRelationship.save()){
-			assert nodeTypeRelationship.save(flush:true) != null
-			
-			//FIX
-			controller.update()
-			params.id = nodeTypeRelationship.id
-			assert response.redirectedUrl == "/nodeTypeRelationship/show/${nodeTypeRelationship.id}"
-			assert flash.message != null
-		}else{
-			// test invalid parameters in update
-			//TODO: add invalid values to params object
-			assert view == "/nodeTypeRelationship/edit"
-		}
-
-        controller.update()
-        nodeTypeRelationship.clearErrors()
-        populateValidParams(params)
-		
-
-        //test outdated version number
-        response.reset()
-        nodeTypeRelationship.clearErrors()
-
-        populateValidParams(params)
-        params.id = nodeTypeRelationship.id
-        params.version = -1
-        controller.update()
-
-        assert view == "/nodeTypeRelationship/edit"
-        assert model.nodeTypeRelationshipInstance != null
-        assert model.nodeTypeRelationshipInstance.errors.getFieldError('version')
-        assert flash.message != null
-    }
 
     void testDelete() {
-        controller.delete()
-        assert flash.message != null
-        assert response.redirectedUrl == '/nodeTypeRelationship/list'
+        def project = new Project(name: 'test1', description: 'desc').save()
+        def parent = new NodeType(name: "typeA", description: "desc", project:  project).save()
+        def child = new NodeType(name:  "typeB", description: "desc", project:  project).save()
 
-        response.reset()
+        def rel1 = new NodeTypeRelationship(name: "rel1", parent: parent, child: child ).save()
 
-        populateValidParams(params)
-        def nodeTypeRelationship = new NodeTypeRelationship(params)
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
 
-        assert nodeTypeRelationship.save() != null
-        assert NodeTypeRelationship.count() == 1
-
-        params.id = nodeTypeRelationship.id
+        params.id = rel1.id
+        params.project = project.name
 
         controller.delete()
 
         assert NodeTypeRelationship.count() == 0
-        assert NodeTypeRelationship.get(nodeTypeRelationship.id) == null
+        assert NodeTypeRelationship.get(rel1.id) == null
         assert response.redirectedUrl == '/nodeTypeRelationship/list'
     }
 }

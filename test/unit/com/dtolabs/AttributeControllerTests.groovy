@@ -1,165 +1,138 @@
 package com.dtolabs
 
+import grails.test.mixin.TestFor
+import grails.test.mixin.Mock
+
 
 @TestFor(AttributeController)
-@Mock([Attribute,WebhookService])
+@Mock([Attribute,WebhookService,Filter])
 class AttributeControllerTests {
-	
-    def populateValidParams(params) {
-      assert params != null
-      // TODO: Populate valid properties like...
-	  Date now = new Date()
-	  mockDomain(Filter, [new Filter(id:1,version:1,dataType:'String',regex:'^.*\$')])
-	  
-	  params["id"] = 1
-	  params["version"] = 1
-      params["name"] = 'attribute_name'
-	  params["filter"] = Filter.get(1)
 
-    }
+    void testList1() {
+        def project = new Project(name: 'test1', description: 'desc')
 
-    void testIndex() {
-        controller.index()
-        assert "/attribute/list" == response.redirectedUrl
-    }
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
 
-    void testList() {
-
+        params.project = project.name
         def model = controller.list()
 
         assert model.attributeInstanceList.size() == 0
-        assert model.attributeInstanceTotal == 0
+    }
+
+    void testList2() {
+        def project = new Project(name: 'test1', description: 'desc')
+        params.project = project.name
+
+        def filter = new Filter(dataType:'String',regex:'^.*\$', project:project).save()
+        def attr1 = new Attribute(name: "arch", filter: filter, project: project).save()
+
+
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
+        def model = controller.list()
+
+        assert model.attributeInstanceList.size() == 1
+        assert model.attributeInstanceList.get(0) == attr1
+
     }
 
     void testCreate() {
+        def project = new Project(name: 'test1', description: 'desc')
+        params.project = project.name
+
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
+
        def model = controller.create()
        assert model.attributeInstance != null
     }
 
-    void testSave() {
-        controller.save()
-
-        assert model.attributeInstance != null
-        assert view == '/attribute/create'
-
-        response.reset()
-
-        populateValidParams(params)
-        controller.save()
-			
-	    assert response.redirectedUrl == '/attribute/show/1'
-	    assert controller.flash.message != null
-	    assert Attribute.count() == 1
-    }
-
-	/*
-	 * research services in unit tests
-    void testShow() {
-        controller.show()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/attribute/list'
 
 
-        populateValidParams(params)
-        def attribute = new Attribute(params)
 
-        assert attribute.save() != null
+    void testShow1() {
+        defineBeans {
+            iconService(IconService)
+        }
 
-        params.id = attribute.id
+        def project = new Project(name: 'test1', description: 'desc')
+
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
+
+        params.project = project.name
+        params.id = 123 // phony id
 
         def model = controller.show()
 
-        assert model.attributeInstance == attribute
-    }
-    */
 
-    void testEdit() {
-        controller.edit()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/attribute/list'
-
-
-        populateValidParams(params)
-        def attribute = new Attribute(params)
-
-        assert attribute.save() != null
-
-        params.id = attribute.id
-
-        def model = controller.edit()
-
-        assert model.attributeInstance == attribute
+        assert null == model
     }
 
-    void testUpdate() {
-		mockDomain(Attribute)
-        controller.update()
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/attribute/list'
+    void testShow2() {
+        defineBeans {
+            iconService(IconService)
+        }
 
-        response.reset()
+        def project = new Project(name: 'test1', description: 'desc')
+        def filter = new Filter(dataType:'String',regex:'^.*\$', project: project).save()
+        def attr1 = new Attribute(name: "arch", filter: filter,  project: project).save()
 
-        populateValidParams(params)
-        def attribute = new Attribute(params)
 
-		if(attribute.save()){
-			
-			assert attribute.save(flush:true) != null
-			
-			//FIX
-			controller.update()
-			params.id = attribute.id
-			assert response.redirectedUrl == "/attribute/show/${attribute.id}"
-			assert flash.message != null
-		}else{
-			// test invalid parameters in update
-			//TODO: add invalid values to params object
-			assert view == "/attribute/edit"
-			
-		}
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
 
-        //controller.update()
-        //attribute.clearErrors()
-        //populateValidParams(params)
+        params.project = project.name
+        params.id = attr1.id
 
-		
-        //test outdated version number
-        response.reset()
-        attribute.clearErrors()
+        def model = controller.show()
 
-        populateValidParams(params)
-        params.id = attribute.id
-        params.version = -1
-        controller.update()
 
-        assert view == "/attribute/edit"
-        assert model.attributeInstance != null
-        assert model.attributeInstance.errors.getFieldError('version')
-        assert flash.message != null
+        assert model.attributeInstance == attr1
     }
 
     void testDelete() {
+        def project = new Project(name: 'test1', description: 'desc')
+        def filter = new Filter(dataType:'String',regex:'^.*\$', project:project).save()
+        def attr1 = new Attribute(name: "arch", filter: filter,  project: project).save()
+
+
+        def control = mockFor(ProjectService)
+        control.demand.findProject{name->
+            assert name == project.name
+            project
+        }
+        controller.projectService=control.createMock()
+
+        params.project = project.name
+        params.id = attr1.id
+
         controller.delete()
-        assert flash.message != null
-        assert response.redirectedUrl == '/attribute/list'
 
-        response.reset()
+        assert 0 == Attribute.count()
 
-        populateValidParams(params)
-        def attribute = new Attribute(params)
-
-        assert attribute.save() != null
-        assert Attribute.count() == 1
-
-        params.id = attribute.id
-
-        controller.delete()
-
-        assert Attribute.count() == 0
-        assert Attribute.get(attribute.id) == null
         assert response.redirectedUrl == '/attribute/list'
     }
 }

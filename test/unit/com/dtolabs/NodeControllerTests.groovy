@@ -239,6 +239,7 @@ class NodeControllerTests {
         defineBeans {
             webhookService(WebhookService)
             projectService(ProjectService)
+            iconService(IconService)
         }
 
         Project project = new Project(name: 'test1', description: 'desc').save()
@@ -281,6 +282,7 @@ class NodeControllerTests {
         defineBeans {
             nodeService(NodeService)
             webhookService(WebhookService)
+            iconService(IconService)
         }
 
         Project project = new Project(name: 'test1', description: 'desc').save()

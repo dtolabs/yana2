@@ -5,7 +5,7 @@ import grails.test.mixin.Mock
 
 
 @TestFor(NodeTypeController)
-@Mock([NodeType, Project, NodeTypeRelationship, Webhook, Node])
+@Mock([NodeType, Project, NodeTypeRelationship, Webhook, Node, Filter, Attribute, NodeAttribute])
 
 class NodeTypeControllerTests {
 
@@ -149,4 +149,48 @@ class NodeTypeControllerTests {
         assertEquals("/nodeType/show/${params.id}", response.redirectedUrl)
 
     }
+
+    /**
+     * Tests AJAX method
+     */
+     void testGetNodeAttributes() {
+         Project project = new Project(name: 'test1', description: 'desc').save()
+         Filter filter = new Filter(project: project, dataType: "String", regex: ".*").save()
+         Attribute arch = new Attribute(name:  "arch", project:  project, filter: filter).save()
+         Attribute repo = new Attribute(name:  "repo", project:  project, filter: filter).save()
+         NodeType nodeType = new NodeType(project: project,
+                 name: "TypeA",
+                 description: "test node type A description",
+                 image: "Node.png").save()
+         NodeAttribute attr1 = new NodeAttribute(attribute: arch, nodetype: nodeType, required: false).save()
+         NodeAttribute attr2 = new NodeAttribute(attribute: repo, nodetype: nodeType, required: false).save()
+
+         params.templateid = nodeType.id
+         /**
+          * Run the controller action
+          */
+         controller.getNodeAttributes()
+
+         println("DEBUG: response.text=" + response.text)
+         assertNotNull("No JSON returned", response.json)
+         assertEquals("attList wrong size: " + response.json.attList, 2, response.json.attList[0].size())
+         assertEquals("atts wrong size: " + response.json.atts, 2, response.json.atts[0].size())
+
+         def hasAtt_arch = false
+         def hasAtt_repo = false
+         response.json.atts[0].each {
+             assertEquals("NodeType id incorrect in atts.", nodeType.id, it?.tid.toLong())
+             assertEquals("Filter incorrect in atts.", filter.dataType, it?.datatype)
+             switch (it?.val) {
+                 case "arch":
+                     hasAtt_arch = true
+                     break
+                 case "repo":
+                     hasAtt_repo = true
+
+             }
+         }
+         assertTrue("attribute not found in JSON.", hasAtt_arch)
+         assertTrue("attribute not found in JSON.", hasAtt_repo)
+     }
 }
