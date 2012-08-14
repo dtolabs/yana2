@@ -7,7 +7,7 @@ class Node {
         project component:true
     }
 	
-	static mappedBy = [children: 'child', parents: 'parent']
+	static mappedBy = [children: 'parent', parents: 'child']
 	static hasMany = [nodeValues:NodeValue,children:ChildNode,parents:ChildNode]
 	
     String name
