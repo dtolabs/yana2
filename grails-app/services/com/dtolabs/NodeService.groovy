@@ -29,13 +29,13 @@ class NodeService {
 						String tags,
 						List<Node> selectedParents,
 						List<Node> selectedChildren,
-						List<NodeValue> nodeValues) {
+						Map<String,String> values) {
         projectService.authorizedOperatorPermission(nodeType.project)
 		return commitNode(false, project, new Node(),
 			              nodeType, name, description, tags,
 			  			  selectedParents,
 						  selectedChildren,
-						  nodeValues)
+                          values)
 
 	}
 
@@ -46,13 +46,13 @@ class NodeService {
 						String tags,
 						List<Node> selectedParents,
 						List<Node> selectedChildren,
-						List<NodeValue> nodeValues) {
+						Map<String,String> values) {
         projectService.authorizedOperatorPermission(nodeInstance.project)
 		commitNode(true, project, nodeInstance,
 				   nodeInstance.nodetype, name, description, tags,
 	  			   selectedParents,
 				   selectedChildren,
-				   nodeValues)
+				   values)
 	}
 
     void deleteNode(Node nodeInstance) {
@@ -75,14 +75,29 @@ class NodeService {
         return readNode(node)
     }
 
+    /**
+     * List nodes for the project with the given paging parameters, return a map with [total: Integer, nodes: List]
+     * @param project
+     * @param params
+     * @return
+     */
+    Map listNodes(Project project, Map params=[:]){
+        projectService.authorizedReadPermission(project)
+        int totCount = Node.countByProject(project)
+        ArrayList nodes = Node.findAllByProject(project, params)
+        [total:totCount,nodes:nodes]
+    }
+
+    @PostFilter("hasPermission(filterObject.project, read) or hasPermission(filterObject.project, admin)")
+    List<Node> listNodesById(List<Long> ids){
+        return Node.findAll("from Node as N where N.id IN (:ids)", [ids: ids])
+    }
+
 	Node cloneNode(Node nodeInstance) {
         projectService.authorizedOperatorPermission(nodeInstance.project)
-		List<NodeValue> nodeValues = []
+		Map<String,String> nodeValues = [:]
 		nodeInstance.nodeValues.each() {NodeValue nodeValue ->
-			def nodeValueClone = new NodeValue()
-			nodeValueClone.nodeattribute = nodeValue.nodeattribute
-			nodeValueClone.value = nodeValue.value
-			nodeValues += nodeValueClone
+			nodeValues[nodeValue.nodeattribute.attribute.name]= nodeValue.value
 		}
 		
 		return commitNode(false, nodeInstance.project, new Node(),
@@ -103,7 +118,7 @@ class NodeService {
 							String tags,
 							List<Node> parentList,
 							List<Node> childList,
-							List<NodeValue> nodeValues) {
+                            Map<String, String> values) {
         nodeInstance.name = name
         nodeInstance.description = description
         nodeInstance.tags = tags
@@ -116,29 +131,48 @@ class NodeService {
             return nodeInstance
         }
 
-        nodeInstance.save(flush: true)
 
         if (doUpdate) {
             deleteParentsAndChildren(nodeInstance)
         }
 
+        HashSet toSave=[]
         // Next, assign all selected parent nodes of this node.
         parentList.each {parent ->
-            addChildNode(parent, nodeInstance)
+            if(addChildNode(parent, nodeInstance)){
+                toSave<<parent
+                toSave<<nodeInstance
+            }
         }
 
         // Next, assign all selected child nodes of this node.
         childList.each {child ->
-            addChildNode(nodeInstance, child)
+            if(addChildNode(nodeInstance, child)){
+                toSave << child
+                toSave << nodeInstance
+            }
+        }
+        toSave.each{
+            it.save()
         }
 
+        def nvmap = nodeInstance.nodeValues?.groupBy {it.nodeattribute.attribute.name}
+        def atmap = nodeType.attributes?.groupBy {it.attribute.name}
         // Next, assign all the NodeValue objects for this node.
-        nodeValues.each {nodeValue ->
+        values.each {nvname,nvalue ->
+            def nodeValue
             if (!doUpdate) {
+                def att = atmap[nvname]?.getAt(0)
+                nodeValue= new NodeValue(node: nodeInstance, nodeattribute: att, value: nvalue)
+                nodeInstance.addToNodeValues(nodeValue)
+            }else{
+                nodeValue = nvmap[nvname]?.getAt(0)
                 nodeValue.node = nodeInstance
+                nodeValue.value = nvalue
             }
             nodeValue.save(failOnError: true) // TODO: Is this failOnError necessary?
         }
+        nodeInstance.save(flush: true)
 
         println("-->")
         println(" nodeInstance.name:  ${nodeInstance.name} ")
@@ -168,6 +202,13 @@ class NodeService {
         }
     }
 
+    /**
+     * Create or return an existing ChildNode for the parent+child, return true if a new ChildNode was
+     * created and added for both Nodes
+     * @param parent
+     * @param child
+     * @return true if a new parent/child ChildNode was added to the Nodes
+     */
     private boolean addChildNode(Node parent, Node child) {
         ChildNode childNode = ChildNode.findByParentAndChild(parent, child)
         if (!childNode) {
@@ -176,7 +217,9 @@ class NodeService {
                 NodeTypeRelationship.findByParentAndChild(parent.nodetype, child.nodetype)
             if (nodeTypeRelationship) {
                 println("=== INFO: node-type-relationship allowed between ${parent.name} & ${child.name}")
-                childNode = new ChildNode(parent: parent, child: child)
+                childNode = new ChildNode()
+                parent.addToChildren(childNode)//sets the parent property
+                child.addToParents(childNode)//sets the child property
                 childNode.save(flush: true, failOnError: true)
                 return true
             } else {

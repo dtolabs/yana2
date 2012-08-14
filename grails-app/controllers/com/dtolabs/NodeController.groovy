@@ -79,8 +79,9 @@ class NodeController {
 	def list() {
         def project = projectService.findProject(params.project)
 		String path = iconService.getSmallIconPath()
-        int totCount = Node.countByProject(project)
-        ArrayList nodes = Node.findAllByProject(project, params)
+        def result=nodeService.listNodes(project,params)
+        int totCount = result.total
+        ArrayList nodes = result.nodes
 		if (params.format && params.format!='none') {
 			switch (params.format.toLowerCase()) {
 				case 'xml':
@@ -100,8 +101,9 @@ class NodeController {
 
 	def create() {
         def project = projectService.findProject(params.project)
+        def result = nodeService.listNodes(project)
 
-		[nodeList: Node.findAllByProject(project),
+		[nodeList: result.nodes,
 		 nodeTypeList: NodeType.findAllByProject(project),
 		 params:params]
 	}
@@ -141,25 +143,12 @@ class NodeController {
         }
 
 		try {
-			List<NodeValue> nodeValues = []
-			params.each {key, val ->
-				if (key.contains('att')
-					&& !key.contains('_filter')
-					&& !key.contains('_require')) {
-					NodeAttribute att = NodeAttribute.get(key[3..-1].toInteger())
-					nodeValues +=
-					  new NodeValue(node:nodeInstance,
-								    nodeattribute:att,
-								    value:val)
-				}
-			}
-
-			nodeInstance =
+            nodeInstance =
 			  nodeService.createNode(project, nodeInstance.nodetype,
 				  				     params.name, params.description, params.tags,
-									 getParentNodesFromParams(),
-									 getChildNodesFromParams(),
-									 nodeValues)
+									 getNodesByIdStrings(params.parents),
+                                     getNodesByIdStrings(params.children),
+                                     params.attributevalues)
 
 		} catch (Exception t) {
 			if (params.action == 'api') {
@@ -202,8 +191,8 @@ class NodeController {
 			redirect(action: "show", id: nodeInstance.id)
 		}
 	}
-	
-	def update() {
+
+    def update() {
         def project = projectService.findProject(params.project)
 		Node nodeInstance = nodeService.readNode(params.id)
 		if (!nodeInstance) {
@@ -221,23 +210,12 @@ class NodeController {
 		}
 
 		try {
-			List<NodeValue> nodeValues = []
-			params.each {key, val ->
-				if (key.contains('att')
-					&& !key.contains('_filter')
-					&& !key.contains('_require')) {
-					NodeValue nodeValue = NodeValue.get(key[3..-1].toInteger()) // TODO: What happens if NodeValue does not exit?
-					nodeValue.value = val
-                    nodeValues<<nodeValue
-				}
-			}
-
-			nodeService.updateNode(
+            nodeService.updateNode(
 			  nodeInstance.project, nodeInstance,
 			  params.name, params.description, params.tags,
-			  getParentNodesFromParams(),
-			  getChildNodesFromParams(),
-			  nodeValues)
+              getNodesByIdStrings(params.parents),
+              getNodesByIdStrings(params.children),
+              params.attributevalues)
 		} catch (Exception e) {
 
             if (params.action == 'api') {
@@ -505,18 +483,9 @@ class NodeController {
 		render response as JSON
 	}
 	
-	private List<Node> getNodesFromParams(Long[] nodeIDs) {
-		return Node.findAll("from Node as N where N.id IN (:ids)", [ids:nodeIDs])
-	}
 
-	private List<Node> getParentNodesFromParams() {
-		Long[] nodeIDs = Eval.me("${params.parents}")		
-		return (nodeIDs ? getNodesFromParams(nodeIDs) : [])
+	private List<Node> getNodesByIdStrings(final List<String> input) {
+        List<Long> nodeIDs = input.collect{Long.parseLong(it)}
+		return (nodeIDs ? nodeService.listNodesById(nodeIDs) : [])
 	}
-
-	private List<Node> getChildNodesFromParams() {
-		Long[] nodeIDs = Eval.me("${params.children}")		
-		return (nodeIDs ? getNodesFromParams(nodeIDs) : [])
-	}
-
 }

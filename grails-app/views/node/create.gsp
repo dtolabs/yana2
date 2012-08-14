@@ -78,7 +78,7 @@
   		var template = $("#nodetype").val();
   	  	if(template!=null){
 			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getNodeAttributes",{templateid:template,ajax:'true'},function(json){
+			$.getJSON("${g.createLink(action: 'getNodeAttributes')}",{templateid:template,ajax:'true'},function(json){
 				if(json){
 					var div = document.getElementById("attributes");
 					div.innerHTML = '';
@@ -121,7 +121,7 @@
 						// input text - attid
 						var input = document.createElement('input');
 						input.type='text';
-						input.name='att'+j.id;
+						input.name='attributevalues.'+j.val;
 						input.id='att'+j.id;
 						input.size = 20;
 						input.onblur =  function () {validate(this)};

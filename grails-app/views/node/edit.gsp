@@ -20,11 +20,11 @@
   	}
 
   	function getAttributes(){
-  	  	var node = "${nodeInstance?.id}"
+  	  	var node = "${nodeInstance?.id}";
   		var template = ("${nodeInstance?.nodetype?.id}") ? "${nodeInstance?.nodetype?.id}" : $("#nodetype").val();
   	  	if(template!=null){
 			$.ajaxSetup({contentType:"application/json"});
-			$.getJSON("${request.contextPath}/node/getNodeAttributes",{templateid:template,node:node,ajax:'true'},function(json){
+			$.getJSON("${g.createLink(action: 'getNodeAttributes')}",{templateid:template,node:node,ajax:'true'},function(json){
 				if(json){
 					var div = document.getElementById("attributes");
 					div.innerHTML = '';
@@ -66,7 +66,7 @@
 						// input text - attid
 						var input = document.createElement('input');
 						input.type='text';
-						input.name='att'+j.tid;
+						input.name='attributevalues.'+j.val;
 						input.id='att'+j.tid;
 						input.value = j.key;
 						input.size = 20;
