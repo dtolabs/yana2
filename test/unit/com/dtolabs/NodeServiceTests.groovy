@@ -88,50 +88,50 @@ class NodeServiceTests {
 										   "testNode0",
 										   "test node 0 description",
 										   "test node 0 tags",
-										   [], [], [])
+										   [],[],[:])
 		def testNode1 = service.createNode(testProject,
 										   testNodeType1,
 
 										   "testNode1",
 										   "test node 1 description",
 										   "test node 1 tags",
-										   [], [], [])
+										   [],[],[:])
 		def testNode2 = service.createNode(testProject,
 										   testNodeType2,
 										   "testNode2",
 										   "test node 2 description",
 										   "test node 2 tags",
-										   [], [], [])
+										   [],[],[:])
 		def testNode3 = service.createNode(testProject,
 										   testNodeType3,
 										   "testNode3",
 										   "test node 3 description",
 										   "test node 3 tags",
-										   [testNode1], [], [])
+										   [testNode1], [], [:])
 		def testNode4 = service.createNode(testProject,
 										   testNodeType4,
 										   "testNode4",
 										   "test node 4 description",
 										   "test node 4 tags",
-										   [testNode1, testNode2], [], [])
+										   [testNode1, testNode2], [], [:])
 		def testNode6 = service.createNode(testProject,
 										   testNodeType6,
 										   "testNode6",
 										   "test node 6 description",
 										   "test node 6 tags",
-										   [], [], [])
+										   [],[],[:])
 		def testNode7 = service.createNode(testProject,
 										   testNodeType7,
 										   "testNode7",
 										   "test node 7 description",
 										   "test node 7 tags",
-										   [], [], [])
+										   [],[],[:])
 		def testNode5 = service.createNode(testProject,
 										   testNodeType5,
 										   "testNode5",
 										   "test node 5 description",
 										   "test node 5 tags",
-										   [testNode2], [testNode6, testNode7], [])
+										   [testNode2], [testNode6, testNode7], [:])
 	}
 	
 	void tearDown() {
@@ -148,7 +148,7 @@ class NodeServiceTests {
 						   "testNode1",
 						   "test node 1 description",
 						   "test node 1 tags",
-						   [], [], [])
+						   [], [], [:])
 		
 		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
 		assertEquals('testNode1', testNode1.name)
@@ -172,7 +172,7 @@ class NodeServiceTests {
 						   "testNode1",
 						   "test node 1 description",
 						   "test node 1 tags",
-						   [], [], [])
+						   [], [], [:])
 
 		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
 
@@ -182,7 +182,7 @@ class NodeServiceTests {
 						   "testNode1Update",
 						   "test node 1 description (update)",
 						   "test node 1 tags (update)",
-						   [], [], [])
+						   [], [], [:])
 		
 		def Node testNode1Update = Node.findByProjectAndName(testProject, "testNode1Update")	
 		assertEquals('testNode1Update', testNode1Update.name)
@@ -206,7 +206,7 @@ class NodeServiceTests {
 						   "testNode1",
 						   "test node 1 description",
 						   "test node 1 tags",
-						   [], [], [])
+						   [], [], [:])
 
 		assertEquals(1, Node.list().size())
 		

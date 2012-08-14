@@ -50,7 +50,7 @@ class NodeServiceCRUDTests extends GroovyTestCase {
                 "testNode1",
                 "test node 1 description",
                 "tagsA,tagsB",
-                [], [], [])
+                [], [], [:])
 
         Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
         assertEquals("testNode1", testNode1.name)
@@ -88,7 +88,7 @@ class NodeServiceCRUDTests extends GroovyTestCase {
                 "testNode1",
                 "test node 1 description",
                 "tagsA,tagsB",
-                [], [], [])
+                [], [], [:])
 
         Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
         assert null != testNode1
@@ -98,7 +98,7 @@ class NodeServiceCRUDTests extends GroovyTestCase {
                 "testNode1Update",
                 "test node 1 description (update)",
                 "tagsA,tagsB,tagUpdate",
-                [], [], [])
+                [], [], [:])
 
         Node testNode1Update = Node.findByProjectAndName(testProject, "testNode1Update")
 
@@ -137,7 +137,7 @@ class NodeServiceCRUDTests extends GroovyTestCase {
                 "testNode1",
                 "test node 1 description",
                 "tagsA,tagsB",
-                [], [], [])
+                [], [], [:])
 
         assertEquals(1, Node.list().size())
 
