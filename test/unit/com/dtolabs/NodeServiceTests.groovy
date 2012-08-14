@@ -177,8 +177,7 @@ class NodeServiceTests {
 		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
 
 
-		service.updateNode(testProject,
-						   testNode1,
+		service.updateNode(testNode1,
 						   "testNode1Update",
 						   "test node 1 description (update)",
 						   "test node 1 tags (update)",
@@ -225,34 +224,34 @@ class NodeServiceTests {
         }
         service.projectService = mockControl.createMock()
 		createNodes()
-
-println("---------------------->")
-NodeTypeRelationship.findAll().each {ntr ->
-	println("-->")
-	println("ntr.parent.name: ${ntr.parent.name}")
-	println("ntr.child.name:  ${ntr.child.name}")
-	println("<--")
-}
-Node.findAll().each {node ->
-	println("-->")
-	println("node.name: ${node.name}")
-	node.parents.each {parent ->
-		println("  parent-p: ${parent.parent.name}")
-		println("  parent-c: ${parent.child.name}")
-	}
-	node.children.each {child ->
-		println("   child-p: ${child.parent.name}")
-		println("   child-c: ${child.child.name}")
-	}
-	println("<--")
-}
-ChildNode.findAll().each {cn ->
-	println("-->")
-	println("cn.parent.name: ${cn.parent.name}")
-	println("cn.child.name:  ${cn.child.name}")
-	println("<--")
-}
-println("<----------------------")
+		
+		println("---------------------->")
+		NodeTypeRelationship.findAll().each {ntr ->
+			println("-->")
+			println("ntr.parent.name: ${ntr.parent.name}")
+			println("ntr.child.name:  ${ntr.child.name}")
+			println("<--")
+		}
+		Node.findAll().each {node ->
+			println("-->")
+			println("node.name: ${node.name}")
+			node.parents.each {parent ->
+				println("  parent-p: ${parent.parent.name}")
+				println("  parent-c: ${parent.child.name}")
+			}
+			node.children.each {child ->
+				println("   child-p: ${child.parent.name}")
+				println("   child-c: ${child.child.name}")
+			}
+			println("<--")
+		}
+		ChildNode.findAll().each {cn ->
+			println("-->")
+			println("cn.parent.name: ${cn.parent.name}")
+			println("cn.child.name:  ${cn.child.name}")
+			println("<--")
+		}
+		println("<----------------------")
 
 		// 0    1    2
 		//     / \	/ \

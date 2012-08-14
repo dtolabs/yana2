@@ -211,7 +211,7 @@ class NodeController {
 
 		try {
             nodeService.updateNode(
-			  nodeInstance.project, nodeInstance,
+			  nodeInstance,
 			  params.name, params.description, params.tags,
               getNodesByIdStrings(params.parents),
               getNodesByIdStrings(params.children),

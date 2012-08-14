@@ -93,7 +93,7 @@ class NodeServiceCRUDTests extends GroovyTestCase {
         Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
         assert null != testNode1
 
-        nodeService.updateNode(testProject,
+        nodeService.updateNode(
                 testNode1,
                 "testNode1Update",
                 "test node 1 description (update)",

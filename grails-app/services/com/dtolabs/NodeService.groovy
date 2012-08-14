@@ -4,6 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.access.prepost.PostFilter
 
 class NodeService {
+
     def projectService
     def aclService
     def aclUtilService
@@ -23,13 +24,13 @@ class NodeService {
      * @return
      */
 	Node createNode(Project project,
-						NodeType nodeType,
-						String name,
-						String description,
-						String tags,
-						List<Node> selectedParents,
-						List<Node> selectedChildren,
-						Map<String,String> values) {
+					NodeType nodeType,
+					String name,
+					String description,
+					String tags,
+					List<Node> selectedParents,
+					List<Node> selectedChildren,
+					Map<String,String> values) {
         projectService.authorizedOperatorPermission(nodeType.project)
 		return commitNode(false, project, new Node(),
 			              nodeType, name, description, tags,
@@ -39,16 +40,15 @@ class NodeService {
 
 	}
 
-	void updateNode(Project project,
-						Node nodeInstance,
-						String name,
-						String description,
-						String tags,
-						List<Node> selectedParents,
-						List<Node> selectedChildren,
-						Map<String,String> values) {
+	void updateNode(Node nodeInstance,
+					String name,
+					String description,
+					String tags,
+					List<Node> selectedParents,
+					List<Node> selectedChildren,
+					Map<String,String> values) {
         projectService.authorizedOperatorPermission(nodeInstance.project)
-		commitNode(true, project, nodeInstance,
+		commitNode(true, nodeInstance.project, nodeInstance,
 				   nodeInstance.nodetype, name, description, tags,
 	  			   selectedParents,
 				   selectedChildren,
@@ -61,13 +61,12 @@ class NodeService {
         nodeInstance.delete(flush: true)
 	}
 
-    private Node readNode(Node node)
-    {
+    private Node readNode(Node node) {
         projectService.authorizedReadPermission(node.project)
         return node
     }
-    Node readNode(id)
-    {
+	
+    Node readNode(id) {
         def node = Node.get(id)
         if(!node){
             return null
@@ -174,20 +173,6 @@ class NodeService {
         }
         nodeInstance.save(flush: true)
 
-        println("-->")
-        println(" nodeInstance.name:  ${nodeInstance.name} ")
-        nodeInstance.parents.each {
-            parent ->
-            println("  parent-p: ${parent.parent.name}")
-            println("  parent-c: ${parent.child.name}")
-        }
-        nodeInstance.children.each {
-            child ->
-            println("   child-p: ${child.parent.name}")
-            println("   child-c: ${child.child.name}")
-        }
-        println("<--")
-
         return nodeInstance
     }
 
@@ -215,22 +200,18 @@ class NodeService {
             // Is a relationship between parent & child allowed?
             NodeTypeRelationship nodeTypeRelationship =
                 NodeTypeRelationship.findByParentAndChild(parent.nodetype, child.nodetype)
-            if (nodeTypeRelationship) {
-                println("=== INFO: node-type-relationship allowed between ${parent.name} & ${child.name}")
+            if (nodeTypeRelationship) {                
                 childNode = new ChildNode()
                 parent.addToChildren(childNode)//sets the parent property
                 child.addToParents(childNode)//sets the child property
                 childNode.save(flush: true, failOnError: true)
                 return true
-            } else {
-                println("=== ERROR: node-type-relationship disallowed between ${parent.name} & ${child.name}")
+            } else {                
             }
-        } else {
-            println("=== ERROR: child-node already exists for ${parent.name} & ${child.name}")
+        } else {            
         }
         return false
     }
-
 }
 
 /**
