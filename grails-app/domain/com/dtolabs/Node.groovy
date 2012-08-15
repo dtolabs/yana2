@@ -7,7 +7,12 @@ class Node {
         project component:true
     }
 	
-	static mappedBy = [children: 'parent', parents: 'child']
+	static mappedBy = [
+            // maps this Node as the 'parent' field of ChildNodes in the children set.
+            children: 'parent',
+            // maps this Node as the 'child' field of ChildNodes in the parents set.
+            parents: 'child'
+    ]
 	static hasMany = [nodeValues:NodeValue,children:ChildNode,parents:ChildNode]
 	
     String name
