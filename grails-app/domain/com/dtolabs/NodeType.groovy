@@ -13,7 +13,12 @@ class NodeType{
         description name: 'typedesc'
     }
 	
-	static mappedBy = [children: 'child', parents: 'parent']
+	static mappedBy = [
+            // maps this NodeType as the 'parent' field of NodeTypeRelationship in the children set.
+            children: 'parent',
+            // maps this NodeType as the 'child' field of NodeTypeRelationship in the parents set.
+            parents: 'child'
+    ]
 	static hasMany = [nodes:Node, attributes:NodeAttribute,
             children:NodeTypeRelationship,parents:NodeTypeRelationship]
 
