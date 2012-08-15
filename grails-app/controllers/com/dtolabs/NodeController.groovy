@@ -129,43 +129,36 @@ class NodeController {
 
 	def save() {
         def project = projectService.findProject(params.project)
-        params.project = null
+        params.project=null
+        Node nodeInstance = new Node(params)
+        nodeInstance.project=project
+        def parentNodes = getNodesByIdStrings(params.parents)
+        def childNodes = getNodesByIdStrings(params.children)
+        def nodeType = NodeType.get(params.nodetype.id.toLong())
+        try{
+            nodeInstance =
+              nodeService.createNode(project, nodeType,
+                                     params.name, params.description, params.tags,
+                                     parentNodes,
+                                     childNodes,
+                                     params.attributevalues)
+        } catch(e) {
+            render(view: "create",
+                   model: [nodeInstance: nodeInstance])
 
-		Node nodeInstance = new Node(params)
-        nodeInstance.project = project
-
-        if (!nodeInstance.validate()) {
-            return render(view: "create", model:[
+            flash.message = message(code: 'default.not.created.message', args: [
+                    message(code: 'node.label', default: 'Node'),
+                    params.name
+            ])
+        }
+        if (nodeInstance.errors.hasErrors()) {
+            return render(view: "create", model: [
                     nodeTypeList: NodeType.findAllByProject(project),
                     nodeInstance: nodeInstance,
                     params: params
             ])
         }
 
-		try {
-            nodeInstance =
-			  nodeService.createNode(project, nodeInstance.nodetype,
-				  				     params.name, params.description, params.tags,
-									 getNodesByIdStrings(params.parents),
-                                     getNodesByIdStrings(params.children),
-                                     params.attributevalues)
-
-		} catch (Exception t) {
-			if (params.action == 'api') {
-				response.status = 400 //Bad Request
-				render "node creation failed"
-			} else {
-				render(view: 'create',
-					   model: [nodeInstance: nodeInstance])
-				flash.message = message(code: 'default.not.created.message', args: [
-					message(code: 'node.label', default: 'Node'),
-					params.name
-				])
-				redirect(action: "create", name: params.name)
-			}
-			return
-		}
-		
 		if (params.action == 'api') {
 			response.status = 200
 			if (params.format && params.format != 'none') {
@@ -209,29 +202,35 @@ class NodeController {
 			return
 		}
 
+        def parentNodes = getNodesByIdStrings(params.parents)
+        def childNodes = getNodesByIdStrings(params.children)
 		try {
             nodeService.updateNode(
 			  nodeInstance,
 			  params.name, params.description, params.tags,
-              getNodesByIdStrings(params.parents),
-              getNodesByIdStrings(params.children),
+              parentNodes,
+              childNodes,
               params.attributevalues)
-		} catch (Exception e) {
-
-            if (params.action == 'api') {
-				response.status = 400 //Bad Request
-				render "node update failed"
-			} else {
-				render(view: "edit",
-					   model: [nodeInstance: nodeInstance])
-				flash.message = message(code: 'default.not.updated.message', args: [
-					message(code: 'node.label', default: 'Node'),
-					params.name
-				])	
-				redirect(action: params.action, id: params.id)
-			}
+		} catch (e) {
+            render(view: "edit",
+                   model: [nodeInstance: nodeInstance])
+            flash.message = message(code: 'default.not.updated.message', args: [
+                message(code: 'node.label', default: 'Node'),
+                params.name
+            ])
 			return
 		}
+        if (nodeInstance.errors.hasErrors()) {
+            flash.message = message(code: 'default.not.updated.message', args: [
+                    message(code: 'node.label', default: 'Node'),
+                    params.name
+            ])
+            return render(view: "edit", model: [
+                    nodeTypeList: NodeType.findAllByProject(project),
+                    nodeInstance: nodeInstance,
+                    params: params
+            ])
+        }
 
 		if (params.action == 'api') {
 			response.status = 200
@@ -331,47 +330,34 @@ class NodeController {
 			])
 			return redirect(action: "list")
 		}
-		
-		def selectedParents = []
+
+
+		def selectedParents = nodeInstance.parents?.parent.collect {nd ->
+            [id: nd.id, name: nd.name, display: nd.toString()]
+        }
+        def selectedParentIds = new HashSet(selectedParents*.id)
 		def unselectedParents = []
-		nodeInstance.nodetype.children.each {nodeTypeRelationship ->
+		nodeInstance.nodetype.parents.each {nodeTypeRelationship ->
 			nodeTypeRelationship.parent.nodes.each {node ->
-				def Node selectedParent = null
-				nodeInstance.children.each {childNode ->
-					if (childNode.parent.id == node.id) {
-						selectedParent = node
-					}
-				}
-				if (selectedParent != null) {
-					selectedParents += [id:node.id,
-										name:node.name,
-										display:"${node.name} [${node.nodetype.name}]"]
-				} else {
-					unselectedParents += [id:node.id,
+				if (!(node.id in selectedParentIds)) {
+					unselectedParents << [id:node.id,
 										  name:node.name,
-										  display:"${node.name} [${node.nodetype.name}]"]
+										  display:node.toString()]
 				}
 			}
 		}
 
-		def selectedChildren = []
+		def selectedChildren = nodeInstance.children?.child.collect {nd->
+            [id:nd.id,name:nd.name,display:nd.toString()]
+        }
+        def selectedChildrenIds = new HashSet(selectedChildren*.id)
 		def unselectedChildren = []
-		nodeInstance.nodetype.parents.each {nodeTypeRelationship ->
+		nodeInstance.nodetype.children.each {nodeTypeRelationship ->
 			nodeTypeRelationship.child.nodes.each {node ->
-				def Node selectedChild = null
-				nodeInstance.parents.each {childNode ->
-					if (childNode.child.id == node.id) {
-						selectedChild = node
-					}
-				}
-				if (selectedChild != null) {
-					selectedChildren += [id:node.id,
-										 name:node.name,
-										 display:"${node.name} [${node.nodetype.name}]"]
-				} else {
-					unselectedChildren += [id:node.id,
+				if (!(node.id in selectedChildrenIds)) {
+					unselectedChildren << [id:node.id,
 										   name:node.name,
-										   display:"${node.name} [${node.nodetype.name}]"]
+										   display: node.toString()]
 				}
 			}
 		}
@@ -423,7 +409,7 @@ class NodeController {
 		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
             projectService.authorizedReadPermission(nodeType.project)
-			nodeType.children.each {nodeTypeRelationship ->
+			nodeType.parents.each {nodeTypeRelationship ->
 				nodeTypeRelationship.parent.nodes.each {node ->
 					unselectedParents += [id:node.id,
 										  name:node.name,
@@ -440,7 +426,7 @@ class NodeController {
 		if (params.id != 'null') {
 			NodeType nodeType = NodeType.get(params.id)
             projectService.authorizedReadPermission(nodeType.project)
-			nodeType.parents.each {nodeTypeRelationship ->
+			nodeType.children.each {nodeTypeRelationship ->
 				nodeTypeRelationship.child.nodes.each {node ->
 					unselectedChildren += [id:node.id,
 										   name:node.name,
@@ -484,7 +470,10 @@ class NodeController {
 	}
 	
 
-	private List<Node> getNodesByIdStrings(final List<String> input) {
+	private List<Node> getNodesByIdStrings(input) {
+        if(input instanceof String){
+            input=[input]
+        }
         List<Long> nodeIDs = input.collect{Long.parseLong(it)}
 		return (nodeIDs ? nodeService.listNodesById(nodeIDs) : [])
 	}
