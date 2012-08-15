@@ -154,6 +154,7 @@ class NodeService {
         toSave.each{
             it.save()
         }
+        nodeInstance.save()
 
         def nvmap = nodeInstance.nodeValues?.groupBy {it.nodeattribute.attribute.name}
         def atmap = nodeType.attributes?.groupBy {it.attribute.name}
