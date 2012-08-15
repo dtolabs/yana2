@@ -171,23 +171,23 @@
 				
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Parents: </td>
-					<td><span class="styled-select"><g:select name="unselectedParents" from="${unselectedParents}" optionKey="id" optionValue="display" value="${nodeInstance.children.parent.id}" multiple="true"/></span></td>
+					<td><span class="styled-select"><g:select name="unselectedParents" from="${unselectedParents}" optionKey="id" optionValue="display" value="${nodeInstance.parents.parent.id}" multiple="true"/></span></td>
 					<td>
 					<input type=button value="&gt;&gt;" onClick="selectMember('unselectedParents', 'parents')"/>
 					<br/>
 					<input type=button value="&lt;&lt;" onClick="selectMember('parents', 'unselectedParents')"/>
 					</td>
-					<td><span class="styled-select"><g:select name="parents" from="${selectedParents}" optionKey="id" optionValue="display" value="${nodeInstance.children.parent.id}" multiple="true"/></span></td>
+					<td><span class="styled-select"><g:select name="parents" from="${selectedParents}" optionKey="id" optionValue="display" value="${nodeInstance.parents.parent.id}" multiple="true"/></span></td>
 				</tr>
 				<tr>
 					<td style="font-weight:bold;" valign=top>Node Children: </td>
-					<td><span class="styled-select"><g:select name="unselectedChildren" from="${unselectedChildren}" optionKey="id" optionValue="display" value="${nodeInstance.parents.child.id}" multiple="true"/></span></td>
+					<td><span class="styled-select"><g:select name="unselectedChildren" from="${unselectedChildren}" optionKey="id" optionValue="display" value="${nodeInstance.children.child.id}" multiple="true"/></span></td>
 					<td>
 					<input type=button value="&gt;&gt;" onClick="selectMember('unselectedChildren', 'children')"/>
 					<br/>
 					<input type=button value="&lt;&lt;" onClick="selectMember('children', 'unselectedChildren')"/>
 					</td>
-					<td><span class="styled-select"><g:select name="children" from="${selectedChildren}" optionKey="id" optionValue="display" value="${nodeInstance.parents.child.id}" multiple="true"/></span></td>
+					<td><span class="styled-select"><g:select name="children" from="${selectedChildren}" optionKey="id" optionValue="display" value="${nodeInstance.children.child.id}" multiple="true"/></span></td>
 				</tr>
 			</table>
 				
