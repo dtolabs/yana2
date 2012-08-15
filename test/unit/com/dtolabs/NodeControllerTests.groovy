@@ -164,7 +164,7 @@ class NodeControllerTests {
 
         params.name = "node1"
         params.description = "desc"
-        params.'nodetype.id' = nodeType.id
+        params.nodetype=[id: nodeType.id]
         params.tags = "tag1,tag2"
         params.project = project.name
         request.method = "POST"
@@ -206,9 +206,11 @@ class NodeControllerTests {
 
     }
 
+    /**
+     * FIXME: this test should be a NodeService unit test
+     */
     void testSave_NotUnique() {
         defineBeans {
-            nodeService(NodeService)
             webhookService(WebhookService)
         }
 
@@ -224,7 +226,7 @@ class NodeControllerTests {
 
         params.name = "node1"
         params.description = "desc"
-        params.'nodetype.id' = nodeType.id
+        params.nodetype=[id: nodeType.id]
         params.tags = "tag1,tag2"
         params.project = project.name
         request.method = "POST"
@@ -235,6 +237,21 @@ class NodeControllerTests {
             project
         }
         controller.projectService = control.createMock()
+
+        def control2 = mockFor(NodeService, false)
+        control2.demand.createNode { Project proj, NodeType nodetype, name, description, tags, parentNodes, childNodes, nodeValues ->
+            assert name == 'node1'
+            assert proj == project
+            assert description == 'desc'
+            assert tags == 'tag1,tag2'
+            assert parentNodes == []
+            assert childNodes == []
+            assert nodeValues == null
+            def node = new Node(name: name, description: description, tags: tags, project: proj, nodetype: nodetype)
+            assert null == node.save()
+            node
+        }
+        controller.nodeService = control2.createMock()
         /**
          * Run the controller action
          */
