@@ -53,14 +53,13 @@ data=
 data="$data $(printf "%s:%s," nodetype "$TYPEID")"
 data="$data $(printf "%s:'%s'," name "$NAME")"
 data="$data $(printf "%s:'%s'," description "$DESCRIPTION")"
-data="$data $(printf "%s:'%s'," status "$STATUS")"
 data="$data $(printf "%s:'%s'" tags "$TAGS")"
 data="$data, ${attributeData[@]}"
 
 # 
 # Example data:
 #
-# "{name:'new node',description:'this is the description',nodetype:1,status:'DEV',tags:'this,is,a,test',att1:'value1',att2:'value2'}"
+# "{name:'new node',description:'this is the description',nodetype:1,tags:'this,is,a,test',att1:'value1',att2:'value2'}"
 #
 #
 
@@ -72,7 +71,7 @@ curl --fail --silent --request POST --header "Content-Type: application/json" \
     ${YANA_URL}/api/node/xml \
     --cookie ${cookie} -o $response || rerun_die "failed posting Yana data"
 
-nodeId=$(xmlstarlet sel -t -m /nodes/node -v @id $response)
+nodeId=$(xmlstarlet sel -t -m /yana/nodes/node -v @id $response)
 
 echo "$nodeId:$TYPE:$NAME"
 

@@ -3,176 +3,155 @@ package com.dtolabs
 import groovy.xml.MarkupBuilder
 
 class XmlService {
-	
-	static transactional = false
-	static scope = "prototype"
 
-	String formatNodes(ArrayList nodes){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.nodes() {
-			nodes.each(){ Node val1 ->
+    static transactional = false
+    static scope = "prototype"
 
-				def values = NodeValue.findAllByNode(val1)
+    String formatNodes(ArrayList nodeList) {
+        def writer = new StringWriter()
+        def xml = new MarkupBuilder(writer)
 
-				node(id:val1.id,name:val1.name,nodetypeId:val1.nodetype.id,type:val1.nodetype.name,tags:val1.tags){
-					description(val1.description)
-                                    'date-modified'(DateFormatUtil.formatRfc3339(val1.lastUpdated))
-                                    'date-created'(DateFormatUtil.formatRfc3339(val1.dateCreated))
-					attributes(){
-						values.each{ NodeValue val2 ->
-							'attribute'(id:val2.id,
-                                    name:val2.nodeattribute.attribute.name,
-                                    value:val2.value,required:val2.nodeattribute.required)
-						}
-					}
+        xml.yana() {
+            nodes() {
+                nodeList.each() { Node nd ->
 
-					parents(){
-						def rents = ChildNode.findAllByChild(Node.get(val1.id.toLong()));
-						rents.each{ parent ->
-							node(childnodeId:parent.id,id:parent.parent.id,name:parent.parent.name,nodetypeId:parent.parent.nodetype.id,type:parent.parent.nodetype.name,tags:parent.parent.tags,rolename:NodeTypeRelationship.findByParentAndChild(parent.parent.nodetype,parent.child.nodetype).name)
-						}
-					}
+                    def values = NodeValue.findAllByNode(nd)
 
-					children(){
-						def kinder = ChildNode.findAllByParent(Node.get(val1.id.toLong()));
-						kinder.each{ child ->
-							node(childnodeId:child.id,id:child.child.id,name:child.child.name,nodetypeId:child.child.nodetype.id,type:child.child.nodetype.name,tags:child.child.tags,rolename:NodeTypeRelationship.findByParentAndChild(child.parent.nodetype,child.child.nodetype).name)
-						}
-					}
-				}
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatChildNodes(ArrayList cnodes){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.childNodes() {
-			cnodes.each(){ val1 ->
-				childNode(id:val1.id,parentNodeId:val1.parent.id,parentName:val1.parent.name,parentNodeType:val1.parent.nodetype.name,childNodeId:val1.child.id,childName:val1.child.name,childNodeType:val1.child.nodetype.name)
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatNodeValues(ArrayList tvals){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.nodeValues() {
-			tvals.each(){ val1 ->
-				nodeValue(id:val1.id,nodeId:val1.node.id,nodeAttributeId:val1.nodeattribute.id,value:val1.value)
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatNodeAttributes(ArrayList tatts){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.nodeAttributes() {
-			tatts.each(){ val1 ->
-				nodeAttribute(id:val1.id,attributeId:val1.attribute.id,nodetypeId:val1.nodetype.id,required:val1.required,filterId:val2.attribute.filter.id,filterDataType:val2.attribute.filter.dataType)
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatFilters(ArrayList filters){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.filters() {
-			filters.each(){ val1 ->
-				filter(id:val1.id,dataType:val1.dataType,regex:val1.regex)
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatAttributes(ArrayList attributes){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.attributes() {
-			attributes.each(){ val1 ->
-                        attribute(id:val1.id,name:val1.name,description:val1.description,filterId:val1.filter.id,filterDataType:val1.filter.dataType) 
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatNodeTypes(ArrayList nodetypes){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.nodetypes() {
-			nodetypes.each(){ val1 ->
-				def nodecount = Node.findAllByNodetype(val1).size()
-				def tatts = NodeAttribute.findAllByNodetype(NodeType.get(val1.id.toLong()))
-				
-				def criteria = NodeTypeRelationship.createCriteria()
-				def parents = criteria.list{
-					eq("child", NodeType.get(val1.id?.toLong()))
-				}
-				
-				def criteria2 = NodeTypeRelationship.createCriteria()
-				def children = criteria2.list{
-					eq ("parent", NodeType.get(val1.id?.toLong()))
-				}
-				
-				nodetype(id:val1.id,name:val1.name,description:val1.description,image:val1.image,nodeCount:nodecount){
-					nodeAttributes() {
-						tatts.each(){ val2 ->
-							nodeAttribute(id:val2.id,attributeName:val2.attribute.name,attributeId:val2.attribute.id,nodetypeId:val2.nodetype.id,required:val2.required,filterId:val2.attribute.filter.id,filterDataType:val2.attribute.filter.dataType)
-						}
-					}
-					nodetypeRelationships() {
-						parents.each(){ val3 ->
-							nodetypeRelationship(id:val3.id,parentNodeId:val3.parent.id,parentName:val3.parent.name,childNodeId:val3.child.id,childName:val3.child.name,roleName:val3.name)
-						}
-						children.each(){ val4 ->
-							nodetypeRelationship(id:val4.id,parentNodeId:val4.parent.id,parentName:val4.parent.name,childNodeId:val4.child.id,childName:val4.child.name,roleName:val4.name)
-						}
-					}
-				}
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatNodeTypeRelationships(ArrayList nodeTypeRelationships) {
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
+                    node(id: nd.id, name: nd.name, type: nd.nodetype.name, tags: nd.tags) {
+                        description(nd.description)
 
-		xml.nodeTypeRelationships() {
-			nodeTypeRelationships.each { 
-				nodeTypeRelationship(id:it.id, roleName: it.name,
-					parentNodeTypeId: it.parent.id, parentNodeTypeName: it.parent.name,
-					childNodeTypeId: it.child.id, childNodeTypeName: it.child.name,
-					) {
-				}
-			}
-		}
-		return writer.toString()
-	}
-	
-	String formatHooks(ArrayList hooks){
-		def writer = new StringWriter()
-		def xml = new MarkupBuilder(writer)
-			
-		xml.hooks() {
-			hooks.each(){ val1 ->
-				hook(id:val1.id,name:val1.name,url:val1.url,format:val1.format,service:val1.service,fails:val1.attempts){
-					user(val1.user.username)
-				}
-			}
-		}
-		return writer.toString()
-	}
+                        attributes() {
+                            values.each { NodeValue val ->
+                                'attribute'(
+                                        name: val.nodeattribute.attribute.name,
+                                        value: val.value)
+                            }
+                        }
+
+                        parents() {
+                            def rents = ChildNode.findAllByChild(Node.get(nd.id.toLong()));
+                            rents.each { parent ->
+                                node(id: parent.parent.id, name: parent.parent.name, type: parent.parent.nodetype.name)
+                            }
+                        }
+
+                        children() {
+                            def kinder = ChildNode.findAllByParent(Node.get(nd.id.toLong()));
+                            kinder.each { child ->
+                                node(id: child.child.id, name: child.child.name, type: child.child.nodetype.name)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return writer.toString()
+    }
+
+
+
+    String formatFilters(ArrayList filterList) {
+        def writer = new StringWriter()
+        def xml = new MarkupBuilder(writer)
+
+        xml.yana() {
+            filters() {
+                filterList.each() {
+                    filter(id: it.id, dataType: it.dataType, regex: it.regex)
+                }
+            }
+        }
+        return writer.toString()
+    }
+
+    String formatAttributes(ArrayList attributeList) {
+        def writer = new StringWriter()
+        def xml = new MarkupBuilder(writer)
+
+        xml.yana() {
+            attributes() {
+                attributeList.each() {
+                    attribute(id: it.id, name: it.name, filter: it.filter.dataType, description: it.description,)
+                }
+            }
+        }
+        return writer.toString()
+    }
+
+    String formatNodeTypes(ArrayList typeList) {
+        def writer = new StringWriter()
+        def xml = new MarkupBuilder(writer)
+
+        xml.yana() {
+            types() {
+                typeList.each() { ntype ->
+                    def nodecount = Node.findAllByNodetype(ntype).size()
+                    def attrs = NodeAttribute.findAllByNodetype(NodeType.get(ntype.id.toLong()))
+
+                    def criteria = NodeTypeRelationship.createCriteria()
+                    def parents = criteria.list {
+                        eq("child", NodeType.get(ntype.id?.toLong()))
+                    }
+
+                    def criteria2 = NodeTypeRelationship.createCriteria()
+                    def children = criteria2.list {
+                        eq("parent", NodeType.get(ntype.id?.toLong()))
+                    }
+
+                    type(id: ntype.id, name: ntype.name, image: ntype.image, nodeCount: nodecount) {
+                        description(ntype.description)
+                        attributes() {
+                            attrs.each() { attr ->
+                                attribute(name: attr.attribute.name, required: attr.required, filter: attr.attribute.filter.dataType)
+                            }
+                        }
+                        relationships() {
+                            parents.each() { p ->
+                                relationship(parent: p.parent.name, child: p.child.name, name: p.name)
+                            }
+                            children.each() { c ->
+                                relationship(parent: c.parent.name, child: c.child.name, name: c.name)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return writer.toString()
+    }
+
+    String formatNodeTypeRelationships(ArrayList nodeTypeRelationships) {
+        def writer = new StringWriter()
+        def xml = new MarkupBuilder(writer)
+
+        xml.yana() {
+            relationships() {
+                nodeTypeRelationships.each {
+                    relationship(id: it.id, name: it.name,
+                            parent: it.parent.name,
+                            child: it.child.name,
+                    ) {
+                    }
+                }
+            }
+        }
+        return writer.toString()
+    }
+
+    String formatHooks(ArrayList hooks) {
+        def writer = new StringWriter()
+        def xml = new MarkupBuilder(writer)
+
+        xml.yana() {
+            webhooks() {
+                hooks.each() {
+                    webhook(id: it.id, name: it.name, url: it.url, format: it.format, service: it.service, fails: it.attempts) {
+                        user(it.user.username)
+                    }
+                }
+            }
+        }
+        return writer.toString()
+    }
 }

@@ -23,10 +23,9 @@ case "$http_code" in
 	#
 	# Output the response
 	#
-	(xmlstarlet sel -t -m /nodeTypeRelationships/nodeTypeRelationship \
-	    -v @id  -o ":" -v @roleName -o ":" \
-	    -v @parentNodeTypeId -o ":"  -v @parentNodeTypeName -o ":" \
-	    -v @childNodeTypeId  -o ":" -v @childNodeTypeName -o ":" 
+	(xmlstarlet sel -t -m /yana/relationships/relationship \
+	    -v @id  -o ":" -v @name -o ":" \
+	    -v @parent -o ":" -v @child \
 		-n \
 	    $response |format ) || rerun_die "failed parsing server response"
 	;;

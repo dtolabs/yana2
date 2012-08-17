@@ -111,7 +111,7 @@ xmlstarlet val --well-formed --quiet ${response} 2>/dev/null || rerun_die "Yana 
 # Output the data
 #
 
-xmlstarlet sel -t -m /nodes/node  -v @id  -o ":"  \
+xmlstarlet sel -t -m /yana/nodes/node  -v @id  -o ":"  \
     -v @name -o ":" -v @type -o ":"  -v @tags -o ":" \
     -v description -n  $response | format
 

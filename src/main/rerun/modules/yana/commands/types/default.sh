@@ -69,9 +69,9 @@ format() {
 
 if [ -n "$TYPE" ]
 then
-xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @name -o ":" -v @description -o ":" -v @id -n  $response | format
+xmlstarlet sel -t -m /yana/types/type[@name=\'"${TYPE}"\'] -v @name -o ":" -v description -o ":" -v @id -n  $response | format
 else
-xmlstarlet sel -t -m /nodetypes/nodetype -v @name -o ":" -v @description -o ":" -v @id  -n  $response | format
+xmlstarlet sel -t -m /yana/types/type -v @name -o ":" -v description -o ":" -v @id  -n  $response | format
 fi
 
 # ------------------------------

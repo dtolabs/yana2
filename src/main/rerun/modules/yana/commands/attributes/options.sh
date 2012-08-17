@@ -37,7 +37,7 @@ done
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$ACTION" ] && ACTION=list
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
-[ -z "$FORMAT" ] && FORMAT='${ID}:${NAME}:${FILTER_ID}:${FILTER_DATATYPE}'
+[ -z "$FORMAT" ] && FORMAT='${ID}:${NAME}:${FILTER_DATATYPE}'
 [ -z "$PROJECT" ] && PROJECT=$YANA_PROJECT
 # Check required options are set
 

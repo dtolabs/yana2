@@ -24,7 +24,6 @@ while [ "$#" -gt 0 ]; do
   -f|--file) rerun_option_check $# ; FILE=$2 ; shift ;;
   -F|--format) rerun_option_check $# ; FORMAT=$2 ; shift ;;
   -i|--id) rerun_option_check $# ; ID=$2 ; shift ;;
-  -S|--status) rerun_option_check $# ; STATUS=$2 ; shift ;;
   -n|--name) rerun_option_check $# ; NAME=$2 ; shift ;;
   -T|--tags) rerun_option_check $# ; TAGS=$2 ; shift ;;
   -t|--typeid) rerun_option_check $# ; TYPEID=$2 ; shift ;;
@@ -45,7 +44,6 @@ done
 [ -z "$ACTION" ] && ACTION="get"
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
 [ -z "$DEPTH" ] && DEPTH=1
-[ -z "$STATUS" ] && STATUS=DEV
 [ -z "$FORMAT" ] && FORMAT='${ATTRIBUTE}:${VALUE}'
 [ -z "$PROJECT" ] && PROJECT=$YANA_PROJECT
 # Check required options are set

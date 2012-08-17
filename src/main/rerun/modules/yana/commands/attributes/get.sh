@@ -17,10 +17,10 @@ format() {
     do
 	IFS=:
 	arr=( $line )
-	[ ${#arr[*]} -eq 4 ] || continue
+	[ ${#arr[*]} -eq 3 ] || continue
 	IFS=$oIFS
 	yana_expand "$FORMAT" ID=${arr[0]} NAME=${arr[1]} \
-	    FILTER_ID=${arr[2]} FILTER_DATATYPE=${arr[3]}
+	    FILTER_DATATYPE=${arr[2]}
     done 
 }
 
@@ -35,9 +35,9 @@ xmlstarlet val --well-formed \
 #
 # Output the response
 #
-(xmlstarlet sel -t -m /attributes/attribute \
+(xmlstarlet sel -t -m /yana/attributes/attribute \
      -v @id  -o ":" -v @name -o ":" \
-     -v @filterId  -o ":" -v @filterDataType -n \
+     -v @filter -n \
     $response | format ) || rerun_die "failed parsing server response"
 
 # ------------------------------

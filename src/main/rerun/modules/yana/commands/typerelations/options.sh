@@ -39,7 +39,7 @@ done
 # If defaultable options variables are unset, set them to their DEFAULT
 [ -z "$ACTION" ] && ACTION=list
 [ -z "$CFG" ] && CFG="$HOME/.yanarc"
-[ -z "$FORMAT" ] && FORMAT='${ID}:${ROLE}:${PARENT_TYPE_ID}:${PARENT_TYPE_NAME}:${CHILD_TYPE_ID}:${CHILD_TYPE_NAME}'
+[ -z "$FORMAT" ] && FORMAT='${ID}:${NAME}:${PARENT}:${CHILD}'
 [ -z "$PROJECT" ] && PROJECT=$YANA_PROJECT
 
 # Check required options are set

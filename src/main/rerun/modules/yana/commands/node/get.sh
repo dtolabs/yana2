@@ -31,15 +31,13 @@ format() {
 #
 # Output the data
 #
-NAME=$(xmlstarlet sel -t -m /nodes/node -v @name $response)
-TYPE=$(xmlstarlet sel -t -m /nodes/node -v @type $response)
-DESCRIPTION=$(xmlstarlet sel -t -m /nodes/node -v description $response)
-TAGS=$(xmlstarlet sel -t -m /nodes/node -v @tags $response)
-STATUS=$(xmlstarlet sel -t -m /nodes/node -v @status $response)
+NAME=$(xmlstarlet sel -t -m /yana/nodes/node -v @name $response)
+TYPE=$(xmlstarlet sel -t -m /yana/nodes/node -v @type $response)
+DESCRIPTION=$(xmlstarlet sel -t -m /yana/nodes/node -v description $response)
+TAGS=$(xmlstarlet sel -t -m /yana/nodes/node -v @tags $response)
 echo "name:$NAME" | format
 echo "type:$TYPE" | format
 echo "description:$DESCRIPTION" | format
-echo "status:$STATUS" | format
 echo "tags:$TAGS" | format
 
-xmlstarlet sel -t -m /nodes/node/attributes/attribute -v @name -o ":" -v @value -n $response|sort|format
+xmlstarlet sel -t -m /yana/nodes/node/attributes/attribute -v @name -o ":" -v @value -n $response|sort|format

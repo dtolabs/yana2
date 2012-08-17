@@ -46,9 +46,9 @@ format() {
     do
 	IFS=:
 	arr=( $line )
-	[ ${#arr[*]} -eq 5 ] || continue
+	[ ${#arr[*]} -eq 3 ] || continue
 	IFS=$oIFS
-	yana_expand "$FORMAT"  CHILDNODE=${arr[0]} ATTRIBUTESHIP=${arr[1]} ID=${arr[2]} NAME=${arr[3]} TYPE=${arr[4]} 
+	yana_expand "$FORMAT"  ID=${arr[0]} NAME=${arr[1]} FILTER_DATATYPE=${arr[2]} 
     done 
 }
 

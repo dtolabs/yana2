@@ -55,23 +55,23 @@ format() {
 #
 # Look up the type name if addressed by ID.
 #
-[ -z "$TYPE" ] &&  TYPE=$(xmlstarlet sel -t -m /nodetypes/nodetype -v @name $response)
+[ -z "$TYPE" ] &&  TYPE=$(xmlstarlet sel -t -m /yana/types/type -v @name $response)
 
 
 #
 # Output the data
 #
-NAME=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @name $response)
-DESCRIPTION=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @description $response)
-ID=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @id $response)
-NODECNT=$(xmlstarlet sel -t -m /nodetypes/nodetype[@name=\'"${TYPE}"\'] -v @nodeCount $response)
+NAME=$(xmlstarlet sel -t -m /yana/types/type[@name=\'"${TYPE}"\'] -v @name $response)
+DESCRIPTION=$(xmlstarlet sel -t -m /yana/types/type[@name=\'"${TYPE}"\'] -v description $response)
+ID=$(xmlstarlet sel -t -m /yana/types/type[@name=\'"${TYPE}"\'] -v @id $response)
+NODECNT=$(xmlstarlet sel -t -m /yana/types/type[@name=\'"${TYPE}"\'] -v @nodeCount $response)
 ATTRIBUTES=$(xmlstarlet sel -t \
-    -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodeAttributes/nodeAttribute \
-    -v @attributeName -i 'not(position()=last())' -o "," \
+    -m /yana/types/type[@name=\'"${TYPE}"\']/attributes/attribute \
+    -v @name -i 'not(position()=last())' -o "," \
     $response)
 RELATIONSHIPS=$(xmlstarlet sel -t \
-    -m /nodetypes/nodetype[@name=\'"${TYPE}"\']/nodetypeRelationships/nodetypeRelationship \
-    -v @roleName -i 'not(position()=last())' -o "," \
+    -m /yana/types/type[@name=\'"${TYPE}"\']/relationships/relationship \
+    -v @name -i 'not(position()=last())' -o "," \
     $response)
 
 

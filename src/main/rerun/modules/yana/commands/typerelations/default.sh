@@ -46,11 +46,10 @@ format() {
     do
 	IFS=:
 	arr=( $line )
-	[ ${#arr[*]} -eq 6 ] || continue
+	[ ${#arr[*]} -eq 4 ] || continue
 	IFS=$oIFS
-	yana_expand "$FORMAT"  ID=${arr[0]} ROLE=${arr[1]} \
-	    PARENT_TYPE_ID=${arr[2]} PARENT_TYPE_NAME=${arr[3]} \
-	    CHILD_TYPE_ID=${arr[4]} CHILD_TYPE_NAME=${arr[5]} 
+	yana_expand "$FORMAT"  ID=${arr[0]} NAME=${arr[1]} \
+	    PARENT=${arr[2]} CHILD=${arr[3]}
     done 
 }
 
