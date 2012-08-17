@@ -207,3 +207,8 @@ webhook.services = ["node"]
 grails.plugins.springsecurity.acl.authority.modifyAuditingDetails = 'ROLE_YANA_ADMIN'
 grails.plugins.springsecurity.acl.authority.changeOwnership = 'ROLE_YANA_ADMIN'
 grails.plugins.springsecurity.acl.authority.changeAclDetails = 'ROLE_YANA_ADMIN'
+
+grails.plugins.springsecurity.auth.forceHttps=true
+
+//forces pre-authenticated provider
+//grails.plugins.springsecurity.providerNames = ['preAuthenticatedAuthenticationProvider', 'anonymousAuthenticationProvider']

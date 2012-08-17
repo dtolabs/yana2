@@ -2,6 +2,9 @@
 body {
     background: url('${resource(dir: 'images', file: 'yana_bg.png')}') repeat;
 }
+.logo{
+    background: url('${resource(dir: 'images', file: 'yana_logo2.png')}') no-repeat;
+}
 
 .header_login_corner {
     background-image: url('${resource(dir: 'images', file: 'yana_uleft_corner.png')}');
