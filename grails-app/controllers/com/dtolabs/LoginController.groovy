@@ -54,6 +54,20 @@ class LoginController {
 		render view: view, model: [postUrl: postUrl,
 		                           rememberMeParameter: config.rememberMe.parameter]
 	}
+	/**
+	 * action for displaying Container form-based auth login page
+	 */
+	def preauth = {
+
+	}
+
+    /**
+     * Login error for Container form-based auth login
+     */
+	def preauthError = {
+        flash.message = g.message(code: "springSecurity.errors.login.fail")
+        redirect action: 'preauth'
+	}
 
 	/**
 	 * The redirect action for Ajax requests.

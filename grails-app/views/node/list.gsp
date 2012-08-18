@@ -25,8 +25,9 @@
 						<td style="padding-left:5px;" valign=top width=325><g:if test="${nodeInstance.description?.size()>50}">${nodeInstance.description[0..50]}...</g:if><g:else>${nodeInstance.description}</g:else></td>					
 						<td style="padding-left:5px;" valign=top>
 						<g:if test="${nodeInstance.tags}">
-						<g:each in="${nodeInstance.tags.split(',')}" status="b" var="tag">
-							<a href="/search/index?q=tags:${tag}" style="padding:0;">${tag}</a><g:if test="${b+1<nodeInstance.tags.split(',').size()}">,</g:if>
+                            <g:set var="taglist" value="${nodeInstance.tags.split(',')}"/>
+						<g:each in="${taglist}" status="b" var="tag">
+                            <g:link action="index" controller="search" params="${[q:'tags:'+tag]}" style="padding:0;">${tag.encodeAsHTML()}</g:link><g:if test="${b+1< taglist.size()}">,</g:if>
 						</g:each>
 						</g:if>
 						</td>

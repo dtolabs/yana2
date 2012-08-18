@@ -20,7 +20,9 @@
 					</g:form>
 				</td>
 				<td width=175>
-					&nbsp;<span class="fake_button"><a href="/search/index?q=nodetype:${nodeTypeInstance.name}">Find Nodes</a></span>
+					&nbsp;<span class="fake_button"><g:link action="index" controller="search"
+                                                            params="${[q: 'nodetype:' + nodeTypeInstance.name]}"
+                                                            >Find Nodes</g:link></span>
 				</td>
 			</tr>
 		</table>
