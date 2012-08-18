@@ -111,8 +111,8 @@ class ExportService {
             }
             ndMap.remove("typeId") // Don't include the type's ID
             ndMap.attributes.each { Map m ->
-                BuilderUtil.makeAttribute(m, "value")
                 BuilderUtil.makeAttribute(m, "name")
+                BuilderUtil.makeAttribute(m, "value")
                 m.remove("id")        // Don't include id and required properties
                 m.remove("required")  //
             }
