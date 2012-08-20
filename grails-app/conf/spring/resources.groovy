@@ -26,11 +26,12 @@ beans = {
         preAuthenticatedUserDetailsService = ref('preAuthenticatedGrantedAuthoritiesUserDetailsService')
     }
 
+    //Default mapping uses same as internal role names
     roleAuthorityMapper(YanaAuthoritiesMapper){
-        adminRole='admin'
-        operatorRole='user'
-        architectRole='architect'
-        superuserRole='superuser'
+        adminRole='ROLE_YANA_ADMIN'
+        operatorRole='ROLE_YANA_USER'
+        architectRole='ROLE_YANA_ARCHITECT'
+        superuserRole='ROLE_YANA_SUPERUSER'
     }
 
     j2eeAuthDetailsSource(J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource){
