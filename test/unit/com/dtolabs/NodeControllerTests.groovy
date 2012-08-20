@@ -3,6 +3,7 @@ package com.dtolabs
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import org.springframework.validation.FieldError
+import groovy.xml.MarkupBuilder
 
 @TestFor(NodeController)
 @Mock([Node, NodeType, Project, NodeValue, ChildNode, Webhook, Filter, Attribute, NodeAttribute])
@@ -99,18 +100,21 @@ class NodeControllerTests {
             [total: 3, nodes: [node1, node2, node3]]
         }
         controller.nodeService = control2.createMock()
+        def control3 = mockFor(XmlService, false)
+        control3.demand.formatNodes { nodelist ->
+            assert nodelist == [node1,node2,node3]
+            '<xml><test>ok3</test></xml>'
+        }
+        controller.xmlService = control3.createMock()
         /**
          * Run the controller action
          */
         controller.list()
 
         assertNotNull("Response did not contain XML", response.xml)
-        assertEquals("Incorrect number of nodes:", 3, response.xml.node.size())
-        assertEquals(node1.name, response.xml.node[0].@name.text())
-        assertEquals(node2.name, response.xml.node[1].@name.text())
-        assertEquals(node3.name, response.xml.node[2].@name.text())
-
-
+        assertNotNull("Response did not contain XML", response.xml)
+        assertEquals("Incorrect number of nodes:", 1, response.xml.test.size())
+        assertEquals('ok3', response.xml.test[0].text())
     }
 
     void testCreate() {
@@ -341,14 +345,20 @@ class NodeControllerTests {
             node1
         }
         controller.nodeService = control2.createMock()
+        def control3 = mockFor(XmlService, false)
+        control3.demand.formatNodes { nodelist ->
+            assert nodelist==[node1]
+            '<xml><test>ok</test></xml>'
+        }
+        controller.xmlService = control3.createMock()
         /**
          * Run the controller action
          */
         controller.show()
 
         assertNotNull("Response did not contain XML", response.xml)
-        assertEquals("Incorrect number of nodes:", 1, response.xml.node.size())
-        assertEquals(node1.name, response.xml.node[0].@name.text())
+        assertEquals("Incorrect number of nodes:", 1, response.xml.test.size())
+        assertEquals('ok', response.xml.test[0].text())
     }
 
     void testEdit() {
