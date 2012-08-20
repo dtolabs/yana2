@@ -24,31 +24,31 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
         Node node2 = new Node(name: 'node2', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
         Node node3 = new Node(name: 'node3', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.project = project.name
 
         // model:	[nodeInstanceList: nodes, nodeInstanceTotal: totCount, path:path]
 
         def control = mockFor(ProjectService)
-        control.demand.findProject{name->
+        control.demand.findProject {name ->
             assert name == 'test1'
             project
         }
-        controller.projectService=control.createMock()
+        controller.projectService = control.createMock()
 
         def control2 = mockFor(NodeService, false)
         control2.demand.listNodes { Project proj, params ->
             assert proj == project
-            [total:3,nodes:[node1,node2,node3]]
+            [total: 3, nodes: [node1, node2, node3]]
         }
         controller.nodeService = control2.createMock()
         /**
@@ -74,15 +74,15 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
         Node node2 = new Node(name: 'node2', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
         Node node3 = new Node(name: 'node3', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.project = project.name
         params.format = "xml"
@@ -102,7 +102,7 @@ class NodeControllerTests {
         controller.nodeService = control2.createMock()
         def control3 = mockFor(XmlService, false)
         control3.demand.formatNodes { nodelist ->
-            assert nodelist == [node1,node2,node3]
+            assert nodelist == [node1, node2, node3]
             '<xml><test>ok3</test></xml>'
         }
         controller.xmlService = control3.createMock()
@@ -124,9 +124,9 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         params.project = project.name
 
@@ -162,13 +162,13 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         params.name = "node1"
         params.description = "desc"
-        params.nodetype=[id: nodeType.id]
+        params.nodetype = [id: nodeType.id]
         params.tags = "tag1,tag2"
         params.project = project.name
         request.method = "POST"
@@ -180,17 +180,17 @@ class NodeControllerTests {
         }
         controller.projectService = control.createMock()
 
-        def control2 = mockFor(NodeService,false)
+        def control2 = mockFor(NodeService, false)
         control2.demand.createNode { Project proj, NodeType nodetype, name, description, tags, parentNodes, childNodes, nodeValues ->
             assert name == 'node1'
             assert proj == project
-            assert description=='desc'
-            assert tags=='tag1,tag2'
-            assert parentNodes==[]
-            assert childNodes==[]
-            assert nodeValues==null
-            def node= new Node(name: name, description: description, tags: tags, project: proj, nodetype: nodetype)
-            assert null!=node.save()
+            assert description == 'desc'
+            assert tags == 'tag1,tag2'
+            assert parentNodes == []
+            assert childNodes == []
+            assert nodeValues == null
+            def node = new Node(name: name, description: description, tags: tags, project: proj, nodetype: nodetype)
+            assert null != node.save()
             node
         }
         controller.nodeService = control2.createMock()
@@ -198,8 +198,8 @@ class NodeControllerTests {
          * Run the controller action
          */
         controller.save()
-        assert 'default.created.message'==flash.message
-        assert 0==model.size()
+        assert 'default.created.message' == flash.message
+        assert 0 == model.size()
 
         assertEquals("Incorrect response code.", 302, response.status)
         assertEquals("/node/show/1", response.redirectedUrl)
@@ -221,16 +221,16 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.name = "node1"
         params.description = "desc"
-        params.nodetype=[id: nodeType.id]
+        params.nodetype = [id: nodeType.id]
         params.tags = "tag1,tag2"
         params.project = project.name
         request.method = "POST"
@@ -285,12 +285,12 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.id = 1
         params.project = project.name
@@ -303,7 +303,7 @@ class NodeControllerTests {
         controller.projectService = control.createMock()
         def control2 = mockFor(NodeService, false)
         control2.demand.readNode { id ->
-            assert id==1L
+            assert id == 1L
             node1
         }
         controller.nodeService = control2.createMock()
@@ -328,12 +328,12 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.id = 1
         params.project = project.name
@@ -347,7 +347,7 @@ class NodeControllerTests {
         controller.nodeService = control2.createMock()
         def control3 = mockFor(XmlService, false)
         control3.demand.formatNodes { nodelist ->
-            assert nodelist==[node1]
+            assert nodelist == [node1]
             '<xml><test>ok</test></xml>'
         }
         controller.xmlService = control3.createMock()
@@ -366,12 +366,12 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.id = 1
         params.project = project.name
@@ -413,12 +413,12 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.id = 1
         params.project = project.name
@@ -440,18 +440,18 @@ class NodeControllerTests {
             assert id == 1L
             node1
         }
-        control2.demand.updateNode{ Project proj, Node nodeInstance,
-                    String name, String  description, String tags,
-                    parentNodes,
-                    childNodes,
-                    nodeValues->
-            assert proj==project
-            assert nodeInstance==node1
+        control2.demand.updateNode { Project proj, Node nodeInstance,
+                                     String name, String description, String tags,
+                                     parentNodes,
+                                     childNodes,
+                                     nodeValues ->
+            assert proj == project
+            assert nodeInstance == node1
             assert name == null
-            assert description=='new description'
-            assert tags=='tag3'
-            assert parentNodes==[]
-            assert childNodes==[]
+            assert description == 'new description'
+            assert tags == 'tag3'
+            assert parentNodes == []
+            assert childNodes == []
             assert nodeValues == null
         }
         controller.nodeService = control2.createMock()
@@ -466,22 +466,22 @@ class NodeControllerTests {
     void testUpdate_withAttributes() {
         Project project = new Project(name: 'test1', description: 'desc').save()
         Filter filter = new Filter(project: project, dataType: "String", regex: ".*").save()
-        Attribute arch = new Attribute(name:  "arch", project:  project, filter: filter).save()
-        Attribute repo = new Attribute(name:  "repo", project:  project, filter: filter).save()
+        Attribute arch = new Attribute(name: "arch", project: project, filter: filter).save()
+        Attribute repo = new Attribute(name: "repo", project: project, filter: filter).save()
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
         NodeAttribute attr1 = new NodeAttribute(attribute: arch, nodetype: nodeType, required: false).save()
         NodeAttribute attr2 = new NodeAttribute(attribute: repo, nodetype: nodeType, required: false).save()
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
-        def nv1 = new NodeValue(node: node1, nodeattribute:  attr1, value: "sparc").save()
-        def nv2 = new NodeValue(node: node1, nodeattribute:  attr2, value: "ftp://localhost/resource").save()
+                              project: project, nodetype: nodeType).save()
+        def nv1 = new NodeValue(node: node1, nodeattribute: attr1, value: "sparc").save()
+        def nv2 = new NodeValue(node: node1, nodeattribute: attr2, value: "ftp://localhost/resource").save()
 
         params.id = node1.id
         params.project = project.name
-        params.attributevalues = [arch:"noarch",repo:"http://localhost/resource"]
+        params.attributevalues = [arch: "noarch", repo: "http://localhost/resource"]
 
         /**
          * Change these properties
@@ -513,7 +513,7 @@ class NodeControllerTests {
             assert tags == 'tag3'
             assert parentNodes == []
             assert childNodes == []
-            assert nodeValues == [arch:'noarch',repo:'http://localhost/resource']
+            assert nodeValues == [arch: 'noarch', repo: 'http://localhost/resource']
         }
         controller.nodeService = control2.createMock()
         /**
@@ -529,12 +529,12 @@ class NodeControllerTests {
         Project project = new Project(name: 'test1', description: 'desc').save()
 
         NodeType nodeType = new NodeType(project: project,
-                name: "TypeA",
-                description: "test node type A description",
-                image: "Node.png").save()
+                                         name: "TypeA",
+                                         description: "test node type A description",
+                                         image: "Node.png").save()
 
         Node node1 = new Node(name: 'node1', description: 'desc', tags: 'tag1,tag2',
-                project: project, nodetype: nodeType).save()
+                              project: project, nodetype: nodeType).save()
 
         params.id = 1
         params.project = project.name
@@ -545,7 +545,7 @@ class NodeControllerTests {
             node1
         }
         control2.demand.deleteNode { Node node ->
-            assert node==node1
+            assert node == node1
             node1
         }
         controller.nodeService = control2.createMock()
@@ -555,6 +555,6 @@ class NodeControllerTests {
         controller.delete()
 
         assertEquals("/node/list", response.redirectedUrl)
-        assert 'default.deleted.message'==flash.message
+        assert 'default.deleted.message' == flash.message
     }
 }
