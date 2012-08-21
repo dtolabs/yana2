@@ -137,9 +137,10 @@ class NodeTypeController {
 
     @ProjectAccess(ProjectAccess.Level.read)
     def list() {
+        def project = projectService.findProject(params.project)
 		def path = iconService.getSmallIconPath()
 		if(params.format && params.format!='none'){
-			def nodetypes = NodeType.list()
+			def nodetypes = NodeType.findAllByProject(project)
 			switch(params.format.toLowerCase()){
 				case 'xml':
 					def xml = xmlService.formatNodeTypes(nodetypes)
@@ -152,7 +153,7 @@ class NodeTypeController {
 			}
 		}else{
 			params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			[nodeTypeInstanceList: NodeType.list(params), nodeTypeInstanceTotal: NodeType.count(),path:path]
+            [nodeTypeInstanceList: NodeType.findAllByProject(project, params), nodeTypeInstanceTotal: NodeType.countByProject(project), path: path]
 		}
     }
 
