@@ -60,15 +60,15 @@ ul.sf-menu li li li.sfHover ul {
 	margin:	0px;
 }
 .sf-menu a {
-	border:	 2px solid #0431f7;
+	border:	 2px solid #000;
 	padding: 5px;
 	text-decoration:none;
 }
 .sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
-	color:			#89a9ff;
+	color:			#000;
 }
 .sf-menu li {
-	background:		#01137e;
+	background:		#fefefe;
 }
 .sf-menu li.spacer {
 	background-color:transparent;
@@ -77,15 +77,15 @@ ul.sf-menu li li li.sfHover ul {
 	background-color:transparent;
 }
 .sf-menu li li {
-	background:		#01137e;
+	background:		#fefefe;
 }
 
 .sf-menu li li li {
-	background:		#01137e;
+	background:		#fefefe;
 }
 .sf-menu li:hover, .sf-menu li.sfHover,
 .sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
-	background:		#021faf;
+	background:		#888;
 	outline:		0;
 	color:			#ffffff;
 }

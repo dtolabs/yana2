@@ -15,7 +15,7 @@ class YanaTagLib {
 	def breadcrumbs = { attrs,body ->
 
 		def crumbs = breadcrumbService.getCrumb(controllerName,actionName)
-		def output = "<div style='width:400px;font:bold 12px Helvetica, Arial, sans-serif;color:#ffffff;padding:0px 5px 3px 5px;'>"
+		def output = "<div class='breadcrumbs'>"
 		def count = 0
 
 		if(crumbs!=null){
@@ -27,13 +27,13 @@ class YanaTagLib {
 					if(count > 0){
 						output += ">"
 					}
-					output += (it.name==actionName || (count+1)==crumbs.size())?"""<div style="color:#ff6600;display:inline;">${it.name}</div>""":"""<a href="${createLink(controller:links[0],action:links[1])}">${it.name}</a>"""
+					output += (it.name==actionName || (count+1)==crumbs.size())?"""<div class="crumbpart">${it.name}</div>""":"""<a href="${createLink(controller:links[0],action:links[1])}">${it.name}</a>"""
 					++count
 				}
 			}
 		}else{
-			output += """<a href="${createLink(controller:controllerName,action:'index')}">${controllerName}</a> > """
-			output += """<div style="color:#ff6600;display:inline">${actionName}</div>"""
+			output += """<a href="${createLink(controller:controllerName,action:'index')}">${controllerName}</a> &gt; """
+			output += """<div class="crumbpart">${actionName}</div>"""
 		}
 		
 		output += "</div>"
