@@ -18,7 +18,6 @@ class BootStrap {
 
     def init = { servletContext ->
         if(CH.config.grails?.plugins?.springsecurity?.providerNames && 'preAuthenticatedAuthenticationProvider' in CH.config.grails.plugins.springsecurity.providerNames){
-//        if(CH.config.yana?.containerAuthentication?.enabled){
             SpringSecurityUtils.clientRegisterFilter('j2eePreAuthenticatedProcessingFilter', SecurityFilterPosition.PRE_AUTH_FILTER)
         }
 
