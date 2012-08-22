@@ -14,6 +14,7 @@ import org.springframework.security.acls.domain.PrincipalSid
 import org.springframework.security.core.Authentication
 import org.springframework.security.acls.model.AccessControlEntry
 import org.springframework.security.acls.domain.PermissionFactory
+import com.dtolabs.yana2.YanaConstants
 
 class ProjectService {
     static transactional = true
@@ -239,16 +240,19 @@ class ProjectService {
             }
         }
         //grant admin permissions to this project
-        addPermission(project,'ROLE_YANA_SUPERUSER', YanaPermission.ADMINISTRATION)
-        addPermission(project,'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        addPermission(project, YanaConstants.ROLE_SUPERUSER, YanaPermission.ADMINISTRATION)
+        addPermission(project, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
         //YANA_USER gets OPERATOR and READ access
-        addPermission(project,'ROLE_YANA_USER',YanaPermission.OPERATOR)
-        addPermission(project,'ROLE_YANA_USER', YanaPermission.READ)
+        addPermission(project, YanaConstants.ROLE_OPERATOR,YanaPermission.OPERATOR)
+        addPermission(project, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
 
         //YANA_ARCHITECT gets ARCHITECT and READ access
-        addPermission(project,'ROLE_YANA_ARCHITECT',YanaPermission.ARCHITECT)
-        addPermission(project,'ROLE_YANA_ARCHITECT', YanaPermission.READ)
+        addPermission(project, YanaConstants.ROLE_ARCHITECT,YanaPermission.ARCHITECT)
+        addPermission(project, YanaConstants.ROLE_ARCHITECT, YanaPermission.READ)
+
+        //READONLY gets READ access
+        addPermission(project, YanaConstants.ROLE_USER, YanaPermission.READ)
 
         return project
     }

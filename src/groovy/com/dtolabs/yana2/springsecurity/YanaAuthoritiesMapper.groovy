@@ -3,6 +3,7 @@ package com.dtolabs.yana2.springsecurity
 import org.springframework.security.core.authority.mapping.MapBasedAttributes2GrantedAuthoritiesMapper
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.util.Assert
+import com.dtolabs.yana2.YanaConstants
 
 /*
  * Copyright 2012 DTO Labs, Inc. (http://dtolabs.com)
@@ -34,10 +35,6 @@ import org.springframework.util.Assert
  * Yana roles.
  */
 class YanaAuthoritiesMapper extends MapBasedAttributes2GrantedAuthoritiesMapper implements InitializingBean {
-    public static final String ROLE_YANA_ADMIN = 'ROLE_YANA_ADMIN'
-    public static final String ROLE_YANA_OPERATOR = 'ROLE_YANA_USER'
-    public static final String ROLE_YANA_ARCHITECT = 'ROLE_YANA_ARCHITECT'
-    public static final String ROLE_YANA_SUPERUSER = 'ROLE_YANA_SUPERUSER'
     /**
      * A simple String,String map that can be configured via a groovy bean builder
      */
@@ -62,6 +59,11 @@ class YanaAuthoritiesMapper extends MapBasedAttributes2GrantedAuthoritiesMapper 
      * stringSeparator which will be split into a list of strings.
      */
     Object superuserRole
+    /**
+     * Shortcut for setting the yana User read-only role value, can be a string or list of strings, or string containing the
+     * stringSeparator which will be split into a list of strings.
+     */
+    Object userRole
 
     /**
      * Separator for strings values in the adminRole/operatorRole/architectRole, default value is "," (comma)
@@ -70,22 +72,26 @@ class YanaAuthoritiesMapper extends MapBasedAttributes2GrantedAuthoritiesMapper 
 
     public void afterPropertiesSet() throws Exception {
         if(adminRole){
-            setRoleForObject(ROLE_YANA_ADMIN, adminRole)
+            setRoleForObject(YanaConstants.ROLE_ADMIN, adminRole)
         }
         if(operatorRole){
-            setRoleForObject(ROLE_YANA_OPERATOR, operatorRole)
+            setRoleForObject(YanaConstants.ROLE_OPERATOR, operatorRole)
         }
         if(architectRole){
-            setRoleForObject(ROLE_YANA_ARCHITECT, architectRole)
+            setRoleForObject(YanaConstants.ROLE_ARCHITECT, architectRole)
         }
         if(superuserRole){
-            setRoleForObject(ROLE_YANA_SUPERUSER, superuserRole)
+            setRoleForObject(YanaConstants.ROLE_SUPERUSER, superuserRole)
+        }
+        if(userRole){
+            setRoleForObject(YanaConstants.ROLE_USER, userRole)
         }
         Assert.notEmpty(roleMap, "simpleMap or adminRole/operatorRole/architectRole must be set");
-        Assert.isTrue(roleMap.containsValue(ROLE_YANA_ADMIN), ROLE_YANA_ADMIN + ' was not mapped by a container role')
-        Assert.isTrue(roleMap.containsValue(ROLE_YANA_OPERATOR), ROLE_YANA_OPERATOR + ' was not mapped by a container role')
-        Assert.isTrue(roleMap.containsValue(ROLE_YANA_ARCHITECT), ROLE_YANA_ARCHITECT + ' was not mapped by a container role')
-        Assert.isTrue(roleMap.containsValue(ROLE_YANA_SUPERUSER), ROLE_YANA_SUPERUSER + ' was not mapped by a container role')
+        Assert.isTrue(roleMap.containsValue(YanaConstants.ROLE_ADMIN), YanaConstants.ROLE_ADMIN + ' was not mapped by a container role')
+        Assert.isTrue(roleMap.containsValue(YanaConstants.ROLE_OPERATOR), YanaConstants.ROLE_OPERATOR + ' was not mapped by a container role')
+        Assert.isTrue(roleMap.containsValue(YanaConstants.ROLE_ARCHITECT), YanaConstants.ROLE_ARCHITECT + ' was not mapped by a container role')
+        Assert.isTrue(roleMap.containsValue(YanaConstants.ROLE_SUPERUSER), YanaConstants.ROLE_SUPERUSER + ' was not mapped by a container role')
+        Assert.isTrue(roleMap.containsValue(YanaConstants.ROLE_USER), YanaConstants.ROLE_USER + ' was not mapped by a container role')
         setAttributes2grantedAuthoritiesMap(roleMap)
     }
 

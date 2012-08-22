@@ -38,6 +38,13 @@ class NodeTypeControllerTests {
 
         params.project = project.name
 
+        def control = mockFor(ProjectService)
+        control.demand.findProject {name ->
+            assert name == 'test1'
+            project
+        }
+        controller.projectService = control.createMock()
+
         /**
          * Run the controller action
          */

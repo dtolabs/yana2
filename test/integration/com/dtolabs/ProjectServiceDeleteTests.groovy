@@ -4,6 +4,7 @@ import com.dtolabs.yana2.springacl.YanaPermission
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.AuthorityUtils
+import com.dtolabs.yana2.YanaConstants
 
 /*
  * Copyright 2012 DTO Labs, Inc. (http://dtolabs.com)
@@ -36,7 +37,7 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         // have to be authenticated as an admin to create ACLs
         SecurityContextHolder.context.authentication = new UsernamePasswordAuthenticationToken(
                 'admin', 'admin',
-                AuthorityUtils.createAuthorityList('ROLE_YANA_ADMIN'))
+                AuthorityUtils.createAuthorityList(YanaConstants.ROLE_ADMIN))
     }
     void testDeleteProject() {
         def p1 = new Project(name: 'test1', description: 'desc')
@@ -49,8 +50,8 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         loginAsAdmin()
 
         //add some acls for the project
-        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
-        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        projectService.addPermission(p1, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
+        projectService.addPermission(p1, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
         def result = projectService.deleteProject(p1)
         assertNotNull(result)
@@ -78,8 +79,8 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         loginAsAdmin()
 
         //add some acls for the project
-        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
-        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        projectService.addPermission(p1, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
+        projectService.addPermission(p1, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
         def result = projectService.deleteProject(p1)
         assertNotNull(result)
@@ -115,8 +116,8 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         loginAsAdmin()
 
         //add some acls for the project
-        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
-        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        projectService.addPermission(p1, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
+        projectService.addPermission(p1, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
         def result = projectService.deleteProject(p1)
         assertNotNull(result)
@@ -213,8 +214,8 @@ class ProjectServiceDeleteTests extends GroovyTestCase {
         loginAsAdmin()
 
         //add some acls for the project
-        projectService.addPermission(p1, 'ROLE_YANA_USER', YanaPermission.READ)
-        projectService.addPermission(p1, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        projectService.addPermission(p1, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
+        projectService.addPermission(p1, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
         def result = projectService.deleteProject(p1)
         assertNotNull(result)

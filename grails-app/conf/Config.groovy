@@ -1,4 +1,4 @@
-
+import com.dtolabs.yana2.YanaConstants
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
@@ -204,9 +204,9 @@ grails.rest.injectInto = ["Controller", "Service", "Routes"]
 webhook.services = ["node"]
 
 // spring-security-acl definitions
-grails.plugins.springsecurity.acl.authority.modifyAuditingDetails = 'ROLE_YANA_ADMIN'
-grails.plugins.springsecurity.acl.authority.changeOwnership = 'ROLE_YANA_ADMIN'
-grails.plugins.springsecurity.acl.authority.changeAclDetails = 'ROLE_YANA_ADMIN'
+grails.plugins.springsecurity.acl.authority.modifyAuditingDetails = YanaConstants.ROLE_ADMIN
+grails.plugins.springsecurity.acl.authority.changeOwnership = YanaConstants.ROLE_ADMIN
+grails.plugins.springsecurity.acl.authority.changeAclDetails = YanaConstants.ROLE_ADMIN
 
 grails.plugins.springsecurity.auth.forceHttps=true
 

@@ -1,4 +1,3 @@
-import com.dtolabs.Filter
 import com.dtolabs.Role
 import com.dtolabs.User
 import com.dtolabs.UserRole
@@ -11,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import com.dtolabs.yana2.springacl.YanaPermission
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition
+import com.dtolabs.yana2.YanaConstants
 
 class BootStrap {
     def projectService
@@ -21,10 +21,11 @@ class BootStrap {
             SpringSecurityUtils.clientRegisterFilter('j2eePreAuthenticatedProcessingFilter', SecurityFilterPosition.PRE_AUTH_FILTER)
         }
 
-        Role adminRole = Role.findByAuthority('ROLE_YANA_ADMIN')?: new Role(authority:'ROLE_YANA_ADMIN').save(faileOnError:true)
-		Role userRole = Role.findByAuthority('ROLE_YANA_USER')?: new Role(authority:'ROLE_YANA_USER').save(faileOnError:true)
-		Role archRole = Role.findByAuthority('ROLE_YANA_ARCHITECT')?: new Role(authority:'ROLE_YANA_ARCHITECT').save(faileOnError:true)
-		Role rootRole = Role.findByAuthority('ROLE_YANA_SUPERUSER')?: new Role(authority:'ROLE_YANA_SUPERUSER').save(faileOnError:true)
+        Role adminRole = Role.findByAuthority(YanaConstants.ROLE_ADMIN)?: new Role(authority: YanaConstants.ROLE_ADMIN).save(faileOnError:true)
+		Role userRole = Role.findByAuthority(YanaConstants.ROLE_USER)?: new Role(authority: YanaConstants.ROLE_USER).save(faileOnError:true)
+		Role operatorRole = Role.findByAuthority(YanaConstants.ROLE_OPERATOR)?: new Role(authority: YanaConstants.ROLE_OPERATOR).save(faileOnError:true)
+		Role archRole = Role.findByAuthority(YanaConstants.ROLE_ARCHITECT)?: new Role(authority: YanaConstants.ROLE_ARCHITECT).save(faileOnError:true)
+		Role rootRole = Role.findByAuthority(YanaConstants.ROLE_SUPERUSER)?: new Role(authority: YanaConstants.ROLE_SUPERUSER).save(faileOnError:true)
 
 		User user = User.get(1)
 		if(user?.id){
@@ -54,7 +55,12 @@ class BootStrap {
             User opUser = User.findByUsername('op1')
             if(!opUser){
                 opUser = new User(username: 'op1',password: 'op1',enabled: true,accountExpired: false,accountLocked: false,passwordExpired: false).save(failOnError: true)
-                UserRole.create opUser,userRole
+                UserRole.create opUser,operatorRole
+            }
+            User user1 = User.findByUsername('user1')
+            if(!user1){
+                user1 = new User(username: 'user1',password: 'user1',enabled: true,accountExpired: false,accountLocked: false,passwordExpired: false).save(failOnError: true)
+                UserRole.create user1,userRole
             }
 
 
@@ -89,7 +95,7 @@ class BootStrap {
         // have to be authenticated as an admin to create ACLs
         SCH.context.authentication = new UsernamePasswordAuthenticationToken(
                 CH.config.root.login, CH.config.root.password,
-                AuthorityUtils.createAuthorityList('ROLE_YANA_ADMIN'))
+                AuthorityUtils.createAuthorityList(YanaConstants.ROLE_ADMIN))
     }
 
 

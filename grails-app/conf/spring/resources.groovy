@@ -8,6 +8,7 @@ import org.springframework.security.web.authentication.preauth.j2ee.J2eeBasedPre
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService
 import com.dtolabs.yana2.springsecurity.YanaAuthoritiesMapper
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
+import com.dtolabs.yana2.YanaConstants
 
 // Place your Spring DSL code here
 beans = {
@@ -28,10 +29,11 @@ beans = {
 
     //Default mapping uses same as internal role names
     roleAuthorityMapper(YanaAuthoritiesMapper){
-        adminRole='ROLE_YANA_ADMIN'
-        operatorRole='ROLE_YANA_USER'
-        architectRole='ROLE_YANA_ARCHITECT'
-        superuserRole='ROLE_YANA_SUPERUSER'
+        adminRole= YanaConstants.ROLE_ADMIN
+        operatorRole= YanaConstants.ROLE_OPERATOR
+        architectRole= YanaConstants.ROLE_ARCHITECT
+        superuserRole= YanaConstants.ROLE_SUPERUSER
+        userRole= YanaConstants.ROLE_USER
     }
 
     j2eeAuthDetailsSource(J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource){

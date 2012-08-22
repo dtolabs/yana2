@@ -42,8 +42,8 @@ class ProjectServiceTests {
         assertEquals 0,Project.list().size()
 
         def mockControl = mockFor(AclUtilService)
-        //NB: 6 addPermission calls for the roles
-        6.times{
+        //NB: 7 addPermission calls for the roles
+        7.times{
             mockControl.demand.addPermission{project,username,perm-> }
         }
         service.aclUtilService=mockControl.createMock()
@@ -61,8 +61,8 @@ class ProjectServiceTests {
         assertEquals 1,Project.list().size()
 
         def mockControl = mockFor(AclUtilService)
-        //NB: 6 addPermission calls for the roles
-        6.times {
+        //NB: 7 addPermission calls for the roles
+        7.times {
             mockControl.demand.addPermission {project, username, perm -> }
         }
         service.aclUtilService = mockControl.createMock()
