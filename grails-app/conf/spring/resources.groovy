@@ -29,11 +29,7 @@ beans = {
 
     //Default mapping uses same as internal role names
     roleAuthorityMapper(YanaAuthoritiesMapper){
-        adminRole= YanaConstants.ROLE_ADMIN
-        operatorRole= YanaConstants.ROLE_OPERATOR
-        architectRole= YanaConstants.ROLE_ARCHITECT
-        superuserRole= YanaConstants.ROLE_SUPERUSER
-        userRole= YanaConstants.ROLE_USER
+        useDefault=true
     }
 
     j2eeAuthDetailsSource(J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource){

@@ -38,4 +38,9 @@ public class YanaConstants {
     public static final String ROLE_ARCHITECT = "ROLE_YANA_ARCHITECT";
     public static final String ROLE_SUPERUSER = "ROLE_YANA_SUPERUSER";
     public static final String ROLE_USER = "ROLE_YANA_USER";
+    public static final List<String> ALL_ROLES = Collections.unmodifiableList(Arrays.asList(ROLE_ADMIN,
+                                                                                            ROLE_OPERATOR,
+                                                                                            ROLE_ARCHITECT,
+                                                                                            ROLE_SUPERUSER,
+                                                                                            ROLE_USER));
 }
