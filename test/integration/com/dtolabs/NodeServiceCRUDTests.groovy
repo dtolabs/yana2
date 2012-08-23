@@ -4,6 +4,7 @@ import com.dtolabs.yana2.springacl.YanaPermission
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.AuthorityUtils
+import com.dtolabs.yana2.YanaConstants
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -19,7 +20,7 @@ class NodeServiceCRUDTests extends GroovyTestCase {
         SecurityContextHolder.context.authentication =
             new UsernamePasswordAuthenticationToken(
                     'admin', 'admin',
-                    AuthorityUtils.createAuthorityList('ROLE_YANA_ADMIN'))
+                    AuthorityUtils.createAuthorityList(YanaConstants.ROLE_ADMIN))
     }
 
     /**
@@ -36,8 +37,8 @@ class NodeServiceCRUDTests extends GroovyTestCase {
         loginAsAdmin()
 
         // add some acls for the project
-        projectService.addPermission(testProject, 'ROLE_YANA_USER', YanaPermission.READ)
-        projectService.addPermission(testProject, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        projectService.addPermission(testProject, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
+        projectService.addPermission(testProject, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
 
         NodeType testNodeType1 = new NodeType(project: testProject,
@@ -73,8 +74,8 @@ class NodeServiceCRUDTests extends GroovyTestCase {
         loginAsAdmin()
 
         // add some acls for the project
-        projectService.addPermission(testProject, 'ROLE_YANA_USER', YanaPermission.READ)
-        projectService.addPermission(testProject, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        projectService.addPermission(testProject, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
+        projectService.addPermission(testProject, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
         NodeType testNodeType1 = new NodeType(project: testProject,
                 name: "testNodeType1",
@@ -122,8 +123,8 @@ class NodeServiceCRUDTests extends GroovyTestCase {
         loginAsAdmin()
 
         // add some acls for the project
-        projectService.addPermission(testProject, 'ROLE_YANA_USER', YanaPermission.READ)
-        projectService.addPermission(testProject, 'ROLE_YANA_ADMIN', YanaPermission.ADMINISTRATION)
+        projectService.addPermission(testProject, YanaConstants.ROLE_OPERATOR, YanaPermission.READ)
+        projectService.addPermission(testProject, YanaConstants.ROLE_ADMIN, YanaPermission.ADMINISTRATION)
 
         NodeType testNodeType1 = new NodeType(project: testProject,
                 name: "testNodeType1",

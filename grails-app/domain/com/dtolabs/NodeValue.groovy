@@ -9,7 +9,7 @@ class NodeValue{
 	String value
 
     static mapping = {
-        value column: 'nodevalue'
+        value column: 'nodevalue', type: 'text'
     }
 
     static constraints = {
