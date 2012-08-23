@@ -40,9 +40,10 @@ class ExportService {
          */
         Attribute.findAllByProject(project).each { Attribute attr ->
             Map attrMap = attr.toMap()
-            ["name", "id", "filter", "description"].each { key ->
+            ["name", "filter", "description"].each { key ->
                 BuilderUtil.makeAttribute(attrMap, key)
             }
+            attrMap.remove("id")
             root.yana.attributes << attrMap
         }
         BuilderUtil.makePlural(root.yana, "attributes")
@@ -60,8 +61,8 @@ class ExportService {
             }
 
             Map typeMap = type.toMap()
+            typeMap.remove("id")
             BuilderUtil.makeAttribute(typeMap, "name")
-            BuilderUtil.makeAttribute(typeMap, "id")
 
             typeMap.remove("parents") // don't include relationship info
             typeMap.remove("children")//
@@ -103,10 +104,11 @@ class ExportService {
             }
 
             Map ndMap = nd.toMap()
+            ndMap.remove("id")
             ndMap.remove("parents") // ChildNodes are not included here
             ndMap.remove("children")
 
-            ["name", "id", "type", "tags"].each { key ->
+            ["name", "type", "tags"].each { key ->
                 BuilderUtil.makeAttribute(ndMap, key)
             }
             ndMap.remove("typeId") // Don't include the type's ID
