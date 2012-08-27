@@ -27,11 +27,11 @@ class BootStrap {
 		Role archRole = Role.findByAuthority(YanaConstants.ROLE_ARCHITECT)?: new Role(authority: YanaConstants.ROLE_ARCHITECT).save(faileOnError:true)
 		Role rootRole = Role.findByAuthority(YanaConstants.ROLE_SUPERUSER)?: new Role(authority: YanaConstants.ROLE_SUPERUSER).save(faileOnError:true)
 
-		User user = User.get(1)
+		User user = User.findByUsername(CH.config.root.login)
 		if(user?.id){
 			user.username="${CH.config.root.login}"
 			user.password="${CH.config.root.password}"
-			user.save(faileOnError:true)
+			user.save(failOnError:true)
 		}else{
 			user = new User(username:"${CH.config.root.login}",password:"${CH.config.root.password}",enabled:true,accountExpired:false,accountLocked:false,passwordExpired:false).save(failOnError:true)
 		}
