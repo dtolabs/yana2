@@ -27,21 +27,24 @@ class BootStrap {
 		Role archRole = Role.findByAuthority(YanaConstants.ROLE_ARCHITECT)?: new Role(authority: YanaConstants.ROLE_ARCHITECT).save(faileOnError:true)
 		Role rootRole = Role.findByAuthority(YanaConstants.ROLE_SUPERUSER)?: new Role(authority: YanaConstants.ROLE_SUPERUSER).save(faileOnError:true)
 
-		User user = User.findByUsername(CH.config.root.login)
-		if(user?.id){
-			user.username="${CH.config.root.login}"
-			user.password="${CH.config.root.password}"
-			user.save(failOnError:true)
-		}else{
-			user = new User(username:"${CH.config.root.login}",password:"${CH.config.root.password}",enabled:true,accountExpired:false,accountLocked:false,passwordExpired:false).save(failOnError:true)
-		}
 
-		if(!user?.authorities?.contains(rootRole)){
-			UserRole.create user,rootRole
-		}
-		if(!user?.authorities?.contains(adminRole)){
-			UserRole.create user,adminRole
-		}
+        if (CH.config.root?.login && CH.config.root?.password) {
+            User user = User.findByUsername(CH.config.root.login.toString())
+            if (user?.id) {
+                user.username = CH.config.root.login.toString()
+                user.password = CH.config.root.password.toString()
+                user.save(failOnError: true)
+            } else {
+                user = new User(username: CH.config.root.login.toString(), password: CH.config.root.password.toString(), enabled: true, accountExpired: false, accountLocked: false, passwordExpired: false).save(failOnError: true)
+            }
+
+            if (!user?.authorities?.contains(rootRole)) {
+                UserRole.create user, rootRole
+            }
+            if (!user?.authorities?.contains(adminRole)) {
+                UserRole.create user, adminRole
+            }
+        }
 
 
         if (Environment.current.name == 'development') {
