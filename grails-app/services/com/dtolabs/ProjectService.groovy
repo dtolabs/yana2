@@ -219,8 +219,9 @@ class ProjectService {
     @PreAuthorize("hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
     def createProject(String name, String description) {
         def project = new Project(name: name, description: description)
-        if (!project.save()) {
+        if (!project.save(flush:true)) {
             log.error("Unable to create project: " + project)
+            return project
         } else {
             Properties defaultFilters = new Properties()
             if (null != servletContext) {

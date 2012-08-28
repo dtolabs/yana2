@@ -61,9 +61,8 @@ class ProjectServiceTests {
         assertEquals 1,Project.list().size()
 
         def mockControl = mockFor(AclUtilService)
-        //NB: 7 addPermission calls for the roles
-        7.times {
-            mockControl.demand.addPermission {project, username, perm -> }
+        mockControl.demand.addPermission {project, username, perm ->
+            fail 'not expected'
         }
         service.aclUtilService = mockControl.createMock()
 
