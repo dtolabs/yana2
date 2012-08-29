@@ -15,7 +15,7 @@ class NodeValue{
     static constraints = {
         node(nullable:false)
 		nodeattribute(nullable:false)
-		value(nullable:false)
+		value(nullable:true,blank: true)
     }
 
     String getName() {
@@ -26,7 +26,7 @@ class NodeValue{
         def map = [
                 id: this.id,
                 name: getName(),
-                value: this.value,
+                value: this.value?:'',
                 required: this.nodeattribute.required
         ]
         return map

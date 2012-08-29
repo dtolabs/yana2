@@ -160,15 +160,21 @@ class NodeService {
         def atmap = nodeType.attributes?.groupBy {it.attribute.name}
         // Next, assign all the NodeValue objects for this node.
         values.each {nvname,nvalue ->
+            if(!atmap || !atmap[nvname]){
+                //ignore if no such attribute exists
+                return
+            }
             def nodeValue
-            if (!doUpdate) {
-                def att = atmap[nvname]?.getAt(0)
-                nodeValue= new NodeValue(node: nodeInstance, nodeattribute: att, value: nvalue)
-                nodeInstance.addToNodeValues(nodeValue)
-            }else{
+            if(doUpdate && nvmap && nvmap[nvname]){
+                //update existing nodevalue instance
                 nodeValue = nvmap[nvname]?.getAt(0)
                 nodeValue.node = nodeInstance
                 nodeValue.value = nvalue
+            }else{
+                //create new nodevalue
+                def att = atmap[nvname]?.getAt(0)
+                nodeValue = new NodeValue(node: nodeInstance, nodeattribute: att, value: nvalue)
+                nodeInstance.addToNodeValues(nodeValue)
             }
             nodeValue.save(failOnError: true) // TODO: Is this failOnError necessary?
         }

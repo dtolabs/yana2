@@ -7,11 +7,15 @@ import grails.test.mixin.TestFor
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(NodeService)
-@Mock([Node,Project,NodeType,NodeTypeRelationship,ChildNode])
+@Mock([Node,Project,NodeType,NodeTypeRelationship,ChildNode,Filter,Attribute,NodeAttribute, NodeValue])
 class NodeServiceTests {
 	Project testProject
 	NodeType testNodeType0, testNodeType1, testNodeType2, testNodeType3,
 			 testNodeType4, testNodeType5, testNodeType6, testNodeType7
+    NodeAttribute nodeAttribute1, nodeAttribute2
+    Attribute attribute1,attribute2
+    Filter filter1,filter2
+
 
 	void setUp() {
 		testProject = new Project(name:'testProject1',
@@ -29,6 +33,18 @@ class NodeServiceTests {
 									 name:"testNodeType2",
 									 description:"test node type 2 description",
 									 image:"testNodeType2.jpg").save()
+
+        filter1 = new Filter(project: testProject,dataType: 'String',regex: '^.*$').save()
+        filter2 = new Filter(project: testProject,dataType: 'Integer',regex: '^[0-9]$').save()
+        attribute1 = new Attribute(filter: filter1,project: testProject,name: 'attr1',description: 'blah').save()
+        attribute2 = new Attribute(filter: filter2,project: testProject,name: 'attr2',description: 'blah').save()
+        nodeAttribute1 = new NodeAttribute(attribute: attribute1, nodetype: testNodeType2,required: false).save()
+        nodeAttribute2 = new NodeAttribute(attribute: attribute2, nodetype: testNodeType2,required: false).save()
+        testNodeType2.addToAttributes(nodeAttribute1)
+        testNodeType2.addToAttributes(nodeAttribute2)
+        assert null!=testNodeType2.save()
+
+
 		testNodeType3 = new NodeType(project:testProject,
 									 name:"testNodeType3",
 									 description:"test node type 3 description",
@@ -158,7 +174,69 @@ class NodeServiceTests {
 		assertEquals(null, testNode1.children)
 		assertEquals(null, testNode1.nodeValues)
 	}
-	
+
+	void testCreateNodeWithAttributes() {
+		assertEquals(0, Node.list().size())
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        service.projectService = mockControl.createMock()
+
+        service.createNode(testProject,
+						   testNodeType2,
+						   "testNode1",
+						   "test node 1 description",
+						   "test node 1 tags",
+						   [], [], [attr1:"a string", attr2:'123'])
+
+		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
+		assertEquals('testNode1', testNode1.name)
+		assertEquals("test node 1 description", testNode1.description)
+		assertEquals("test node 1 tags", testNode1.tags)
+		assertEquals(null, testNode1.parents)
+		assertEquals(null, testNode1.children)
+		assert null!=testNode1.nodeValues
+		assert 2==testNode1.nodeValues.size()
+        def attrvals = [:]
+        testNode1.nodeValues.each {
+            attrvals[it.name]=it.toMap()
+        }
+        assert null!=attrvals.attr1
+        assert "a string"==attrvals.attr1.value
+        assert null!=attrvals.attr2
+        assert "123" == attrvals.attr2.value
+	}
+
+	void testCreateNodeWithAttributesEmpty() {
+		assertEquals(0, Node.list().size())
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        service.projectService = mockControl.createMock()
+
+        service.createNode(testProject,
+						   testNodeType2,
+						   "testNode1",
+						   "test node 1 description",
+						   "test node 1 tags",
+						   [], [], [attr1:"", attr2:'123'])
+
+		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
+		assertEquals('testNode1', testNode1.name)
+		assertEquals("test node 1 description", testNode1.description)
+		assertEquals("test node 1 tags", testNode1.tags)
+		assertEquals(null, testNode1.parents)
+		assertEquals(null, testNode1.children)
+		assert null!=testNode1.nodeValues
+		assert 2==testNode1.nodeValues.size()
+        def attrvals = [:]
+        testNode1.nodeValues.each {
+            attrvals[it.name]=it
+        }
+        assert null!=attrvals.attr1
+        assert !attrvals.attr1.value
+        assert null!=attrvals.attr2
+        assert "123" == attrvals.attr2.value
+	}
+
 	void testUpdateNode() {
 		assertEquals(0, Node.list().size())
 
@@ -190,6 +268,88 @@ class NodeServiceTests {
 		assertEquals(null, testNode1Update.parents)
 		assertEquals(null, testNode1Update.children)
 		assertEquals(null, testNode1Update.nodeValues)
+	}
+	void testUpdateNodeWithAttributes() {
+		assertEquals(0, Node.list().size())
+
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        service.projectService = mockControl.createMock()
+
+		service.createNode(testProject,
+						   testNodeType2,
+						   "testNode1",
+						   "test node 1 description",
+						   "test node 1 tags",
+						   [], [], [:])
+
+		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
+
+
+		service.updateNode(testNode1,
+						   "testNode1Update",
+						   "test node 1 description (update)",
+						   "test node 1 tags (update)",
+						   [], [], [attr1: "a string", attr2: '123'])
+
+		def Node testNode1Update = Node.findByProjectAndName(testProject, "testNode1Update")
+		assertEquals('testNode1Update', testNode1Update.name)
+		assertEquals("test node 1 description (update)", testNode1Update.description)
+		assertEquals("test node 1 tags (update)", testNode1Update.tags)
+		assertEquals(null, testNode1Update.parents)
+		assertEquals(null, testNode1Update.children)
+		assert null!=testNode1Update.nodeValues
+        assert 2 == testNode1Update.nodeValues.size()
+        def attrvals = [:]
+        testNode1Update.nodeValues.each {
+            attrvals[it.name] = it.toMap()
+        }
+        assert null != attrvals.attr1
+        assert "a string" == attrvals.attr1.value
+        assert null != attrvals.attr2
+        assert "123" == attrvals.attr2.value
+	}
+	void testUpdateNodeWithAttributesEmpty() {
+		assertEquals(0, Node.list().size())
+
+        def mockControl = mockFor(ProjectService)
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        mockControl.demand.authorizedOperatorPermission {project -> assert project == testProject }
+        service.projectService = mockControl.createMock()
+
+		service.createNode(testProject,
+						   testNodeType2,
+						   "testNode1",
+						   "test node 1 description",
+						   "test node 1 tags",
+						   [], [], [attr1: "a string", attr2: '123'])
+
+		def Node testNode1 = Node.findByProjectAndName(testProject, "testNode1")
+
+
+		service.updateNode(testNode1,
+						   "testNode1Update",
+						   "test node 1 description (update)",
+						   "test node 1 tags (update)",
+						   [], [], [attr1: ""])
+
+		def Node testNode1Update = Node.findByProjectAndName(testProject, "testNode1Update")
+		assertEquals('testNode1Update', testNode1Update.name)
+		assertEquals("test node 1 description (update)", testNode1Update.description)
+		assertEquals("test node 1 tags (update)", testNode1Update.tags)
+		assertEquals(null, testNode1Update.parents)
+		assertEquals(null, testNode1Update.children)
+		assert null!=testNode1Update.nodeValues
+        assert 2 == testNode1Update.nodeValues.size()
+        def attrvals = [:]
+        testNode1Update.nodeValues.each {
+            attrvals[it.name] = it.toMap()
+        }
+        assert null != attrvals.attr1
+        assert "" == attrvals.attr1.value
+        assert null != attrvals.attr2
+        assert "123" == attrvals.attr2.value
 	}
 	
 	void testDeleteNode() {
