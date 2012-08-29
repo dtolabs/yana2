@@ -444,14 +444,31 @@ class NodeController {
         if (params.templateid != 'null') {
             if (params.node) {
                 def node = nodeService.readNode(params.node)
-                NodeValue.findAllByNode(node).each {nodeValue ->
-                    response += [tid: nodeValue.id,
-                            id: nodeValue.nodeattribute.attribute.id,
-                            required: nodeValue.nodeattribute.required,
-                            key: nodeValue.value,
-                            val: nodeValue.nodeattribute.attribute.name,
-                            datatype: nodeValue.nodeattribute.attribute.filter.dataType,
-                            filter: nodeValue.nodeattribute.attribute.filter.regex]
+                def ntype=node.nodetype
+                def attrs=[:]
+                def nvattrs=[:]
+
+                NodeAttribute.findAllByNodetype(ntype,[fetch:[attribute:'join']]).each {nodeAttribute ->
+                    attrs[nodeAttribute.attribute.name]=[
+                            nodeattribute: nodeAttribute,
+                            attribute: nodeAttribute.attribute,
+                            datatype: nodeAttribute.attribute.filter.dataType,
+                            filter: nodeAttribute.attribute.filter.regex]
+                }
+                NodeValue.findAllByNode(node, [fetch: [nodeattribute: 'select']]).each {nodeValue ->
+                    nvattrs[nodeValue.nodeattribute.attribute.name]=nodeValue
+                }
+                attrs.each{ aname,attr->
+                    def nodeValue=nvattrs[aname]
+                    def nodeattribute=attr.nodeattribute
+                    def attribute=attr.attribute
+                    response += [tid: nodeValue?.id,
+                            id: attribute.id,
+                            required: nodeattribute.required,
+                            key: nodeValue?.value,
+                            val: attribute.name,
+                            datatype: attr.datatype,
+                            filter: attr.filter]
                 }
             } else {
                 def ntype = NodeType.get(params.templateid)
