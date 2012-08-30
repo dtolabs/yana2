@@ -79,11 +79,9 @@ class NodeController {
     def list() {
         def project = projectService.findProject(params.project)
         String path = iconService.getSmallIconPath()
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        def result = nodeService.listNodes(project, params)
-        int totCount = result.total
-        ArrayList nodes = result.nodes
         if (params.format && params.format != 'none') {
+            def result = nodeService.listNodes(project, params)
+            ArrayList nodes = result.nodes
             switch (params.format.toLowerCase()) {
                 case 'xml':
                     def xml = xmlService.formatNodes(nodes)
@@ -95,6 +93,10 @@ class NodeController {
                     break
             }
         } else {
+            params.max = Math.min(params.max ? params.int('max') : 10, 100)
+            def result = nodeService.listNodes(project, params)
+            int totCount = result.total
+            ArrayList nodes = result.nodes
             [nodeInstanceList: nodes, nodeInstanceTotal: totCount, path: path]
         }
     }
