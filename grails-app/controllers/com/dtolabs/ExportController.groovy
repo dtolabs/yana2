@@ -37,6 +37,9 @@ class ExportController {
         }
 
         def xml = exportService.export(project)
+        if ("inline" != params.view) {
+            response.setHeader("Content-Disposition", "attachment; filename=\"${project.name.replaceAll('[^a-zA-Z0-9.+_]+','_')}.yana.xml\"")
+        }
         render(text: xml, contentType: "text/xml")
     }
 }
