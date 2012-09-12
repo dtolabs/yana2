@@ -16,12 +16,17 @@
     </g:if>
     <g:if test="${params.saved=='1'}">
         <div class="message" role="status">
-            ${g.message(code: "projectController.savePermission.success.message", args: [params.permissionGrant, params.permission, params.recipient])}
+            ${g.message(code: "projectController.savePermission.success.message", args: [params.permissionGrant, params.permission, params.recipient]).encodeAsHTML()}
         </div>
     </g:if>
     <g:if test="${params.deleted=='1'}">
         <div class="message" role="status">
-            ${g.message(code: "projectController.deletePermission.success.message", default: 'Permission deleted')}
+            ${g.message(code: "projectController.deletePermission.success.message", default: 'Permission deleted').encodeAsHTML()}
+        </div>
+    </g:if>
+    <g:if test="${request.error && request.errorCode}">
+        <div class="message" role="status">
+            ${g.message(code: request.errorCode, default: 'Error', args: [request.permissionGrant, request.permission, request.recipient]).encodeAsHTML()}
         </div>
     </g:if>
 

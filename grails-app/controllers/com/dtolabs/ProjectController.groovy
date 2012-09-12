@@ -1,7 +1,6 @@
 package com.dtolabs
 
 import grails.plugins.springsecurity.Secured
-import com.dtolabs.yana2.springacl.YanaPermission
 
 @Secured(['ROLE_YANA_USER', 'ROLE_YANA_ARCHITECT', 'ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
 class ProjectController {
@@ -118,8 +117,16 @@ class ProjectController {
         def recipient = params.recipient
         def perm = params.permission
         def grant = params.permissionGrant=='grant'
-        def done=projectService.deleteProjectPermission(p,recipient,perm,grant)
-        return redirect(action: 'editAdmin',params: [name:params.name]+[deleted:1])
+        def result=projectService.deleteProjectPermission(p,recipient,perm,grant)
+        if(result.success){
+            return redirect(action: 'editAdmin',params: [name:params.name]+[deleted: 1])
+        }else{
+            def acls = projectService.getProjectPermissions(p)
+            return render(view: 'editAdmin',model: [project: p,
+                                                           acls: acls,
+                                                           error: 1,
+                                                           errorCode: "projectController.deletePermission.${result.errorCode}.message"] + params.subMap(['recipient', 'permission', 'permissionGrant', 'name']))
+        }
     }
     @Secured(['ROLE_YANA_ADMIN', 'ROLE_YANA_SUPERUSER'])
     def saveProjectPermission(){
@@ -153,7 +160,14 @@ class ProjectController {
             projectService.addPermission(p, recipient, perm)
         }else if(params.permissionGrant=='deny'){
             grant=false
-            projectService.denyPermission(p, recipient, perm)
+            def result=projectService.denyPermission(p, recipient, perm)
+            if (!result.success){
+                def acls = projectService.getProjectPermissions(p)
+                return render(view: 'editAdmin', model: [project: p,
+                                                                acls: acls,
+                                                                error: 1,
+                                                                errorCode: "projectController.savePermission.${result.errorCode}.message"]+ params.subMap(['recipient', 'permission', 'permissionGrant', 'name']))
+            }
         }
         return redirect(action: 'editAdmin', params: params.subMap(['recipient','permission','permissionGrant','name']) + [saved: 1])
     }

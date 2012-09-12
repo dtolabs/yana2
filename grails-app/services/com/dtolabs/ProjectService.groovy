@@ -51,18 +51,22 @@ class ProjectService {
      * @param permission the permission to grant
      */
     @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
-    void denyPermission(Project project, String recipient, Permission permission) {
+    Map denyPermission(Project project, String recipient, Permission permission) {
+        if (permission == YanaPermission.ADMINISTRATION && recipient in [YanaConstants.ROLE_ADMIN, YanaConstants.ROLE_SUPERUSER]) {
+            return [success: false, errorCode: 'disallowed']
+        }
         ObjectIdentity oid = objectIdentityRetrievalStrategy.getObjectIdentity(project)
         int_denyPermission oid, recipient, permission
+        return [success: true]
     }
 
     @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
-    void denyPermission(Project project, String username, int permission) {
+    Map denyPermission(Project project, String username, int permission) {
         denyPermission project, username, aclPermissionFactory.buildFromMask(permission)
     }
 
     @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
-    void denyPermission(Project project, String username, String permission) {
+    Map denyPermission(Project project, String username, String permission) {
         denyPermission project, username, YanaPermission.forName(permission)
     }
     /**
@@ -332,8 +336,12 @@ class ProjectService {
      * @return true if successful
      */
     @PreAuthorize("hasPermission(#project, admin) or hasRole('ROLE_YANA_ADMIN') or hasRole('ROLE_YANA_SUPERUSER')")
-    def boolean deleteProjectPermission(Project project,String recipient, String perm, boolean granted) {
+    def Map deleteProjectPermission(Project project,String recipient, String perm, boolean granted) {
+        //disallow removing 'admin' permission for a project for the ADMIN role
+        if(YanaPermission.forName(perm)==YanaPermission.ADMINISTRATION && recipient in [YanaConstants.ROLE_ADMIN, YanaConstants.ROLE_SUPERUSER ] && granted) {
+            return [success:false,errorCode:'disallowed']
+        }
         deletePermission(Project,project.id,recipient, YanaPermission.forName(perm),granted)
-        return true
+        return [success: true]
     }
 }

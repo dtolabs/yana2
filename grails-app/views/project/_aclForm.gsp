@@ -1,4 +1,4 @@
-<%@ page import="com.dtolabs.yana2.springacl.YanaPermission; com.dtolabs.Project" %>
+<%@ page import="com.dtolabs.yana2.YanaConstants; com.dtolabs.yana2.springacl.YanaPermission; com.dtolabs.Project" %>
 
 <div >
     <div>
@@ -49,6 +49,11 @@
                     <span class="permission">${g.message(code: 'permission.'+ aclEntry.permission+'.label', default: aclEntry.permission)}</span>
                 </td>
                 <td>
+                    %{--
+                    Hide delete button if action would be disallowed:
+                    not allowed to delete ADMINISTRATION perm for the ROLE_YANA_ADMIN or ROLE_YANA_SUPERUSER
+                    --}%
+                    <g:if test="${!(recipient in [YanaConstants.ROLE_ADMIN,YanaConstants.ROLE_SUPERUSER]) || aclEntry.permission!= YanaPermission.nameFor(YanaPermission.ADMINISTRATION)}">
                     <g:form controller="project" action="deleteProjectPermission">
                         <g:hiddenField name="name" value="${project.name}"/>
                         <g:hiddenField name="recipient" value="${recipient}"/>
@@ -58,6 +63,7 @@
                             name="${g.message(code:'default.button.delete.label')}"
                             onclick="return confirm('${g.message(code: 'default.button.delete.confirm.message').encodeAsJavaScript()}');"/>
                     </g:form>
+                    </g:if>
                 </td>
             </tr>
             </g:each>
