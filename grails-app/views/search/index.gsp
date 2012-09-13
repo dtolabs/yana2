@@ -117,7 +117,7 @@
 			</table>
 		
 			<div class="pagination">
-				<g:paginate total="${Node.count()}" />
+				<g:paginate total="${total}" params="${[q:params.q]}"/>
 			</div>
 		</div>
 	</g:if>

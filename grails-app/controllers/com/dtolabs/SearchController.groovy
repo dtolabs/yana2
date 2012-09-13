@@ -30,11 +30,21 @@ class SearchController {
         if (!params.q?.trim()) {
             return [:]
         }
+        if(!params.sort){
+            params.sort='name'
+        }
+        if(!params.order){
+            params.order='asc'
+        }
         try {
             def results = Node.search( {
                                            must(term("project", params.project))
                                            must(queryString(params.q))
                                        }, params.subMap(['offset', 'max', 'sort', 'order']))
+            def total = Node.countHits( {
+                                           must(term("project", params.project))
+                                           must(queryString(params.q))
+                                       })
             if (params.format) {
 
 
@@ -51,7 +61,7 @@ class SearchController {
                         break;
                 }
             } else {
-                return [searchResult: results, path: path]
+                return [searchResult: results, total: total, path: path]
             }
         } catch (SearchEngineQueryParseException ex) {
             return [parseException: true]
