@@ -3,10 +3,17 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
         <title>Import</title>
+        <style>
+
+        .note {
+            border: 2px solid #ddd;
+            padding: 5px;
+        }
+        </style>
     </head>
     <body>
 
-        <div class="body">
+        <div class="body" id="uploadForm">
             <h1>Import XML</h1>
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
@@ -36,11 +43,26 @@
                         
                         </tbody>
                     </table>
-                </div>
-                <div class="buttons">
-                    <g:submitButton name="import" class="button" value="import" />
+                    <span class="spinner note" style="display: none;">
+
+                        Importing File&hellip;
+                        <g:img dir="images" file="spinner.gif"/>
+                    </span>
                 </div>
             </g:uploadForm>
+            <div class="buttons">
+                <button class="dosubmit fake_button">import</button>
+            </div>
         </div>
+    <script>
+    $(document).ready(function(){
+        $('.dosubmit').click(function(){
+            $('#uploadForm .spinner').show();
+            $('.dosubmit').attr('disabled','true');
+            $('div.buttons').hide();
+            setTimeout(function(){$('#uploadForm form').submit();},100);
+        });
+    });
+    </script>
     </body>
 </html>
