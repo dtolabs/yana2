@@ -141,14 +141,13 @@ class ExportService {
             } else {
                 childMap.remove("relationship")
             }
-            childMap.remove("id") // We don't publicize ChildNode.id
             childMap.putAll(childMap.remove("child")) // Hoist the child info up a level
+            childMap.remove("id") // We don't publicize the id
+            childMap.parent.remove("id") // We don't publicize the id
             BuilderUtil.makeAttribute(childMap, "name")
             BuilderUtil.makeAttribute(childMap, "type")
-            BuilderUtil.makeAttribute(childMap, "id")
             BuilderUtil.makeAttribute(childMap.parent, "name")
             BuilderUtil.makeAttribute(childMap.parent, "type")
-            BuilderUtil.makeAttribute(childMap.parent, "id")
 
             root.yana.children.child << childMap
         }
