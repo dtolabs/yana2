@@ -94,6 +94,8 @@ class NodeController {
             }
         } else {
             params.max = Math.min(params.max ? params.int('max') : 10, 100)
+            params.sort=params.sort?:'nodetype.name,name'
+            params.order=params.order?:'asc'
             def result = nodeService.listNodes(project, params)
             int totCount = result.total
             ArrayList nodes = result.nodes
@@ -286,11 +288,23 @@ class NodeController {
             }
         } else {
             ChildNode[] parents = ChildNode.createCriteria().list {
-                eq("child", Node.get(params.id?.toLong()))
+                eq("child", nodeInstance)
+                parent{
+                    delegate.'nodetype' {
+                        order('name', 'asc')
+                    }
+                    order('name','asc')
+                }
             }
 
             ChildNode[] children = ChildNode.createCriteria().list {
-                eq("parent", Node.get(params.id?.toLong()))
+                eq("parent", nodeInstance)
+                child{
+                    delegate.'nodetype'{
+                        order('name', 'asc')
+                    }
+                    order('name', 'asc')
+                }
             }
 
             if (nodeInstance?.tags) {
@@ -323,6 +337,11 @@ class NodeController {
         def nodes = criteria.list {
             ne("id", params.id?.toLong())
             eq("project", project)
+
+            delegate.'nodetype' {
+                order('name', 'asc')
+            }
+            order('name', 'asc')
         }
 
         if (!nodeInstance) {

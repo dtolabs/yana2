@@ -83,7 +83,32 @@ class NodeService {
     Map listNodes(Project project, Map params=[:]){
         projectService.authorizedReadPermission(project)
         int totCount = Node.countByProject(project)
-        ArrayList nodes = Node.findAllByProject(project, params)
+        def sort= params.sort
+        def criteria= Node.createCriteria()
+        def nodes = criteria.list{
+            delegate.'project'{
+                idEq(project.id)
+            }
+            if(params.max){
+                maxResults(params.max.toInteger())
+            }
+            if(params.offset){
+                firstResult(params.offset.toInteger())
+            }
+            if(sort){
+                def x = sort.split(/\s*,\s*/)
+                x[0..1].each{y->
+                    if(y.contains('.')){
+                        def z= y.split('\\.',2)
+                        delegate."${z[0]}"{
+                            order(z[1],params.order?:'asc')
+                        }
+                    }else{
+                        order(y,params.order?:'asc')
+                    }
+                }
+            }
+        }
         [total:totCount,nodes:nodes]
     }
 
