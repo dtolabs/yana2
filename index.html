@@ -1,62 +1,590 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+        <head>
 
-    <title>Yana2 by dtolabs</title>
-  </head>
+            <link rel="icon" type="image/png" href="images/favicon.png"/>
+            <title>YANA - Yet Another Node Authority !</title>
 
-  <body>
+            <link href='http://fonts.googleapis.com/css?family=Play:400italic,400' rel='stylesheet' type='text/css'>
+<script 
+ src="http://twitterjs.googlecode.com/svn/trunk/src/twitter.min.js" 
+ type="text/javascript">
+</script>
+<script type="text/javascript" charset="utf-8">
+getTwitters('tweet', { 
+  id: 'alexhonor', 
+  count: 3, 
+  enableLinks: true, 
+  ignoreReplies: true, 
+  clearContents: true,
+  template: '"%text%" <a href="http://twitter.com/%user_screen_name%/statuses/%id_str%/">%time%</a>'
+});
+</script>
 
-    <header>
-      <div class="container">
-        <h1>Yana2</h1>
-        <h2>Yet Another Node Authority</h2>
 
-        <section id="downloads">
-          <a href="https://github.com/dtolabs/yana2/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/dtolabs/yana2/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/dtolabs/yana2" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
+            <link rel="stylesheet" media="screen" href="css/bootstrap.css"/>
+            <link rel="stylesheet" media="screen" href="css/style.css"/>
+            <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
+            <script src="js/bootstrap-dropdown.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
 
-    <div class="container">
-      <section id="main_content">
-        <h3>Welcome to GitHub Pages.</h3>
+                    $('.dropdown-toggle').dropdown();
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+                });
+               
+            </script>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+            <link rel="stylesheet" media="screen" href="css/prettyPhoto.css"/>
+            <script src="js/jquery.prettyPhoto.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('a[data-rel]').each(function() {
+                        $(this).attr('rel', $(this).data('rel'));
+                    });
+                    $("a[rel^='prettyPhoto[gallery1]']").prettyPhoto({
+                        animation_speed: 'fast',
+                        slideshow: 5000,
+                        autoplay_slideshow: false,
+                        opacity: 0.80,
+                        show_title: false,
+                        theme: 'pp_default', /* light_rounded / dark_rounded / light_square / dark_square / facebook */
+                        overlay_gallery: false,
+                        social_tools: false,
+                        changepicturecallback: function(){
+                            var $pp = $('.pp_default');
+                            if( parseInt( $pp.css('left') ) < 0 ){
+                                $pp.css('left', 0 );
+                            }
+                        }
+                    });
+                });
+            </script>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
 
-<h3>Designer Templates</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
 
-<h3>Rather Drive Stick?</h3>
+        </head>
+        <body id="home">
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+            <div id="header_wrapper">
 
-<h3>Authors and Contributors</h3>
+                <div class="container clearfix"> 
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
 
-<h3>Support or Contact</h3>
+                    <div id="header"> 
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact support@github.com and we’ll help you sort it out.</p>
-      </section>
-    </div>
+                        <div class="navbar">
+                            <div class="navbar-inner">
+                                <div class="container">
 
-    
-  </body>
-</html>
+                                    <div class="nav">
+                                        <a href="#home"><img class="logo" src="images/logo.png"></a>
+                                        <ul class="nav">
+
+                                            <li>&nbsp; </li>
+                                            <li>&nbsp; </li>
+                                        
+                                            <li><a href="#why">Why?</a></li>
+                                            <li class="divider-vertical"></li>
+                                            <li><a href="#features">Features</a></li>
+                                            <li class="divider-vertical"></li>
+                                            <li><a href="#uses">Uses</a></li>
+                                            <li class="divider-vertical"></li>
+                                            <li><a href="#screenshots">Screenshots</a></li>
+                                            <li class="divider-vertical"></li>
+                                            <li><a href="#download">Download</a></li>
+                                            <li class="divider-vertical"></li>         
+
+
+                                            <li class="dropdown" id="menu1">
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+                                                   Help
+                                                    <b class="caret"></b>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="https://github.com/yana/yana/issues">Issues</a></li>
+                                                    <li><a href="https://groups.google.com/forum/#!forum/yana-discuss">Mailing List</a></li>
+                                                    <li><a href="https://github.com/yana/yana/wiki">Wiki</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div id="slide" class="flexslider image-slider">
+                        <div class="span12">
+
+
+                            <div class="span6">
+
+
+                                <h1>Draft the world the way you want it.</h1>
+
+                                <h3>Specify, objectify, relate, and attribute something to all the things and in the way you want for your SaaS cloudy world.</h3>
+                                <br /><br/>  <br/>
+
+
+                                <a class="btn  btn-xlarge" href="http://github.com/yana/yana">GitHub Project</a>
+
+
+
+
+                            </div> 		
+
+                            <div class="span5">	
+                
+                                <img src="images/preview/yana-mascot-logo.png" class="screengrab"  height="300px" alt="Screenshot">
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="why" class="container clearfix"> 
+              <div class="span12">
+              <h1>Welcome to Yet Another Node Authority!</h1>
+
+              <h3>Why do I need yet another node authority?</h3>
+              <ul>
+                <li>Do you need an independent information source that contains information about hosts, VMs, services,  software deployments,  configurations and dependencies?</li>
+                <li>Do you need that information to be specified and be accessible by different tools and as a source you consider to be authoritative?</li>
+                <li>Do you want to describe things about your application and infrastructure using a bare bones non-opinioned model that let's you specify things in your own opinionated way?</li>
+              </ul>
+
+              <p>YANA is a super simple, bare bones model management service where you specify, store and manage administrative information using an object graph. YANA is like a drafting board that lets you define and manage your model as specifications.
+                Use YANA as a place to visualize and navigate the management information and put it all together into a single model.
+              </p>
+              <p>YANA provides a plain jane GUI for viewing and modifying the model. YANA provides access control to govern who can change what parts of the model. YANA includes an API and export/import services to interact with the model from other tools and systems.</p>
+
+
+              <p>YANA is a super simple thing, that lets you do a not-always-super-simple thing, describe your world.  YANA lets you create object graphs that represent your online software systems as interconected Nodes. Nodes are described with Attributes and Relationships as declared by thier Type. The YANA model objects can be declared via API or XML documents.
+                YANA only takes responsibility to store, update, query, export and import the model. 
+                YANA enables easy "integration" with other services  via a RESTy API and XML document support.
+                </p>
+              <p>A YANA model is a specification of your world. It's the model of your world state.   You can't represent the world as it is because it's always changing but you can represent the  way you want the world to be.  YANA let's you create an a-priori definition of expected state.  With YANA you can specify environmental state or represent state definitions be they about configurations, properties, dependencies, etc. Tools can be controlled by the state in the YANA model or even change the model's state.
+                </p>
+
+
+
+              <h3>Other Node Authorities</h3>
+              <p>YANA is not unique as a Node Authority. There are many other tools and services
+                that support maintaining a node model. For example, configuration management tools
+                like CFEngine, Puppet, and Chef  are each capable of collecting and storing information
+                about infrastructure and applications. This information is then made available to
+                the automation layer and makes actions data-driven and thus more reusable.
+              </p>
+              <p>ITIL declares the concept of a "CMDB" containing information about how business
+                systems are comprised of interconnected components. This information is important
+                for Service Management concerns like incident, problem, change and capacity management.
+              </p>
+              <p>Infrastructure as a Service environments all include a Node Authority that knows about the
+                virtual machines they control. The VM life cycle, from launch to retirement are
+                governed by the compute service controller. This controller is the absolute truth
+                about the state of the hosts.
+              </p>
+
+              <p>Tools like Zookeeper allow you to define object graphs that model the structure
+                of your application. The graph can be made active and invoke actions when the
+                graph changes. These graphs are useful for the application to self-configure.
+                </p>
+
+              <p>Monitoring tools like Zenoss, allow you to model your environment from network
+                layer to service layer, letting you also define relationships
+                between objects. This is important because these "run-time service models"
+                are essential to understand how faults can impact the broader environment.
+              </p>
+              <p>Your house-built system management tools probably include multiple Node Authorities.
+                Inventory databases, deployment consoles, alarm managers each contain a view
+                of the environment and the applications that run in it. These tools might be built
+                from using libraries like neo4j that make it easy to implement object graph
+                data structures.
+              </p>
+              <p>
+                Each of the Node Authorities named above are useful and share an important common purpose,
+                to represent the structure and properties of an environment. 
+                YANA is yet another Node Authority, but just that. YANA is not active. YANA just
+                provides basic CRUD, import/export, and access control. You can use YANA as
+                a generic node model representation when you need to share specifications between one or more tools.
+              </p>
+
+              <h3>Modeling with YANA</h3>
+
+              <p>YANA only gives you a basic set of objects to specify things in your domain: Nodes, Types, Attributes and Relationships. </p>
+
+                <p>
+                  <b>Node</b>: A Node is an object in the graph. It may or not be connected to another
+                  Node by a Relationship. It may have few or many Attributes describing its
+                  characteristics and state. Nodes have an inherent feature called <i>tags</i>
+                  that take a list of labels useful for loose classification or grouping needs.
+                </p>
+                <p>
+                  <b>Type</b>: A Node Type is a template specifying a kind of Node. A Node's
+                  allowable Attributes and Relationshps are declared by the Node Type.
+                  A YANA Node Type is different than a type in a programming language like
+                  Ruby or Java. YANA Type's do not support specialization or generalization
+                  through inheritance or composition. Node Types are like a frame that defines
+                  the permissible "slots" for attributes and relationships.
+                </p>
+                <p><b>Relationship</b>: A Relationship represents a connection between two Nodes.
+                  It is said in this relationship there is a Parent and a Child. This is just
+                  a matter of perspective but is often useful to know. 
+                </p>
+
+                <p><b>Attribute</b>: A Node Attribute defines a property about a Node.
+                  An Attribute is a key/value pair who's value is restricted by
+                  a Filter.
+                </p>
+
+
+
+              <p>These four basic concepts are enough to create a YANA model. Nothing beats some pictures so how about some?
+              </p>
+              <p>
+                Here's some drawings showing the basic YANA modeling objects and how they work together.
+                Using those objects we can define Types and Nodes to represent application environments.
+              </p>
+              <p>The first drawing shows the model primitives and how they are used together.
+                Two Nodes, "node A" and "node B", have a relationship where "node A" has a child, "node B".
+                One can also see "node A" has an attribute with a "value" that defines some state.
+                To the left, one can see "Type A" reflects the model for "node A" and "node B".
+                The Type declares one attribute and one type of relationship.
+              </p>
+              <p>
+                <img src="images/metamodel.png" alt="meta model"/>
+                <img src="images/model-example-types.png" alt="meta model"/>
+                <img src="images/model-example.png" alt="model example types"/>
+
+              </p>
+              <p>The second drawing shows a model describing a set of Nodes representing the information about some customer application instances. It shows several columns, each one for Nodes of a given Node Type.
+                The 
+                "CentosHost" Nodes, centos01 and centos02,   represent the hosts serving the "JBoss" nodes,
+                jboss-5 and jboss-6. Several "AppInstance" Nodes represent JBoss application instances. The
+                "OracleRDB" Node, represents an Oracle database instance. 
+                The "Customer" Nodes represent the business service Nodesrovisioned for the customers, 
+                A, B and C.
+              </p>
+              <p>The third drawing shows the Nodes connected through Relationships. 
+                Relations are used to compose Nodes together to form larger structures.
+                Note,
+                YANA models can arrange Nodes into hierarchies but practically speaking,
+                YANA models often take the form of networks.
+              </p>
+
+              <p>Overlaying the application model, an administrator may enhance the model
+                to apply tags to Nodes or create their own Nodes to represent points of control.
+              </p>
+
+              <h3>Using YANA</h3>
+
+              <p>The first step towards building a YANA model is to define the Node Types
+                and necessary Attributes. Attributes can be shared across Types so think
+                of them like properties which can be general and shared. Once Node Types
+                have been declared the next stage begins by defining the Relationships
+                between the Nodes of the declared Types. One might consider the 
+                type definiton layer, the Node Types
+                and Attributes, to be like the "schema" of the model.
+              </p>
+              <p>In the drawing below, one can see a model spec coming from a git repository
+                (could be another source code management system)
+                and, via the YANA API, the model spec is imported to the YANA database. Models are stored
+                in a YANA project and thus the project name is a parameter to the import function.
+                YANA considers it a good practice to maintain the type definition layer 
+                as an artifact in the source repository and formally released to YANA instances.
+                YANA instances can share model data through an export/import process as one
+                can see in the top left of the drawing.
+                One might share a set of base types across a number of projects.
+              </p>
+              <p>
+                <center><img src="images/model-use.png" alt="meta model"/></center>
+              </p>
+              <p>
+                On the right hand side of the drawing, are Monitoring and Deployment tools which
+                interact with the YANA db via the REST API and the exchange of model specs.
+                A Monitoring tool might modify the YANA model to reflect operational state.
+                One might imagine the Monitoring tool is updating Nodes based on operational
+                tests.
+                The Deployment tool does gets information about a set of Nodes as a listing
+                (perhaps based on search queries) and uses the model spec during its remote
+                execution across a set of Hosts.
+              </p>
+              </div>
+            </div>
+            <div id="features" class="container clearfix"> 
+
+                <div class="span12">
+                    <h1>Features</h1>
+                    <p class="textstyle1">It's more than just data. It's data about your datacenter (in the cloud, somewhat virtualized or otherwise).</p>
+
+                </div>
+
+               <div class="span3">
+                    <div class="icon_bg"><img src="images/icons/icon-4.png" width="92" height="92" alt="icon"></div>
+                    <h4>Model</h4>
+                    <p>Drive your automation world with the resource model that represents your application and infrastructure. </p>
+                    <p>You describe the things in your world with a Node in a YANA model. </p>
+                    <p>Connect Nodes together
+                    through Relationships to describe the interconnections in your world.</p>
+                </div>
+
+                <div class="span3">
+                    <div class="icon_bg"><img src="images/icons/icon-1.png" width="92" height="92" alt="icon"></div>
+                    <h4>Reuse</h4>
+                    <p>Resuable data. Define your model once and use it over and over again. Data-driven automation processes FTW!</p>
+                    <p>Alike Nodes are described as Node Types that serve as a template for them.
+                    </p>
+                    <p>Use YANA import and export services to maintain base model data in text files.
+                    </p>
+                </div>
+
+                <div class="span3">
+                    <div class="icon_bg"><img src="images/icons/icon-2.png" width="92" height="92" alt="icon"></div>
+                    <h4>HTTP</h4>
+                    <p>Access your resource model over the web, via browser or API. It's going over HTTP either way (SSL is configurable).</p>
+                    <p>Access YANA model data programmatically over a simple HTTP interface.
+                    </p>
+                </div>
+
+                <div class="span3">
+                    <div class="icon_bg"><img src="images/icons/icon-3.png" width="92" height="92" alt="icon"></div>
+                    <h4>Save Time</h4>
+                    <p>Stop the information sprawl. Keep your information organized and structured the way you want so its easier to access.</p>
+                    <p>Drive multiple tools with the same data model to avoid "similar but different" autorities of truth.
+                    </p>
+                    <p>
+                      Avoid unstructured documenation formats spread across internal wikis and loose "README" files
+                      by capturing this knowledge into a formalized artifact.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="row_color">
+
+                <div id="uses" class="container clearfix"> 
+
+                    <div class="span12">
+                        <div class="span12"><h1>Uses</h1></div>
+                        <div class="span11"><hr/></div>
+                    </div>
+                    <div class="span11 uses" >
+
+                        <div class="span4"> <img src="images/uses-cmdb.png" alt="image" class="image_left">
+                            <h5>CMDB</h5>
+                            <p class="textstyle3">Not ITIL, not DMTF</p>
+                            <!--
+                            <ul class="uses_info">
+                                <li><a href="#"><img src="images/icons/team-social-url.png" width="16" height="16" alt="icon">Read more</a></li>
+                            </ul>
+                            -->
+                        </div><div class="span5">
+                            <p>The YANA model does not prescribe a particular standard. YANA only provides a very basic set of modeling concepts that help you define an object graph using a type system. Objects are called "nodes" in the YANA model. Each node is defined by its "type", which is in turn defined in terms of "attributes". Nodes in the model connect through "relationships". Relationships dictate the patterns of connection between "parent" and "child" nodes.</p>
+                        </div>
+
+                    </div>
+                    <div class="span11 uses" >
+
+                        <div class="span4"> <img src="images/uses-orchestration.png" alt="image" class="image_left">
+                            <h5>Orchestration </h5>
+                            <p class="textstyle3">Yet another node authority</p>
+                            <!--
+                            <ul class="uses_info">
+                                <li><a href="#"><img src="images/icons/team-social-url.png" width="16" height="16" alt="icon">Read more</a></li>
+                            </ul>
+                            -->
+                        </div><div class="span5">
+                            <p>More and more automation tools need information about the hosts in their infrastructure.
+                              The control of execution is often governed by selecting hosts based on class membership
+                              or attribute. Rather than maintain this host inventory in scripted code, a YANA
+                              model can be used to independently represent the host information and provide it to tools. 
+                              YANA also
+                              supports a formalized process to define and control the model's evolution friendly with an SDLC.
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="span11 uses" >
+
+                        <div class="span4"> <img src="images/uses-monitoring.png" alt="image" class="image_left">
+                            <h5>Monitoring</h5>
+                            <p class="textstyle3">Real time service model</p>
+                            <!--
+                            <ul class="uses_info">
+                                <li><a href="#"><img src="images/icons/team-social-url.png" width="16" height="16" alt="icon">Read more</a></li>
+                            </ul>
+                            -->
+                        </div><div class="span5">
+                            <p>Monitoring tools need to help you know if a business service is really
+                              up. YANA helps you describe the business service in terms of interconnected
+                              objects. Monitoring tools can use YANA models to correlate and learn about dependencies.
+                              Infrastructure changes fast (especially in virtual ones) so the YANA model
+                              is easy to change, but in a way that stays in step with your
+                              management tools.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="screenshots" class="container clearfix">
+                <div class="span12"> 
+
+                    <div class="span12"><h1>Screenshots</h1></div>
+                    <div class="span11"><hr/></div>
+                    <div class="span11">
+                      <p>YANA has a plain jane GUI.</p>
+                        <ul id="screens" >
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-login.png" alt="Image"/></a><a href="images/preview/login.png" data-rel="prettyPhoto[gallery1]" title="Role based access control configured through Active Directory, LDAP or others." class="zoom zoom_icon"></a></div>
+                            </li>
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-project.png" alt="Image"/></a><a href="images/preview/projects.png" data-rel="prettyPhoto[gallery1]" title="Each model is managed in a project." class="zoom zoom_icon"></a></div>
+                            </li>
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-import.png" alt="Image"/></a><a href="images/preview/import.png" data-rel="prettyPhoto[gallery1]" title="Import a model from an XML file into a project." class="zoom zoom_icon"></a></div>
+                            </li>
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-nodes.png" alt="Image"/></a><a href="images/preview/nodes.png" data-rel="prettyPhoto[gallery1]" title="A list of nodes categorized by tags." class="zoom zoom_icon"></a> </div>
+                            </li>
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-node.png" alt="Image"/></a><a href="images/preview/node.png" data-rel="prettyPhoto[gallery1]" title="A view of a node showing current attribute values and parent and child nodes." class="zoom zoom_icon"></a></div>
+                            </li>
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-types.png" alt="Image"/></a><a href="images/preview/types.png" data-rel="prettyPhoto[gallery1]" title="A listing of Node Types. Types define your Nodes." class="zoom zoom_icon"></a></div>
+                            </li>
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-type.png" alt="Image"/></a><a href="images/preview/type.png" data-rel="prettyPhoto[gallery1]" title="A Node Type is described in terms of attributes and relationships." class="zoom zoom_icon"></a></div>
+                            </li>
+                            <li>
+                                <div class="thumb"><a href="#"><img src="images/preview/thumb-attribute.png" alt="Image"/></a><a href="images/preview/attribute.png" data-rel="prettyPhoto[gallery1]" title="An attribute is a named property. An attribute's allowable values are restricted by its Filter's regex pattern." class="zoom zoom_icon"></a></div>
+                            </li>
+                        </ul>
+
+
+                    </div>
+                </div>
+            </div>
+            <div id="opensource" class="container clearfix">
+                <div class="span12">
+                    <div class="span12"><h2>Open Source</h2></div>
+                    <div class="span11"><hr/></div>
+                    <div class="span11">
+                    <p>YANA is an 
+                      <a href="http://github.com/yana/yana">open source project maintained at GitHub</a>. 
+                    The work is done under an <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2 license</a>.
+                      Because it's an open source project, we welcome your contribution.
+                      YANA is a young project and plenty of refinement can be made.
+                      If you find YANA a useful tool, consider contributing to the project in
+                      some way whether it be through source code or just feedback and guidance.
+                    </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="download" class="container clearfix">
+                <div class="span12"> 
+
+
+                    <div class="logo_grey"><img src="images/logo.png" alt="logo"></div>
+                    <h2>Yet Another Node Authority !</h2>
+                    <ul class="textlist">
+                        <li><span class="coloredstrong">$0 /</span> totally free </li>
+                        <li>| </li>
+                        <li>Apache 2 License</li>
+                    </ul>
+
+                    <div class="row"><div class="button_wrapper"> 
+                        <a class="btn btn-the-bizzniss-4 btn-xlarge" href="https://github.com/yana/yana/downloads">Download Now</a>
+                    </div></div>
+                </div>
+            </div>
+
+
+            <div id="extra">
+
+                <div class="inner">
+
+                    <div class="container">
+
+                        <div class="row">
+<!--
+                            <div class="span3">
+
+                                <h3>Quick Links</h3>
+
+
+                                <ul class="footer-links clearfix">  	
+                                    <li><a href="#">Support</a></li>
+                                    <li><a href="#">License</a></li>
+                                    <li><a href="#">Terms of Use</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                </ul>
+
+                            </div>
+-->
+
+
+                            <div class="span4">
+
+                                <h3><img src="images/icons/social-footer-twitter.png" width="25px">Tweets</h3>
+                                <br />	
+                                 <div id="tweet">
+ <p>Please wait while my tweets load <img src="images/icons/social-footer-twitter.png" /></p>
+ <p><a href="http://twitter.com/yanadb">If you can't wait - check out what I've been twittering</a></p>
+</div>
+
+
+                            </div> 
+<!--
+                            <div class="span5">
+
+                                <h3>Subscribe and get updates</h3>
+                                <br />
+
+                                <div class="input-prepend">
+                                    <span class="add-on"><i class="icon-envelope"></i></span><input class="span3" id="inputIcon" placeholder="Enter Your Email..." type="text">
+
+                                    <a href="#"  class="btn  btn-small">Subscribe Now</a>
+                                </div>
+
+                            </div> 
+
+                        </div> 
+-->
+
+                    </div> 
+
+                </div> 
+
+            </div>
+            <div id="footer" >
+                <div class="inner"> 
+
+                    <div class="container"> <p>Copyright 2012 DTO Labs.</p>
+                        <p>
+                      
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="clear"></div>
+
+            <script src="js/jquery.easing.1.3.js" type="text/javascript"></script> 
+
+            <script src="js/custom.js" type="text/javascript"></script>
+        </body>
+
+
+    </html>
