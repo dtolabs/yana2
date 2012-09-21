@@ -1,5 +1,7 @@
 # Yana: Yet another node authority!
 
+![logo](http://yana.github.com/yana/images/logo.png)
+
 You didn't have one or you wanted another node authority. 
 
 ## Overview
