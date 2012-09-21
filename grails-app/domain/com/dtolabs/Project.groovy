@@ -9,7 +9,11 @@ class Project {
         name name: 'project'
     }
     static constraints = {
-        name unique: true, nullable: false, blank: false
+        name unique: true, nullable: false, blank: false, validator: {val,obj->
+            !Project.withNewSession {
+                Project.findAllByNameIlikeAndIdNot(val,obj.id)
+            }
+        }
         description nullable: false, blank: false
     }
 

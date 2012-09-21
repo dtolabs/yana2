@@ -16,6 +16,7 @@ class SearchController {
     def searchableService
     def jsonService
     def xmlService
+    def projectService
 
     /**
      * Search Nodes only
@@ -36,13 +37,14 @@ class SearchController {
         if(!params.order){
             params.order='asc'
         }
+        def Project proj=projectService.findProject(params.project)
         try {
             def results = Node.search( {
-                                           must(term("project", params.project))
+                                           must(term("project", params.project.toLowerCase()))
                                            must(queryString(params.q))
                                        }, params.subMap(['offset', 'max', 'sort', 'order']))
             def total = Node.countHits( {
-                                           must(term("project", params.project))
+                                           must(term("project", params.project.toLowerCase()))
                                            must(queryString(params.q))
                                        })
             if (params.format) {

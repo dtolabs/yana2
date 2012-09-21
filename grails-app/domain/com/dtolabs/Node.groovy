@@ -5,6 +5,7 @@ class Node {
     static searchable = {
         nodetype component:true
         project component:true
+        except=['version']
     }
 	
 	static mappedBy = [
